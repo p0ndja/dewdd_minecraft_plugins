@@ -904,37 +904,6 @@ public class Core {
 		}
 	}
 
-	public LinkedList<SellableType> sortSell(LinkedList<SellableType> sortPls) {
-		int dataSize = sell.size();
-
-		int indexSorted[] = new int[sell.size()];
-
-		for (int i = 0; i < dataSize; i++) {
-			indexSorted[i] = i;
-		}
-
-		for (int i = 0; i < dataSize; i++) {
-			for (int j = 0; j < (dataSize - 1 - i); j++) {
-
-				if (sortPls.get(indexSorted[j]).timeToGet < sortPls.get(indexSorted[j + 1]).timeToGet) {
-					int t = indexSorted[j];
-
-					indexSorted[j] = indexSorted[j + 1];
-
-					indexSorted[j + 1] = t;
-
-				}
-			}
-
-		}
-
-		LinkedList<SellableType> tmp2 = new LinkedList<SellableType>();
-		for (int i = 0; i < dataSize; i++) {
-			tmp2.add(sortPls.get(indexSorted[i]));
-		}
-		return tmp2;
-	}
-
 	public void save_tmpAllShop(LinkedList<AllShop> tmpAllShop) {
 
 		String filena = tmpAllShopPath;
@@ -960,39 +929,6 @@ public class Core {
 					fwriter.write(wr + System.getProperty("line.separator"));
 
 				}
-
-			}
-
-			fwriter.close();
-			d.pl("ptdew&dewdd:saved " + filena);
-			return;
-
-		} catch (IOException e) {
-			// Auto-generated catch block
-			e.printStackTrace();
-		}
-
-	}
-
-	public void save_tmpSell(LinkedList<SellableType> tmpSell) {
-
-		String filena = tmpSellPath;
-		File fff = new File(filena);
-
-		FileWriter fwriter;
-		try {
-			fff.createNewFile();
-
-			d.pl("ptdew&dewdd: Start saving " + filena);
-			fwriter = new FileWriter(fff);
-
-			for (int y = 0; y < tmpSell.size(); y++) {
-				SellableType sty = tmpSell.get(y);
-				AllBlockInGameType abt = Core.allBlockInGameAsList[sty.index];
-
-				String wr = "" + abt.getIDData() + " " + sty.sellPerPrice;
-
-				fwriter.write(wr + System.getProperty("line.separator"));
 
 			}
 
@@ -1056,6 +992,70 @@ public class Core {
 			e.printStackTrace();
 		}
 
+	}
+
+	public void save_tmpSell(LinkedList<SellableType> tmpSell) {
+
+		String filena = tmpSellPath;
+		File fff = new File(filena);
+
+		FileWriter fwriter;
+		try {
+			fff.createNewFile();
+
+			d.pl("ptdew&dewdd: Start saving " + filena);
+			fwriter = new FileWriter(fff);
+
+			for (int y = 0; y < tmpSell.size(); y++) {
+				SellableType sty = tmpSell.get(y);
+				AllBlockInGameType abt = Core.allBlockInGameAsList[sty.index];
+
+				String wr = "" + abt.getIDData() + " " + sty.sellPerPrice;
+
+				fwriter.write(wr + System.getProperty("line.separator"));
+
+			}
+
+			fwriter.close();
+			d.pl("ptdew&dewdd:saved " + filena);
+			return;
+
+		} catch (IOException e) {
+			// Auto-generated catch block
+			e.printStackTrace();
+		}
+
+	}
+
+	public LinkedList<SellableType> sortSell(LinkedList<SellableType> sortPls) {
+		int dataSize = sell.size();
+
+		int indexSorted[] = new int[sell.size()];
+
+		for (int i = 0; i < dataSize; i++) {
+			indexSorted[i] = i;
+		}
+
+		for (int i = 0; i < dataSize; i++) {
+			for (int j = 0; j < (dataSize - 1 - i); j++) {
+
+				if (sortPls.get(indexSorted[j]).timeToGet < sortPls.get(indexSorted[j + 1]).timeToGet) {
+					int t = indexSorted[j];
+
+					indexSorted[j] = indexSorted[j + 1];
+
+					indexSorted[j + 1] = t;
+
+				}
+			}
+
+		}
+
+		LinkedList<SellableType> tmp2 = new LinkedList<SellableType>();
+		for (int i = 0; i < dataSize; i++) {
+			tmp2.add(sortPls.get(indexSorted[i]));
+		}
+		return tmp2;
 	}
 
 }

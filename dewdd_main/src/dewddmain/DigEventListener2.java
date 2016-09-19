@@ -5,6 +5,9 @@
  */
 package dewddmain;
 
+import java.util.HashMap;
+import java.util.Random;
+
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
@@ -55,6 +58,7 @@ import org.bukkit.event.player.PlayerGameModeChangeEvent;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.event.server.ServerCommandEvent;
@@ -65,6 +69,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.potion.PotionEffectType;
 
 import api_admin.dewddadmin;
+import api_skyblock.api_skyblock;
 import dewddflower.dewset;
 import dewddtran.tr;
 import net.minecraft.server.v1_8_R3.EntityPlayer;
@@ -1488,12 +1493,23 @@ public class DigEventListener2 implements Listener {
 
 		}
 	}
+	
+	class ShowCurStandProtect {
+		public Player player;
+		public int lastStandProtectID = -1;
+		public int worldID = 0;
+	}
 
 	dewset dew;
 
 	public JavaPlugin ac = null;
 
 	public String pseecommand = "dewdd.main.seecommand";
+
+	private Random rnd = new Random();
+	
+	
+	public HashMap<String, ShowCurStandProtect> showCurStandProtect = new HashMap<String, ShowCurStandProtect>();
 
 	// Chat Event.class
 	// BlockBreakEvent
@@ -3129,6 +3145,67 @@ public class DigEventListener2 implements Listener {
 		}
 
 		System.gc();
+
+	}
+	
+	@EventHandler
+	public void eventja(PlayerMoveEvent e) {
+		if (!tr.isrunworld(ac.getName(), e.getPlayer().getWorld().getName()))
+			return;
+
+		if (rnd.nextInt(100) > 50) {
+
+			Player p = e.getPlayer();
+
+			ShowCurStandProtect i = showCurStandProtect.get(p.getName());
+			if (i == null) {
+				i = new ShowCurStandProtect();
+				i.player = p;
+				i.lastStandProtectID = -1;
+				i.worldID = dew.getworldid(p.getWorld().getName());
+				
+				showCurStandProtect.put(p.getName(), i);
+
+				return;
+
+			} else {
+
+				int curStandID = dew.checkpermissionarea(p.getLocation().getBlock(),true);
+				int curWorldID = dew.getworldid(p.getLocation().getWorld().getName());
+				
+				if (curStandID == -1) { // no protect
+					if (i.lastStandProtectID != -1) { // has protect
+
+						p.sendMessage(dprint.r.color(tr.gettr("exit from main protect of ")
+								+ dew.dewsignname[i.worldID][i.lastStandProtectID][0] + " id " + i.lastStandProtectID + " world " + i.worldID));
+						
+						i.lastStandProtectID = curStandID; // be -1
+						i.worldID = 0;
+						
+						return;
+					}
+
+				} else { // cur has protect
+							// cur there are protect
+					if (curStandID == i.lastStandProtectID && curWorldID == i.worldID) {
+
+					} else {
+					
+						p.sendMessage(dprint.r.color(tr.gettr("enter to main protect of ")
+								+ dew.dewsignname[curWorldID][curStandID][0] + 
+								" id " + curStandID + " world " + curWorldID));
+						
+						
+						i.lastStandProtectID = curStandID;
+						i.worldID = curWorldID;
+						return;
+
+					}
+
+				}
+			}
+
+		}
 
 	}
 

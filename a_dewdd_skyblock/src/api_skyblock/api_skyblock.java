@@ -199,7 +199,7 @@ public class api_skyblock {
 
 				for (int lop = 0; lop < rsMax; lop++) {
 					if (rs[lop].x == x && rs[lop].z == z) {
-						dprint.r.printAll(">>> owner " + rs[lop].p[0]);
+					//	dprint.r.printAll(">>> owner " + rs[lop].p[0]);
 						checkrs = false;
 						break;
 					}

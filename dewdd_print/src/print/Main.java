@@ -12,7 +12,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class Main extends JavaPlugin {
-	Logger	log;
+	Logger log;
 
 	@Override
 	public void onDisable() {

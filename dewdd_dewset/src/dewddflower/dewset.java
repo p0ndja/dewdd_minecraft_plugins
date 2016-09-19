@@ -6181,10 +6181,21 @@ public class dewset extends dewset_interface {
 						break;
 					case 27: // loop count
 						dewsignloop[wlo][dewsignmax[wlo] - 1] = Integer.parseInt(strLine);
+						dewsignloop[wlo][dewsignmax[wlo] - 1] = 0;
 						dprint.r.printC("loaded sign of world " + wlo + " sign id = " + dewsignmax[wlo]);
 						moden = 0;
 						break;
 					}
+					
+					
+					/*if (dewsignx1[wlo][dewsignmax[wlo] - 1]== 0 &&
+							dewsigny1[wlo][dewsignmax[wlo] - 1] == 0 &&
+							dewsignz1[wlo][dewsignmax[wlo] - 1] == 0 && 
+						dewsignx2[wlo][dewsignmax[wlo] - 1] == 0 &&
+						dewsigny2[wlo][dewsignmax[wlo] - 1] == 0 && 
+						dewsignz2[wlo][dewsignmax[wlo] - 1] == 0) {
+							dewsignmax[wlo]--;
+						}*/
 
 					moden++;
 

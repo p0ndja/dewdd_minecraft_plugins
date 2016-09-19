@@ -7,7 +7,7 @@ package dewddtran;
 
 public class datat {
 
-	public String	s;
-	public String	an;
+	public String s;
+	public String an;
 
 }

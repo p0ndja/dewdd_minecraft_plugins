@@ -12,8 +12,8 @@ import org.bukkit.plugin.java.JavaPlugin;
 import dprint.dprint;
 
 public class Main extends JavaPlugin {
-	Logger	log;
-	tranrun	ax	= new tranrun();
+	Logger log;
+	tranrun ax = new tranrun();
 
 	@Override
 	public void onDisable() {
