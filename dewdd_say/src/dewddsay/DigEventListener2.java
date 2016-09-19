@@ -91,7 +91,16 @@ public class DigEventListener2 implements Listener {
 			}
 
 			if (m[0].equalsIgnoreCase("ghost")) {
-				if (player.getGameMode() == GameMode.SURVIVAL) {
+				if (player.hasPermission("essentials.fly")) {
+					player.setGameMode(player.getGameMode() == GameMode.SPECTATOR ? GameMode.SURVIVAL : GameMode.SPECTATOR);
+					return;
+				}
+				else {
+					player.sendMessage(dprint.r.color("you need permission essentials.fly"));
+					return;
+				}
+				
+				/*if (player.getGameMode() == GameMode.SURVIVAL) {
 					int money = (int) tr.gettrint("CONFIG_FLY_WITHOUT_PERMISSION_PRICE_USE_EACH_MINUTES");
 
 					try {
@@ -117,7 +126,7 @@ public class DigEventListener2 implements Listener {
 
 				else {
 					player.setGameMode(GameMode.SURVIVAL);
-				}
+				}*/
 
 			}
 
@@ -156,7 +165,7 @@ public class DigEventListener2 implements Listener {
 			 * return; }
 			 */
 
-			if (m[0].equalsIgnoreCase("dewfly") == true || m[0].equalsIgnoreCase("wing") == true
+			/*if (m[0].equalsIgnoreCase("dewfly") == true || m[0].equalsIgnoreCase("wing") == true
 					|| m[0].equalsIgnoreCase("อยากบินได้") == true || m[0].equalsIgnoreCase("123") == true) {
 
 				if (player.getAllowFlight() == true) {
@@ -186,7 +195,7 @@ public class DigEventListener2 implements Listener {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-			}
+			}*/
 			// dewsuper
 			if (m[0].equalsIgnoreCase("dewsuper") == true) {
 				if (m.length == 1) {

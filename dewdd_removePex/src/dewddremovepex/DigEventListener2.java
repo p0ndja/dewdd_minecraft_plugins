@@ -29,7 +29,6 @@ import dewddtran.tr;
 
 public class DigEventListener2 implements Listener {
 	public static String perenchant = "dewdd.removepex.holdunsafeenchantment";
-	
 
 	class delay extends Thread {
 
@@ -46,22 +45,20 @@ public class DigEventListener2 implements Listener {
 				dprint.r.printAll("ft waiting ac != null");
 
 			}
-			
+
 			RemovePex a = new RemovePex();
 
 			Bukkit.getScheduler().cancelTasks(ac);
-			Bukkit.getScheduler().scheduleSyncRepeatingTask(ac, a, 0,1200);
-			
+			Bukkit.getScheduler().scheduleSyncRepeatingTask(ac, a, 0, 1200);
+
 		}
 	}
-	
-	
 
 	class clearItem1000 implements Runnable {
 		private Inventory inv;
 		private Player player;
 
-		public clearItem1000(Inventory inv,String player) {
+		public clearItem1000(Inventory inv, String player) {
 			this.inv = inv;
 			this.player = Bukkit.getPlayer(player);
 			Bukkit.getScheduler().scheduleSyncDelayedTask(ac, this, 1);
@@ -92,10 +89,12 @@ public class DigEventListener2 implements Listener {
 						found = true;
 						break;
 					}
-					
-					if (itm.getEnchantmentLevel(ench) > 6 && player.hasPermission(perenchant) == false && itm.getType() != Material.CHEST) {
+
+					if (itm.getEnchantmentLevel(ench) > 6 && player.hasPermission(perenchant) == false
+							&& itm.getType() != Material.CHEST) {
 						found = true;
-						dprint.r.printAll(player.getName() + tr.gettr("this_player_hold_unsafe_enchant_without_this_permission" + perenchant));
+						dprint.r.printAll(player.getName()
+								+ tr.gettr("this_player_hold_unsafe_enchant_without_this_permission" + perenchant));
 						break;
 					}
 				}
@@ -106,16 +105,15 @@ public class DigEventListener2 implements Listener {
 				}
 			}
 
-			
 		}
 
 	}
-	
+
 	@EventHandler
 	public void eventja(InventoryClickEvent e) {
 		Inventory inv = e.getClickedInventory();
 		// if (inv.getType() != InventoryType.CREATIVE) {
-		clearItem1000 xxx = new clearItem1000(inv,e.getWhoClicked().getName());
+		clearItem1000 xxx = new clearItem1000(inv, e.getWhoClicked().getName());
 		// }
 	}
 
@@ -123,8 +121,8 @@ public class DigEventListener2 implements Listener {
 	public void eventja(InventoryOpenEvent e) {
 		Inventory inv = e.getInventory();
 		// if (inv.getType() != InventoryType.CREATIVE) {
-		clearItem1000 xxx = new clearItem1000(inv,e.getPlayer().getName());
-		
+		clearItem1000 xxx = new clearItem1000(inv, e.getPlayer().getName());
+
 		// }
 	}
 
@@ -145,7 +143,6 @@ public class DigEventListener2 implements Listener {
 
 				}
 
-
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
 				delay eee = new delay();
@@ -158,9 +155,9 @@ public class DigEventListener2 implements Listener {
 	}
 
 	class RemovePex implements Runnable {
-		
+
 		public RemovePex() {
-			
+
 		}
 
 		@Override
@@ -170,40 +167,45 @@ public class DigEventListener2 implements Listener {
 				if (pr.getGameMode() == GameMode.CREATIVE) {
 					if (!pr.hasPermission("essentials.gamemode")) {
 						pr.setGameMode(GameMode.SURVIVAL);
-						
-						pr.kickPlayer(tr.gettr("banned cuz you can be game mode but not Admin Or GameMode Group"));
-						//pr.setBanned(true);
+
+						String kickMessage = tr.gettr("kick cuz you can be game mode but not Admin Or GameMode Group");
+						pr.kickPlayer(kickMessage);
+						dprint.r.printA(pr.getName() + " " + kickMessage);
+						// pr.setBanned(true);
 
 						continue;
 					}
 				}
 
-				if (pr.isFlying() && pr.getGameMode() != GameMode.SPECTATOR) {
-					if (!pr.hasPermission("essentials.fly")) {
-						int moneyNeed = (int) tr.gettrint("CONFIG_FLY_WITHOUT_PERMISSION_PRICE_USE_EACH_MINUTES");
-
-						try {
-							if (Economy.hasEnough(pr.getName(), moneyNeed)) {
-								Economy.subtract(pr.getName(), moneyNeed);
-							} else {
-								pr.setFlying(false);
-								pr.setAllowFlight(false);
-								// pr.kickPlayer(tr.gettr("kick_cuz can fly but
-								// not vip"));
-								// continue;
-							}
-						} catch (UserDoesNotExistException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						} catch (NoLoanPermittedException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
+				if (pr.getGameMode() == GameMode.SURVIVAL) {
+					if (pr.isFlying() || pr.getAllowFlight()) {
+						if (!pr.hasPermission("essentials.fly")) {
+							pr.setAllowFlight(false);
+							String kickMessage = tr.gettr("kick cuz you can fly but not vip");
+							pr.kickPlayer(kickMessage);
+							
+							dprint.r.printA(pr.getName() + " " + kickMessage);
+							
 						}
-
 					}
 				}
 
-				
+				/*
+				 * if (!pr.hasPermission("essentials.fly")) { int moneyNeed =
+				 * (int) tr.gettrint(
+				 * "CONFIG_FLY_WITHOUT_PERMISSION_PRICE_USE_EACH_MINUTES");
+				 * 
+				 * try { if (Economy.hasEnough(pr.getName(), moneyNeed)) {
+				 * Economy.subtract(pr.getName(), moneyNeed); } else {
+				 * pr.setFlying(false); pr.setAllowFlight(false); //
+				 * pr.kickPlayer(tr.gettr("kick_cuz can fly but // not vip"));
+				 * // continue; } } catch (UserDoesNotExistException e) { //
+				 * TODO Auto-generated catch block e.printStackTrace(); } catch
+				 * (NoLoanPermittedException e) { // TODO Auto-generated catch
+				 * block e.printStackTrace(); }
+				 * 
+				 * }
+				 */
 
 			}
 		}
@@ -227,7 +229,7 @@ public class DigEventListener2 implements Listener {
 		if (!tr.isrunworld(ac.getName(), e.getPlayer().getWorld().getName())) {
 			return;
 		}
-		
+
 		Player player = e.getPlayer();
 
 		if (!player.hasPermission("essentials.god")) {
