@@ -11,6 +11,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.file.Files;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.Random;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -19,7 +20,7 @@ import print_api.r;
 
 class UUID {
 
-	public String  sendUUID(String user) {
+	public String getUUID(String user) {
 
 		URL name;
 		try {
@@ -28,30 +29,36 @@ class UUID {
 			String string = in.readLine();
 			in.close();
 			System.out.println(string);
+
+			if (string.indexOf("<") > 0) {
+				return "<error>";
+			}
+			if (string.indexOf(">") > 0) {
+				return "<error>";
+			}
+
 			return string;
 
 		} catch (MalformedURLException e) {
-			// TODO Auto-generated catch block
+
 			e.printStackTrace();
+			return "<error>";
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
+
 			e.printStackTrace();
+			return "<error>";
 		}
-		
-		return "";
 
 	}
-	
-	public String getNameFromEssentialsFile (String filePath) {
 
-	
+	public String getNameFromEssentialsFile(String filePath) {
+
 		String filena = filePath;
 
 		File fff = new File(filena);
 
 		try {
 
-		
 			String theName = "";
 
 			fff.createNewFile();
@@ -75,7 +82,7 @@ class UUID {
 				// Print the content on the console
 
 				// lastAccountName: DewDD
-				//r.pl("strLine " + strLine);
+				// r.pl("strLine " + strLine);
 				if (m[0].trim().equalsIgnoreCase("lastAccountName")) {
 					theName = m[1].trim();
 					r.pl("theName = " + m[1]);
@@ -86,7 +93,6 @@ class UUID {
 
 			in.close();
 
-			
 			return theName;
 		} catch (Exception e) {// Catch exception if any
 			r.pl("Error load " + filena + e.getMessage());
@@ -94,116 +100,135 @@ class UUID {
 		}
 	}
 
-
 	class CheckItNow implements Runnable {
-		private File sub ;
-		public CheckItNow(File sub) {
+		private File sub;
+		private String outputPath;
+
+		public CheckItNow(File sub, String outputPath) {
 			this.sub = sub;
-			
+			this.outputPath = outputPath;
+
 		}
+
 		@Override
 		public void run() {
-			
-			String oldName = getNameFromEssentialsFile(sub.getAbsolutePath());
-			String newName = sendUUID(oldName);
-		
 
-			
+			String oldName = getNameFromEssentialsFile(sub.getAbsolutePath());
+			String newName = "";
+
+			int countSeem = 0;
+
+			String saved = "";
+
+			do {
+				do {
+
+					newName = getUUID(oldName);
+
+					try {
+						Thread.sleep(new Random().nextInt(1000));
+					} catch (InterruptedException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+
+				} while (newName.equalsIgnoreCase("<error>"));
+
+				if (saved.equalsIgnoreCase("")) {
+					saved = newName;
+				} else {
+					if (saved.equalsIgnoreCase(newName)) {
+						countSeem++;
+					} else {
+						countSeem = 0;
+					}
+				}
+
+			} while (countSeem < 3);
+
 			String desFolder = "real";
-			
+
 			if (newName.equalsIgnoreCase("not premium")) {
 				desFolder = "crack";
-				
-				
-				String folder = "/ramdisk/" + desFolder ;
+
+				String folder = outputPath + "/" + desFolder;
 				File fol = new File(folder);
 				fol.mkdirs();
-				
-				File out = new File(folder + "/" + sub.getName());
-			
-				
-				 try {
-					Files.copy(sub.toPath(), out.toPath() );
+
+				File out = new File(outputPath + "/" + sub.getName());
+
+				try {
+					Files.copy(sub.toPath(), out.toPath());
 				} catch (IOException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-				 
-			}
-			else {
-			
-			String folder = "/ramdisk/" + desFolder ;
-			File fol = new File(folder);
-			fol.mkdirs();
-			
-			
-			
-			File out = new File(folder + "/" + spliteUUID(newName)  + ".yml");
-		
-			 try {
-				Files.copy(sub.toPath(), out.toPath() );
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			 
+
+			} else {
+
+				String folder = outputPath + "/" + desFolder;
+				File fol = new File(folder);
+				fol.mkdirs();
+
+				File out = new File(folder + "/" + spliteUUID(newName) + ".yml");
+
+				try {
+					Files.copy(sub.toPath(), out.toPath());
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+
 			}
 		}
 	}
-	
-	public  void allFileInFolder(String path) {
+
+	public void allFileInFolder(String path, String path2) {
 		File file = new File(path);
 		if (file.isDirectory()) {
-			
-			ExecutorService executor = Executors.newFixedThreadPool(10);
-			       
-			
+
+			ExecutorService executor = Executors.newFixedThreadPool(50);
+
 			for (File sub : file.listFiles()) {
 				if (sub.isFile()) {
-					
+
 					r.pl(sub.getName());
-					
-					
-			            Runnable worker = new CheckItNow(sub);
-			            executor.execute(worker);
-			          
-			     
-					  
+
+					Runnable worker = new CheckItNow(sub, path2);
+					executor.execute(worker);
 
 				}
 			}
-			
-			 executor.shutdown();
-			 
+
+			executor.shutdown();
+
 		}
-		
 
 	}
-	
+
 	public String spliteUUID(String old) {
-		String fff = old.substring(0, 8) + "-" +  old.substring(8, 12) +  "-" +  old.substring(12, 16) + "-"  +  old.substring(16);
+		String fff = old.substring(0, 8) + "-" + old.substring(8, 12) + "-" + old.substring(12, 16) + "-"
+				+ old.substring(16);
 		return fff;
 	}
 
-	
 }
 
 class api_skyblock {
-	public static   int RSMaxPlayer = 20;
+	public static int RSMaxPlayer = 20;
 
-	public  RSData rs[] = new RSData[100];
+	public RSData rs[] = new RSData[100];
 
 	public static int rsMax = 0;
 
+	public ArrayList<LV1000Type> lv1000 = new ArrayList<LV1000Type>();
 
-	public  ArrayList<LV1000Type> lv1000 = new ArrayList<LV1000Type>();
-
-	public void saveRSProtectFile() {
+	public void saveRSProtectFile(String outputPath) {
 
 		File dir = new File(Constant.folder_name);
 		dir.mkdir();
 
-		String filena = "/ramdisk/" + Constant.rsProtect_filename;
+		String filena = outputPath;
 		File fff = new File(filena);
 
 		FileWriter fwriter;
@@ -245,15 +270,15 @@ class api_skyblock {
 		}
 
 	}
-	
-	public void loadRSProtectFile() {
+
+	public void loadRSProtectFile(String path) {
 		String worldf = Constant.rsProtect_filename;
 
 		File dir = new File(Constant.folder_name);
 		dir.mkdir();
 		System.out.println(dir.getAbsolutePath());
 
-		String filena = Constant.folder_name + File.separator + worldf;
+		String filena = path;
 		File fff = new File(filena);
 
 		try {
@@ -382,66 +407,148 @@ class api_skyblock {
 
 public class main {
 	public static void main(String abc[]) {
-		int mode = 2;
-			UUID xx = new UUID();
-			
+		int mode = 3;
+		UUID xx = new UUID();
+
+		String thePath = "";
+		String theDesPath = "";
+
+		if (abc.length == 0) {
+			thePath = "/ramdisk/survival";
+			theDesPath = "/ramdisk";
+		} else {
+			thePath = abc[0];
+			theDesPath = abc[1];
+		}
+
 		switch (mode) {
 		case 1:
-		
-			//xx.sendUUID("natt0880");
-			//xx.allFileInFolder("/home/d/mis/survival/plugins/Essentials/userdata");
-			
-			xx.allFileInFolder("/ramdisk/survival");
-			
-			
-			//String eee = xx.sendUUID("dewdd");
-			//r.pl(xx.spliteUUID(eee));
-		
+
+			// xx.sendUUID("natt0880");
+			// xx.allFileInFolder("/home/d/mis/survival/plugins/Essentials/userdata");
+
+			xx.allFileInFolder(thePath, theDesPath);
+
+			// String eee = xx.sendUUID("dewdd");
+			// r.pl(xx.spliteUUID(eee));
+
 			break;
 		case 2:
 			api_skyblock sky = new api_skyblock();
-			sky.loadRSProtectFile();
-			
-			for (int i = 0 ; i < api_skyblock.rsMax ; i ++ ) {
+			sky.loadRSProtectFile("/home/d/mis/skyblock/plugins/dewdd_skyblock/ptdew_dewdd_rs_protect.txt");
+
+			for (int i = 0; i < api_skyblock.rsMax; i++) {
 				RSData rs = sky.rs[i];
-				
+
 				// loop all player
-				for (int j = 0 ; j < api_skyblock.RSMaxPlayer ; j ++ ) {
+				for (int j = 0; j < api_skyblock.RSMaxPlayer; j++) {
 					String cur = rs.p[j];
 					if (cur.equalsIgnoreCase("null")) {
 						continue;
 					}
-					
-					String uuid = xx.sendUUID(cur);
+
+					String uuid = xx.getUUID(cur);
 					if (uuid.equalsIgnoreCase("not premium") || uuid.length() < 32) {
 						rs.p[j] = "null";
 						r.pl(rs.p[j]);
-						
-					}
-					else if (uuid.equalsIgnoreCase("<autocut>") || uuid.equalsIgnoreCase("<autoabsorb>")) {
+
+					} else if (uuid.equalsIgnoreCase("<autocut>") || uuid.equalsIgnoreCase("<autoabsorb>")) {
 						continue;
-					}
-					else {
-						
-						rs.p[j] = rs.p[j] + "=" + uuid;
+					} else {
+
+						rs.p[j] = rs.p[j] + "=" + xx.spliteUUID(uuid);
 						r.pl(rs.p[j]);
+
+					}
+
+				}
+
+			} // all rs
+
+			sky.saveRSProtectFile("/ramdisk/output.txt");
+
+			break;
+		case 3:
+			sky = new api_skyblock();
+			sky.loadRSProtectFile("/ramdisk/ptdew_dewdd_rs_protect.txt");
+
+			LinkedList<RSData> list = new LinkedList<RSData>();
+
+			for (int i = 0; i < api_skyblock.rsMax; i++) {
+				RSData rs = sky.rs[i];
+				list.add(rs);
+
+			} // all rs
+
+		boolean hasRemoved = false;
+			do {
+			hasRemoved = false;
+
+				for (int i = 0; i < list.size(); i++) {
+					// if null all delete them
+						boolean found = false;
+				
+						RSData rs = list.get(i);
+					for (int j = 0; j < api_skyblock.RSMaxPlayer; j++) {
 						
-					
+						String cur = rs.p[j].trim();
+
+						if (cur.equalsIgnoreCase("null") == false && cur.split("=").length == 2) {
+							r.pl("removed " + cur);
+							found = true;
+							break;
+						}
 					}
 					
-				
-				
+					String cur = rs.p[0].trim();
+					if (cur.equalsIgnoreCase("null") == true || cur.split("=").length != 2) {
+						r.pl("removed " + cur);
+						found = false;
+					}
+					
+
+					if (found == false) {
+						list.remove(i);
+						hasRemoved = true;
+						break;
+					}
+				}
+
+			} while (hasRemoved == true);
+
+			
+			for (int i = 0; i < list.size(); i++) {
+				// if null all delete them
+					boolean found = false;
+			
+					RSData rs = list.get(i);
+				for (int j = 0; j < api_skyblock.RSMaxPlayer; j++) {
+					if (rs.p[j].equalsIgnoreCase("null")) {
+						rs.p[j] = "<autocut>";
+						break;
+					}
+				}
+				for (int j = 0; j < api_skyblock.RSMaxPlayer; j++) {
+					if (rs.p[j].equalsIgnoreCase("null")) {
+						rs.p[j] = "<autoabsorb>";
+						break;
+					}
 				}
 				
 				
-			} // all rs
+			}
 			
+			sky.rs = new RSData[list.size()];
+			sky.rsMax = list.size();
+			for (int i = 0  ; i < list.size() ; i ++ ) {
+				sky.rs[i] = list.get(i);
+			}
 			
-			sky.saveRSProtectFile();
-			
+			sky.saveRSProtectFile("/ramdisk/yeh.txt");
+
 			break;
 		}
-	
+
 	}
 
 }

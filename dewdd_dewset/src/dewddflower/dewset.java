@@ -44,6 +44,7 @@ import dewddtran.tr;
 import li.Constant_Protect;
 import li.IDDataType;
 import li.LXRXLZRZType;
+import li.Useful;
 
 public class dewset extends dewset_interface {
 
@@ -771,7 +772,7 @@ public class dewset extends dewset_interface {
 				loca.setY(y);
 				loca.setZ(z);
 
-				player.getWorld().spawnCreature(loca, EntityTypeGot);
+				player.getWorld().spawnEntity(loca, EntityTypeGot);
 
 			} // loop monster all
 		}
@@ -845,10 +846,10 @@ public class dewset extends dewset_interface {
 
 				while (System.currentTimeMillis() - startTime < 1000 && world.getLoadedChunks().length <= chunklimit) {
 
-					int x = li.useful.randomInteger(ee.lx, ee.rx);
-					int z = li.useful.randomInteger(ee.lz, ee.rz);
+					int x = Useful.randomInteger(ee.lx, ee.rx);
+					int z = Useful.randomInteger(ee.lz, ee.rz);
 
-					int y = li.useful.randomInteger(ee.ly, ee.rz);
+					int y = Useful.randomInteger(ee.ly, ee.rz);
 
 					Block block = world.getBlockAt(x, y, z);
 					if (IDDataType.isThisItemOnTheList(item, block.getTypeId(), block.getData())) {
@@ -4261,7 +4262,7 @@ public class dewset extends dewset_interface {
 				return;
 
 			for (Player pla : player.getWorld().getPlayers()) {
-				pla.playSound(player, Sound.NOTE_PIANO, randomG.nextInt(50), randomG.nextFloat() + 1);
+				pla.playSound(player, Sound.BLOCK_NOTE_PLING, randomG.nextInt(50), randomG.nextFloat() + 1);
 			}
 		}
 	}

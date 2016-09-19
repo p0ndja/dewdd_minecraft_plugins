@@ -6,6 +6,7 @@ import org.bukkit.Material;
 import org.bukkit.block.Block;
 
 public class Useful {
+	
 	public static int randomInteger(int min, int max) {
 		Random rand = new Random();
 		int randomNum = min + (int) (Math.random() * ((max - min) + 1));

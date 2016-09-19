@@ -336,6 +336,16 @@ public class buff_run implements Listener {
 
 	}
 
+	public void randomplaynote(Location player) {
+		if (rnd.nextInt(100) > 10) {
+			return;
+		}
+
+		for (Player pla : player.getWorld().getPlayers()) {
+			pla.playSound(player, Sound.BLOCK_NOTE_HARP, rnd.nextInt(50), rnd.nextFloat() + 1);
+		}
+	}
+	
 	@EventHandler
 	public void eventja(PlayerExpChangeEvent e) {
 		if (!tr.isrunworld(ac.getName(), e.getPlayer().getWorld().getName())) {
@@ -392,14 +402,6 @@ public class buff_run implements Listener {
 
 	}
 
-	public void randomplaynote(Location player) {
-		if (rnd.nextInt(100) > 10) {
-			return;
-		}
-
-		for (Player pla : player.getWorld().getPlayers()) {
-			pla.playSound(player, Sound.BLOCK_NOTE_HARP, rnd.nextInt(50), rnd.nextFloat() + 1);
-		}
-	}
+	
 
 } // dig
