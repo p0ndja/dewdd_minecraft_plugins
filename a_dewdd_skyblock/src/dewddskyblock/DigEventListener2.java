@@ -21,6 +21,7 @@ import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.CreatureType;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
+import org.bukkit.entity.ItemFrame;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -48,6 +49,7 @@ import org.bukkit.event.player.PlayerBucketEmptyEvent;
 import org.bukkit.event.player.PlayerBucketFillEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
+import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
@@ -602,6 +604,48 @@ public class DigEventListener2 implements Listener {
 
 	}
 
+	@EventHandler
+	public void eventja(PlayerInteractEntityEvent e) {
+		if (!api_skyblock.isrunworld(e.getPlayer().getWorld().getName())) {
+			return;
+		}
+		Block block = e.getPlayer().getLocation().getBlock();
+		Player player = e.getPlayer();
+
+		boolean cando = api_skyblock.cando(block, player, "break");
+		if (cando == false) {
+			e.setCancelled(true);
+			return;
+		}
+
+		int getid = api_skyblock.getprotectid(player.getLocation().getBlock());
+
+		if (getid > -1) {
+			// have protect
+
+			// check you are in that home
+
+			int gx = dew.getplayerinslot(player.getName(), getid);
+
+			// dprint.r.printAll("blockbreak lv 1 gx = " + gx);
+
+			if (gx > -1) {
+
+				/*
+				 * // search nearest stone Block bd =
+				 * Bukkit.getWorld("world").getBlockAt(api_skyblock.rs[getid].x,
+				 * api_skyblock.rs[getid].y, api_skyblock.rs[getid].z);
+				 * 
+				 * if (block.getType() == Material.COBBLESTONE) {
+				 * CallNextMission bb = new CallNextMission(getid,
+				 * Missional.LV_0_BREAK_COBBLESTONE);
+				 * Bukkit.getScheduler().scheduleSyncDelayedTask(ac, bb, 1); }
+				 */
+			}
+
+		}
+	}
+	
 	@EventHandler
 	public void eventja(ChunkUnloadEvent e) {
 		if (!api_skyblock.isrunworld(e.getChunk().getWorld().getName())) {

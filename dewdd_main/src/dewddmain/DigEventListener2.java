@@ -48,6 +48,7 @@ import org.bukkit.event.player.PlayerBucketFillEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerGameModeChangeEvent;
+import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
@@ -2299,6 +2300,22 @@ public class DigEventListener2 implements Listener {
 
 	}
 
+	@EventHandler
+	public void eventja(PlayerInteractEntityEvent e) {
+		
+		if (!tr.isrunworld(ac.getName(), e.getPlayer().getWorld().getName()))
+			return;
+
+		Player br = e.getPlayer();
+		if (dew.checkpermissionarea(e.getPlayer().getLocation().getBlock(), br, "HangingPlaceEvent") == true) {
+			br.sendMessage("ptdew&dewdd : " + tr.gettr("don't_place_hanging_picture_not_yours"));
+
+			e.setCancelled(true);
+		}
+
+		
+	}
+	
 	@EventHandler
 	public void eventja(InventoryOpenEvent event) {
 		if (!tr.isrunworld(ac.getName(), event.getPlayer().getWorld().getName()))
