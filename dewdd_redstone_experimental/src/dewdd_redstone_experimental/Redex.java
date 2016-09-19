@@ -60,7 +60,6 @@ public class Redex {
 
 	public LinkedList<AreaType>		listEx						= new LinkedList<AreaType>();
 
-	public ArrayList<Chromosome>	dnaList;
 
 	public Hybrid					hybrid;
 	
@@ -77,7 +76,6 @@ public class Redex {
 		eventListenerX = new EventListenerX(this);
 		this.hybrid.registerEvent(eventListenerX);
 
-		this.dnaList = this.hybrid.getPopulation();
 
 		// load Start Area
 		this.start = new AreaType();
@@ -168,10 +166,14 @@ public class Redex {
 	}
 
 	public void DecodeAllArea() {
+		// load new dna
+		
+		ArrayList <Chromosome> tmp = hybrid.getPopulation();
+		for (int lop = 0 ; lop < maxPopulation ; lop ++ ) {
+			listEx.get(lop).chro = tmp.get(lop);
+		}
 
-		this.dnaList = this.hybrid.getPopulation();
-
-		dprint.r.printAll("DecodeAllArea first " + this.dnaList.size() + " , "
+		dprint.r.printAll("DecodeAllArea first " + " , "
 				+ this.hybrid.getPopulation().size());
 		DecodeAllDNA caa = new DecodeAllDNA(this, 0);
 		Bukkit.getScheduler().scheduleSyncDelayedTask(DigEventListener2.ac, caa,

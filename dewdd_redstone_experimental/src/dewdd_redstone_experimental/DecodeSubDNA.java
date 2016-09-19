@@ -43,7 +43,7 @@ public class DecodeSubDNA implements Runnable {
 		// dprint.r.printAll("dnaList Length " + redex.dnaList.size());
 		AreaType at = isAreaTypeMode == false ? this.redex.listEx.get(this.curId) : areaType;
 		at.isRunning = true;
-		Chromosome dna = this.redex.dnaList.get(this.curId);
+		Chromosome dna = at.chro;
 
 		int diffX = this.redex.output.loc.rx - this.redex.output.loc.lx;
 		int diffY = this.redex.output.loc.ry - this.redex.output.loc.ly;

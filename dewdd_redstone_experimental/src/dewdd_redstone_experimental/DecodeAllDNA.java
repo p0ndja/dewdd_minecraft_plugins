@@ -36,6 +36,8 @@ public class DecodeAllDNA implements Runnable {
 		}
 
 		dprint.r.printAll("Decoding Done");
+		
+		
 
 	}
 }

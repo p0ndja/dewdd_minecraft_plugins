@@ -1,7 +1,8 @@
 package dewdd_redstone_experimental;
 
+import java.util.ArrayList;
+
 import core_optimization_api.Chromosome;
-import dewsort_api.BubbleSort;
 
 public class CheckAllLabDone implements Runnable {
 	private Redex redex;
@@ -16,7 +17,9 @@ public class CheckAllLabDone implements Runnable {
 
 		for (int lop = 0; lop < Redex.maxPopulation; lop++) {
 			AreaType at = this.redex.listEx.get(lop);
-
+		/*	dprint.r.printAll("CheckAllLab lop 1 at " + (at == null ? "yes" : "no") + " , cho " 
+					+ ((at.chro == null) ? "yes" : "no"));*/
+			
 			if (at.isRunning == true) {
 				dprint.r.printAll("check All lab done False");
 				return;
@@ -29,6 +32,19 @@ public class CheckAllLabDone implements Runnable {
 		dprint.r.printAll("check All lab done true");
 
 		// add the best
+		
+		ArrayList <Chromosome> tmp  = new ArrayList<Chromosome>();
+		for (int lop = 0; lop < Redex.maxPopulation; lop++) {
+			
+			AreaType at = this.redex.listEx.get(lop);
+		/*	dprint.r.printAll("CheckAllLab lop 2 at " + (at == null ? "yes" : "no") + " , cho " 
+			+ ((at.chro == null) ? "yes" : "no"));*/
+			at.chro.fitness = 1 /(at.chro.fitness+1);
+			tmp.add(at.chro);
+		}
+		
+		
+		this.redex.hybrid.setAllChromosomeGen1(tmp);
 		
 		this.redex.hybrid.produceNextGen(1);
 		
