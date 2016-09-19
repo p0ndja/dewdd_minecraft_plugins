@@ -174,7 +174,8 @@ public class dewddautoseed implements Listener {
 
 						if (sign.getLine(0).equalsIgnoreCase("[dewbreak]")) {
 							block.getRelative(e.getDirection()).breakNaturally();
-
+							e.setCancelled(true);
+							
 						}
 					}
 
