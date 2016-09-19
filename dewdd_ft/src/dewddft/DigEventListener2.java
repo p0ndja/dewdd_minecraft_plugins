@@ -13,6 +13,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Random;
 
 import org.bukkit.Bukkit;
@@ -22,6 +23,7 @@ import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.Chest;
 import org.bukkit.block.Sign;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Chicken;
 import org.bukkit.entity.Cow;
 import org.bukkit.entity.Creature;
@@ -40,12 +42,17 @@ import org.bukkit.event.block.BlockRedstoneEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityTargetEvent;
 import org.bukkit.event.entity.EntityTargetLivingEntityEvent;
+import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerFishEvent;
 import org.bukkit.event.player.PlayerFishEvent.State;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.material.MaterialData;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.potion.PotionEffectType;
 
@@ -59,7 +66,7 @@ import dewddtran.tr;
 public class DigEventListener2 implements Listener {
 
 	class autosell implements Runnable {
-		private Block	b;
+		private Block b;
 
 		public autosell(Block b) {
 			this.b = b;
@@ -82,17 +89,14 @@ public class DigEventListener2 implements Listener {
 						for (int x2 = -1; x2 <= 1; x2++) {
 							for (int z2 = -1; z2 <= 1; z2++) {
 								b3 = b2.getRelative(x2, 0, z2);
-								if (b3.getTypeId() == 63
-										|| b3.getTypeId() == 68) {
+								if (b3.getTypeId() == 63 || b3.getTypeId() == 68) {
 									Sign sign = (Sign) b3.getState();
 
-									if (sign.getLine(0).equalsIgnoreCase(
-											"[autosell]")) {
+									if (sign.getLine(0).equalsIgnoreCase("[autosell]")) {
 										double lowest = 100000;
 										double temp = 0;
 
-										Player pla = Bukkit.getPlayer(sign
-												.getLine(1));
+										Player pla = Bukkit.getPlayer(sign.getLine(1));
 
 										if (pla == null) {
 
@@ -100,17 +104,10 @@ public class DigEventListener2 implements Listener {
 
 											Player lop = null;
 
-											for (Player pla2 : Bukkit
-													.getOnlinePlayers())
-												if (pla2.getWorld()
-														.getName()
-														.equalsIgnoreCase(
-																b2.getWorld()
-																		.getName())) {
-													temp = pla2
-															.getLocation()
-															.distance(
-																	b2.getLocation());
+											for (Player pla2 : Bukkit.getOnlinePlayers())
+												if (pla2.getWorld().getName()
+														.equalsIgnoreCase(b2.getWorld().getName())) {
+													temp = pla2.getLocation().distance(b2.getLocation());
 
 													if (temp <= lowest) {
 														lop = pla2;
@@ -126,19 +123,19 @@ public class DigEventListener2 implements Listener {
 
 										}
 
-										if (pla == null) return;
+										if (pla == null)
+											return;
 
 										// xxx
 
 										Chest c = (Chest) b2.getState();
-										for (ItemStack ic : c.getInventory()
-												.getContents()) {
+										for (ItemStack ic : c.getInventory().getContents()) {
 											if (ic == null) {
 												continue;
 											}
 
-											double price = DigEventListener2
-													.getprice(ic.getType().name() , ic.getData().getData());
+											double price = DigEventListener2.getprice(ic.getType().name(),
+													ic.getData().getData());
 
 											if (price == -1) {
 												continue;
@@ -150,23 +147,16 @@ public class DigEventListener2 implements Listener {
 											price2 = price * ic.getAmount();
 
 											try {
-												Economy.add(pla.getName(),
-														price2);
-											}
-											catch (UserDoesNotExistException
-													| NoLoanPermittedException e) {
+												Economy.add(pla.getName(), price2);
+											} catch (UserDoesNotExistException | NoLoanPermittedException e) {
 												// TODO Auto-generated catch
 												// block
 												e.printStackTrace();
 											}
 
-											pla.sendMessage(pla.getName()
-													+ " auto sell ...  "
-													+ ic.getTypeId() + ":"
-													+ ic.getData()
-													+ " amount = "
-													+ ic.getAmount()
-													+ " price = " + price2);
+											pla.sendMessage(pla.getName() + " auto sell ...  " + ic.getTypeId() + ":"
+													+ ic.getData() + " amount = " + ic.getAmount() + " price = "
+													+ price2);
 											c.getInventory().remove(ic);
 											c.update();
 
@@ -186,25 +176,25 @@ public class DigEventListener2 implements Listener {
 
 	class autoshoot implements Runnable {
 
-		private int			second;
-		private EntityType	ent;
-		private Player		p;
-		private int			mode;
+		private int second;
+		private EntityType ent;
+		private Player p;
+		private int mode;
 
 		public autoshoot(int second, EntityType ent, Player p, int mode) {
 			this.second = second;
 			this.ent = ent;
 			this.p = p;
 			this.mode = mode;
-			Bukkit.getScheduler().scheduleSyncDelayedTask(ac, this,
-					rnd.nextInt(40));
+			Bukkit.getScheduler().scheduleSyncDelayedTask(ac, this, rnd.nextInt(40));
 		}
 
 		@Override
 		public void run() {
 			second--;
 
-			if (second <= 0) return;
+			if (second <= 0)
+				return;
 
 			boolean shootcomplete = false;
 
@@ -212,36 +202,37 @@ public class DigEventListener2 implements Listener {
 				if (en == null) {
 					continue;
 				}
-				if (en.getType() == ent) if (en instanceof LivingEntity) {
-					LivingEntity er = (LivingEntity) en;
-					switch (mode) {
-					case 1:
-						er.shootArrow();
+				if (en.getType() == ent)
+					if (en instanceof LivingEntity) {
+						LivingEntity er = (LivingEntity) en;
+						switch (mode) {
+						case 1:
+							er.shootArrow();
 
-						break;
-					case 2:
-						er.throwEgg();
+							break;
+						case 2:
+							er.throwEgg();
 
-						break;
-					case 3:
-						er.throwSnowball();
+							break;
+						case 3:
+							er.throwSnowball();
 
-						break;
+							break;
 
-					case 4:
-						er.teleport(er.getEyeLocation());
+						case 4:
+							er.teleport(er.getEyeLocation());
 
-						break;
+							break;
 
-					case 5:
-						er.getWorld().strikeLightning(er.getEyeLocation());
+						case 5:
+							er.getWorld().strikeLightning(er.getEyeLocation());
 
-						break;
+							break;
 
+						}
+
+						shootcomplete = true;
 					}
-
-					shootcomplete = true;
-				}
 			}
 
 			if (shootcomplete == true) {
@@ -257,8 +248,7 @@ public class DigEventListener2 implements Listener {
 			while (ac == null) {
 				try {
 					Thread.sleep(1000);
-				}
-				catch (InterruptedException e) {
+				} catch (InterruptedException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
@@ -284,9 +274,7 @@ public class DigEventListener2 implements Listener {
 
 					i++;
 					Thread.sleep(1000);
-					System.out
-							.println("dew main waiting for create dewset sleeping ac +"
-									+ i);
+					System.out.println("dew main waiting for create dewset sleeping ac +" + i);
 
 				}
 
@@ -294,9 +282,7 @@ public class DigEventListener2 implements Listener {
 
 					i++;
 					Thread.sleep(1000);
-					System.out
-							.println("dew main waiting for create dewset sleeping dew +"
-									+ i);
+					System.out.println("dew main waiting for create dewset sleeping dew +" + i);
 
 					dew = new dewset();
 
@@ -306,17 +292,14 @@ public class DigEventListener2 implements Listener {
 
 					i++;
 					Thread.sleep(1000);
-					System.out
-							.println("dew main waiting for create dewset sleeping dew ac +"
-									+ i);
+					System.out.println("dew main waiting for create dewset sleeping dew ac +" + i);
 
 					dew.ac = ac;
 
 				}
 				dew.loadmainfile();
 
-			}
-			catch (InterruptedException e) {
+			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
 				delay eee = new delay();
 				eee.start();
@@ -328,8 +311,8 @@ public class DigEventListener2 implements Listener {
 	}
 
 	class giveft implements Runnable {
-		private String	give	= "";
-		private int		amount	= 0;
+		private String give = "";
+		private int amount = 0;
 
 		public giveft(String give, int amount) {
 			this.give = give;
@@ -341,33 +324,27 @@ public class DigEventListener2 implements Listener {
 			if (give.equalsIgnoreCase("exp")) {
 				for (Player p : Bukkit.getOnlinePlayers()) {
 					p.setExp(p.getExp() + amount);
-					p.sendMessage("ptdew free item : you got exp += " + amount
-							+ " = " + p.getExp());
+					p.sendMessage("ptdew free item : you got exp += " + amount + " = " + p.getExp());
 				}
 				return;
-			}
-			else if (give.equalsIgnoreCase("money")) {
+			} else if (give.equalsIgnoreCase("money")) {
 				for (Player p : Bukkit.getOnlinePlayers()) {
 					try {
 						Economy.add(p.getName(), amount);
-					}
-					catch (UserDoesNotExistException | NoLoanPermittedException e) {
+					} catch (UserDoesNotExistException | NoLoanPermittedException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
 					try {
-						p.sendMessage("ptdew free item : "
-								+ tr.gettr("you_got_money") + " += " + amount
-								+ " = " + Economy.getMoney(p.getName()));
-					}
-					catch (UserDoesNotExistException e) {
+						p.sendMessage("ptdew free item : " + tr.gettr("you_got_money") + " += " + amount + " = "
+								+ Economy.getMoney(p.getName()));
+					} catch (UserDoesNotExistException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
 				}
 				return;
-			}
-			else if (give.equalsIgnoreCase("giveitem")) {
+			} else if (give.equalsIgnoreCase("giveitem")) {
 
 				for (Player pr : Bukkit.getOnlinePlayers()) {
 
@@ -376,36 +353,39 @@ public class DigEventListener2 implements Listener {
 					boolean don = false;
 
 					for (ItemStack it : pr.getInventory().getContents()) {
-						if (it == null) continue;
+						if (it == null)
+							continue;
 
-						if (it.getItemMeta() == null) continue;
+						if (it.getItemMeta() == null)
+							continue;
 
 						if (it.getItemMeta().hasDisplayName() == false)
 							continue;
 
-						if (it.getItemMeta().getDisplayName()
-								.equalsIgnoreCase("noft")) {
+						if (it.getItemMeta().getDisplayName().equalsIgnoreCase("noft")) {
 							don = true;
 							break;
 						}
 					}
 
 					for (ItemStack it : pr.getInventory().getArmorContents()) {
-						if (it == null) continue;
+						if (it == null)
+							continue;
 
-						if (it.getItemMeta() == null) continue;
+						if (it.getItemMeta() == null)
+							continue;
 
 						if (it.getItemMeta().hasDisplayName() == false)
 							continue;
 
-						if (it.getItemMeta().getDisplayName()
-								.equalsIgnoreCase("noft")) {
+						if (it.getItemMeta().getDisplayName().equalsIgnoreCase("noft")) {
 							don = true;
 							break;
 						}
 					}
 
-					if (don == true) continue;
+					if (don == true)
+						continue;
 
 					for (int i = 1; i <= amount; i++) {
 						giveitem ii = new giveitem(pr);
@@ -418,12 +398,11 @@ public class DigEventListener2 implements Listener {
 	}
 
 	class giveitem implements Runnable {
-		private Player	pr;
+		private Player pr;
 
 		public giveitem(Player player) {
 			this.pr = player;
-			Bukkit.getScheduler().scheduleSyncDelayedTask(ac, this,
-					rnd.nextInt(1200));
+			Bukkit.getScheduler().scheduleSyncDelayedTask(ac, this, rnd.nextInt(1200));
 		}
 
 		public void run() {
@@ -443,12 +422,10 @@ public class DigEventListener2 implements Listener {
 				}
 			}
 
-
-			int ranid  = 0;
-			//dprint.r.printAll("ft give item randid " + ranid + " , " + allBlockInGameMax);
+			int ranid = 0;
+			// dprint.r.printAll("ft give item randid " + ranid + " , " +
+			// allBlockInGameMax);
 			ranid = rnd.nextInt(allBlockInGameMax);
-			
-				
 
 			if (pr.getInventory().firstEmpty() == -1) {
 				// recall
@@ -457,10 +434,10 @@ public class DigEventListener2 implements Listener {
 			}
 
 			String bai[] = allBlockInGame[ranid].split(":");
-			ItemStack it = new ItemStack( Material.getMaterial( bai[0]));
-			it.getData().setData( Byte.parseByte(bai[1]));
+			ItemStack it = new ItemStack(Material.getMaterial(bai[0]));
+			it.getData().setData(Byte.parseByte(bai[1]));
 			ItemStack it2 = it.getData().toItemStack();
-			
+
 			it2.setAmount(1);
 
 			pr.getInventory().addItem(it2);
@@ -469,9 +446,9 @@ public class DigEventListener2 implements Listener {
 	}
 
 	class lastinv {
-		public int		s1	= 0;
-		public String	s2	= "";
-		public int		s3	= 0;
+		public int s1 = 0;
+		public String s2 = "";
+		public int s3 = 0;
 
 		// delay item amount
 		// 50 exp 30
@@ -480,9 +457,9 @@ public class DigEventListener2 implements Listener {
 	}
 
 	class monkill implements Runnable {
-		private int	delay;
-		private int	sec;
-		private int	rad;
+		private int delay;
+		private int sec;
+		private int rad;
 
 		public monkill(int sec, int delay, int rad) {
 			this.delay = delay;
@@ -512,8 +489,7 @@ public class DigEventListener2 implements Listener {
 							if (ent2 instanceof Creature) {
 								Creature en2 = (Creature) ent2;
 
-								if (en2.getLocation()
-										.distance(en.getLocation()) > rad) {
+								if (en2.getLocation().distance(en.getLocation()) > rad) {
 									continue;
 								}
 
@@ -522,14 +498,10 @@ public class DigEventListener2 implements Listener {
 								}
 
 								en.setTarget(en2);
-								dprint.r.printC("mon kill "
-										+ en.getLocation().getBlockX() + ","
-										+ en.getLocation().getBlockY() + ","
-										+ en.getLocation().getBlockZ() + " to "
-										+
+								dprint.r.printC("mon kill " + en.getLocation().getBlockX() + ","
+										+ en.getLocation().getBlockY() + "," + en.getLocation().getBlockZ() + " to " +
 
-										en2.getLocation().getBlockX() + ","
-										+ en2.getLocation().getBlockY() + ","
+								en2.getLocation().getBlockX() + "," + en2.getLocation().getBlockY() + ","
 										+ en2.getLocation().getBlockZ()
 
 								);
@@ -542,7 +514,8 @@ public class DigEventListener2 implements Listener {
 				}
 			}
 
-			if (sec <= 0) return;
+			if (sec <= 0)
+				return;
 
 			new monkill(sec, delay, rad);
 
@@ -550,9 +523,9 @@ public class DigEventListener2 implements Listener {
 	}
 
 	class monkillhuman implements Runnable {
-		private int	delay;
-		private int	sec;
-		private int	rad;
+		private int delay;
+		private int sec;
+		private int rad;
 
 		public monkillhuman(int sec, int delay, int rad) {
 			this.delay = delay;
@@ -590,13 +563,10 @@ public class DigEventListener2 implements Listener {
 
 							en.setTarget(en2);
 
-							dprint.r.printC("mon kill human"
-									+ en.getLocation().getBlockX() + ","
-									+ en.getLocation().getBlockY() + ","
-									+ en.getLocation().getBlockZ() + " to " +
+							dprint.r.printC("mon kill human" + en.getLocation().getBlockX() + ","
+									+ en.getLocation().getBlockY() + "," + en.getLocation().getBlockZ() + " to " +
 
-									en2.getLocation().getBlockX() + ","
-									+ en2.getLocation().getBlockY() + ","
+							en2.getLocation().getBlockX() + "," + en2.getLocation().getBlockY() + ","
 									+ en2.getLocation().getBlockZ()
 
 							);
@@ -609,7 +579,8 @@ public class DigEventListener2 implements Listener {
 				}
 			}
 
-			if (sec <= 0) return;
+			if (sec <= 0)
+				return;
 
 			new monkillhuman(sec, delay, rad);
 
@@ -618,14 +589,14 @@ public class DigEventListener2 implements Listener {
 
 	class sell_type {
 
-		public String		name;
-		public Byte	data;
-		public double	price;
+		public String name;
+		public Byte data;
+		public double price;
 	}
 
 	class teleport_fish implements Runnable {
-		private Player		p;
-		private Location	loc;
+		private Player p;
+		private Location loc;
 
 		public teleport_fish(Player p, Location loc) {
 			this.p = p;
@@ -640,48 +611,46 @@ public class DigEventListener2 implements Listener {
 		}
 	}
 
-	public static double getprice(String name , Byte data) {
+	public static double getprice(String name, Byte data) {
 		double price = -1;
 		for (int gr = 0; gr < DigEventListener2.sellmax; gr++)
 			if (DigEventListener2.sell[gr].name.equalsIgnoreCase(name)) {
 				if (DigEventListener2.sell[gr].data == data) {
-				price = DigEventListener2.sell[gr].price;
-				break;
-				
+					price = DigEventListener2.sell[gr].price;
+					break;
+
 				}
 			}
 
 		return price;
 	}
 
-	public dewset			dew			= dewddflower.Main.ds;
-	public JavaPlugin		ac			= null;
-	int						maxl		= 0;
+	public dewset dew = dewddflower.Main.ds;
+	public JavaPlugin ac = null;
+	int maxl = 0;
 
 	public String[] allBlockInGame = new String[500];
 	public int allBlockInGameMax = 0;
-	
-	lastinv[]				inv			= new lastinv[30];
 
-	public static sell_type	sell[];
+	lastinv[] inv = new lastinv[30];
 
-	public static int		sellmax;
-	
+	public static sell_type sell[];
+
+	public static int sellmax;
+
 	public static ArrayList<AllShop> allShop = new ArrayList<AllShop>();
-	
 
-	public Random			rnd			= new Random();
+	public Random rnd = new Random();
 
-	String					pdura		= "dewdd.ft.fix";
+	String pdura = "dewdd.ft.fix";
 
-	String					pautoshoot	= "dewdd.ft.autoshoot";
+	String pautoshoot = "dewdd.ft.autoshoot";
 
-	String					pbleed		= "dewdd.ft.bleed";
+	String pbleed = "dewdd.ft.bleed";
 
-	String					pmonkill	= "dewdd.ft.monkill";
+	String pmonkill = "dewdd.ft.monkill";
 
-	public static String			folder_name	= "plugins" + File.separator
-												+ "dewdd_ft";
+	public static String folder_name = "plugins" + File.separator + "dewdd_ft";
 	public static AllShopCore allShopCore = new AllShopCore();
 
 	public DigEventListener2() {
@@ -699,7 +668,8 @@ public class DigEventListener2 implements Listener {
 			return;
 		}
 
-		if (rnd.nextInt(100) < 95) return;
+		if (rnd.nextInt(100) < 95)
+			return;
 		autosell abr = new autosell(e.getBlock());
 		Bukkit.getScheduler().scheduleSyncDelayedTask(ac, abr);
 
@@ -708,8 +678,10 @@ public class DigEventListener2 implements Listener {
 	@EventHandler
 	public void eventja(EntityDamageByEntityEvent e) {
 
-		if (e.getDamager() == null) return;
-		if (e.getEntity() == null) return;
+		if (e.getDamager() == null)
+			return;
+		if (e.getEntity() == null)
+			return;
 
 		if (!tr.isrunworld(ac.getName(), e.getEntity().getWorld().getName())) {
 			return;
@@ -721,11 +693,11 @@ public class DigEventListener2 implements Listener {
 
 				LivingEntity en = (LivingEntity) e.getEntity();
 
-				if (p.getItemInHand() == null) return;
+				if (p.getItemInHand() == null)
+					return;
 
 				if (p.getItemInHand().getType() == Material.STICK) {
-					p.sendMessage(dprint.r.color(tr
-							.gettr("canpickupitems_set_to")));
+					p.sendMessage(dprint.r.color(tr.gettr("canpickupitems_set_to")));
 					en.setCanPickupItems(!en.getCanPickupItems());
 					return;
 				}
@@ -735,10 +707,8 @@ public class DigEventListener2 implements Listener {
 					if (en.getPassenger() == null) {
 
 						if (p.getPassenger() != null)
-							if (p.getPassenger().getEntityId() == en
-									.getEntityId()) {
-								p.sendMessage(dprint.r.color(tr
-										.gettr("error_can't_ride_who_riding_you")));
+							if (p.getPassenger().getEntityId() == en.getEntityId()) {
+								p.sendMessage(dprint.r.color(tr.gettr("error_can't_ride_who_riding_you")));
 								return;
 							}
 						en.setPassenger(p);
@@ -764,7 +734,8 @@ public class DigEventListener2 implements Listener {
 				LivingEntity b = (LivingEntity) e.getTarget();
 				if (b.hasPotionEffect(PotionEffectType.INVISIBILITY)) {
 
-					if (e.getReason() == e.getReason().FORGOT_TARGET) return;
+					if (e.getReason() == e.getReason().FORGOT_TARGET)
+						return;
 
 					if (e.getReason() == e.getReason().TARGET_ATTACKED_ENTITY)
 						return;
@@ -790,7 +761,8 @@ public class DigEventListener2 implements Listener {
 				LivingEntity b = (LivingEntity) e.getTarget();
 				if (b.hasPotionEffect(PotionEffectType.INVISIBILITY)) {
 
-					if (e.getReason() == e.getReason().FORGOT_TARGET) return;
+					if (e.getReason() == e.getReason().FORGOT_TARGET)
+						return;
 
 					e.setTarget(null);
 
@@ -801,10 +773,69 @@ public class DigEventListener2 implements Listener {
 		}
 	}
 	
+	public HashMap<Player,Inventory> inventory = new HashMap<Player,Inventory>();
+	public  HashMap<Player , Integer> inventoryID = new HashMap<Player , Integer>();
+
+	public void updateInventory(Inventory inv, Player player) {
+		int id = inventoryID.get(player);
+		
+		inv.clear();
+		
+		ItemStack itm = new ItemStack( Material.STICK, 1);
+		itm.addUnsafeEnchantment(Enchantment.DIG_SPEED, 10);
+		ItemMeta ex =  itm.getItemMeta();
+		
+		ex.setDisplayName("next");
+		itm.setItemMeta(ex);
+		inv.setItem( 53,itm);
+		
+		
+		 itm = new ItemStack( Material.STICK, 1);
+		itm.addUnsafeEnchantment(Enchantment.DIG_SPEED, 10);
+		 ex =  itm.getItemMeta();
+		
+		ex.setDisplayName("back");
+		itm.setItemMeta(ex);
+		inv.setItem( 52,itm);
+		
+		
+		for (int i = 0 ; i < 3 && id + i < allShop.size(); i ++ ) {
+			AllShop ash = allShop.get(i + id);
+			
+			for ( int j = 0; j < ash.size ; j ++ ) {
+				
+				int curPosition = 9 * i * 2;
+				if (j > 4) {
+					curPosition += 4;
+				}
+				
+				if ( i == 1 ) {
+					curPosition += 4;
+				}
+				
+				 itm = new ItemStack( Material.getMaterial(ash.item[j]) , ash.amount[j],ash.data[j]);
+				 ex =  itm.getItemMeta();
+				ex.setDisplayName("Shop " + (i + id) + " > " + ash.playPrice	);
+				itm.setItemMeta(ex);
+				
+				inv.setItem(curPosition +j , itm);
+				
+			}
+			
+		}
+	}
 	
+	@EventHandler
+	public void eventja(InventoryOpenEvent e) {
+
+	}
 	
-	
-	
+	@EventHandler
+	public void eventja(InventoryClickEvent e) {
+		if (e.getInventory().getName().equalsIgnoreCase("dew shop")) {
+			e.setCancelled(true);
+		}
+	}
 
 	@EventHandler
 	public void eventja(PlayerCommandPreprocessEvent e) {
@@ -814,13 +845,20 @@ public class DigEventListener2 implements Listener {
 
 		String m[] = e.getMessage().split("\\s+");
 		Player p = e.getPlayer();
-		
-		if (e.getMessage().equalsIgnoreCase("/dft shop")){
-		
-			Inventory myInventory = Bukkit.createInventory(null, InventoryType.PLAYER , "dew shop");
+
+		if (e.getMessage().equalsIgnoreCase("/dft shop")) {
+			p.sendMessage("here");
+			Inventory myInventory = Bukkit.createInventory(null,54, "dew shop");
+			inventory.put(p, myInventory);
+			inventoryID.put(p, 0);
 			
+			
+
 			p.openInventory(myInventory);
 			
+			updateInventory(myInventory, p);
+			
+
 		}
 
 		if (m[0].equalsIgnoreCase("/dft")) {
@@ -836,8 +874,7 @@ public class DigEventListener2 implements Listener {
 				p.sendMessage("/dft monkill <second> <delaytick> <radius>");
 				p.sendMessage("/dft monkillhuman <second> <delaytick> <radius>");
 				return;
-			}
-			else if (m.length > 1)
+			} else if (m.length > 1)
 				if (m[1].equalsIgnoreCase("monkillhuman")) {
 					if (m.length != 5) {
 						p.sendMessage("/sky monkillhuman <second> <delaytick> <radius>");
@@ -845,8 +882,7 @@ public class DigEventListener2 implements Listener {
 					}
 
 					if (!p.hasPermission(pmonkill)) {
-						p.sendMessage(tr.gettr("you_don't_have_permission")
-								+ pmonkill);
+						p.sendMessage(tr.gettr("you_don't_have_permission") + pmonkill);
 						return;
 					}
 
@@ -855,16 +891,14 @@ public class DigEventListener2 implements Listener {
 					int rad = Integer.parseInt(m[4]);
 
 					new monkillhuman(sec, tick, rad);
-				}
-				else if (m[1].equalsIgnoreCase("monkill")) {
+				} else if (m[1].equalsIgnoreCase("monkill")) {
 					if (m.length != 5) {
 						p.sendMessage("/sky monkill <second> <delaytick> <radius>");
 						return;
 					}
 
 					if (!p.hasPermission(pmonkill)) {
-						p.sendMessage(tr.gettr("you_don't_have_permission")
-								+ pmonkill);
+						p.sendMessage(tr.gettr("you_don't_have_permission") + pmonkill);
 						return;
 					}
 
@@ -874,15 +908,13 @@ public class DigEventListener2 implements Listener {
 
 					new monkill(sec, tick, rad);
 
-				}
-				else if (m[1].equalsIgnoreCase("setle")) {
+				} else if (m[1].equalsIgnoreCase("setle")) {
 					if (m.length != 3) {
 						p.sendMessage("/sky setle <name>");
 						return;
 					}
 
-					boolean pro = dew.checkpermissionarea(p.getLocation()
-							.getBlock(), p.getPlayer(), "build");
+					boolean pro = dew.checkpermissionarea(p.getLocation().getBlock(), p.getPlayer(), "build");
 					if (pro == true) {
 						p.sendMessage(tr.gettr("not_your_zone"));
 						return;
@@ -917,8 +949,8 @@ public class DigEventListener2 implements Listener {
 							continue;
 						}
 
-						if (en.getLocation().distance(p.getLocation()) < nearest
-								.getLocation().distance(p.getLocation())) {
+						if (en.getLocation().distance(p.getLocation()) < nearest.getLocation()
+								.distance(p.getLocation())) {
 							nearest = en;
 						}
 
@@ -933,10 +965,8 @@ public class DigEventListener2 implements Listener {
 					LivingEntity vi = nearest;
 					vi.setCustomName(m[2]);
 					vi.setCustomNameVisible(true);
-					p.sendMessage(tr.gettr("set_complete") + " "
-							+ vi.getType().getName() + " at "
-							+ vi.getLocation().getBlockX() + ","
-							+ vi.getLocation().getBlockY() + ","
+					p.sendMessage(tr.gettr("set_complete") + " " + vi.getType().getName() + " at "
+							+ vi.getLocation().getBlockX() + "," + vi.getLocation().getBlockY() + ","
 							+ vi.getLocation().getBlockZ());
 
 					// setname from trade
@@ -949,8 +979,7 @@ public class DigEventListener2 implements Listener {
 						return;
 					}
 
-					boolean pro = dew.checkpermissionarea(p.getLocation()
-							.getBlock(), p.getPlayer(), "build");
+					boolean pro = dew.checkpermissionarea(p.getLocation().getBlock(), p.getPlayer(), "build");
 					if (pro == true) {
 						p.sendMessage(tr.gettr("not_your_zone"));
 						return;
@@ -975,8 +1004,8 @@ public class DigEventListener2 implements Listener {
 								continue;
 							}
 
-							if (en.getLocation().distance(p.getLocation()) < nearest
-									.getLocation().distance(p.getLocation())) {
+							if (en.getLocation().distance(p.getLocation()) < nearest.getLocation()
+									.distance(p.getLocation())) {
 								nearest = en;
 							}
 
@@ -1001,14 +1030,13 @@ public class DigEventListener2 implements Listener {
 				else if (m[1].equalsIgnoreCase("reload")) {
 					reloadPL();
 					p.sendMessage("reloaded");
-				}
-				else if (m[1].equalsIgnoreCase("list")) {
+				} else if (m[1].equalsIgnoreCase("list")) {
 					// bubble sort
 					for (int i = 0; i < DigEventListener2.sellmax; i++) {
 						for (int j = 0; j < DigEventListener2.sellmax - 1 - i; j++) {
 							if (DigEventListener2.sell[j].price < DigEventListener2.sell[j + 1].price) {
-								
-								String name = sell[j].name ;
+
+								String name = sell[j].name;
 								byte data = sell[j].data;
 								double pri = sell[j].price;
 
@@ -1025,14 +1053,11 @@ public class DigEventListener2 implements Listener {
 					}
 
 					for (int i = 0; i < DigEventListener2.sellmax; i++) {
-						p.sendMessage(dprint.r
-								.color(DigEventListener2.sell[i].name + ":" + sell[i].data
-										+ " price "
-										+ DigEventListener2.sell[i].price));
+						p.sendMessage(dprint.r.color(DigEventListener2.sell[i].name + ":" + sell[i].data + " price "
+								+ DigEventListener2.sell[i].price));
 					}
 
-				}
-				else if (m[1].equalsIgnoreCase("autoshoot")) {
+				} else if (m[1].equalsIgnoreCase("autoshoot")) {
 					if (!p.hasPermission(pautoshoot) || m.length != 5) {
 						p.sendMessage("/dft autoshoot <entitytype> <amount> <mode>  (only op!");
 						return;
@@ -1046,11 +1071,9 @@ public class DigEventListener2 implements Listener {
 						return;
 					}
 
-					new autoshoot(Integer.parseInt(m[3]), ent, p,
-							Integer.parseInt(m[4]));
+					new autoshoot(Integer.parseInt(m[3]), ent, p, Integer.parseInt(m[4]));
 
-				}
-				else if (m[1].equalsIgnoreCase("bleed")) {
+				} else if (m[1].equalsIgnoreCase("bleed")) {
 					if (!p.hasPermission(pbleed)) {
 						p.sendMessage("/dft bleed   (only op!");
 						return;
@@ -1109,22 +1132,19 @@ public class DigEventListener2 implements Listener {
 					}
 				}
 
-		}
-		else if (m[0].equalsIgnoreCase("/dnick")) {
+		} else if (m[0].equalsIgnoreCase("/dnick")) {
 			if (m.length != 3) {
 				p.sendMessage("/dnick <prefix,suffix> <name>");
 				return;
 			}
 
-			if (m[1].equalsIgnoreCase("prefix") == false
-					&& m[1].equalsIgnoreCase("suffix") == false) {
+			if (m[1].equalsIgnoreCase("prefix") == false && m[1].equalsIgnoreCase("suffix") == false) {
 				p.sendMessage("prefix or suffix");
 				return;
 			}
 
 			p.sendMessage("sending..");
-			Bukkit.dispatchCommand(Bukkit.getConsoleSender(),
-					"manuaddv " + p.getName() + " " + m[1] + " " + m[2]);
+			Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "manuaddv " + p.getName() + " " + m[1] + " " + m[2]);
 
 		}
 
@@ -1140,22 +1160,19 @@ public class DigEventListener2 implements Listener {
 		e.getState();
 		if (e.getState() == State.IN_GROUND) {
 			if (e.getPlayer().getItemInHand().getType() == Material.FISHING_ROD)
-				if (e.getPlayer().getItemInHand().getItemMeta()
-						.getDisplayName().equalsIgnoreCase("jumper")) {
+				if (e.getPlayer().getItemInHand().getItemMeta().getDisplayName().equalsIgnoreCase("jumper")) {
 					new teleport_fish(e.getPlayer(), e.getHook().getLocation());
 					return;
 				}
-		}
-		else {
+		} else {
 			e.getState();
 			if (e.getState() == State.CAUGHT_ENTITY) {
-				System.out.println(e.getPlayer().getName() + " CAUGHT_ENTITY "
-						+ e.getCaught().getType().name());
+				System.out.println(e.getPlayer().getName() + " CAUGHT_ENTITY " + e.getCaught().getType().name());
 			}
 		}
 
 	}
-	
+
 	public void loadMissionBlockFile() {
 
 		String filena = folder_name + File.separator + "missionblock.txt";
@@ -1165,8 +1182,6 @@ public class DigEventListener2 implements Listener {
 
 			allBlockInGame = new String[500];
 			allBlockInGameMax = 0;
-			
-			
 
 			fff.createNewFile();
 
@@ -1192,7 +1207,7 @@ public class DigEventListener2 implements Listener {
 				// d.pl("...");
 				// rs[rsMax - 1].mission = 0;
 
-				allBlockInGameMax ++;
+				allBlockInGameMax++;
 			}
 
 			dprint.r.printAll(" Loaded " + filena);
@@ -1245,12 +1260,10 @@ public class DigEventListener2 implements Listener {
 
 			in.close();
 
-		}
-		catch (FileNotFoundException e) {
+		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}
-		catch (IOException e) {
+		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
@@ -1298,23 +1311,20 @@ public class DigEventListener2 implements Listener {
 				m = strLine.split("\\s+");
 
 				DigEventListener2.sellmax++;
-				
+
 				String bem[] = m[0].split(":");
-				
+
 				DigEventListener2.sell[DigEventListener2.sellmax - 1].name = bem[0];
 				DigEventListener2.sell[DigEventListener2.sellmax - 1].data = Byte.parseByte(bem[1]);
-				
-				
-				DigEventListener2.sell[DigEventListener2.sellmax - 1].price = Double
-						.parseDouble(m[1]);
+
+				DigEventListener2.sell[DigEventListener2.sellmax - 1].price = Double.parseDouble(m[1]);
 
 			}
 
 			System.out.println("ptdew&DewDD ft : Sell loaded " + filena);
 
 			in.close();
-		}
-		catch (Exception e) {// Catch exception if any
+		} catch (Exception e) {// Catch exception if any
 			System.err.println("Error load " + filena + e.getMessage());
 		}
 	}
@@ -1330,8 +1340,7 @@ public class DigEventListener2 implements Listener {
 
 		for (int l = 0; l < maxl; l++) {
 			giveft a = new giveft(inv[l].s2, inv[l].s3);
-			Bukkit.getScheduler().scheduleSyncRepeatingTask(ac, a, inv[l].s1,
-					inv[l].s1);
+			Bukkit.getScheduler().scheduleSyncRepeatingTask(ac, a, inv[l].s1, inv[l].s1);
 		}
 
 	}

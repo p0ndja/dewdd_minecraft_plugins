@@ -45,6 +45,7 @@ import org.bukkit.event.hanging.HangingBreakEvent;
 import org.bukkit.event.hanging.HangingBreakEvent.RemoveCause;
 import org.bukkit.event.hanging.HangingEvent;
 import org.bukkit.event.hanging.HangingPlaceEvent;
+import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerBucketEmptyEvent;
 import org.bukkit.event.player.PlayerBucketFillEvent;
@@ -914,6 +915,12 @@ public class DigEventListener2 implements Listener {
 		}
 	}
 
+	
+	@EventHandler
+	public void eventja(InventoryClickEvent e) {
+		
+	}
+	
 	@EventHandler
 	public void eventja(HangingBreakEvent e) {
 		if (!api_skyblock.isrunworld(e.getEntity().getWorld().getName())) {
