@@ -206,7 +206,7 @@ public class dewset extends dewset_interface {
 
 							dprint.r.printC(this.player.getName() + " dewset  " + tr.gettr("recall") + " " + this.xlx
 									+ " , " + this.ylx + " , " + this.zlx);
-							dprint.r.printC(this.player.getName() + "low " + this.lx + " , " + this.ly + " , " + this.lz
+							dprint.r.printC(this.player.getName() + " low " + this.lx + " , " + this.ly + " , " + this.lz
 									+ " high " + this.mx + "," + this.my + "," + this.mz + " world "
 									+ this.playerLocation.getWorld().getName());
 
@@ -509,103 +509,111 @@ public class dewset extends dewset_interface {
 				return;
 			}
 
-			for (Entity en : playerLocation.getWorld().getEntities()) {
-				if (en == null) {
-					continue;
-				}
-
-				if (en.getType() == EntityType.ITEM_FRAME) {
-
-					// dprint.r.printAll("x " + lx + "," + mx);
-					// dprint.r.printAll("y " + ly + "," + my);
-					// dprint.r.printAll("z " + lz + "," + mz);
-
-					if (en.getLocation().getBlockX() >= lx && en.getLocation().getBlockX() <= mx) {
-						// dprint.r.printAll("x in range");
-						if (en.getLocation().getBlockY() >= ly && en.getLocation().getBlockY() <= my) {
-							// dprint.r.printAll("y in range");
-							if (en.getLocation().getBlockZ() >= lz && en.getLocation().getBlockZ() <= mz) {
-								// dprint.r.printAll("z in range");
-								// copy to new one
-
-								dprint.r.printAll("item frame location " + tr.locationToString(en.getLocation()));
-
-								int tmpx = (en.getLocation().getBlockX() - selectx1) + playerLocation.getBlockX();
-								int tmpy = (en.getLocation().getBlockY() - selecty1) + playerLocation.getBlockY();
-								int tmpz = (en.getLocation().getBlockZ() - selectz1) + playerLocation.getBlockZ();
-
-								Location loc2 = en.getLocation();
-								loc2.setX(tmpx);
-								loc2.setY(tmpy);
-								loc2.setZ(tmpz);
-
-								Entity newen = null;
-
-								if (!checkThereIsEntityOnThisLocation(EntityType.ITEM_FRAME, loc2)) {
-									if (arxx) {
-										if (dewset.this.decreseitem1(this.player, Material.ITEM_FRAME.getId(), (byte) 0,
-												true) == false) {
-											this.player.sendMessage(dprint.r
-													.color("ptdew&dewdd : dewcopy " + tr.gettr("don't_have_enough_item")
-															+ Material.ITEM_FRAME.getId() + ":" + 0));
-											//dprint.r.printAll("nope2");
-											return;
-										}
-
-									}
-									newen = playerLocation.getWorld().spawnEntity(loc2, EntityType.ITEM_FRAME);
-									dprint.r.printAll("false new");
-
-								} else {
-									dprint.r.printAll("found item_frame");
-
-									newen = getEntityOnThisLocation(EntityType.ITEM_FRAME, loc2);
-									dprint.r.printAll("getEntity " + (newen == null));
-
-								}
-
-								ItemFrame item = (ItemFrame) newen;
-								ItemFrame sour = (ItemFrame) en;
-
-								item.setFacingDirection(sour.getFacing());
-
-								if (sour.getItem() == null) {
-									continue;
-								}
-
-								if (item.getItem().getType() == sour.getItem().getType()
-										&& item.getItem().getData() == sour.getItem().getData()) {
-									continue;
-
-								} else {
-									if (arxx) {
-										if (dewset.this.decreseitem1(this.player, sour.getItem().getTypeId(),
-												sour.getItem().getData().getData(), true) == false) {
-											this.player.sendMessage(dprint.r
-													.color("ptdew&dewdd : dewcopy " + tr.gettr("don't_have_enough_item")
-															+ sour.getItem().getTypeId() + ":" + sour.getItem().getData()));
-											//dprint.r.printAll("nope3");
-											return;
-										}
-										newen = playerLocation.getWorld().spawnEntity(loc2, EntityType.ITEM_FRAME);
-
-									}
-
-									item.setItem(sour.getItem());
-								}
-
-								dprint.r.printAll("copy item frame" + loc2.getBlockX() + "," + loc2.getBlockY() + ","
-										+ loc2.getBlockZ());
-
-							}
-						}
-					}
-				}
-			}
+			copyItemFrame(playerLocation, lx, ly, lz, mx, my, mz, selectx1, selecty1,
+					selectz1, arxx, player, "dewcopy");
 
 			dprint.r.printC("ptdew&dewdd : dewcopy " + tr.gettr("done") + " : " + this.player.getName());
 			this.player.sendMessage("ptdew&dewdd : dewcopy " + tr.gettr("done") + " : " + this.player.getName());
 
+		}
+	}
+	
+	public void copyItemFrame(Location playerLocation,int lx,int ly,int lz , int mx , int my , int mz 
+			 , int selectx1 , int selecty1,int selectz1, boolean arxx,Player player , String text) {
+		for (Entity en : playerLocation.getWorld().getEntities()) {
+			if (en == null) {
+				continue;
+			}
+
+			if (en.getType() == EntityType.ITEM_FRAME) {
+
+				// dprint.r.printAll("x " + lx + "," + mx);
+				// dprint.r.printAll("y " + ly + "," + my);
+				// dprint.r.printAll("z " + lz + "," + mz);
+
+				if (en.getLocation().getBlockX() >= lx && en.getLocation().getBlockX() <= mx) {
+					// dprint.r.printAll("x in range");
+					if (en.getLocation().getBlockY() >= ly && en.getLocation().getBlockY() <= my) {
+						// dprint.r.printAll("y in range");
+						if (en.getLocation().getBlockZ() >= lz && en.getLocation().getBlockZ() <= mz) {
+							// dprint.r.printAll("z in range");
+							// copy to new one
+
+							//dprint.r.printAll("item frame location " + tr.locationToString(en.getLocation()));
+
+							int tmpx = (en.getLocation().getBlockX() - selectx1) + playerLocation.getBlockX();
+							int tmpy = (en.getLocation().getBlockY() - selecty1) + playerLocation.getBlockY();
+							int tmpz = (en.getLocation().getBlockZ() - selectz1) + playerLocation.getBlockZ();
+
+							Location loc2 = en.getLocation();
+							loc2.setX(tmpx);
+							loc2.setY(tmpy);
+							loc2.setZ(tmpz);
+
+							Entity newen = null;
+
+							if (!checkThereIsEntityOnThisLocation(EntityType.ITEM_FRAME, loc2)) {
+								if (arxx) {
+									if (dewset.this.decreseitem1(player, Material.ITEM_FRAME.getId(), (byte) 0,
+											true) == false) {
+										player.sendMessage(dprint.r
+												.color("ptdew&dewdd : " + text + " " + tr.gettr("don't_have_enough_item")
+														+ Material.ITEM_FRAME.getId() + ":" + 0));
+										//dprint.r.printAll("nope2");
+										return;
+									}
+
+								}
+								//dprint.r.printAll("loc " + tr.locationToString(playerLocation));
+								
+								newen = playerLocation.getWorld().spawnEntity(loc2, EntityType.ITEM_FRAME);
+								//dprint.r.printAll("false new");
+
+							} else {
+								//dprint.r.printAll("found item_frame");
+
+								newen = getEntityOnThisLocation(EntityType.ITEM_FRAME, loc2);
+								//dprint.r.printAll("getEntity " + (newen == null));
+
+							}
+
+							ItemFrame item = (ItemFrame) newen;
+							ItemFrame sour = (ItemFrame) en;
+
+							item.setFacingDirection(sour.getFacing());
+
+							if (sour.getItem() == null) {
+								continue;
+							}
+
+							if (item.getItem().getType() == sour.getItem().getType()
+									&& item.getItem().getData() == sour.getItem().getData()) {
+								continue;
+
+							} else {
+								if (arxx) {
+									if (dewset.this.decreseitem1(player, sour.getItem().getTypeId(),
+											sour.getItem().getData().getData(), true) == false) {
+										player.sendMessage(dprint.r
+												.color("ptdew&dewdd : " + text + " " + tr.gettr("don't_have_enough_item")
+														+ sour.getItem().getTypeId() + ":" + sour.getItem().getData()));
+										//dprint.r.printAll("nope3");
+										return;
+									}
+									newen = playerLocation.getWorld().spawnEntity(loc2, EntityType.ITEM_FRAME);
+
+								}
+
+								item.setItem(sour.getItem());
+							}
+
+							dprint.r.printAll("copy item frame" + loc2.getBlockX() + "," + loc2.getBlockY() + ","
+									+ loc2.getBlockZ());
+
+						}
+					}
+				}
+			}
 		}
 	}
 
@@ -1741,7 +1749,7 @@ public class dewset extends dewset_interface {
 
 							dprint.r.printC(this.player.getName() + " dewset  " + tr.gettr("recall") + " " + this.xlx
 									+ " , " + this.ylx + " , " + this.zlx);
-							dprint.r.printC(this.player.getName() + "low " + this.lx + " , " + this.ly + " , " + this.lz
+							dprint.r.printC(this.player.getName() + " low " + this.lx + " , " + this.ly + " , " + this.lz
 									+ " high " + this.mx + "," + this.my + "," + this.mz + " world "
 									+ this.playerLocation.getWorld().getName());
 
@@ -2491,10 +2499,25 @@ public class dewset extends dewset_interface {
 
 					this.amount1++;
 				} // amount 1
+				
+				
+				Location playerLocation2 = playerLocation;
+				playerLocation2.setX(lx + ndx);
+				playerLocation2.setY(ly + ndy);
+				playerLocation2.setZ(lz + ndz);
+				
+				
+				copyItemFrame(playerLocation2, lx, ly, lz, mx, my, mz, lx, ly,
+						lz, arxx, player, "dewStack");
+				
 				this.amount1 = 1;
 
 				this.amountloop++;
 			} // amount loop
+			
+			
+			
+			
 
 			this.player.sendMessage(dprint.r.color("ptdew&dewdd : Stack " + tr.gettr(tr.gettr("done"))));
 			dprint.r.printC("ptdew&dewdd : " + this.player.getName() + " > Stack " + tr.gettr(tr.gettr("done")));
