@@ -30,8 +30,8 @@ public class Main extends JavaPlugin {
 		getServer().getPluginManager().registerEvents(ax, this);
 		dprint.printAll("ptdew&dewdd : loaded dewdd tran");
 
-		tr.loadrunworldfile();
-		tr.loadtrfile();
+		tr.loadRunWorldFile();
+		tr.loadTrFile();
 
 	}
 

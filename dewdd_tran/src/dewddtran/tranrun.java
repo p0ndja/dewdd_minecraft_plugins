@@ -29,11 +29,11 @@ public class tranrun implements Listener {
 
 		if (m[0].equalsIgnoreCase("/dtran")) {
 			if (m.length == 1) {
-				p.sendMessage("/dtran reload");
-				p.sendMessage("/dtran list");
-				p.sendMessage("/dtran runworld");
-				p.sendMessage("/dtran offline <day>");
-				p.sendMessage("" + tr.runworld.size());
+				p.sendMessage(dprint.color("/dtran reload"));
+				p.sendMessage(dprint.color("/dtran list"));
+				p.sendMessage(dprint.color("/dtran runworld"));
+				p.sendMessage(dprint.color("/dtran offline <day>"));
+				p.sendMessage(dprint.color("" + tr.runworld.size()));
 				return;
 			}
 
@@ -54,9 +54,9 @@ public class tranrun implements Listener {
 			}
 			else if (m[1].equalsIgnoreCase("reload")) {
 				dprint.printAll("tran reloading file...");
-				tr.loadtrfile();
+				tr.loadTrFile();
 
-				tr.loadrunworldfile();
+				tr.loadRunWorldFile();
 				dprint.printAll("tran reloaded...");
 
 			}
@@ -78,7 +78,7 @@ public class tranrun implements Listener {
 						+ File.separator + "plugins" + File.separator
 						+ "essentials" + File.separator + "userdata");
 
-				String me[] = tr.getlastonline(day, ff.getAbsolutePath());
+				String me[] = tr.getLastOnline(day, ff.getAbsolutePath());
 				p.sendMessage(ff.getAbsolutePath());
 
 				if (me == null) {

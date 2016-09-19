@@ -21,7 +21,7 @@ public class gettps implements Listener {
 		/*	dprint.r.printC("Online Player = "
 					+ Bukkit.getOnlinePlayers().length);
 */
-			if (Bukkit.getOnlinePlayers().length == 0) {
+			if (Bukkit.getOnlinePlayers().size() == 0) {
 
 				for (World w : Bukkit.getWorlds()) {
 					for (org.bukkit.Chunk chunk : w.getLoadedChunks()) {
