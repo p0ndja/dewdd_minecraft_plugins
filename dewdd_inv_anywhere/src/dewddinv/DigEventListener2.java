@@ -25,14 +25,15 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
+import org.bukkit.event.block.BlockDispenseEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryMoveItemEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
+import org.bukkit.event.inventory.InventoryPickupItemEvent;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.event.player.PlayerInventoryEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
-import org.bukkit.event.player.PlayerResourcePackStatusEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -88,8 +89,6 @@ public class DigEventListener2 implements Listener {
 
 		// dprint.r.printAll("clicked slot " + e.getSlot() + " , type " +
 		// e.getInventory().getType().name());
-		
-		
 
 		// printall("click " + e.getSlot() );
 		// printall("name " + e.getInventory().getName());
@@ -108,13 +107,11 @@ public class DigEventListener2 implements Listener {
 			// e.getInventory().setItem(menuslot, it);
 			try {
 				e.getClickedInventory().setItem(menuslot, it);
-			// dprint.r.printC("player added " + menuslot);
-			}
-			catch (NullPointerException eee) {
-					eee.printStackTrace();
+				// dprint.r.printC("player added " + menuslot);
+			} catch (NullPointerException eee) {
+				eee.printStackTrace();
 				return;
-			}
-			catch (Exception eee) {
+			} catch (Exception eee) {
 				eee.printStackTrace();
 				return;
 			}
@@ -137,7 +134,6 @@ public class DigEventListener2 implements Listener {
 
 					Chest chest = (Chest) Bukkit.getWorld(posi.worldName).getBlockAt(posi.x, posi.y, posi.z).getState();
 
-					
 					p.openInventory(chest.getInventory());
 				} catch (Exception eee) {
 					p.sendMessage(eee.getMessage());
@@ -218,12 +214,10 @@ public class DigEventListener2 implements Listener {
 					saveinventoryfile(p.getName());
 					return;
 				}
-				
-				
+
 				if (api_private.DewddPrivate.hasProtect(b3)) {
-					if (api_private.DewddPrivate.cando(b3, p) &&  api_private.DewddPrivate.nearPrivateSign(b3)) {
-						addNewInventory(b3.getLocation(), inv.get(getid(p.getName())),
-								p.getName());
+					if (api_private.DewddPrivate.cando(b3, p) && api_private.DewddPrivate.nearPrivateSign(b3)) {
+						addNewInventory(b3.getLocation(), inv.get(getid(p.getName())), p.getName());
 
 					}
 
@@ -290,8 +284,6 @@ public class DigEventListener2 implements Listener {
 			}
 
 		}
-		
-		
 
 		Position newPosi = new Position();
 		newPosi.x = loc.getBlockX();
@@ -301,6 +293,59 @@ public class DigEventListener2 implements Listener {
 
 		tmp.position.add(newPosi);
 		saveinventoryfile(playerName);
+
+	}
+	
+	@EventHandler
+	public void eventja(InventoryMoveItemEvent e) {
+		
+		if (!tr.isrunworld(ac.getName(), e.getDestination().getLocation().getWorld().getName()))
+			return;
+
+		try {
+			
+
+			ItemStack x = e.getItem();
+
+			if (x.getItemMeta().getDisplayName().equalsIgnoreCase("next")) {
+				e.setCancelled(true);
+			}
+			if (x.getItemMeta().getDisplayName().equalsIgnoreCase("back")) {
+				e.setCancelled(true);
+			}
+
+
+		} catch (NullPointerException eee) {
+
+		}
+
+	}
+
+	@EventHandler
+	public void eventja(InventoryPickupItemEvent e) {
+		if (!tr.isrunworld(ac.getName(), e.getItem().getWorld().getName()))
+			return;
+
+		try {
+
+
+			if (e.getItem().getItemStack().getItemMeta().getDisplayName().equalsIgnoreCase("next")) {
+				e.setCancelled(true);
+			}
+			if (e.getItem().getItemStack().getItemMeta().getDisplayName().equalsIgnoreCase("back")) {
+				e.setCancelled(true);
+			}
+
+			if (e.getItem().getCustomName().equalsIgnoreCase("next")) {
+				e.setCancelled(true);
+			}
+			if (e.getItem().getCustomName().equalsIgnoreCase("back")) {
+				e.setCancelled(true);
+			}
+
+		} catch (NullPointerException eee) {
+
+		}
 
 	}
 
@@ -332,14 +377,13 @@ public class DigEventListener2 implements Listener {
 		if (e.getInventory().getType() != InventoryType.CHEST) {
 			return;
 		}
-		
+
 		try {
-		if (e.getInventory().getLocation().getBlock().getType() != Material.CHEST) {
-			
-			return;
-		}
-		}
-		catch (Exception eee) {
+			if (e.getInventory().getLocation().getBlock().getType() != Material.CHEST) {
+
+				return;
+			}
+		} catch (Exception eee) {
 			return;
 		}
 
@@ -382,7 +426,7 @@ public class DigEventListener2 implements Listener {
 		Position posi = tmp.position.get(tmp.now);
 		Block thatBlock = Bukkit.getWorld(posi.worldName).getBlockAt(posi.x, posi.y, posi.z);
 
-		if (api_private.DewddPrivate.hasProtect(thatBlock) &&  api_private.DewddPrivate.nearPrivateSign(thatBlock)) {
+		if (api_private.DewddPrivate.hasProtect(thatBlock) && api_private.DewddPrivate.nearPrivateSign(thatBlock)) {
 			if (!api_private.DewddPrivate.cando(thatBlock, p)) {
 				tmp.position.remove(tmp.now);
 				saveinventoryfile(p.getName());
@@ -562,21 +606,23 @@ public class DigEventListener2 implements Listener {
 						p.sendMessage("please stand on chest block id 54");
 						return;
 					}
-					
+
 					// check permission
 					if (api_private.DewddPrivate.hasProtect(b3)) {
-						if (api_private.DewddPrivate.cando(b3, e.getPlayer())  && api_private.DewddPrivate.nearPrivateSign(b3)) {
-							/*addNewInventory(b3.getLocation(), inv.get(getid(e.getPlayer().getName())),
-									e.getPlayer().getName());*/
+						if (api_private.DewddPrivate.cando(b3, e.getPlayer())
+								&& api_private.DewddPrivate.nearPrivateSign(b3)) {
+							/*
+							 * addNewInventory(b3.getLocation(),
+							 * inv.get(getid(e.getPlayer().getName())),
+							 * e.getPlayer().getName());
+							 */
 
-						}
-						else {
+						} else {
 							p.sendMessage("this is not your chest");
 							return;
 						}
 
-					}
-					else {
+					} else {
 						p.sendMessage("need [private] sign near your chest");
 						return;
 					}
@@ -696,7 +742,8 @@ public class DigEventListener2 implements Listener {
 			if (b.getType() == Material.CHEST) {
 
 				if (api_private.DewddPrivate.hasProtect(b)) {
-					if (api_private.DewddPrivate.cando(b, e.getPlayer())  && api_private.DewddPrivate.nearPrivateSign(b)) {
+					if (api_private.DewddPrivate.cando(b, e.getPlayer())
+							&& api_private.DewddPrivate.nearPrivateSign(b)) {
 						addNewInventory(b.getLocation(), inv.get(getid(e.getPlayer().getName())),
 								e.getPlayer().getName());
 
