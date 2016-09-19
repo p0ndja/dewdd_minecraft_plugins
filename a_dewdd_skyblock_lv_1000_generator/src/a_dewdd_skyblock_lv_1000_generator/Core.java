@@ -31,17 +31,22 @@ public class Core {
 
 	public static double SellMaxCost = 1000;
 	public static double ShopMaxCost = 10000;
+	
+	public static int maxLV = 100;
+	
 
 	LinkedList<AllShop> allShop = new LinkedList<AllShop>();
 
 	// 415 unique item
 
 	public void dnaDecoder(double[] chromosome, LinkedList<AllShop> tmpAllShop, LinkedList<SellableType> tmpSell,
-			LinkedList<LV1000Type> tmpMission, LinkedList<Double> tmpReading, int tmpAllShopUniqueDone,
+			LinkedList<LV1000Type> tmpLV, LinkedList<Double> tmpReading, int tmpAllShopUniqueDone,
 			int curMissionItemSwapPosition) {
 
 		int curChro = 0;
 		while (curChro < dnaSize) {
+			//d.pl("while " + curChro + " / " + dnaSize);
+			
 			// ****************************************************
 			// deal with player sell price
 			if (tmpSell.size() < sell.size()) {
@@ -56,7 +61,7 @@ public class Core {
 
 					tmpSell.add(x);
 
-					d.pl("chro sell = " + curChro);
+					//d.pl("chro sell = " + curChro);
 					curChro++;
 					continue;
 				}
@@ -72,8 +77,8 @@ public class Core {
 				if (tmpReading.size() >= (1 + (minShopSize * 2)) && tmpReading.size() <= (1 + maxShopSize * 2)
 						&& tmpReading.size() % 2 == 1) {
 
-					if (chromosome[curChro] <= 0) { // that mean do it now
-						d.pl("size = " + tmpReading.size() + " .. " + curChro + "  unique " + tmpAllShopUniqueDone);
+					if (chromosome[curChro] <= 0 || tmpReading.size() <= (1 + maxShopSize * 2)) { // that mean do it now
+						//d.pl("size = " + tmpReading.size() + " .. " + curChro + "  unique " + tmpAllShopUniqueDone);
 
 						AllShop x = new AllShop();
 
@@ -100,40 +105,229 @@ public class Core {
 						continue;
 
 					} else {
-						if (chromosome[curChro] <= 0) {
-							curChro++;
-							dnaDecoder(chromosome, tmpAllShop, tmpSell, tmpMission, tmpReading, tmpAllShopUniqueDone,
-									curMissionItemSwapPosition);
-						} else {
-							tmpReading.add(chromosome[curChro]);
 
-							curChro++;
-							continue;
-						}
+						tmpReading.add(Math.abs(chromosome[curChro]));
+
+						curChro++;
+						continue;
+					
 					}
 
 				} else { // add to tmpReading
 
-					// d.pl("chro length = " + chromosome.length + " " +
-					// curChro);
-					if (chromosome[curChro] <= 0) {
+					
+						tmpReading.add(Math.abs(chromosome[curChro]));
+
 						curChro++;
 						continue;
-					} else {
-						tmpReading.add(chromosome[curChro]);
+					
+
+				}
+
+			}  // mission
+			
+		//	d.pl("done shop");
+			// ****************************************************
+			// ****************************************************
+
+			// grab level
+			// <lv Type> id:data:amount (1 item then end)
+			// if that are lv greb Inventory <lv type> id:data:amount id:data:amount etc...
+			// then reward  <10 times for block> <10 times for item>
+			
+			// <lv type> shift : amount ?:?:? ?:?:?
+			// <10 times for block> <amount> <10 times for item> <amount>
+			
+			if (tmpLV.size() <= maxLV) {
+				//d.pl("tmpLV " + tmpLV.size() + " , tmpReading " + tmpReading.size() + " , curChro " + curChro);
+				
+				if (tmpReading.size() >= 2 ) {
+					int epicMode = ((int)(tmpReading.get(0).doubleValue()*100)%4);
+					LV1000Type x = new LV1000Type();
+						x.lvmode  = epicMode;
+						
+					if ( epicMode < 3 ||
+						(epicMode == 3 && 
+						tmpReading.size()-1 >= minItemForCompleteMission 
+						&& (tmpReading.size()-1 <= maxItemForCompleteMission || chromosome[curChro] <= 0 ))   ) { // 1 break
+						 // it's mean LV break drop place MODE
+						
+
+						// add lv need item list
+						for (int i = 1; i < tmpReading.size(); i++) {
+							int itemSlot = getNextBlockSwapMissionType(
+									(int) (tmpReading.get(i).doubleValue() * swapMultipy), curMissionItemSwapPosition,2);
+							curMissionItemSwapPosition = itemSlot;
+
+							x.needItem[x.needSize] = mission.get(itemSlot).theName;
+							x.needData[x.needSize] = mission.get(itemSlot).data;
+							x.needAmount[x.needSize] = (int) (tmpReading.get(i).doubleValue()
+									* mission.get(itemSlot).maxStack);
+						
+
+							x.needSize++;
+						}
+						
+						// add reward part 
+						
+						// add reward block part
+						for (int i = 0 ; i < maxRewardDiffBlockType && curChro < dnaSize ; i ++ ) {
+							double tmpReadChro = chromosome[curChro];
+							if (i == 0) {
+								tmpReadChro = Math.abs(tmpReadChro);
+							}
+							
+							// next Add part
+							if (tmpReadChro <= 0) {
+								break;
+							}
+							
+							int itemSlot = getNextBlockSwapMissionType(
+									(int) (tmpReadChro * swapMultipy), curMissionItemSwapPosition,0);
+							curMissionItemSwapPosition = itemSlot;
+
+							
+							x.rewardItem[x.rewardSize] = mission.get(itemSlot).theName;
+							x.rewardData[x.rewardSize] = mission.get(itemSlot).data;
+							
+							double tmpAmount = Math.abs(chromosome[curChro]);
+							curChro ++;
+							
+							if (tmpAmount > 1) {
+								tmpAmount = 1;
+							}
+							double tmpAmountInt = tmpAmount * mission.get(itemSlot).maxStack;
+							if ((int)tmpAmountInt < 0) {
+								tmpAmountInt = 1;
+							}
+							
+							x.rewardAmount[x.rewardSize] = (int) (tmpAmountInt);
+							
+						
+						
+							x.rewardSize ++;
+						}
+						
+						// add reward item part
+
+						for (int i = 0 ; i < maxRewardDiffItemType && curChro < dnaSize ; i ++ ) {
+							double tmpReadChro = chromosome[curChro];
+							
+							
+							// next Add part
+							if (tmpReadChro <= 0) {
+								break;
+							}
+							
+							int itemSlot = getNextBlockSwapMissionType(
+									(int) (tmpReadChro * swapMultipy), curMissionItemSwapPosition,1);
+							curMissionItemSwapPosition = itemSlot;
+
+							
+							x.rewardItem[x.rewardSize] = mission.get(itemSlot).theName;
+							x.rewardData[x.rewardSize] = mission.get(itemSlot).data;
+							
+							double tmpAmount = Math.abs(chromosome[curChro]);
+							curChro ++;
+							
+							if (tmpAmount > 1) {
+								tmpAmount = 1;
+							}
+							double tmpAmountInt = tmpAmount * mission.get(itemSlot).maxStack;
+							if ((int)tmpAmountInt < 0) {
+								tmpAmountInt = 1;
+							}
+							
+							x.rewardAmount[x.rewardSize] = (int) (tmpAmountInt);
+							
+						
+						
+							x.rewardSize ++;
+						}
+
+						tmpLV.add(x);
+						tmpReading.clear();
+						//curChro++;
+						continue;
+						
+						
+						
+						
+					}
+					else {
+						tmpReading.add(Math.abs(  chromosome[curChro]));
 
 						curChro++;
 						continue;
 					}
+					
+
+
+				} else { // add to tmpReading
+
+					
+						tmpReading.add(Math.abs(  chromosome[curChro]));
+
+						curChro++;
+						continue;
+					
 
 				}
 
-			} else {
-				break;
 			}
-
+			else {
+				d.pl("break as curChro = " + curChro);
+				break ; // lv complete
+			}
 		} // while
 
+	}
+	
+
+	public int getNextBlockSwapMissionType(int swapNextxTime, int curMissionItemSwapPosition,int iNeedBlock) {
+		 // ineedblock 0  = block  , 1 = item , 2 = both
+		int looping = curMissionItemSwapPosition;
+		int returnId = -1;
+
+		do {
+			looping++;
+			if (looping >= mission.size()) {
+				looping = 0;
+			}
+			
+			if (iNeedBlock == 2) { // both
+				if (swapNextxTime > 0) {
+					swapNextxTime--;
+					continue;
+				}
+				returnId = looping;
+				break;
+			}
+			else if (iNeedBlock == 0) {
+				if (mission.get(looping).isBlock == true) {
+				if (swapNextxTime > 0) {
+					swapNextxTime--;
+					continue;
+				}
+				returnId = looping;
+				break;
+				}
+			}
+			else if (iNeedBlock == 1) {
+				if (mission.get(looping).isBlock == false) {
+				if (swapNextxTime > 0) {
+					swapNextxTime--;
+					continue;
+				}
+				returnId = looping;
+				break;
+				}
+			}
+			
+
+		} while (true);
+
+		return returnId;
 	}
 
 	public int getNextUnuseMissionItem(int swapNextxTime, int curMissionItemSwapPosition) {
