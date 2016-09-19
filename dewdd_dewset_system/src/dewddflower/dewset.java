@@ -3471,9 +3471,26 @@ public class dewset extends dewset_interface {
 
 			}
 		}
+		
+		
+		//....................
+		
+		boolean cre = false;
+		boolean creHasProtect = false;
+		if (Bukkit.getPluginManager().getPlugin("dewddcreative") == null) {
+			cre = true;
+		} else {
+			cre = dewddcreative.api_creative.cando(block.getX()	, block.getY(), block.getZ(), player) ;// .cando(block, player, modeevent);
+			if (this.CONFIG_NEED_PROTECT == true) {
+				creHasProtect = dewddcreative.api_creative.isProtectedArea(block);
 
-		boolean candoYap = wg && sky;
-		boolean hasProtectYap = wgHasProtect || skyHasProtect;
+			}
+		}
+		
+		//........................
+
+		boolean candoYap = wg && sky && cre;
+		boolean hasProtectYap = wgHasProtect || skyHasProtect || creHasProtect ;
 		boolean output = false;
 
 		if (this.CONFIG_NEED_PROTECT == true) {
