@@ -2307,8 +2307,23 @@ public class dewset extends dewset_interface {
 									
 
 								} else {
-									dewset.this.saveHistory(coreProtect, this.player, hostBlock, setBlock, true);
+									if ((hostBlock.getType() == Material.SIGN_POST)
+											|| (hostBlock.getType() == Material.WALL_SIGN)) {
 
+										Sign hostSign = (Sign) hostBlock.getState();
+										Sign setSign = (Sign) setBlock.getState();
+
+										for (int i = 0; i < 4; i++) {
+											setSign.setLine(i, hostSign.getLine(i));
+										}
+
+										setSign.update(true);
+										dewset.this.saveHistory(coreProtect, this.player, hostBlock, setBlock, true);
+									}
+									
+									dewset.this.saveHistory(coreProtect, this.player, hostBlock, setBlock, true);
+									
+									
 								}
 
 								this.zlx++;

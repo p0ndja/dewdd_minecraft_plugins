@@ -207,6 +207,8 @@ public class DigEventListener2 implements Listener {
 							cbt.x = gx;
 							cbt.y = y;
 							cbt.z = gz;
+							
+							
 
 							inv = dropper.getInventory();
 							for (int lop = 0; lop < inv.getSize(); lop++) {
