@@ -3,24 +3,30 @@ package dewddflower;
 import li.LXRXLZRZType;
 
 public class RSData {
+	public static LXRXLZRZType getAsLXType(RSData rs) {
+		LXRXLZRZType ee = new LXRXLZRZType(rs.x1, rs.y1, rs.z1, rs.x2,
+				rs.y2, rs.z2);
+		return ee;
+	}
 	public int x1;
 	public int y1;
-	public int z1;
 	
+	public int z1;
 	public int x2;
 	public int y2;
-	public int z2;
 
+	public int z2;
 	public String p[] = null;
 	public int mission = 0;
+
 	public long lastUsed = 0;
-
 	public int tmpForCountingBone1 = 0;
+
 	public int tmpLongForRememberLastTime = 0;
-
 	public int autoCutCount = 0;
-	public long autoCutLastTime = 0;
 
+	public long autoCutLastTime = 0;
+	
 	public RSData copyIt() {
 		RSData tmp = new RSData();
 
@@ -42,12 +48,6 @@ public class RSData {
 
 		return tmp;
 
-	}
-	
-	public static LXRXLZRZType getAsLXType(RSData rs) {
-		LXRXLZRZType ee = new LXRXLZRZType(rs.x1, rs.y1, rs.z1, rs.x2,
-				rs.y2, rs.z2);
-		return ee;
 	}
 
 }

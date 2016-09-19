@@ -1048,7 +1048,8 @@ public class dewset extends dewset_interface {
 			aer.xlx = lx;
 			aer.ylx = ly;
 			aer.zlx = lz;
-
+			aer.playerLocation = player.getLocation();
+			
 			aer.amountloop = 1;
 			aer.amount = amount;
 
@@ -1078,13 +1079,20 @@ public class dewset extends dewset_interface {
 		public int my;
 		public int mz;
 		public Player player = null;
+		public Location playerLocation = null;
 		public int xlx;
 		public int ylx;
 		public int zlx;
 
 		@Override
 		public void run() {
-
+			
+			if (player.getItemInHand().getType() == Material.AIR) {
+				dprint.r.printAll(player.getName() + tr.gettr("has cancel dewset"));
+				
+				return;
+			}
+			
 			boolean arxx = !player.hasPermission(pmaininfinite);
 
 			Block setBlock = null;
@@ -1127,6 +1135,8 @@ public class dewset extends dewset_interface {
 				// dprint.r.printC("blockdx = " + ndx);
 				// dprint.r.printC("blockdy = " + ndy);
 				// dprint.r.printC("blockdz = " + ndz);
+				
+				
 
 				while (amount1 <= 4) { // amount1 // amount1 = start with 1
 					// dprint.r.printAll("amount1 = " + amount1);
@@ -1167,6 +1177,7 @@ public class dewset extends dewset_interface {
 									xgn2.xlx = xlx;
 									xgn2.ylx = ylx;
 									xgn2.zlx = zlx;
+									xgn2.playerLocation = playerLocation;
 
 									dprint.r.printC(
 											"dewa  " + tr.gettr("recall") + " " + xlx + " , " + ylx + " , " + zlx);
@@ -1178,7 +1189,7 @@ public class dewset extends dewset_interface {
 									return;
 								}
 
-								hostBlock = player.getWorld().getBlockAt(xlx, ylx, zlx);
+								hostBlock = playerLocation.getWorld().getBlockAt(xlx, ylx, zlx);
 
 								if (hostBlock.getY() + ndy > 253 || hostBlock.getY() + ndy < 1) {
 									zlx++;
@@ -1350,18 +1361,6 @@ public class dewset extends dewset_interface {
 
 			player.sendMessage(dprint.r.color("ptdew&dewdd : dewA " + tr.gettr(tr.gettr("done"))));
 			dprint.r.printAll("ptdew&dewdd : " + player.getName() + " > dewa " + tr.gettr(tr.gettr("done")));
-		}
-	}
-
-	public void addItemIfItemIsZero(ArrayList<IDDataType> item, Player player) {
-		if (item.size() == 0) {
-			if (player.getItemInHand() == null) {
-				return;
-			}
-
-			IDDataType ne = new IDDataType(player.getItemInHand().getTypeId(),
-					player.getItemInHand().getData().getData());
-			item.add(ne);
 		}
 	}
 
@@ -1821,7 +1820,12 @@ public class dewset extends dewset_interface {
 
 		@Override
 		public void run() {
-
+			if (player.getItemInHand().getType() == Material.AIR) {
+				dprint.r.printAll(player.getName() + tr.gettr("has cancel dewset"));
+				
+				return;
+			}
+			
 			long starttime = System.currentTimeMillis();
 			long endtime = 0;
 
@@ -2077,113 +2081,6 @@ public class dewset extends dewset_interface {
 		}
 	}
 
-	// Bigdigthread
-
-	class dewsetFullSphere_c implements Runnable {
-		private ArrayList<IDDataType> item;
-		private ArrayList<IDDataType> itemSearch;
-		private Player player;
-
-		public dewsetFullSphere_c(Player player, ArrayList<IDDataType> item, ArrayList<IDDataType> itemSearch) {
-			this.player = player;
-			this.item = item;
-			this.itemSearch = itemSearch;
-		}
-
-		@Override
-		public void run() {
-
-			int getid = getfreeselect(player);
-			if (selectx1[getid] == 0 && selecty1[getid] == 0 && selectz1[getid] == 0) {
-				player.sendMessage(dprint.r.color("ptdew&dewdd : dewfullcircle " + tr.gettr("please_set_block_1")));
-				return;
-			}
-			if (selectx2[getid] == 0 && selecty2[getid] == 0 && selectz2[getid] == 0) {
-				player.sendMessage(dprint.r.color("ptdew&dewdd : dewfullcircle " + tr.gettr("please_set_block_2")));
-				return;
-			}
-
-			double midx = ((double) selectx1[getid] + (double) selectx2[getid]) / 2;
-			double midy = ((double) selecty1[getid] + (double) selecty2[getid]) / 2;
-			double midz = ((double) selectz1[getid] + (double) selectz2[getid]) / 2;
-
-			if (midx == selectx1[getid] && midy == selecty1[getid] && midz == selectz1[getid]
-					|| midx == selectx2[getid] && midy == selecty2[getid] && midz == selectz2[getid]) {
-				player.sendMessage(dprint.r.color("ptdew&dewdd : " + tr.gettr("small_circle_can't_run_program")));
-				return;
-			}
-
-			double temp1 = 0;
-
-			double temp5 = 0;
-			double temp2 = 0;
-			double temp3 = 0;
-			temp1 = Math.pow((double) selectx1[getid] - (double) selectx2[getid], 2);
-
-			temp2 = Math.pow((double) selecty1[getid] - (double) selecty2[getid], 2);
-
-			temp3 = Math.pow((double) selectz1[getid] - (double) selectz2[getid], 2);
-
-			double midty = (selecty1[getid] + selecty2[getid]) / 2;
-
-			double midtx = (selectx1[getid] + selectx2[getid]) / 2;
-
-			double midtz = (selectz1[getid] + selectz2[getid]) / 2;
-			temp5 = Math.pow(temp1 + temp2 + temp3, 0.5);
-
-			double midr = temp5 / 3;
-			Block blockmid = player.getWorld().getBlockAt((int) midtx, (int) midty, (int) midtz);
-
-			player.sendMessage(dprint.r.color("cir=" + midtx + "," + midty + "," + midtz));
-			player.sendMessage(dprint.r.color("R=" + temp5));
-
-			dprint.r.printAll("ptdew&dewdd : '" + player.getName() + "'" + tr.gettr("starting") + " dewfullcircle ");
-
-			for (Block blb : getselectblock(getid, player)) {
-
-				/*
-				 * if (PreciousStones.API().canPlace(player,
-				 * blb.getLocation())== false) {
-				 * player.sendMessage(dprint.r.color (
-				 * "ptdew&dewdd :Can't dewfullcircle here (" + blb.getX() + ","
-				 * + blb.getY() + "," + blb.getZ() + ")"); continue; }
-				 */
-
-				if (blb.getLocation().distance(blockmid.getLocation()) > midr) {
-					continue;
-				}
-
-				if (itemSearch.size() > 0) {
-					if (!IDDataType.isThisItemOnTheList(itemSearch, blb.getTypeId(), blb.getData())) {
-						continue;
-					}
-				} 
-
-				if (cando(blb, player, "dewset") == false)
-					return;
-
-				int ranslot = rnd.nextInt(item.size());
-				int id = item.get(ranslot).id;
-				byte data = item.get(ranslot).data;
-
-				
-				
-				if (blb.getTypeId() == id && blb.getData() == data){
-					continue;
-				}
-				
-				if (decreseitem1(player, id, data, true) == false) {
-					player.sendMessage(dprint.r.color("ptdew&dewdd : " + tr.gettr("don't_have_enough_item")));
-					return;
-				}
-				blb.setTypeIdAndData(id, data, true);
-				//
-			} // for
-
-			dprint.r.printAll("ptdew&dewdd : dewfullcircle " + tr.gettr("done") + " : " + player.getName());
-		}
-	}
-
 	class dewselectcube_c implements Runnable {
 		private Player player;
 		private int rad;
@@ -2223,13 +2120,7 @@ public class dewset extends dewset_interface {
 		}
 	}
 
-	// skyblock
-	// nether
-	// invert
-	// old_1
-	// flat
-	// old_2
-	// float
+	// Bigdigthread
 
 	class dewselectprotect_c implements Runnable {
 		private Player player;
@@ -2319,10 +2210,14 @@ public class dewset extends dewset_interface {
 
 			if (invert == false) {
 				dprint.r.printAll(
-						"ptdew&dewdd : '" + player.getName() + "'" + tr.gettr("starting") + " dewset *search ");
+						"ptdew&dewdd : '" + player.getName() + "'" + tr.gettr("starting") +
+						" dewset " + IDDataType.arrayListToString(item) + " >_< " + 
+								IDDataType.arrayListToString(itemSearch));
 			} else {
 				dprint.r.printAll(
-						"ptdew&dewdd : '" + player.getName() + "'" + tr.gettr("starting") + " dewxet *search ");
+						"ptdew&dewdd : '" + player.getName() + "'" + tr.gettr("starting") + " dewxet " +
+								IDDataType.arrayListToString(item) + " >_< " + 
+								IDDataType.arrayListToString(itemSearch));
 			}
 
 			if (selectx1[getid] >= selectx2[getid]) {
@@ -2348,9 +2243,11 @@ public class dewset extends dewset_interface {
 				mz = selectz2[getid];
 				lz = selectz1[getid];
 			}
+			
+			Location playerLocation = player.getLocation();
 
 			dewset_thread xgn = new dewset_thread(player, item, itemSearch, invert, mx, my, mz, lx, ly, lz, lx, ly, lz,
-					getid);
+					getid, playerLocation);
 
 			Bukkit.getScheduler().scheduleSyncDelayedTask(ac, xgn);
 
@@ -2360,6 +2257,14 @@ public class dewset extends dewset_interface {
 
 		}
 	}
+
+	// skyblock
+	// nether
+	// invert
+	// old_1
+	// flat
+	// old_2
+	// float
 
 	class dewset_thread implements Runnable {
 		private ArrayList<IDDataType> item;
@@ -2379,13 +2284,15 @@ public class dewset extends dewset_interface {
 		private int xlx;
 		private int ylx;
 		private int zlx;
+		private Location playerLocation ;
 
 		public dewset_thread(Player player, ArrayList<IDDataType> item, ArrayList<IDDataType> itemSearch,
-				boolean invert, int mx, int my, int mz, int lx, int ly, int lz, int xlx, int ylx, int zlx, int getid) {
+				boolean invert, int mx, int my, int mz, int lx, int ly, int lz, int xlx, int ylx, int zlx, int getid, Location playerLocation) {
 			this.player = player;
 			this.item = item;
 			this.itemSearch = itemSearch;
 			this.invert = invert;
+			this.playerLocation = playerLocation;
 
 			this.mx = mx;
 			this.my = my;
@@ -2405,8 +2312,9 @@ public class dewset extends dewset_interface {
 		@Override
 		public void run() {
 
-			if (player == null) {
-				dprint.r.printAll("dewset error  player not found...");
+			if (player.getItemInHand().getType() == Material.AIR) {
+				dprint.r.printAll(player.getName() + tr.gettr("has cancel dewset"));
+				
 				return;
 			}
 
@@ -2424,7 +2332,7 @@ public class dewset extends dewset_interface {
 				while (ylx <= my) {
 					while (zlx <= mz) {
 
-						blb = player.getWorld().getBlockAt(xlx, ylx, zlx);
+						blb = playerLocation.getWorld().getBlockAt(xlx, ylx, zlx);
 
 						endtime = System.currentTimeMillis();
 						if (endtime - starttime > runtime) {
@@ -2432,11 +2340,11 @@ public class dewset extends dewset_interface {
 							dewset_thread xgn2 =
 
 							new dewset_thread(player, item, itemSearch, invert, mx, my, mz, lx, ly, lz, xlx, ylx, zlx,
-									getid);
+									getid,playerLocation);
 
 							dprint.r.printC("dewset  " + tr.gettr("recall") + " " + xlx + " , " + ylx + " , " + zlx);
 							dprint.r.printC(
-									"low " + lx + " , " + ly + " , " + lz + " high " + mx + "," + my + "," + mz);
+									"low " + lx + " , " + ly + " , " + lz + " high " + mx + "," + my + "," + mz +  " world " + playerLocation.getWorld().getName());
 
 							Bukkit.getScheduler().scheduleSyncDelayedTask(ac, xgn2, sleeptime);
 
@@ -2539,7 +2447,9 @@ public class dewset extends dewset_interface {
 			}
 
 			dprint.r.printAll(
-					"ptdew&dewdd : '" + player.getName() + "'" + tr.gettr("starting") + " dewset(fill)block ");
+					"ptdew&dewdd : '" + player.getName() + "'" + tr.gettr("starting") + " dewset(fill)block " + 
+							IDDataType.arrayListToString(item) + " >_< " + 
+							IDDataType.arrayListToString(itemSearch));
 			int mx = 0;
 			int lx = 0;
 			int my = 0;
@@ -2571,13 +2481,15 @@ public class dewset extends dewset_interface {
 				lz = selectz1[getid];
 			}
 
+			Location playerLocation  = player.getLocation();
 			dewsetblock_thread aer = new dewsetblock_thread(player, item, itemSearch, mx, my, mz, lx, ly, lz, lx, ly,
-					lz, getid);
+					lz, getid, playerLocation);
 			// Player player, int handid , byte handdata , int mx , int my , int
 			// mz
 			// , int lx , int ly , int lz , int xlx , int ylx , int zlx , int
 			// getid , boolean isfillmode
 
+			
 			Bukkit.getScheduler().scheduleSyncDelayedTask(ac, aer, sleeptime);
 
 		}
@@ -2603,12 +2515,14 @@ public class dewset extends dewset_interface {
 		private ArrayList<IDDataType> item;
 		private ArrayList<IDDataType> itemSearch;
 		private int getid;
+		private Location playerLocation;
 
 		public dewsetblock_thread(Player player, ArrayList<IDDataType> item, ArrayList<IDDataType> itemSearch, int mx,
-				int my, int mz, int lx, int ly, int lz, int xlx, int ylx, int zlx, int getid) {
+				int my, int mz, int lx, int ly, int lz, int xlx, int ylx, int zlx, int getid , Location playerLocation) {
 			this.player = player;
 			this.item = item;
 			this.itemSearch = itemSearch;
+			this.playerLocation = playerLocation;
 
 			this.mx = mx;
 			this.my = my;
@@ -2625,7 +2539,12 @@ public class dewset extends dewset_interface {
 
 		@Override
 		public void run() {
-
+			if (player.getItemInHand().getType() == Material.AIR) {
+				dprint.r.printAll(player.getName() + tr.gettr("has cancel dewsetblock"));
+				
+				return;
+			}
+			
 			long endtime = 0;
 			long starttime = System.currentTimeMillis();
 			Block blb = null;
@@ -2659,7 +2578,7 @@ public class dewset extends dewset_interface {
 						if (endtime - starttime > runtime) {
 
 							dewsetblock_thread xgn2 = new dewsetblock_thread(player, item, itemSearch, mx, my, mz, lx,
-									ly, lz, xlx, ylx, zlx, getid);
+									ly, lz, xlx, ylx, zlx, getid, playerLocation);
 
 							dprint.r.printC(
 									"dewsetblock  " + tr.gettr("recall") + " " + xlx + " , " + ylx + " , " + zlx);
@@ -2671,7 +2590,7 @@ public class dewset extends dewset_interface {
 							return;
 						}
 
-						blb = player.getWorld().getBlockAt(xlx, ylx, zlx);
+						blb = playerLocation.getWorld().getBlockAt(xlx, ylx, zlx);
 
 						/*
 						 * if (isfillmode == true) if (blb.getTypeId() != 0) {
@@ -2724,6 +2643,114 @@ public class dewset extends dewset_interface {
 		}
 	}
 
+	class dewsetFullSphere_c implements Runnable {
+		private ArrayList<IDDataType> item;
+		private ArrayList<IDDataType> itemSearch;
+		private Player player;
+		
+
+		public dewsetFullSphere_c(Player player, ArrayList<IDDataType> item, ArrayList<IDDataType> itemSearch) {
+			this.player = player;
+			this.item = item;
+			this.itemSearch = itemSearch;
+		}
+
+		@Override
+		public void run() {
+
+			int getid = getfreeselect(player);
+			if (selectx1[getid] == 0 && selecty1[getid] == 0 && selectz1[getid] == 0) {
+				player.sendMessage(dprint.r.color("ptdew&dewdd : dewfullcircle " + tr.gettr("please_set_block_1")));
+				return;
+			}
+			if (selectx2[getid] == 0 && selecty2[getid] == 0 && selectz2[getid] == 0) {
+				player.sendMessage(dprint.r.color("ptdew&dewdd : dewfullcircle " + tr.gettr("please_set_block_2")));
+				return;
+			}
+
+			double midx = ((double) selectx1[getid] + (double) selectx2[getid]) / 2;
+			double midy = ((double) selecty1[getid] + (double) selecty2[getid]) / 2;
+			double midz = ((double) selectz1[getid] + (double) selectz2[getid]) / 2;
+
+			if (midx == selectx1[getid] && midy == selecty1[getid] && midz == selectz1[getid]
+					|| midx == selectx2[getid] && midy == selecty2[getid] && midz == selectz2[getid]) {
+				player.sendMessage(dprint.r.color("ptdew&dewdd : " + tr.gettr("small_circle_can't_run_program")));
+				return;
+			}
+
+			double temp1 = 0;
+
+			double temp5 = 0;
+			double temp2 = 0;
+			double temp3 = 0;
+			temp1 = Math.pow((double) selectx1[getid] - (double) selectx2[getid], 2);
+
+			temp2 = Math.pow((double) selecty1[getid] - (double) selecty2[getid], 2);
+
+			temp3 = Math.pow((double) selectz1[getid] - (double) selectz2[getid], 2);
+
+			double midty = (selecty1[getid] + selecty2[getid]) / 2;
+
+			double midtx = (selectx1[getid] + selectx2[getid]) / 2;
+
+			double midtz = (selectz1[getid] + selectz2[getid]) / 2;
+			temp5 = Math.pow(temp1 + temp2 + temp3, 0.5);
+
+			double midr = temp5 / 3;
+			Block blockmid = player.getWorld().getBlockAt((int) midtx, (int) midty, (int) midtz);
+
+			player.sendMessage(dprint.r.color("cir=" + midtx + "," + midty + "," + midtz));
+			player.sendMessage(dprint.r.color("R=" + temp5));
+
+			dprint.r.printAll("ptdew&dewdd : '" + player.getName() + "'" + tr.gettr("starting") + " dewfullcircle " + 
+					IDDataType.arrayListToString(item) + " >_< " + 
+					IDDataType.arrayListToString(itemSearch));
+
+			for (Block blb : getselectblock(getid, player)) {
+
+				/*
+				 * if (PreciousStones.API().canPlace(player,
+				 * blb.getLocation())== false) {
+				 * player.sendMessage(dprint.r.color (
+				 * "ptdew&dewdd :Can't dewfullcircle here (" + blb.getX() + ","
+				 * + blb.getY() + "," + blb.getZ() + ")"); continue; }
+				 */
+
+				if (blb.getLocation().distance(blockmid.getLocation()) > midr) {
+					continue;
+				}
+
+				if (itemSearch.size() > 0) {
+					if (!IDDataType.isThisItemOnTheList(itemSearch, blb.getTypeId(), blb.getData())) {
+						continue;
+					}
+				} 
+
+				if (cando(blb, player, "dewset") == false)
+					return;
+
+				int ranslot = rnd.nextInt(item.size());
+				int id = item.get(ranslot).id;
+				byte data = item.get(ranslot).data;
+
+				
+				
+				if (blb.getTypeId() == id && blb.getData() == data){
+					continue;
+				}
+				
+				if (decreseitem1(player, id, data, true) == false) {
+					player.sendMessage(dprint.r.color("ptdew&dewdd : " + tr.gettr("don't_have_enough_item")));
+					return;
+				}
+				blb.setTypeIdAndData(id, data, true);
+				//
+			} // for
+
+			dprint.r.printAll("ptdew&dewdd : dewfullcircle " + tr.gettr("done") + " : " + player.getName());
+		}
+	}
+
 	class dewsetl_thread implements Runnable {
 
 		private int getid;
@@ -2741,9 +2768,10 @@ public class dewset extends dewset_interface {
 		private int ylx = 0;
 
 		private int zlx = 0;
+		private Location playerLocation;
 
 		public dewsetl_thread(Player player, ArrayList<IDDataType> item, int mx, int my, int mz, int lx, int ly, int lz,
-				int xlx, int ylx, int zlx, int getid) {
+				int xlx, int ylx, int zlx, int getid,Location playerLocation) {
 			this.player = player;
 			this.item = item;
 			this.mx = mx;
@@ -2756,10 +2784,17 @@ public class dewset extends dewset_interface {
 			this.ylx = ylx;
 			this.zlx = zlx;
 			this.getid = getid;
+			this.playerLocation = playerLocation;
 		}
 
 		@Override
 		public void run() {
+			if (player.getItemInHand().getType() == Material.AIR) {
+				dprint.r.printAll(player.getName() + tr.gettr("has cancel dewsetLight"));
+				
+				return;
+			}
+			
 			long starttime = System.currentTimeMillis();
 			long endtime = 0;
 
@@ -2777,7 +2812,7 @@ public class dewset extends dewset_interface {
 						if (endtime - starttime > runtime) {
 
 							dewsetl_thread xgn2 = new dewsetl_thread(player, item, mx, my, mz, lx, ly, lz, xlx, ylx,
-									zlx, getid);
+									zlx, getid,playerLocation);
 
 							dprint.r.printC("dewsetl  " + tr.gettr("recall") + " " + xlx + " , " + ylx + " , " + zlx);
 							dprint.r.printC(
@@ -2788,7 +2823,7 @@ public class dewset extends dewset_interface {
 							return;
 						}
 
-						blb = player.getWorld().getBlockAt(xlx, ylx, zlx);
+						blb = playerLocation.getWorld().getBlockAt(xlx, ylx, zlx);
 
 						if (blb.getTypeId() != 0) {
 							zlx++;
@@ -2867,7 +2902,7 @@ public class dewset extends dewset_interface {
 				return;
 			}
 
-			dprint.r.printAll("ptdew&dewdd : '" + player.getName() + "'" + tr.gettr("starting") + " dewsetlight ");
+			dprint.r.printAll("ptdew&dewdd : '" + player.getName() + "'" + tr.gettr("starting") + " dewsetlight " + IDDataType.arrayListToString(item) + " >_< " );
 			int mx = 0;
 			int lx = 0;
 			int my = 0;
@@ -2899,7 +2934,7 @@ public class dewset extends dewset_interface {
 				lz = selectz1[getid];
 			}
 
-			dewsetl_thread aer = new dewsetl_thread(player, item, mx, my, mz, lx, ly, lz, lx, ly, lz, getid);
+			dewsetl_thread aer = new dewsetl_thread(player, item, mx, my, mz, lx, ly, lz, lx, ly, lz, getid,player.getLocation());
 			// Player player, int handid , byte handdata , int mx , int my , int
 			// mz
 			// , int lx , int ly , int lz , int xlx , int ylx , int zlx , int
@@ -2915,6 +2950,7 @@ public class dewset extends dewset_interface {
 		private ArrayList<IDDataType> item;
 		private ArrayList<IDDataType> itemSearch;
 		private Player player = null;
+	
 
 		public dewsetroom_mom(Player player, ArrayList<IDDataType> item, ArrayList<IDDataType> itemSearch) {
 			this.player = player;
@@ -2935,7 +2971,9 @@ public class dewset extends dewset_interface {
 				return;
 			}
 
-			dprint.r.printAll("ptdew&dewdd : '" + player.getName() + "'" + tr.gettr("starting") + " dewset(fill)room ");
+			dprint.r.printAll("ptdew&dewdd : '" + player.getName() + "'" + tr.gettr("starting") + " dewset(fill)room "
+					 + IDDataType.arrayListToString(item) + " >_< " + 
+						IDDataType.arrayListToString(itemSearch));
 			int mx = 0;
 			int lx = 0;
 			int my = 0;
@@ -2967,8 +3005,9 @@ public class dewset extends dewset_interface {
 				lz = selectz1[getid];
 			}
 
+			 Location playerLocation = player.getLocation();
 			dewsetroom_thread aer = new dewsetroom_thread(player, item, itemSearch, mx, my, mz, lx, ly, lz, lx, ly, lz,
-					getid);
+					getid, playerLocation);
 			// Player player, int handid , byte handdata , int mx , int my , int
 			// mz
 			// , int lx , int ly , int lz , int xlx , int ylx , int zlx , int
@@ -3000,9 +3039,10 @@ public class dewset extends dewset_interface {
 		private int ylx = 0;
 
 		private int zlx = 0;
+		private Location playerLocation;
 
 		public dewsetroom_thread(Player player, ArrayList<IDDataType> item, ArrayList<IDDataType> itemSearch, int mx,
-				int my, int mz, int lx, int ly, int lz, int xlx, int ylx, int zlx, int getid) {
+				int my, int mz, int lx, int ly, int lz, int xlx, int ylx, int zlx, int getid ,Location playerLocation) {
 			this.player = player;
 			this.isfillmode = isfillmode;
 			this.item = item;
@@ -3017,11 +3057,16 @@ public class dewset extends dewset_interface {
 			this.ylx = ylx;
 			this.zlx = zlx;
 			this.getid = getid;
+			this.playerLocation = playerLocation;
 		}
 
 		@Override
 		public void run() {
-
+			if (player.getItemInHand().getType() == Material.AIR) {
+				dprint.r.printAll(player.getName() + tr.gettr("has cancel dewsetRoom"));
+				
+				return;
+			}
 			long starttime = System.currentTimeMillis();
 			long endtime = 0;
 
@@ -3048,7 +3093,7 @@ public class dewset extends dewset_interface {
 						if (endtime - starttime > runtime) {
 
 							dewsetroom_thread xgn2 = new dewsetroom_thread(player, item, itemSearch, mx, my, mz, lx, ly,
-									lz, xlx, ylx, zlx, getid);
+									lz, xlx, ylx, zlx, getid,playerLocation);
 
 							dprint.r.printC(
 									"dewsetroom  " + tr.gettr("recall") + " " + xlx + " , " + ylx + " , " + zlx);
@@ -3060,7 +3105,7 @@ public class dewset extends dewset_interface {
 							return;
 						}
 
-						blb = player.getWorld().getBlockAt(xlx, ylx, zlx);
+						blb = playerLocation.getWorld().getBlockAt(xlx, ylx, zlx);
 
 						if (itemSearch.size() > 0) {
 							if (!IDDataType.isThisItemOnTheList(itemSearch, blb.getTypeId(), blb.getData())) {
@@ -3110,7 +3155,6 @@ public class dewset extends dewset_interface {
 
 		private ArrayList<IDDataType> item;
 		private ArrayList<IDDataType> itemSearch;
-		private boolean isfillmode = false;
 		private Player player = null;
 
 		public dewsetwall_mom(Player player, ArrayList<IDDataType> item, ArrayList<IDDataType> itemSearch) {
@@ -3132,7 +3176,9 @@ public class dewset extends dewset_interface {
 				return;
 			}
 
-			dprint.r.printAll("ptdew&dewdd : '" + player.getName() + "'" + tr.gettr("starting") + " dewset(fill)wall ");
+			dprint.r.printAll("ptdew&dewdd : '" + player.getName() + "'" + tr.gettr("starting") + " dewset(fill)wall "
+					 + IDDataType.arrayListToString(item) + " >_< " + 
+						IDDataType.arrayListToString(itemSearch));
 			int mx = 0;
 			int lx = 0;
 			int my = 0;
@@ -3165,7 +3211,7 @@ public class dewset extends dewset_interface {
 			}
 
 			dewsetwall_thread aer = new dewsetwall_thread(player, item, itemSearch, mx, my, mz, lx, ly, lz, lx, ly, lz,
-					getid);
+					getid,player.getLocation());
 			// Player player, int handid , byte handdata , int mx , int my , int
 			// mz
 			// , int lx , int ly , int lz , int xlx , int ylx , int zlx , int
@@ -3182,7 +3228,6 @@ public class dewset extends dewset_interface {
 		private ArrayList<IDDataType> item;
 		private ArrayList<IDDataType> itemSearch;
 
-		private boolean isfillmode = false;
 		private int lx = 0;
 		private int ly = 0;
 
@@ -3195,13 +3240,12 @@ public class dewset extends dewset_interface {
 		private int xlx = 0;
 
 		private int ylx = 0;
-
+		private Location playerLocation;
 		private int zlx = 0;
 
 		public dewsetwall_thread(Player player, ArrayList<IDDataType> item, ArrayList<IDDataType> itemSearch, int mx,
-				int my, int mz, int lx, int ly, int lz, int xlx, int ylx, int zlx, int getid) {
+				int my, int mz, int lx, int ly, int lz, int xlx, int ylx, int zlx, int getid,Location playerLocation) {
 			this.player = player;
-			this.isfillmode = isfillmode;
 			this.item = item;
 			this.itemSearch = itemSearch;
 			this.mx = mx;
@@ -3214,10 +3258,17 @@ public class dewset extends dewset_interface {
 			this.ylx = ylx;
 			this.zlx = zlx;
 			this.getid = getid;
+			this.playerLocation = playerLocation;
 		}
 
 		@Override
 		public void run() {
+			if (player.getItemInHand().getType() == Material.AIR) {
+				dprint.r.printAll(player.getName() + tr.gettr("has cancel dewsetWall"));
+				
+				return;
+			}
+			
 			long starttime = System.currentTimeMillis();
 			long endtime = 0;
 
@@ -3241,7 +3292,7 @@ public class dewset extends dewset_interface {
 						if (endtime - starttime > runtime) {
 
 							dewsetwall_thread xgn2 = new dewsetwall_thread(player, item, itemSearch, mx, my, mz, lx, ly,
-									lz, xlx, ylx, zlx, getid);
+									lz, xlx, ylx, zlx, getid,playerLocation);
 
 							dprint.r.printC(
 									"dewsetwall  " + tr.gettr("recall") + " " + xlx + " , " + ylx + " , " + zlx);
@@ -3253,7 +3304,7 @@ public class dewset extends dewset_interface {
 							return;
 						}
 
-						blb = player.getWorld().getBlockAt(xlx, ylx, zlx);
+						blb = playerLocation.getWorld().getBlockAt(xlx, ylx, zlx);
 
 						if (itemSearch.size() > 0) {
 							if (!IDDataType.isThisItemOnTheList(itemSearch, blb.getTypeId(), blb.getData())) {
@@ -3296,6 +3347,116 @@ public class dewset extends dewset_interface {
 			xlx = lx;
 
 			dprint.r.printAll("ptdew&dewdd : dew(set)fill " + tr.gettr("done") + " : " + player.getName());
+		}
+	}
+
+	class dewsetWallSphere_c implements Runnable {
+
+		private ArrayList<IDDataType> item;
+		private ArrayList<IDDataType> itemSearch;
+		private boolean isfillmode = false;
+		private Player player = null;
+
+		public dewsetWallSphere_c(Player player, ArrayList<IDDataType> item, ArrayList<IDDataType> itemSearch) {
+			this.player = player;
+			this.item = item;
+			this.itemSearch = itemSearch;
+		}
+
+		@Override
+		public void run() {
+
+			// ..........
+			int getid = getfreeselect(player);
+			if (selectx1[getid] == 0 && selecty1[getid] == 0 && selectz1[getid] == 0) {
+				player.sendMessage(dprint.r.color("ptdew&dewdd : dewwallcircle " + tr.gettr("please_set_block_1")));
+				return;
+			}
+			if (selectx2[getid] == 0 && selecty2[getid] == 0 && selectz2[getid] == 0) {
+				player.sendMessage(dprint.r.color("ptdew&dewdd : dewwallcircle " + tr.gettr("please_set_block_2")));
+				return;
+			}
+
+			double midx = ((double) selectx1[getid] + (double) selectx2[getid]) / 2;
+			double midy = ((double) selecty1[getid] + (double) selecty2[getid]) / 2;
+			double midz = ((double) selectz1[getid] + (double) selectz2[getid]) / 2;
+
+			if (midx == selectx1[getid] && midy == selecty1[getid] && midz == selectz1[getid]
+					|| midx == selectx2[getid] && midy == selecty2[getid] && midz == selectz2[getid]) {
+				player.sendMessage(dprint.r.color("ptdew&dewdd : small circle can't run program"));
+				return;
+			}
+
+			double temp1 = 0;
+
+			double temp5 = 0;
+			double temp2 = 0;
+			double temp3 = 0;
+			temp1 = Math.pow((double) selectx1[getid] - (double) selectx2[getid], 2);
+
+			temp2 = Math.pow((double) selecty1[getid] - (double) selecty2[getid], 2);
+
+			temp3 = Math.pow((double) selectz1[getid] - (double) selectz2[getid], 2);
+
+			double midty = (selecty1[getid] + selecty2[getid]) / 2;
+
+			double midtx = (selectx1[getid] + selectx2[getid]) / 2;
+
+			double midtz = (selectz1[getid] + selectz2[getid]) / 2;
+			temp5 = Math.pow(temp1 + temp2 + temp3, 0.5);
+
+			double midr = temp5 / 3;
+
+			player.sendMessage(dprint.r.color("cir=" + midtx + "," + midty + "," + midtz));
+			player.sendMessage(dprint.r.color("R=" + temp5));
+
+			dprint.r.printAll("ptdew&dewdd : '" + player.getName() + "'" + tr.gettr("starting") + " dewwallcircle "
+					+ IDDataType.arrayListToString(item) + " >_< " + 
+					IDDataType.arrayListToString(itemSearch));
+
+			// ........
+
+			int mx = 0;
+			int lx = 0;
+			int my = 0;
+			int ly = 0;
+			int mz = 0;
+			int lz = 0;
+
+			if (selectx1[getid] >= selectx2[getid]) {
+				mx = selectx1[getid];
+				lx = selectx2[getid];
+			} else {
+				mx = selectx2[getid];
+				lx = selectx1[getid];
+			}
+
+			if (selecty1[getid] >= selecty2[getid]) {
+				my = selecty1[getid];
+				ly = selecty2[getid];
+			} else {
+				my = selecty2[getid];
+				ly = selecty1[getid];
+			}
+
+			if (selectz1[getid] >= selectz2[getid]) {
+				mz = selectz1[getid];
+				lz = selectz2[getid];
+			} else {
+				mz = selectz2[getid];
+				lz = selectz1[getid];
+			}
+
+			
+			dewwallcircle_thread aer = new dewwallcircle_thread(player, item, itemSearch, mx, my, mz, lx, ly, lz, lx,
+					ly, lz, getid, midr, midtx, midty, midtz, player.getLocation());
+			// Player player, int handid , byte handdata , int mx , int my , int
+			// mz
+			// , int lx , int ly , int lz , int xlx , int ylx , int zlx , int
+			// getid , boolean isfillmode
+
+			Bukkit.getScheduler().scheduleSyncDelayedTask(ac, aer, sleeptime);
+
 		}
 	}
 
@@ -3421,14 +3582,16 @@ public class dewset extends dewset_interface {
 		private Player player;
 		private Boolean isfirst;
 		private Queue<Block> bd;
+		private Location playerLocation;
 
 		public dewspreadq_c(Player player, ArrayList<IDDataType> item, ArrayList<IDDataType> itemSearch,
-				boolean isfirst, Queue<Block> bd) {
+				boolean isfirst, Queue<Block> bd,Location playerLocation) {
 			this.player = player;
 			this.item = item;
 			this.itemSearch = itemSearch;
 			this.isfirst = isfirst;
 			this.bd = bd;
+			this.playerLocation  = playerLocation;
 
 			Bukkit.getScheduler().scheduleSyncDelayedTask(ac, this, sleeptime);
 		}
@@ -3436,7 +3599,7 @@ public class dewset extends dewset_interface {
 		@Override
 		public void run() {
 
-			Block block = player.getLocation().getBlock();
+			Block block = playerLocation.getBlock();
 			addItemIfItemIsZero(item, player);
 
 			boolean ne = false;
@@ -3526,121 +3689,13 @@ public class dewset extends dewset_interface {
 				}
 
 				if (ccc > 10) {
-					new dewspreadq_c(player, item, itemSearch, false, bd);
+					new dewspreadq_c(player, item, itemSearch, false, bd,playerLocation);
 					return;
 				}
 
 			} // bll
 
 			player.sendMessage(dprint.r.color("dewspreadq " + tr.gettr(tr.gettr("done"))));
-		}
-	}
-
-	class dewsetWallSphere_c implements Runnable {
-
-		private ArrayList<IDDataType> item;
-		private ArrayList<IDDataType> itemSearch;
-		private boolean isfillmode = false;
-		private Player player = null;
-
-		public dewsetWallSphere_c(Player player, ArrayList<IDDataType> item, ArrayList<IDDataType> itemSearch) {
-			this.player = player;
-			this.item = item;
-			this.itemSearch = itemSearch;
-		}
-
-		@Override
-		public void run() {
-
-			// ..........
-			int getid = getfreeselect(player);
-			if (selectx1[getid] == 0 && selecty1[getid] == 0 && selectz1[getid] == 0) {
-				player.sendMessage(dprint.r.color("ptdew&dewdd : dewwallcircle " + tr.gettr("please_set_block_1")));
-				return;
-			}
-			if (selectx2[getid] == 0 && selecty2[getid] == 0 && selectz2[getid] == 0) {
-				player.sendMessage(dprint.r.color("ptdew&dewdd : dewwallcircle " + tr.gettr("please_set_block_2")));
-				return;
-			}
-
-			double midx = ((double) selectx1[getid] + (double) selectx2[getid]) / 2;
-			double midy = ((double) selecty1[getid] + (double) selecty2[getid]) / 2;
-			double midz = ((double) selectz1[getid] + (double) selectz2[getid]) / 2;
-
-			if (midx == selectx1[getid] && midy == selecty1[getid] && midz == selectz1[getid]
-					|| midx == selectx2[getid] && midy == selecty2[getid] && midz == selectz2[getid]) {
-				player.sendMessage(dprint.r.color("ptdew&dewdd : small circle can't run program"));
-				return;
-			}
-
-			double temp1 = 0;
-
-			double temp5 = 0;
-			double temp2 = 0;
-			double temp3 = 0;
-			temp1 = Math.pow((double) selectx1[getid] - (double) selectx2[getid], 2);
-
-			temp2 = Math.pow((double) selecty1[getid] - (double) selecty2[getid], 2);
-
-			temp3 = Math.pow((double) selectz1[getid] - (double) selectz2[getid], 2);
-
-			double midty = (selecty1[getid] + selecty2[getid]) / 2;
-
-			double midtx = (selectx1[getid] + selectx2[getid]) / 2;
-
-			double midtz = (selectz1[getid] + selectz2[getid]) / 2;
-			temp5 = Math.pow(temp1 + temp2 + temp3, 0.5);
-
-			double midr = temp5 / 3;
-
-			player.sendMessage(dprint.r.color("cir=" + midtx + "," + midty + "," + midtz));
-			player.sendMessage(dprint.r.color("R=" + temp5));
-
-			dprint.r.printAll("ptdew&dewdd : '" + player.getName() + "'" + tr.gettr("starting") + " dewwallcircle "
-					+ player.getItemInHand().getTypeId() + ":" + player.getItemInHand().getData());
-
-			// ........
-
-			int mx = 0;
-			int lx = 0;
-			int my = 0;
-			int ly = 0;
-			int mz = 0;
-			int lz = 0;
-
-			if (selectx1[getid] >= selectx2[getid]) {
-				mx = selectx1[getid];
-				lx = selectx2[getid];
-			} else {
-				mx = selectx2[getid];
-				lx = selectx1[getid];
-			}
-
-			if (selecty1[getid] >= selecty2[getid]) {
-				my = selecty1[getid];
-				ly = selecty2[getid];
-			} else {
-				my = selecty2[getid];
-				ly = selecty1[getid];
-			}
-
-			if (selectz1[getid] >= selectz2[getid]) {
-				mz = selectz1[getid];
-				lz = selectz2[getid];
-			} else {
-				mz = selectz2[getid];
-				lz = selectz1[getid];
-			}
-
-			dewwallcircle_thread aer = new dewwallcircle_thread(player, item, itemSearch, mx, my, mz, lx, ly, lz, lx,
-					ly, lz, getid, midr, midtx, midty, midtz);
-			// Player player, int handid , byte handdata , int mx , int my , int
-			// mz
-			// , int lx , int ly , int lz , int xlx , int ylx , int zlx , int
-			// getid , boolean isfillmode
-
-			Bukkit.getScheduler().scheduleSyncDelayedTask(ac, aer, sleeptime);
-
 		}
 	}
 
@@ -3669,12 +3724,14 @@ public class dewset extends dewset_interface {
 		private int xlx = 0;
 		private int ylx = 0;
 		private int zlx = 0;
+		private Location playerLocation;
 
 		public dewwallcircle_thread(Player player, ArrayList<IDDataType> item, ArrayList<IDDataType> itemSearch, int mx,
 				int my, int mz, int lx, int ly, int lz, int xlx, int ylx, int zlx, int getid, double midr, double midtx,
-				double midty, double midtz) {
+				double midty, double midtz ,Location playerLocation) {
 			this.player = player;
 			this.item = item;
+			this.playerLocation = playerLocation;
 			this.itemSearch = itemSearch;
 			this.mx = mx;
 			this.my = my;
@@ -3694,6 +3751,11 @@ public class dewset extends dewset_interface {
 
 		@Override
 		public void run() {
+			if (player.getItemInHand().getType() == Material.AIR) {
+				dprint.r.printAll(player.getName() + tr.gettr("has cancel  WallCircle"));
+				
+				return;
+			}
 
 			long endtime = 0;
 			long starttime = System.currentTimeMillis();
@@ -3710,7 +3772,7 @@ public class dewset extends dewset_interface {
 						if (endtime - starttime > runtime) {
 
 							dewwallcircle_thread xgn2 = new dewwallcircle_thread(player, item, itemSearch, mx, my, mz,
-									lx, ly, lz, xlx, ylx, zlx, getid, midr, midtx, midty, midtz);
+									lx, ly, lz, xlx, ylx, zlx, getid, midr, midtx, midty, midtz , playerLocation);
 
 							dprint.r.printC(
 									"dewwallcircle  " + tr.gettr("recall") + " " + xlx + " , " + ylx + " , " + zlx);
@@ -3722,7 +3784,7 @@ public class dewset extends dewset_interface {
 							return;
 						}
 
-						blb = player.getWorld().getBlockAt(xlx, ylx, zlx);
+						blb = playerLocation.getWorld().getBlockAt(xlx, ylx, zlx);
 
 						if ((int) blb.getLocation().distance(blockmid.getLocation()) != (int) midr) {
 							zlx++;
@@ -3787,6 +3849,12 @@ public class dewset extends dewset_interface {
 			this.player = player;
 			this.a1 = a1;
 			this.a2 = a2;
+			
+			if (player.getItemInHand().getType() == Material.AIR) {
+				dprint.r.printAll(player.getName() + tr.gettr("has cancel gift"));
+				
+				return;
+			}
 
 			long lo = (rnd.nextInt(20) + 1) * 20;
 
@@ -4160,8 +4228,6 @@ public class dewset extends dewset_interface {
 		}
 	}
 
-	// redim" + tr.gettr("for") + "each world each protect = 100
-
 	class seedglowc implements Runnable {
 		private Block block = null;
 		private Player player = null;
@@ -4208,6 +4274,8 @@ public class dewset extends dewset_interface {
 
 		}
 	}
+
+	// redim" + tr.gettr("for") + "each world each protect = 100
 
 	class soiladdseedc implements Runnable {
 		private Block block = null;
@@ -4382,8 +4450,6 @@ public class dewset extends dewset_interface {
 
 	}
 
-	// public double buy1blockmoney = 0.0890932504689118445732202345959;
-
 	public static int getProtectid(Block block, RSWorld worldid) {
 		// must check world
 
@@ -4407,14 +4473,16 @@ public class dewset extends dewset_interface {
 		return -1;
 	}
 
-	// *********
-
-	// cutwoodsub
+	// public double buy1blockmoney = 0.0890932504689118445732202345959;
 
 	public static String getSignWorldFleName(RSWorld idworld) {
 		String aa = "ptdew_dewdd_" + idworld.worldName + ".txt";
 		return aa;
 	}
+
+	// *********
+
+	// cutwoodsub
 
 	public static RSWorld getWorld(String wowo) {
 		for (int d = 0; d < rsWorld.size(); d++)
@@ -4431,8 +4499,6 @@ public class dewset extends dewset_interface {
 		return tr.isrunworld(ac.getName(), worldName);
 	}
 	// randomplaynote
-
-	// decrese item 1
 
 	public static void loadsignfile() {
 		for (RSWorld wow : rsWorld) {
@@ -4516,6 +4582,8 @@ public class dewset extends dewset_interface {
 		dprint.r.printC("loaded all sign all world");
 	}
 
+	// decrese item 1
+
 	public static void loadworldfile() {
 		String worldf = "ptdew_dewdd_worlds_sign.txt";
 
@@ -4584,9 +4652,9 @@ public class dewset extends dewset_interface {
 
 	}
 
-	// Check Permission Area block player mode
-
 	public long lastsort2 = 0;
+
+	// Check Permission Area block player mode
 
 	Random rnd = new Random();
 
@@ -4598,9 +4666,9 @@ public class dewset extends dewset_interface {
 
 	public Block giftblock = null;
 
-	// cut seem block
-
 	public Random randomG = new Random();
+
+	// cut seem block
 
 	public int runtime = (int) tr.gettrint("dewset runtime as milisecond");
 
@@ -4612,9 +4680,9 @@ public class dewset extends dewset_interface {
 
 	public String selectworldname[] = new String[selectmax + 1];
 
-	// Check Permission Area block
-
 	public int selectx1[] = new int[selectmax + 1];
+
+	// Check Permission Area block
 
 	public int selectx2[] = new int[selectmax + 1];
 
@@ -4633,6 +4701,18 @@ public class dewset extends dewset_interface {
 
 		// firstrun19 = true;
 		// }
+	}
+
+	public void addItemIfItemIsZero(ArrayList<IDDataType> item, Player player) {
+		if (item.size() == 0) {
+			if (player.getItemInHand() == null) {
+				return;
+			}
+
+			IDDataType ne = new IDDataType(player.getItemInHand().getTypeId(),
+					player.getItemInHand().getData().getData());
+			item.add(ne);
+		}
 	}
 
 	public void autosortchest2(Block block, Player player) {
@@ -4897,40 +4977,6 @@ public class dewset extends dewset_interface {
 		return typebox;
 	}
 
-	public void fw_list(Player player) {
-		RSWorld worldid = dewset.getWorld(player.getWorld().getName());
-		Block block = player.getLocation().getBlock();
-		int getid = dewset.getProtectid(block, worldid);
-		RSData tmprs;
-
-		if (getid == -1) {
-			tmprs = null;
-		} else {
-			tmprs = worldid.rs.get(getid);
-		}
-
-		int meInSlot = 0;
-		if (getid == -1) {
-			meInSlot = -1;
-		} else {
-			meInSlot = dewset.getplayerinslot(player.getName(), getid, worldid);
-		}
-
-		if (getid == -1) {
-			player.sendMessage(dprint.r.color(tr.gettr("this_zone_don't_have_any_protect")));
-			return;
-		}
-
-		player.sendMessage(dprint.r.color("protect id ") + getid + " , position "
-				+ dewset.getPositionSignAsString(worldid, tmprs));
-
-		for (int i = 0; i < dewset_interface.FWMaxPlayer; i++)
-			if (tmprs.p[i].equalsIgnoreCase("null") == false) {
-				player.sendMessage(dprint.r.color("Member " + i + " = " + tmprs.p[i]));
-
-			}
-	}
-
 	public void createmonster(Player player, EntityType EntityTypeGot, int count) {
 		new createmonster_c(player, EntityTypeGot, count);
 	}
@@ -5090,22 +5136,18 @@ public class dewset extends dewset_interface {
 		Bukkit.getScheduler().scheduleSyncDelayedTask(ac, abr);
 	}
 
-	// fixtool
-
 	public void dewdown(Player player, ArrayList<IDDataType> item) {
 
 		new dewdown_c(player, item);
 	}
 
-	// getfreeselect
+	// fixtool
 
 	public void dewextend(Player player) {
 		new dewextend_c(player);
 	}
 
-	public void dewsetFullSphere(Player player, ArrayList<IDDataType> item, ArrayList<IDDataType> itemSearch) {
-		new dewsetFullSphere_c(player, item, itemSearch);
-	}
+	// getfreeselect
 
 	public void dewselectcube(Player player, int rad) {
 		new dewselectcube_c(player, rad);
@@ -5114,8 +5156,6 @@ public class dewset extends dewset_interface {
 	public void dewselectprotect(Player player) {
 		new dewselectprotect_c(player);
 	}
-
-	// riceblockiron
 
 	public void dewset(Player player, ArrayList<IDDataType> item, ArrayList<IDDataType> itemSearch, boolean invert) {
 		dewset_mom aer = new dewset_mom(player, item, itemSearch, invert);
@@ -5129,6 +5169,12 @@ public class dewset extends dewset_interface {
 
 		Bukkit.getScheduler().scheduleSyncDelayedTask(ac, aer);
 
+	}
+
+	// riceblockiron
+
+	public void dewsetFullSphere(Player player, ArrayList<IDDataType> item, ArrayList<IDDataType> itemSearch) {
+		new dewsetFullSphere_c(player, item, itemSearch);
 	}
 
 	public void dewsetLight(Player player, ArrayList<IDDataType> item) {
@@ -5146,10 +5192,6 @@ public class dewset extends dewset_interface {
 
 	}
 
-	// sandmelon
-
-	// ironorefreeze
-
 	public void dewsetroom(Player player, ArrayList<IDDataType> item, ArrayList<IDDataType> itemSearch) {
 
 		dewsetroom_mom aer = new dewsetroom_mom(player, item, itemSearch);
@@ -5158,9 +5200,21 @@ public class dewset extends dewset_interface {
 
 	}
 
+	// sandmelon
+
+	// ironorefreeze
+
 	public void dewsetwall(Player player, ArrayList<IDDataType> item, ArrayList<IDDataType> itemSearch) {
 
 		dewsetwall_mom aer = new dewsetwall_mom(player, item, itemSearch);
+
+		Bukkit.getScheduler().scheduleSyncDelayedTask(ac, aer);
+
+	}
+
+	public void dewsetWallSphere(Player player, ArrayList<IDDataType> item, ArrayList<IDDataType> itemSearch) {
+
+		dewsetWallSphere_c aer = new dewsetWallSphere_c(player, item, itemSearch);
 
 		Bukkit.getScheduler().scheduleSyncDelayedTask(ac, aer);
 
@@ -5180,15 +5234,11 @@ public class dewset extends dewset_interface {
 
 	public void dewspreadq(Player player, ArrayList<IDDataType> item, ArrayList<IDDataType> itemSearch) {
 		Queue<Block> bd = new LinkedList<Block>();
-		new dewspreadq_c(player, item, itemSearch, true, bd);
-	}
-
-	public void dewsetWallSphere(Player player, ArrayList<IDDataType> item, ArrayList<IDDataType> itemSearch) {
-
-		dewsetWallSphere_c aer = new dewsetWallSphere_c(player, item, itemSearch);
-
-		Bukkit.getScheduler().scheduleSyncDelayedTask(ac, aer);
-
+		
+		dprint.r.printAll("ptdew&dewdd: " + player.getName() + " starting dsq " +   IDDataType.arrayListToString(item) + " >_< " + 
+								IDDataType.arrayListToString(itemSearch));
+		
+		new dewspreadq_c(player, item, itemSearch, true, bd,player.getLocation());
 	}
 
 	public int distance2d(int x1, int z1, int x2, int z2) {
@@ -5197,6 +5247,40 @@ public class dewset extends dewset_interface {
 		double t3 = Math.pow(t1 + t2, 0.5);
 		int t4 = (int) t3;
 		return t4;
+	}
+
+	public void fw_list(Player player) {
+		RSWorld worldid = dewset.getWorld(player.getWorld().getName());
+		Block block = player.getLocation().getBlock();
+		int getid = dewset.getProtectid(block, worldid);
+		RSData tmprs;
+
+		if (getid == -1) {
+			tmprs = null;
+		} else {
+			tmprs = worldid.rs.get(getid);
+		}
+
+		int meInSlot = 0;
+		if (getid == -1) {
+			meInSlot = -1;
+		} else {
+			meInSlot = dewset.getplayerinslot(player.getName(), getid, worldid);
+		}
+
+		if (getid == -1) {
+			player.sendMessage(dprint.r.color(tr.gettr("this_zone_don't_have_any_protect")));
+			return;
+		}
+
+		player.sendMessage(dprint.r.color("protect id ") + getid + " , position "
+				+ dewset.getPositionSignAsString(worldid, tmprs));
+
+		for (int i = 0; i < dewset_interface.FWMaxPlayer; i++)
+			if (tmprs.p[i].equalsIgnoreCase("null") == false) {
+				player.sendMessage(dprint.r.color("Member " + i + " = " + tmprs.p[i]));
+
+			}
 	}
 
 	public ArrayList<Integer> getAllHomeIDThatHaveMyName(String playerName, int worldid) {
@@ -5281,13 +5365,6 @@ public class dewset extends dewset_interface {
 		return ab;
 	}
 
-	
-	public void showpos(Player player, int idc) {
-		player.sendMessage("cur select " + "(" + selectx1[idc] + "," 
-				+ selecty1[idc] + ","+ selectz1[idc] + ") to ( "  + 
-				selectx2[idc] + "," 
-				+ selecty2[idc] + ","+ selectz2[idc] + ")");
-	}
 	
 	// getselectblock //" + tr.gettr("for") + "dewset or dewfill or dewdelete
 	public Block[] getselectblock(int getid, Player player) {
@@ -5374,6 +5451,62 @@ public class dewset extends dewset_interface {
 		return blockmain;
 
 	} // getselectblock
+	
+	// getselectblock //" + tr.gettr("for") + "dewbuy check wa mee kee block
+	public int getselectblockforbuy(int getid, Player player) {
+
+		int countall = 0;
+
+		int lx = 0;
+		int mx = 0;
+		int ly = 0;
+		int my = 0;
+		int lz = 0;
+		int mz = 0;
+
+		if (selectx1[getid] >= selectx2[getid]) {
+			mx = selectx1[getid];
+			lx = selectx2[getid];
+		} else {
+			mx = selectx2[getid];
+			lx = selectx1[getid];
+		}
+
+		if (selecty1[getid] >= selecty2[getid]) {
+			my = selecty1[getid];
+			ly = selecty2[getid];
+		} else {
+			my = selecty2[getid];
+			ly = selecty1[getid];
+		}
+
+		if (selectz1[getid] >= selectz2[getid]) {
+			mz = selectz1[getid];
+			lz = selectz2[getid];
+		} else {
+			mz = selectz2[getid];
+			lz = selectz1[getid];
+		}
+
+		for (int xl = lx; xl <= mx; xl++) {
+			for (int yl = ly; yl <= my; yl++) {
+				for (int zl = lz; zl <= mz; zl++) {
+					Block blb = player.getWorld().getBlockAt(xl, yl, zl);
+					if (cando(blb, player, "buy") == false) {
+						// dprint.r.printAll("...");
+						countall = -1;
+						return countall;
+					} else {
+						countall++;
+					}
+
+				}
+			}
+		}
+
+		return countall;
+
+	} // getselectblock
 
 	/*
 	 * public void protectrail(Block block, Player player) {
@@ -5438,62 +5571,6 @@ public class dewset extends dewset_interface {
 	 * return false; }
 	 */
 
-	// getselectblock //" + tr.gettr("for") + "dewbuy check wa mee kee block
-	public int getselectblockforbuy(int getid, Player player) {
-
-		int countall = 0;
-
-		int lx = 0;
-		int mx = 0;
-		int ly = 0;
-		int my = 0;
-		int lz = 0;
-		int mz = 0;
-
-		if (selectx1[getid] >= selectx2[getid]) {
-			mx = selectx1[getid];
-			lx = selectx2[getid];
-		} else {
-			mx = selectx2[getid];
-			lx = selectx1[getid];
-		}
-
-		if (selecty1[getid] >= selecty2[getid]) {
-			my = selecty1[getid];
-			ly = selecty2[getid];
-		} else {
-			my = selecty2[getid];
-			ly = selecty1[getid];
-		}
-
-		if (selectz1[getid] >= selectz2[getid]) {
-			mz = selectz1[getid];
-			lz = selectz2[getid];
-		} else {
-			mz = selectz2[getid];
-			lz = selectz1[getid];
-		}
-
-		for (int xl = lx; xl <= mx; xl++) {
-			for (int yl = ly; yl <= my; yl++) {
-				for (int zl = lz; zl <= mz; zl++) {
-					Block blb = player.getWorld().getBlockAt(xl, yl, zl);
-					if (cando(blb, player, "buy") == false) {
-						// dprint.r.printAll("...");
-						countall = -1;
-						return countall;
-					} else {
-						countall++;
-					}
-
-				}
-			}
-		}
-
-		return countall;
-
-	} // getselectblock
-
 	public int getwallid() {
 		int g = 0;
 		Random rn = new Random();
@@ -5523,8 +5600,6 @@ public class dewset extends dewset_interface {
 		return true;
 	}
 
-	// savesignfile
-
 	public boolean isprotectitemid(Material importid) {
 		switch (importid) {
 		case CHEST: // chest
@@ -5549,6 +5624,8 @@ public class dewset extends dewset_interface {
 			return false;
 		}
 	}
+
+	// savesignfile
 
 	public boolean isunsortid(ItemStack impo) {
 
@@ -5669,8 +5746,6 @@ public class dewset extends dewset_interface {
 		loaddewsetlistblockfile();
 	}
 
-	// savesignfiledefrag
-
 	public Block protochest(Block block, int d4, String sorttype) {
 		Block temp = null;
 		Sign sign2 = null;
@@ -5711,6 +5786,8 @@ public class dewset extends dewset_interface {
 		return typebox;
 
 	}
+
+	// savesignfiledefrag
 
 	public int randomnumberint() {
 		int randomInt = randomG.nextInt(50);
@@ -5865,6 +5942,13 @@ public class dewset extends dewset_interface {
 	public void seedglow(Block block, Player player) {
 		seedglowc arr = new seedglowc(block, player);
 		Bukkit.getScheduler().scheduleSyncDelayedTask(ac, arr);
+	}
+
+	public void showpos(Player player, int idc) {
+		player.sendMessage("cur select " + "(" + selectx1[idc] + "," 
+				+ selecty1[idc] + ","+ selectz1[idc] + ") to ( "  + 
+				selectx2[idc] + "," 
+				+ selecty2[idc] + ","+ selectz2[idc] + ")");
 	}
 
 	public void soiladdseedrecusive(Block block, Player player, Material seedid, boolean first) {

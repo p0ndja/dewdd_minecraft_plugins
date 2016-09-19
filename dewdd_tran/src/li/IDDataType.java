@@ -15,6 +15,17 @@ public class IDDataType {
 		// TODO Auto-generated constructor stub
 	}
 	
+	public static String arrayListToString(ArrayList<IDDataType> item) {
+		String abc = "";
+		
+		for (int i = 0 ; i < item.size() ; i ++ ) {
+			IDDataType the = item.get(i);
+			
+			abc = + the.id + ":" + the.data +  (i == item.size() - 1 ? ",":" ");
+		}
+		
+		return abc;
+	}
 	
 	public static boolean  isThisItemOnTheList(ArrayList<IDDataType> item, int id , byte data) {
 		for (int i = 0 ; i < item.size() ; i ++ ) {
