@@ -50,6 +50,7 @@ import org.bukkit.event.world.ChunkUnloadEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.potion.PotionEffectType;
+import org.bukkit.util.Vector;
 
 import api_skyblock.api_skyblock;
 import dewddtran.tr;
@@ -113,11 +114,11 @@ public class DigEventListener2 implements Listener {
 
 	class autocut implements Runnable {
 		private Block	b;
-		private int		pid;
+		private int		curRSID;
 
 		public autocut(Block b, int pid, int sid) {
 			this.b = b;
-			this.pid = pid;
+			this.curRSID = pid;
 		}
 
 		@Override
@@ -129,8 +130,14 @@ public class DigEventListener2 implements Listener {
 			case MELON_BLOCK:
 			case BROWN_MUSHROOM:
 			case RED_MUSHROOM:
+				break;
 			case COBBLESTONE:
-
+				if (api_skyblock.rs[curRSID].mission == 0) {
+					
+					
+					dew.nextMission(curRSID);
+					
+				}
 				break;
 
 			case NETHER_WARTS:
@@ -145,8 +152,8 @@ public class DigEventListener2 implements Listener {
 					if (en.getType() == EntityType.DROPPED_ITEM) {
 						if (en.getLocation().distance(b.getLocation()) < 50) {
 							Block b2 = b.getWorld().getBlockAt(
-									api_skyblock.rs[pid].x, 252,
-									api_skyblock.rs[pid].z);
+									api_skyblock.rs[curRSID].x, 252,
+									api_skyblock.rs[curRSID].z);
 							en.teleport(b2.getLocation());
 
 						}
@@ -187,8 +194,8 @@ public class DigEventListener2 implements Listener {
 					if (en.getType() == EntityType.DROPPED_ITEM) {
 						if (en.getLocation().distance(b.getLocation()) < 50) {
 							Block b2 = b.getWorld().getBlockAt(
-									api_skyblock.rs[pid].x, 252,
-									api_skyblock.rs[pid].z);
+									api_skyblock.rs[curRSID].x, 252,
+									api_skyblock.rs[curRSID].z);
 							en.teleport(b2.getLocation());
 						}
 					}
@@ -205,8 +212,8 @@ public class DigEventListener2 implements Listener {
 				return;
 			}
 
-			Block b2 = b.getWorld().getBlockAt(api_skyblock.rs[pid].x, 252,
-					api_skyblock.rs[pid].z);
+			Block b2 = b.getWorld().getBlockAt(api_skyblock.rs[curRSID].x, 252,
+					api_skyblock.rs[curRSID].z);
 
 			long now = 0;
 
@@ -214,17 +221,17 @@ public class DigEventListener2 implements Listener {
 
 				// tax
 				now = System.currentTimeMillis();
-				if (now - api_skyblock.rs[pid].autoCutLastTime < 1000) {
-					api_skyblock.rs[pid].autoCutCount++;
+				if (now - api_skyblock.rs[curRSID].autoCutLastTime < 1000) {
+					api_skyblock.rs[curRSID].autoCutCount++;
 				}
 				else {
-					api_skyblock.rs[pid].autoCutCount = 0;
-					api_skyblock.rs[pid].autoCutLastTime = now;
+					api_skyblock.rs[curRSID].autoCutCount = 0;
+					api_skyblock.rs[curRSID].autoCutLastTime = now;
 				}
 
-				if (api_skyblock.rs[pid].autoCutCount > dew.maxautocut) {
+				if (api_skyblock.rs[curRSID].autoCutCount > dew.maxautocut) {
 					// retry it
-					autocut aee = new autocut(b, pid, 0);
+					autocut aee = new autocut(b, curRSID, 0);
 					Bukkit.getScheduler().scheduleSyncDelayedTask(ac, aee, 1);
 
 					return;
@@ -233,10 +240,10 @@ public class DigEventListener2 implements Listener {
 				b2.getWorld().dropItem(b2.getLocation(), it);
 			}
 
-			dprint.r.printC("autocut: " + b.getType().name() + ":" + b.getData()
-					+ " at " + api_skyblock.rs[pid].p[0] + "(" + b.getX() + ","
+		/*	dprint.r.printC("autocut: " + b.getType().name() + ":" + b.getData()
+					+ " at " + api_skyblock.rs[curRSID].p[0] + "(" + b.getX() + ","
 					+ b.getY() + "," + b.getZ() + ") "
-					+ api_skyblock.rs[pid].autoCutCount);
+					+ api_skyblock.rs[curRSID].autoCutCount);*/
 
 			b.setType(Material.AIR);
 		}
@@ -309,7 +316,7 @@ public class DigEventListener2 implements Listener {
 
 		
 
-		for (int lop = 0; lop < api_skyblock.rsmaxp; lop++)
+		for (int lop = 0; lop < api_skyblock.RSMaxPlayer; lop++)
 			for (Player pl : Bukkit.getOnlinePlayers())
 				if (api_skyblock.rs[getid].p[lop]
 						.equalsIgnoreCase(pl.getName())) {
@@ -385,7 +392,7 @@ public class DigEventListener2 implements Listener {
 
 		// loop all player is there in that zone ?
 
-		for (int lop = 0; lop < api_skyblock.rsmaxp; lop++)
+		for (int lop = 0; lop < api_skyblock.RSMaxPlayer; lop++)
 			for (Player pl : Bukkit.getOnlinePlayers())
 				if (api_skyblock.rs[getid].p[lop]
 						.equalsIgnoreCase(pl.getName())) {
@@ -659,7 +666,7 @@ public class DigEventListener2 implements Listener {
 
 		// if found
 
-		for (int lop = 0; lop < api_skyblock.rsmaxp; lop++)
+		for (int lop = 0; lop < api_skyblock.RSMaxPlayer; lop++)
 			for (Player pl : Bukkit.getOnlinePlayers())
 				if (api_skyblock.rs[getid].p[lop]
 						.equalsIgnoreCase(pl.getName())) {
@@ -733,7 +740,7 @@ public class DigEventListener2 implements Listener {
 			else if (m.length == 2 || m.length == 3)
 				if (m[1].equalsIgnoreCase("rsmax"))
 					player.sendMessage(dprint.r.color("rsmax = "
-							+ api_skyblock.rsmax));
+							+ api_skyblock.rsMax));
 				else if (m[1].equalsIgnoreCase("buyhere")) {
 					// for buy these zone
 
@@ -747,16 +754,16 @@ public class DigEventListener2 implements Listener {
 
 					// buy this zone
 
-					api_skyblock.rsmax++;
-					api_skyblock.rs[api_skyblock.rsmax - 1].p = new String[api_skyblock.rsmaxp];
-					for (int lop = 0; lop < api_skyblock.rsmaxp; lop++)
-						api_skyblock.rs[api_skyblock.rsmax - 1].p[lop] = "null";
+					api_skyblock.rsMax++;
+					api_skyblock.rs[api_skyblock.rsMax - 1].p = new String[api_skyblock.RSMaxPlayer];
+					for (int lop = 0; lop < api_skyblock.RSMaxPlayer; lop++)
+						api_skyblock.rs[api_skyblock.rsMax - 1].p[lop] = "null";
 
-					api_skyblock.rs[api_skyblock.rsmax - 1].p[0] = player
+					api_skyblock.rs[api_skyblock.rsMax - 1].p[0] = player
 							.getName();
 					// time to find x and z
 
-					api_skyblock.rs[api_skyblock.rsmax - 1].y = player
+					api_skyblock.rs[api_skyblock.rsMax - 1].y = player
 							.getLocation().getBlockY();
 
 					// x
@@ -768,9 +775,9 @@ public class DigEventListener2 implements Listener {
 
 					if (Math.abs(player.getLocation().getBlockX() - i3) < Math
 							.abs(player.getLocation().getBlockX() - i4))
-						api_skyblock.rs[api_skyblock.rsmax - 1].x = (int) i3;
+						api_skyblock.rs[api_skyblock.rsMax - 1].x = (int) i3;
 					else
-						api_skyblock.rs[api_skyblock.rsmax - 1].x = i4;
+						api_skyblock.rs[api_skyblock.rsMax - 1].x = i4;
 
 					// z
 					i3 = player.getLocation().getBlockZ() / 300;
@@ -781,20 +788,20 @@ public class DigEventListener2 implements Listener {
 
 					if (Math.abs(player.getLocation().getBlockZ() - i3) < Math
 							.abs(player.getLocation().getBlockZ() - i4))
-						api_skyblock.rs[api_skyblock.rsmax - 1].z = (int) i3;
+						api_skyblock.rs[api_skyblock.rsMax - 1].z = (int) i3;
 					else
-						api_skyblock.rs[api_skyblock.rsmax - 1].z = i4;
+						api_skyblock.rs[api_skyblock.rsMax - 1].z = i4;
 
 					//
 					player.sendMessage(dprint.r
 							.color("ptdew&dewdd : bought island at ("
-									+ api_skyblock.rs[api_skyblock.rsmax - 1].x
+									+ api_skyblock.rs[api_skyblock.rsMax - 1].x
 									+ ","
-									+ api_skyblock.rs[api_skyblock.rsmax - 1].y
+									+ api_skyblock.rs[api_skyblock.rsMax - 1].y
 									+ ","
-									+ api_skyblock.rs[api_skyblock.rsmax - 1].z
+									+ api_skyblock.rs[api_skyblock.rsMax - 1].z
 									+ ") host is "
-									+ api_skyblock.rs[api_skyblock.rsmax - 1].p[0]));
+									+ api_skyblock.rs[api_skyblock.rsMax - 1].p[0]));
 
 					dew.saversprotectfile();
 					return;
@@ -805,7 +812,7 @@ public class DigEventListener2 implements Listener {
 					if (m.length != 3) {
 						player.sendMessage(dprint.r
 								.color("need 3 arguments   /skyblock go <player>"));
-						for (int lop2 = 0; lop2 < api_skyblock.rsmax; lop2++) { // lop2
+						for (int lop2 = 0; lop2 < api_skyblock.rsMax; lop2++) { // lop2
 							Block block = player.getWorld().getBlockAt(
 									api_skyblock.rs[lop2].x,
 									api_skyblock.rs[lop2].y + 10,
@@ -820,7 +827,7 @@ public class DigEventListener2 implements Listener {
 						return;
 					}
 
-					for (int lop2 = 0; lop2 < api_skyblock.rsmax; lop2++)
+					for (int lop2 = 0; lop2 < api_skyblock.rsMax; lop2++)
 						if (api_skyblock.rs[lop2].p[0].toLowerCase().indexOf(
 								m[2].toLowerCase()) > -1) {
 							Block block = player.getWorld().getBlockAt(
@@ -843,8 +850,8 @@ public class DigEventListener2 implements Listener {
 					int manyhome[] = new int[100];
 					int manyhomemax = 0;
 
-					for (int lop = 0; lop < api_skyblock.rsmax; lop++)
-						for (int lop2 = 0; lop2 < api_skyblock.rsmaxp; lop2++)
+					for (int lop = 0; lop < api_skyblock.rsMax; lop++)
+						for (int lop2 = 0; lop2 < api_skyblock.RSMaxPlayer; lop2++)
 							if (api_skyblock.rs[lop].p[lop2]
 									.equalsIgnoreCase(player.getName())) {
 								manyhomemax++;
@@ -1026,14 +1033,14 @@ public class DigEventListener2 implements Listener {
 
 					// check free slot
 
-					for (int i = 1; i < api_skyblock.rsmaxp; i++)
+					for (int i = 1; i < api_skyblock.RSMaxPlayer; i++)
 						if (api_skyblock.rs[getid].p[i].equalsIgnoreCase(m[2])) {
 							player.sendMessage(dprint.r.color(tr
 									.gettr("already_added_this_name_so_not_work")));
 							return;
 						}
 
-					for (int i = 1; i < api_skyblock.rsmaxp; i++)
+					for (int i = 1; i < api_skyblock.RSMaxPlayer; i++)
 						if (api_skyblock.rs[getid].p[i]
 								.equalsIgnoreCase("null")) {
 							api_skyblock.rs[getid].p[i] = m[2];
@@ -1088,7 +1095,7 @@ public class DigEventListener2 implements Listener {
 
 					// check free slot
 
-					for (int i = 1; i < api_skyblock.rsmaxp; i++)
+					for (int i = 1; i < api_skyblock.RSMaxPlayer; i++)
 						if (api_skyblock.rs[getid].p[i].equalsIgnoreCase(m[2])) {
 							api_skyblock.rs[getid].p[i] = "null";
 							player.sendMessage(dprint.r.color(tr
@@ -1115,7 +1122,7 @@ public class DigEventListener2 implements Listener {
 						return;
 					}
 
-					for (int i = 0; i < api_skyblock.rsmaxp; i++)
+					for (int i = 0; i < api_skyblock.RSMaxPlayer; i++)
 						if (api_skyblock.rs[getid].p[i]
 								.equalsIgnoreCase("null") == false)
 							player.sendMessage(dprint.r.color("Member " + i
@@ -1188,10 +1195,10 @@ public class DigEventListener2 implements Listener {
 			if (sign.getLine(0).equalsIgnoreCase("[skypercent20]")) {
 				// show
 
-				int pid[] = new int[api_skyblock.rsmax];
+				int pid[] = new int[api_skyblock.rsMax];
 				int pidmax = 0;
 
-				for (int i = 0; i < api_skyblock.rsmax; i++) {
+				for (int i = 0; i < api_skyblock.rsMax; i++) {
 					if (api_skyblock.rs[i].mission > 0) {
 						pid[pidmax] = i;
 						pidmax++;
@@ -1293,7 +1300,7 @@ public class DigEventListener2 implements Listener {
 		
 		}
 		else {
-			player.sendMessage(dew.getFullMissionHeadAndCurLevel(dew.rs[rsid].mission));
+			player.sendMessage(dew.getFullMissionHeadAndCurLevel(api_skyblock.rs[rsid].mission));
 			
 		}
 
@@ -1361,7 +1368,7 @@ public class DigEventListener2 implements Listener {
 
 						if (se == -1) continue;
 
-						for (int lop = 0; lop < api_skyblock.rsmaxp; lop++)
+						for (int lop = 0; lop < api_skyblock.RSMaxPlayer; lop++)
 							for (Player pl : Bukkit.getOnlinePlayers())
 								if (api_skyblock.rs[getid].p[lop]
 										.equalsIgnoreCase(pl.getName())) {
@@ -1394,7 +1401,8 @@ public class DigEventListener2 implements Listener {
 						&& !plvi.hasPermission(api_skyblock.poveride)
 						&& api_skyblock.getplayerinslot(dew.flag_pvp, pvparea) == -1) {
 					Entity en = e.getProjectile();
-					en.setVelocity(en.getVelocity().getRandom());
+					en.getVelocity();
+					en.setVelocity(Vector.getRandom());
 
 				}
 		}
