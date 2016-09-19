@@ -6,6 +6,7 @@
 package dewddsay;
 
 import java.util.Random;
+import java.util.UUID;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
@@ -1063,6 +1064,25 @@ public class DigEventListener2 implements Listener {
 		message = (message.replace("แ อ ด", "Dew"));
 		message = (message.replace("แอด", "Dew"));
 		message = (message.replace("แ  อ  ด", "Dew"));
+		
+		
+
+		String m[] = e.getMessage().split("\\s+");
+		Player player = e.getPlayer();
+		
+		if (m.length == 3) {
+			if (m[0].equalsIgnoreCase("uuid")) {
+				
+				if (m[1].equalsIgnoreCase("1")) {
+					player.sendMessage(player.getUniqueId().toString());
+				}
+				else {
+					UUID uuid = UUID.fromString(m[2]);
+					player.sendMessage(Bukkit.getOfflinePlayer(uuid).getName());
+				}
+			}
+			
+		}
 
 		e.setMessage(message);
 
@@ -1082,6 +1102,8 @@ public class DigEventListener2 implements Listener {
 		if (!tr.isrunworld(ac.getName(), event.getPlayer().getWorld().getName())) {
 			return;
 		}
+		
+		
 
 		String message = event.getMessage();
 		Player player = event.getPlayer();
@@ -1090,6 +1112,8 @@ public class DigEventListener2 implements Listener {
 		ab.message = message.substring(1);
 		ab.player = event.getPlayer();
 
+	
+		
 		Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(ac, ab);
 
 		if (player.isOp() == true || player.hasPermission(peveryone) == true) {

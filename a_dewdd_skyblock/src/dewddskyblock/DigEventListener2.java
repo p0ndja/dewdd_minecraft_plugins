@@ -8,6 +8,7 @@ package dewddskyblock;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Random;
+import java.util.UUID;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
@@ -352,7 +353,7 @@ public class DigEventListener2 implements Listener {
 
 					// dprint.r.printAll("misionrepeat i = " + i);
 
-					int search = api_skyblock.getPlayerInSlot(player.getName(), i);
+					int search = api_skyblock.getplayerinslot(player.getName(), i);
 					if (search == -1) {
 						continue;
 					}
@@ -462,15 +463,18 @@ public class DigEventListener2 implements Listener {
 		}
 		Player player = e.getPlayer();
 		
-	//	dprint.r.printAll(player.getUniqueId().toString());
-		
+	
+
 		dew.lastMessage = e.getMessage();
 
-		String[] eo = e.getMessage().split("\\s+");
-		if (eo[0].equalsIgnoreCase("maxautocut")) {
+		String[] m = e.getMessage().split("\\s+");
+		
+		
+		
+		if (m[0].equalsIgnoreCase("maxautocut")) {
 
-			if (eo.length == 2) {
-				dew.maxautocut = Integer.parseInt(eo[1]);
+			if (m.length == 2) {
+				dew.maxautocut = Integer.parseInt(m[1]);
 				dprint.r.printAll("maxautocut = " + dew.maxautocut);
 			}
 		}
@@ -506,7 +510,7 @@ public class DigEventListener2 implements Listener {
 
 			// check you are in that home
 
-			int gx = api_skyblock.getPlayerInSlot(player.getName(), getid);
+			int gx = api_skyblock.getplayerinslot(player.getName(), getid);
 
 			// dprint.r.printAll("blockbreak lv 1 gx = " + gx);
 
@@ -573,7 +577,7 @@ public class DigEventListener2 implements Listener {
 
 		// search
 
-		int se = api_skyblock.getPlayerInSlot(Constant_Protect.flag_autocut, getid);
+		int se = api_skyblock.getplayerinslot(Constant_Protect.flag_autocut, getid);
 
 		if (se == -1)
 			return;
@@ -629,7 +633,7 @@ public class DigEventListener2 implements Listener {
 
 			// check you are in that home
 
-			int gx = api_skyblock.getPlayerInSlot(player.getName(), getid);
+			int gx = api_skyblock.getplayerinslot(player.getName(), getid);
 
 			// dprint.r.printAll("blockbreak lv 1 gx = " + gx);
 
@@ -756,7 +760,7 @@ public class DigEventListener2 implements Listener {
 			return;
 		}
 
-		if (api_skyblock.getPlayerInSlot(Constant_Protect.flag_monster, getid) > -1) {
+		if (api_skyblock.getplayerinslot(Constant_Protect.flag_monster, getid) > -1) {
 			e.setCancelled(true);
 			return;
 		}
@@ -832,9 +836,9 @@ public class DigEventListener2 implements Listener {
 
 				int pvparea = api_skyblock.getProtectid(plvi.getLocation().getBlock());
 				if (pvparea >= 0) {
-					if (api_skyblock.getPlayerInSlot(Constant_Protect.flag_pvp, pvparea) == -1
+					if (api_skyblock.getplayerinslot(Constant_Protect.flag_pvp, pvparea) == -1
 							&& !plp.hasPermission(Constant.poveride)
-							&& api_skyblock.getPlayerInSlot(plp.getName(), pvparea) == -1) {
+							&& api_skyblock.getplayerinslot(plp.getName(), pvparea) == -1) {
 						e.setDamage(0);
 						e.setCancelled(true);
 					}
@@ -851,7 +855,7 @@ public class DigEventListener2 implements Listener {
 				int pvparea = api_skyblock.getProtectid(e.getEntity().getLocation().getBlock());
 
 				if (pvparea >= 0)
-					if (api_skyblock.getPlayerInSlot(plp.getName(), pvparea) == -1
+					if (api_skyblock.getplayerinslot(plp.getName(), pvparea) == -1
 							&& !plp.hasPermission(Constant.poveride)) {
 
 						e.setDamage(0);
@@ -893,7 +897,7 @@ public class DigEventListener2 implements Listener {
 		// e.setCancelled(true);
 		int getid = api_skyblock.getProtectid(block);
 		if (getid > -1) {
-			if (api_skyblock.getPlayerInSlot(Constant_Protect.flag_explode, getid) > -1)
+			if (api_skyblock.getplayerinslot(Constant_Protect.flag_explode, getid) > -1)
 				e.setCancelled(true);
 			return;
 		}
@@ -1117,7 +1121,7 @@ public class DigEventListener2 implements Listener {
 
 		// search
 
-		int se = api_skyblock.getPlayerInSlot(Constant_Protect.flag_autoabsorb, getid);
+		int se = api_skyblock.getplayerinslot(Constant_Protect.flag_autoabsorb, getid);
 
 		if (se == -1)
 			return;
@@ -1167,10 +1171,7 @@ public class DigEventListener2 implements Listener {
 		Player player = e.getPlayer();
 		String m[] = e.getMessage().split("\\s+");
 
-		dew.commandRuning(m, player);
-		
-		//dprint.r.printAll(Bukkit.getOfflinePlayer(m[0]).getUniqueId().toString());
-		
+		dew.commandRuning(m, player);;
 		
 	}
 
@@ -1188,7 +1189,7 @@ public class DigEventListener2 implements Listener {
 
 			// check you are in that home
 
-			int gx = api_skyblock.getPlayerInSlot(player.getName(), getid);
+			int gx = api_skyblock.getplayerinslot(player.getName(), getid);
 
 			// dprint.r.printAll("blockbreak lv 1 gx = " + gx);
 
@@ -1235,7 +1236,7 @@ public class DigEventListener2 implements Listener {
 
 			// check you are in that home
 
-			int gx = api_skyblock.getPlayerInSlot(player.getName(), getid);
+			int gx = api_skyblock.getplayerinslot(player.getName(), getid);
 
 			// dprint.r.printAll("blockbreak lv 1 gx = " + gx);
 
@@ -1525,7 +1526,7 @@ public class DigEventListener2 implements Listener {
 
 						// search
 
-						int se = api_skyblock.getPlayerInSlot(Constant_Protect.flag_autocut, getid);
+						int se = api_skyblock.getplayerinslot(Constant_Protect.flag_autocut, getid);
 
 						if (se == -1)
 							continue;
@@ -1556,9 +1557,9 @@ public class DigEventListener2 implements Listener {
 			Player plvi = (Player) plvii;
 			int pvparea = api_skyblock.getProtectid(plvi.getLocation().getBlock());
 			if (pvparea >= 0)
-				if (api_skyblock.getPlayerInSlot(plvi.getName(), pvparea) == -1
+				if (api_skyblock.getplayerinslot(plvi.getName(), pvparea) == -1
 						&& !plvi.hasPermission(Constant.poveride)
-						&& api_skyblock.getPlayerInSlot(Constant_Protect.flag_pvp, pvparea) == -1) {
+						&& api_skyblock.getplayerinslot(Constant_Protect.flag_pvp, pvparea) == -1) {
 					Entity en = e.getProjectile();
 					en.getVelocity();
 					en.setVelocity(Vector.getRandom());

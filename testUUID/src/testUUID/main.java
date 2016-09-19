@@ -207,8 +207,12 @@ class UUID {
 	}
 
 	public String spliteUUID(String old) {
-		String fff = old.substring(0, 8) + "-" + old.substring(8, 12) + "-" + old.substring(12, 16) + "-"
-				+ old.substring(16);
+		String fff = old.substring(0, 8) + "-" + 
+	old.substring(8, 12) + "-" 
+				+ old.substring(12, 16) + "-"
+				+ old.substring(16,20) + "-" 
+				+ old.substring(20);
+		
 		return fff;
 	}
 
@@ -407,7 +411,7 @@ class api_skyblock {
 
 public class main {
 	public static void main(String abc[]) {
-		int mode = 3;
+		int mode = 2;
 		UUID xx = new UUID();
 
 		String thePath = "";
@@ -435,7 +439,7 @@ public class main {
 			break;
 		case 2:
 			api_skyblock sky = new api_skyblock();
-			sky.loadRSProtectFile("/home/d/mis/skyblock/plugins/dewdd_skyblock/ptdew_dewdd_rs_protect.txt");
+			sky.loadRSProtectFile("/home/d/mis/skyblock/plugins/dewdd_skyblock/ptdew_dewdd_rs_protect (backup).txt");
 
 			for (int i = 0; i < api_skyblock.rsMax; i++) {
 				RSData rs = sky.rs[i];

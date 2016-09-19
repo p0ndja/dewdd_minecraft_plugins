@@ -15,7 +15,6 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Random;
-import java.util.UUID;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
@@ -1199,7 +1198,7 @@ public class api_skyblock {
 					continue;
 				}
 
-				if (getPlayerInSlot(player.getName(), id) > -1) {
+				if (getplayerinslot(player.getName(), id) > -1) {
 
 					player.sendMessage(dprint.r.color(tr.gettr("cur_c_is") + (rs[id].mission)));
 				}
@@ -1238,15 +1237,15 @@ public class api_skyblock {
 		}
 
 		// found
-		int getslot = getPlayerInSlot(player.getName(), getid);
+		int getslot = getplayerinslot(player.getName(), getid);
 		rs[getid].lastUsed = System.currentTimeMillis();
 
-		if (getPlayerInSlot(Constant_Protect.flag_noprotect, getid) > -1) {
+		if (getplayerinslot(Constant_Protect.flag_noprotect, getid) > -1) {
 
 			return true;
 		}
 
-		if (getPlayerInSlot(Constant_Protect.flag_everyone, getid) > -1 && mode.equalsIgnoreCase("right")) {
+		if (getplayerinslot(Constant_Protect.flag_everyone, getid) > -1 && mode.equalsIgnoreCase("right")) {
 
 			// player.sendMessage(dprint.r.color("this is not your skyblock ,
 			// host is "
@@ -1305,10 +1304,7 @@ public class api_skyblock {
 		return -1;
 	}
 
-	public static int getPlayerInSlot(String player, int rsID) {
-		
-	
-		
+	public static int getplayerinslot(String player, int rsID) {
 		for (int lop = 0; lop < RSMaxPlayer; lop++) {
 			if (rs[rsID].p[lop].equalsIgnoreCase(player)) {
 				return lop;
@@ -1317,18 +1313,6 @@ public class api_skyblock {
 
 		return -1;
 	}
-	
-	public static int getPlayerInSlot(UUID player, int rsID) {
-		
-		for (int lop = 0; lop < RSMaxPlayer; lop++) {
-			if (rs[rsID].p[lop].split("=")[1].equalsIgnoreCase(player.toString())) {
-				return lop;
-			}
-		}
-
-		return -1;
-	}
-
 
 	public static LXRXLZRZType getPositionLXRXLZRZ() {
 		LXRXLZRZType ee = new LXRXLZRZType(rs[0].x, rs[0].y, rs[0].z, rs[0].x, rs[0].y, rs[0].z);
@@ -2430,7 +2414,7 @@ public class api_skyblock {
 						player.sendMessage(dprint.r.color("need 3 arguments   /skyblock home <player>"));
 
 						for (int lop2 = 0; lop2 < api_skyblock.rsMax; lop2++) {
-							if (api_skyblock.getPlayerInSlot(player.getName(), lop2) == -1) {
+							if (api_skyblock.getplayerinslot(player.getName(), lop2) == -1) {
 								continue;
 							}
 
@@ -2447,7 +2431,7 @@ public class api_skyblock {
 					int homehashim = 0;
 
 					for (int lop2 = 0; lop2 < api_skyblock.rsMax; lop2++) {
-						if (api_skyblock.getPlayerInSlot(player.getName(), lop2) == -1) {
+						if (api_skyblock.getplayerinslot(player.getName(), lop2) == -1) {
 							continue;
 						}
 
@@ -2476,7 +2460,7 @@ public class api_skyblock {
 
 					if (counttruename == 1 || nearname == 1) {
 						for (int lop2 = 0; lop2 < api_skyblock.rsMax; lop2++) {
-							if (api_skyblock.getPlayerInSlot(player.getName(), lop2) == -1) {
+							if (api_skyblock.getplayerinslot(player.getName(), lop2) == -1) {
 								continue;
 							}
 
@@ -2510,7 +2494,7 @@ public class api_skyblock {
 						player.sendMessage(dprint.r.color(tr.gettr("list of sky protect name like your search name")));
 
 						for (int lop2 = 0; lop2 < api_skyblock.rsMax; lop2++) {
-							if (api_skyblock.getPlayerInSlot(player.getName(), lop2) == -1) {
+							if (api_skyblock.getplayerinslot(player.getName(), lop2) == -1) {
 								continue;
 							}
 
@@ -2530,7 +2514,7 @@ public class api_skyblock {
 								.color(tr.gettr("you_have_more_than_1_home_so_choose_it") + " /skyblock home <name>"));
 
 						for (int lop2 = 0; lop2 < api_skyblock.rsMax; lop2++) {
-							if (api_skyblock.getPlayerInSlot(player.getName(), lop2) == -1) {
+							if (api_skyblock.getplayerinslot(player.getName(), lop2) == -1) {
 								continue;
 							}
 
@@ -2556,7 +2540,7 @@ public class api_skyblock {
 
 					}
 
-					if (api_skyblock.getPlayerInSlot(player.getName(), getid) == -1) {
+					if (api_skyblock.getplayerinslot(player.getName(), getid) == -1) {
 						player.sendMessage(dprint.r
 								.color(tr.gettr("owner_of_this_island_name") + " = " + api_skyblock.rs[getid].p[0]));
 					}
@@ -2638,7 +2622,7 @@ public class api_skyblock {
 						return;
 					} else {
 						// check host
-						int doesIInThisHome = api_skyblock.getPlayerInSlot(player.getName(), getid);
+						int doesIInThisHome = api_skyblock.getplayerinslot(player.getName(), getid);
 
 						if (doesIInThisHome == -1) {
 							player.sendMessage(dprint.r.color(tr.gettr("don't have your name on this protect")));
@@ -2861,7 +2845,7 @@ public class api_skyblock {
 
 	public void updateLVInventory(Inventory inv, Player player) {
 		int idx = api_skyblock.getProtectid(player.getLocation().getBlock());
-		int id = api_skyblock.getPlayerInSlot(player.getName(), idx);
+		int id = api_skyblock.getplayerinslot(player.getName(), idx);
 
 		if (id == -1) {
 			return;

@@ -18,7 +18,7 @@ public  class api_creative {
 	public static String peroveride = "dewdd.creative.overide";
 
 	public static int signY = 254;
-	public static int max_b = 5000;// 19900;
+	public static int max_b = 2600;// 19900;
 	private Random randomG = new Random();
 
 	public static JavaPlugin ac;
