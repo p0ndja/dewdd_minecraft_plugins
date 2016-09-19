@@ -161,7 +161,7 @@ public class api_skyblock {
 
 					// check protect if there so skip
 					bb = midBlockX0Z0.getLocation().getWorld().getBlockAt(tmpx, 150, tmpz);
-					int checkid = getprotectid(bb);
+					int checkid = getProtectid(bb);
 					if (checkid > -1) {
 						dprint.r.printC("searching no protect zone " + tmpx + ",150," + tmpz);
 
@@ -448,7 +448,7 @@ public class api_skyblock {
 
 					lastcreate = System.currentTimeMillis();
 
-					player.sendMessage(tr.gettr("cur_lv_is") + (rs[newid].mission));
+					player.sendMessage(tr.gettr("cur_c_is") + (rs[newid].mission));
 
 					// add item done
 
@@ -473,7 +473,7 @@ public class api_skyblock {
 
 				// int id = getOWNIslandID(player, false);
 
-				int id = getprotectid(player.getLocation().getBlock());
+				int id = getProtectid(player.getLocation().getBlock());
 
 				// island not found
 				if (id == -1) {
@@ -482,7 +482,7 @@ public class api_skyblock {
 
 				if (getplayerinslot(player.getName(), id) > -1) {
 
-					player.sendMessage(dprint.r.color(tr.gettr("cur_lv_is") + (rs[id].mission)));
+					player.sendMessage(dprint.r.color(tr.gettr("cur_c_is") + (rs[id].mission)));
 				}
 
 				// check his
@@ -511,7 +511,7 @@ public class api_skyblock {
 			return true;
 		}
 
-		int getid = getprotectid(block);
+		int getid = getProtectid(block);
 
 		if (getid == -1) {
 			// player.sendMessage(dprint.r.color("this is not anyone skyblock");
@@ -572,7 +572,7 @@ public class api_skyblock {
 
 	public static int getplayerinslot(String player, Block block) {
 
-		int getid = getprotectid(block);
+		int getid = getProtectid(block);
 		if (getid == -1) {
 			return -2;
 		}
@@ -626,7 +626,7 @@ public class api_skyblock {
 		return ee;
 	}
 
-	public static int getprotectid(Block block) {
+	public static int getProtectid(Block block) {
 		// must check world
 
 		for (int lop = 0; lop < rsMax; lop++) {

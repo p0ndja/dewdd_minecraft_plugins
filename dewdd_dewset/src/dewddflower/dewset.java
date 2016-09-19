@@ -1705,7 +1705,7 @@ public class dewset extends dewset_interface {
 				}
 
 			}
-			if (checkpermissionarea(player.getLocation().getBlock(), true) >= 0
+			if (getProtectid(player.getLocation().getBlock()) >= 0
 					&& player.hasPermission(pmaindewbuyreplace) == false) {
 				player.sendMessage(
 						dprint.r.color("ptdew&dewdd : " + tr.gettr("can't_dewbuy_replace_another_home_zone")));
@@ -1820,7 +1820,7 @@ public class dewset extends dewset_interface {
 			 */
 
 			// find id home
-			int xyz = checkpermissionarea(player.getLocation().getBlock(), true);
+			int xyz = getProtectid(player.getLocation().getBlock());
 			if (xyz == -1) {
 				player.sendMessage(
 						dprint.r.color("ptdew&dewdd : " + tr.gettr("dewbuydelete_this_zone_don't_have_protection")));
@@ -1869,7 +1869,7 @@ public class dewset extends dewset_interface {
 				return;
 			}
 
-			int homeid = checkpermissionarea(block2, true);
+			int homeid = getProtectid(block2);
 			if (homeid == -1) {
 				player.sendMessage(dprint.r.color("ptdew&dewdd : " + tr.gettr("this_area_don't_have_protect")));
 				return;
@@ -2786,7 +2786,7 @@ public class dewset extends dewset_interface {
 		public void run() {
 			player.sendMessage(dprint.r.color("ptdew&dewdd : dew select protect" + tr.gettr("starting")));
 			Block block = player.getLocation().getBlock();
-			int getid = checkpermissionarea(block, true);
+			int getid = getProtectid(block);
 			if (getid == -1) {
 				player.sendMessage(dprint.r.color("ptdew&dewdd : " + tr.gettr("this_zone_don't_have_protect")));
 				return;
@@ -5268,7 +5268,7 @@ public class dewset extends dewset_interface {
 
 	}
 
-	public int checkpermissionarea(Block block, boolean gethomeid) {
+	public int getProtectid(Block block) {
 		int worldid = getworldid(block.getWorld().getName());
 
 		if (worldid == -1)
@@ -5391,7 +5391,7 @@ public class dewset extends dewset_interface {
 
 		boolean goodc1 = false;
 
-		int dewsignnow = checkpermissionarea(block, true);
+		int dewsignnow = getProtectid(block);
 
 		if (dewsignnow >= 0) { // true if that is protect
 			boolean che1 = false;
@@ -5759,8 +5759,8 @@ public class dewset extends dewset_interface {
 	}
 
 	@Override
-	public boolean dewps_add(String message, Player player) {
-		int xyz = checkpermissionarea(player.getLocation().getBlock(), true);
+	public boolean fw_add(String message, Player player) {
+		int xyz = getProtectid(player.getLocation().getBlock());
 
 		String m[] = message.split("\\s+");
 
@@ -5841,7 +5841,7 @@ public class dewset extends dewset_interface {
 	}
 
 	@Override
-	public boolean dewps_goid(Player player, int id) {
+	public boolean fw_goid(Player player, int id) {
 
 		int worldid = getworldid(player.getLocation().getWorld().getName());
 
@@ -5872,11 +5872,11 @@ public class dewset extends dewset_interface {
 	}
 
 	@Override
-	public boolean dewps_list(Player player) {
+	public boolean fw_list(Player player) {
 
 		Block block = player.getLocation().getBlock();
 
-		int xyz = checkpermissionarea(block, true);
+		int xyz = getProtectid(block);
 		if (xyz == -1) {
 			player.sendMessage(dprint.r.color("ptdew&dewdd : " + tr.gettr("tree_check_protect_and_not_found")));
 			return false;
@@ -5895,7 +5895,7 @@ public class dewset extends dewset_interface {
 	}
 
 	@Override
-	public boolean dewps_remove(String message, Player player) {
+	public boolean fw_remove(String message, Player player) {
 		String m[] = message.split("\\s+");
 		if (m.length != 3) {
 			player.sendMessage(dprint.r.color("/fw remove <name>"));
@@ -5906,7 +5906,7 @@ public class dewset extends dewset_interface {
 		int worldid = getworldid(player.getLocation().getWorld().getName());
 		// got player name
 
-		int xyz = checkpermissionarea(player.getLocation().getBlock(), true);
+		int xyz = getProtectid(player.getLocation().getBlock());
 
 		dprint.r.printC("ptdew&dewdd : dewremove name = '" + nameToRemove + "'");
 		System.out.println("ptdew&dewdd : dewremove " + tr.gettr("search_home_id") + "= '" + xyz + "'");
