@@ -565,33 +565,9 @@ public class DigEventListener2 implements Listener {
 
 			// dewinvert
 
-			if (message.equalsIgnoreCase("dewtime") == true) {
-				dew.dewtime(player);
-				canc = true;
-				return;
-			}
+		
 
-			if (message.equalsIgnoreCase("time") == true) {
-
-				for (int c = 0; c <= dew.timechunkmax; c++) {
-					dprint.r.printAll("dewtime list [" + c + "] = "
-							+ dew.timechunkx[c] + "," + dew.timechunkz[c]);
-				}
-
-				canc = true;
-				return;
-			}
-
-			if (message.equalsIgnoreCase("cleartime") == true) {
-				dew.timechunkx = new int[10000];
-				dew.timechunkz = new int[10000];
-
-				dew.timechunkmax = -1;
-				dprint.r.printAll("dewtime cleared");
-
-				canc = true;
-				return;
-			}
+		
 
 			// dewfillwall
 
@@ -2140,23 +2116,6 @@ public class DigEventListener2 implements Listener {
 
 		if (!tr.isrunworld(ac.getName(), event.getWorld().getName())) return;
 
-		boolean isad = false;
-		Chunk chunk = event.getChunk();
-		int oldf = 0;
-
-		for (int ddx = 0; ddx <= dew.timechunkmax; ddx++)
-			if (chunk.getX() * 16 == dew.timechunkx[ddx]
-					&& chunk.getZ() * 16 == dew.timechunkz[ddx]) {
-				isad = true;
-				oldf = ddx;
-				break;
-			}
-
-		if (isad == true) {
-			event.setCancelled(true);
-			dprint.r.printC("dewtime cancelled unload chunk = [" + oldf
-					+ "] > " + chunk.getX() * 16 + "," + chunk.getZ() * 16);
-		}
 
 	}
 

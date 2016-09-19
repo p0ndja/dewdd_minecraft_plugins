@@ -17,7 +17,6 @@ import java.util.Queue;
 import java.util.Random;
 
 import org.bukkit.Bukkit;
-import org.bukkit.Chunk;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Sound;
@@ -3894,105 +3893,7 @@ public class dewset extends dewset_interface {
 		}
 	}
 
-	class dewtime_c implements Runnable {
-		private Player	player;
-
-		public dewtime_c(Player player) {
-			this.player = player;
-			Bukkit.getScheduler().scheduleSyncDelayedTask(ac, this);
-		}
-
-		@Override
-		public void run() {
-
-			int getid = getfreeselect(player);
-			if (selectx1[getid] == 0 && selecty1[getid] == 0
-					&& selectz1[getid] == 0) {
-				player.sendMessage(dprint.r.color("ptdew&dewdd : dewtime "
-						+ tr.gettr("please_set_block_1")));
-				return;
-			}
-			if (selectx2[getid] == 0 && selecty2[getid] == 0
-					&& selectz2[getid] == 0) {
-				player.sendMessage(dprint.r.color("ptdew&dewdd : dewtime "
-						+ tr.gettr("please_set_block_2")));
-				return;
-			}
-
-			dprint.r.printAll("ptdew&dewdd : '" + player.getName() + "'"
-					+ tr.gettr("starting") + " dewtime "
-					+ player.getItemInHand().getTypeId() + ":"
-					+ player.getItemInHand().getData());
-
-			int mx = 0;
-			int mz = 0;
-
-			int lx = 0;
-			int lz = 0;
-
-			if (selectx1[getid] >= selectx2[getid]) {
-				mx = selectx1[getid];
-				lx = selectx2[getid];
-			}
-			else {
-				lx = selectx1[getid];
-				mx = selectx2[getid];
-			}
-
-			if (selecty1[getid] >= selecty2[getid]) {
-			}
-			else {
-			}
-
-			if (selectz1[getid] >= selectz2[getid]) {
-				mz = selectz1[getid];
-				lz = selectz2[getid];
-			}
-			else {
-				lz = selectz1[getid];
-				mz = selectz2[getid];
-			}
-
-			Block block = null;
-			Chunk chunk = null;
-
-			for (int nx = lx; nx <= mx; nx += 16) {
-				for (int nz = lz; nz <= mz; nz += 16) {
-
-					block = player.getWorld().getBlockAt(nx, 1, nz);
-					block.getChunk().load();
-					chunk = block.getChunk();
-
-					// add to new
-
-					boolean isad = false;
-
-					for (int ddx = 0; ddx <= timechunkmax; ddx++)
-						if (chunk.getX() * 16 == timechunkx[ddx]
-								&& chunk.getZ() * 16 == timechunkz[ddx]) {
-							isad = true;
-							break;
-						}
-
-					if (isad == false) {
-						timechunkmax++;
-						timechunkx[timechunkmax] = chunk.getX() * 16;
-						timechunkz[timechunkmax] = chunk.getZ() * 16;
-						dprint.r.printAll("dewtime "
-								+ tr.gettr("add_new_chunk") + "  = ["
-								+ timechunkmax + "] > "
-								+ timechunkx[timechunkmax] + ","
-								+ timechunkz[timechunkmax]);
-					}
-
-				}
-			}
-
-			dprint.r.printAll("ptdew&dewdd :  dewtime  " + tr.gettr("done")
-					+ " : " + player.getName());
-
-		}
-	}
+	
 
 	class dewwallcircle_mom implements Runnable {
 
@@ -4895,19 +4796,13 @@ public class dewset extends dewset_interface {
 
 	// cut seem block
 
-	public int			timechunkmax		= -1;
-
-	public int			timechunkx[];
-
-	public int			timechunkz[];
 
 	public dewset() {
 		// if (firstrun19 == false){
 
 		// loadadminlist();
 
-		timechunkx = new int[10000];
-		timechunkz = new int[10000];
+	
 
 		// firstrun19 = true;
 		// }
@@ -5926,9 +5821,7 @@ public class dewset extends dewset_interface {
 		new dewspreadq_c(player, handid, handdata, true);
 	}
 
-	public void dewtime(Player player) {
-		new dewtime_c(player);
-	}
+
 
 	public void dewwallcircle(Player player, int handid, byte handdata,
 			boolean isfillmode) {
