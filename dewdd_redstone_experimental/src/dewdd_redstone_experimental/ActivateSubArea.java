@@ -22,6 +22,8 @@ public class ActivateSubArea implements Runnable {
 		}
 
 		AreaType at = this.redex.listEx.get(this.curId);
+		
+		
 		setBlock = at.getBlocklxlylz().getRelative(this.redex.beaconX,
 				this.redex.beaconY, this.redex.beaconZ);
 		setBlock.setType(Material.REDSTONE_BLOCK);

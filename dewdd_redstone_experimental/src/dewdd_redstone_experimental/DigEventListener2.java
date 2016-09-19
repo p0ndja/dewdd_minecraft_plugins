@@ -10,6 +10,7 @@ import java.util.Random;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -17,6 +18,7 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockPistonExtendEvent;
 import org.bukkit.event.block.BlockPistonRetractEvent;
 import org.bukkit.event.block.BlockRedstoneEvent;
+import org.bukkit.event.entity.ItemSpawnEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.world.ChunkUnloadEvent;
@@ -112,7 +114,8 @@ public class DigEventListener2 implements Listener {
 			}
 
 			if (lop == (e.getBlocks().size() - 1)) {
-				b2 = b2.getRelative(e.getDirection());
+				b2 = b2.getRelative(e.getDirection()).getRelative(e.getDirection());
+				
 				extendid = DigEventListener2.redex
 						.getIdOfThisLocation(b2.getLocation());
 				// dprint.r.printAll(tr.locationToString(b2.getLocation()));
@@ -186,12 +189,22 @@ public class DigEventListener2 implements Listener {
 	 * @EventHandler public void eventja(BlockPistonEvent e) { if
 	 * (!isrunworld(e.getBlock().getWorld().getName())) { return; } }
 	 */
+	@EventHandler
+	public void eventja(ItemSpawnEvent e) {
+		if (e.getEntityType() == EntityType.DROPPED_ITEM) {
+			e.setCancelled(true);
+
+		}
+
+	}
 
 	@EventHandler
 	public void eventja(ChunkUnloadEvent e) {
 		if (!this.isrunworld(e.getChunk().getWorld().getName())) {
 			return;
 		}
+
+		e.setCancelled(true);
 
 	}
 

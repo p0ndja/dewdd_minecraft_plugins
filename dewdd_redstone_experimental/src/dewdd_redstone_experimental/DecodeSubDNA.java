@@ -69,8 +69,8 @@ public class DecodeSubDNA implements Runnable {
 			tmpy = tmpy % diffY;
 			int posy = (int) tmpy;*/
 			
-			double tmpy = Math.abs(dna.dna[startPoint + 1]) * 255;
-			tmpy = tmpy % 255;
+			double tmpy = Math.abs(dna.dna[startPoint + 1]) * 10;
+			tmpy = tmpy % 10;
 			int posy = (int) tmpy;
 
 			double tmpz = Math.abs(dna.dna[startPoint + 2]) * diffZ;
@@ -144,7 +144,7 @@ public class DecodeSubDNA implements Runnable {
 			}
 
 			// time to set Block
-			Block b2 = leftTopBlock.getRelative(posx, posy, posz);
+			Block b2 = leftTopBlock.getRelative(posx, posy + 167, posz);
 
 			if (b2.getType() == Material.AIR) {
 				b2.setType(setType);
