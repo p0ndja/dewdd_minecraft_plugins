@@ -194,12 +194,30 @@ public class Core {
 		d.pl("converted tmpShop to AllShop ");
 	}
 
-	public void decodeLV(ParameterLVType paraLV) {
+	public void decodeTmpLV(ParameterLVType paraLV) {
+		
+		
+		// random unique item
+		ParameterRandomUniqueItem rUnique = new ParameterRandomUniqueItem();
+		decodeRandomUniqueItem(rUnique);
+		
+		int rAmount[] = new int[allBlockInGameAsList.size()];
+		for (int i = 0; i < allBlockInGameAsList.size(); i ++) {
+			
+			double  c01 = decodeRandomGive01_();
+			rAmount[i] =(int) ( c01 * allBlockInGameAsList.get(
+					rUnique.index[i]).maxStack);
+			if (rAmount[i] <= 0) rAmount[i] = 1;
+			
+		}
+		
+		
 		// add need item
+		
 		
 	}
 
-	public void decodeRandomSumAmountItem(ParameterRandomAmountItem para) {
+	public void decodeRandomSumAmount417ForAllShop(ParameterRandomAmountItem para) {
 		para.amount = new int[allBlockInGameAsList.size()];
 
 		for (int i = 0; i < allBlockInGameAsList.size(); i++) {
@@ -242,7 +260,7 @@ public class Core {
 		return tmpReadChro;
 	}
 	
-	public int decodeRandomGive01_() {
+	public double decodeRandomGive01_() {
 		double tmpReadChro = 0;
 		tmpReadChro = Math.abs(chromosome[curChro]);
 
@@ -256,9 +274,8 @@ public class Core {
 			tmpReadChro = 1;
 		}
 
-		int returner = (int) tmpReadChro;
+		return tmpReadChro;
 
-		return returner;
 	}
 
 	public void decodeRandomUniqueItem(ParameterRandomUniqueItem para) {
@@ -352,10 +369,11 @@ public class Core {
 			bo.data = allBlockInGameAsList.get(para.index[cur]).data;
 			// ........
 
-			int rendomStack01 = decodeRandomGive01_();
+			double rendomStack01 = decodeRandomGive01_();
 
 			bo.curAmount = (int) (rendomStack01 * allBlockInGameAsList.get(cur).maxStack);
 	
+			if (bo.curAmount <=0 ) bo.curAmount = 1;
 
 
 			paraItemsInShop.outputAllItemInShop.add(bo);
@@ -465,7 +483,7 @@ public class Core {
 		tmp4.usedItNeedList = usedItNeedList;
 		tmp4.usedItRewardList = usedItRewardList;
 
-		decodeLV(tmp4);
+		decodeTmpLV(tmp4);
 
 		d.pl("abc");
 	}
