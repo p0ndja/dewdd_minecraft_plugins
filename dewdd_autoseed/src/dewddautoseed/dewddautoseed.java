@@ -5,6 +5,7 @@
  */
 package dewddautoseed;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.Dropper;
@@ -15,62 +16,16 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockDispenseEvent;
 import org.bukkit.event.block.BlockPistonExtendEvent;
-import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import dewddflower.dewset;
-
 public class dewddautoseed implements Listener {
 
-	class delay_dewset extends Thread {
-
-		@Override
-		public void run() {
-
-			try {
-				// dew = null;
-
-				int i = 0;
-				while (ac == null) {
-
-					i++;
-					Thread.sleep(1000);
-					System.out.println("dew ft waiting for create dewset sleeping ac +" + i);
-
-				}
-
-				while (dewddflower.Main.ds == null) {
-
-					i++;
-					Thread.sleep(1000);
-					System.out.println("dew ft waiting for create dewset sleeping dew +" + i);
-
-					// dew = dewddflower.Main.ds;
-
-				}
-				dew = dewddflower.Main.ds;
-
-			} catch (InterruptedException e) {
-
-				e.printStackTrace();
-			}
-
-		}
-	}
 
 	public JavaPlugin ac = null;
 
-	dewset dew;
-
-	public dewddautoseed() {
-
-		delay_dewset abc2 = new delay_dewset();
-		abc2.start();
-
-	}
 
 	@EventHandler
 	public void eventja(BlockDispenseEvent e) {
@@ -226,21 +181,173 @@ public class dewddautoseed implements Listener {
 				}
 
 	}
+	
+	public boolean decreseitem1(Player player, int itemid, int itemdata, boolean forcetruedata) {
+		ItemStack itm = null;
+		int lenl = 0;
 
-	@EventHandler
-	public void eventja(BlockPlaceEvent event) {
+		if (itemid == 0)
+			return false;
 
-		/*
-		 * Player player = event.getPlayer(); Block block = event.getBlock();
-		 * 
-		 * switch (player.getItemInHand().getType()) { case CROPS: case CARROT:
-		 * case POTATO: case PUMPKIN_SEEDS: case MELON_SEEDS:
-		 * 
-		 * dew.soiladdseedrecusive(block, player, player.getItemInHand()
-		 * .getType(), true);
-		 * 
-		 * return; }
-		 */
+		for (lenl = 0; lenl < player.getInventory().getContents().length; lenl++) {
+			if (player.getInventory().getItem(lenl) == null) {
+				continue;
+			}
+
+			itm = player.getInventory().getItem(lenl);
+
+			if (itemid == 8 || itemid == 9 || itemid == 326)
+				return true;
+			else if (itemid == 44 || itemid == 43) {
+				if (itm.getTypeId() != 44 && itm.getTypeId() != 43) {
+					continue;
+				}
+			}
+
+			// piston
+			else if (itemid == 33 || itemid == 34 || itemid == 29) {
+				if (itm.getTypeId() != 33 && itm.getTypeId() != 34 && itm.getTypeId() != 29) {
+					continue;
+				}
+			}
+
+			// dirt
+			else if (itemid == 2 || itemid == 3 || itemid == 60) {
+				if (itm.getTypeId() != 3 && itm.getTypeId() != 2 && itm.getTypeId() != 60) {
+					continue;
+				}
+			}
+			// repeater
+			else if (itemid == 356 || itemid == 93 || itemid == 94) {
+				if (itm.getTypeId() != 356 && itm.getTypeId() != 93 && itm.getTypeId() != 94) {
+					continue;
+				}
+			}
+			// redstone torch
+			else if (itemid == 75 || itemid == 76) {
+				if (itm.getTypeId() != 75 && itm.getTypeId() != 76) {
+					continue;
+				}
+			}
+			// redstone wire
+			else if (itemid == 331 || itemid == 55) {
+				if (itm.getTypeId() != 331 && itm.getTypeId() != 55) {
+					continue;
+				}
+			}
+			// pumpkin
+			else if (itemid == 361 || itemid == 104) {
+				if (itm.getTypeId() != 361 && itm.getTypeId() != 104) {
+					continue;
+				}
+			}
+			// melon
+			else if (itemid == 362 || itemid == 105) {
+				if (itm.getTypeId() != 362 && itm.getTypeId() != 105) {
+					continue;
+				}
+			}
+
+			// sugar
+			else if (itemid == 338 || itemid == 83) {
+				if (itm.getTypeId() != 338 && itm.getTypeId() != 83) {
+					continue;
+				}
+			}
+
+			// wheat
+			else if (itemid == 295 || itemid == 59) {
+				if (itm.getTypeId() != 295 && itm.getTypeId() != 59) {
+					continue;
+				}
+			}
+			// carrot
+			else if (itemid == 391 || itemid == 141) {
+				if (itm.getTypeId() != 391 && itm.getTypeId() != 141) {
+					continue;
+				}
+			}
+			// potato
+			else if (itemid == 392 || itemid == 142) {
+				if (itm.getTypeId() != 392 && itm.getTypeId() != 142) {
+					continue;
+				}
+			} else if (itm.getTypeId() != itemid) {
+				continue;
+			}
+
+			if (forcetruedata == true)
+				if (itm.getData().getData() != itemdata) {
+					continue;
+				}
+
+			if (itm.getAmount() != 1) {
+				itm.setAmount(itm.getAmount() - 1);
+				return true;
+			} else {
+				ItemStack emy = player.getItemInHand();
+				emy.setTypeId(0);
+
+				player.getInventory().setItem(lenl, emy);
+
+				return true;
+			}
+
+		}
+		return false;
+	}
+	
+	class seedGlowByBoneMeal_c implements Runnable {
+		private Block block = null;
+		private Player player = null;
+
+		public seedGlowByBoneMeal_c(Block block, Player player) {
+			this.player = player;
+			this.block = block;
+		}
+
+		@Override
+		public void run() {
+
+			int d = 5;
+			Block b2 = null;
+
+			for (int gx = -d; gx <= d; gx++) {
+				for (int gy = -d; gy <= d; gy++) {
+					for (int gz = -d; gz <= d; gz++) {
+						b2 = block.getRelative(gx, gy, gz);
+						switch (b2.getTypeId()) {
+
+						case 142:
+						case 141:
+						case 59:
+						case 104:
+						case 105:
+
+							if (b2.getData() >= 7) {
+								continue;
+							}
+							if (decreseitem1(player, 351, 15, true) == false)
+								return;
+							b2.setData((byte) 7);
+
+							seedGlowByBoneMeal(b2, player);
+
+							break;
+
+						}
+
+					}
+				}
+			}
+
+		}
+	}
+
+
+	public void seedGlowByBoneMeal(Block block, Player player) {
+		seedGlowByBoneMeal_c arr = new seedGlowByBoneMeal_c(block, player);
+		Bukkit.getScheduler().scheduleSyncDelayedTask(ac, arr);
 	}
 
 	@EventHandler
@@ -260,7 +367,7 @@ public class dewddautoseed implements Listener {
 			case CROPS:
 			case PUMPKIN_SEEDS:
 			case MELON_SEEDS:
-				dew.seedglow(b, p);
+				seedGlowByBoneMeal(b, p);
 			}
 		}
 	}

@@ -9,6 +9,8 @@ import java.util.logging.Logger;
 
 import org.bukkit.plugin.java.JavaPlugin;
 
+import dewddtran.tr;
+
 public class Main extends JavaPlugin {
 	Logger log;
 	dewddautoseed ax = new dewddautoseed();
@@ -16,7 +18,7 @@ public class Main extends JavaPlugin {
 	@Override
 	public void onDisable() {
 		getServer().getPluginManager().disablePlugin(this);
-		dprint.r.printAll("ptdew&dewdd : unloaded dewdd autoseed");
+		dprint.r.printAll("ptdew&dewdd : " + tr.gettr("unloaded_plugin") + " dewdd autoseed");
 	}
 
 	@Override
@@ -28,7 +30,7 @@ public class Main extends JavaPlugin {
 
 		getServer().getPluginManager().registerEvents(ax, this);
 
-		dprint.r.printAll("ptdew&dewdd : loaded dewdd autoseed");
+		dprint.r.printAll("ptdew&dewdd : " + tr.gettr("loaded_plugin") + " dewdd autoseed");
 
 	}
 

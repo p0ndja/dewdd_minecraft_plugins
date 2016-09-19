@@ -7,8 +7,16 @@ depend: [dewddprint, dewddtran]
 
 commands:
   skyblock:
-    description: skyblock for random teleport to skyblock
+    description: can use /skyblock , /sky commands ( need to add for all player)
     usage: /<command>
     aliases: [sky]
     permissions: dewdd.skyblock.skyblock
+
+permissions:
+  dewdd.skyblock.overide:
+    description: can do anything as everyone skyblock
+    default: op
+  dewdd.skyblock.resetlv:
+    description: can reset challenge lv of everyone skyblock
+    default: op
 

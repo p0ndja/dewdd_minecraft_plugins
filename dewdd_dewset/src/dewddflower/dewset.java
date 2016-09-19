@@ -47,6 +47,121 @@ import li.LXRXLZRZType;
 
 public class dewset extends dewset_interface {
 
+	public boolean decreseitem1(Player player, int itemid, int itemdata, boolean forcetruedata) {
+		ItemStack itm = null;
+		int lenl = 0;
+
+		if (itemid == 0)
+			return false;
+
+		for (lenl = 0; lenl < player.getInventory().getContents().length; lenl++) {
+			if (player.getInventory().getItem(lenl) == null) {
+				continue;
+			}
+
+			itm = player.getInventory().getItem(lenl);
+
+			if (itemid == 8 || itemid == 9 || itemid == 326)
+				return true;
+			else if (itemid == 44 || itemid == 43) {
+				if (itm.getTypeId() != 44 && itm.getTypeId() != 43) {
+					continue;
+				}
+			}
+
+			// piston
+			else if (itemid == 33 || itemid == 34 || itemid == 29) {
+				if (itm.getTypeId() != 33 && itm.getTypeId() != 34 && itm.getTypeId() != 29) {
+					continue;
+				}
+			}
+
+			// dirt
+			else if (itemid == 2 || itemid == 3 || itemid == 60) {
+				if (itm.getTypeId() != 3 && itm.getTypeId() != 2 && itm.getTypeId() != 60) {
+					continue;
+				}
+			}
+			// repeater
+			else if (itemid == 356 || itemid == 93 || itemid == 94) {
+				if (itm.getTypeId() != 356 && itm.getTypeId() != 93 && itm.getTypeId() != 94) {
+					continue;
+				}
+			}
+			// redstone torch
+			else if (itemid == 75 || itemid == 76) {
+				if (itm.getTypeId() != 75 && itm.getTypeId() != 76) {
+					continue;
+				}
+			}
+			// redstone wire
+			else if (itemid == 331 || itemid == 55) {
+				if (itm.getTypeId() != 331 && itm.getTypeId() != 55) {
+					continue;
+				}
+			}
+			// pumpkin
+			else if (itemid == 361 || itemid == 104) {
+				if (itm.getTypeId() != 361 && itm.getTypeId() != 104) {
+					continue;
+				}
+			}
+			// melon
+			else if (itemid == 362 || itemid == 105) {
+				if (itm.getTypeId() != 362 && itm.getTypeId() != 105) {
+					continue;
+				}
+			}
+
+			// sugar
+			else if (itemid == 338 || itemid == 83) {
+				if (itm.getTypeId() != 338 && itm.getTypeId() != 83) {
+					continue;
+				}
+			}
+
+			// wheat
+			else if (itemid == 295 || itemid == 59) {
+				if (itm.getTypeId() != 295 && itm.getTypeId() != 59) {
+					continue;
+				}
+			}
+			// carrot
+			else if (itemid == 391 || itemid == 141) {
+				if (itm.getTypeId() != 391 && itm.getTypeId() != 141) {
+					continue;
+				}
+			}
+			// potato
+			else if (itemid == 392 || itemid == 142) {
+				if (itm.getTypeId() != 392 && itm.getTypeId() != 142) {
+					continue;
+				}
+			} else if (itm.getTypeId() != itemid) {
+				continue;
+			}
+
+			if (forcetruedata == true)
+				if (itm.getData().getData() != itemdata) {
+					continue;
+				}
+
+			if (itm.getAmount() != 1) {
+				itm.setAmount(itm.getAmount() - 1);
+				return true;
+			} else {
+				ItemStack emy = player.getItemInHand();
+				emy.setTypeId(0);
+
+				player.getInventory().setItem(lenl, emy);
+
+				return true;
+			}
+
+		}
+		return false;
+	}
+	
 	class autosortchest2_class implements Runnable {
 		private Block block;
 		private Player player;
@@ -55,6 +170,7 @@ public class dewset extends dewset_interface {
 			this.block = block;
 			this.player = player;
 		}
+		
 
 		@Override
 		public void run() {
@@ -4215,53 +4331,7 @@ public class dewset extends dewset_interface {
 		}
 	}
 
-	class seedglowc implements Runnable {
-		private Block block = null;
-		private Player player = null;
-
-		public seedglowc(Block block, Player player) {
-			this.player = player;
-			this.block = block;
-		}
-
-		@Override
-		public void run() {
-
-			int d = 5;
-			Block b2 = null;
-
-			for (int gx = -d; gx <= d; gx++) {
-				for (int gy = -d; gy <= d; gy++) {
-					for (int gz = -d; gz <= d; gz++) {
-						b2 = block.getRelative(gx, gy, gz);
-						switch (b2.getTypeId()) {
-
-						case 142:
-						case 141:
-						case 59:
-						case 104:
-						case 105:
-
-							if (b2.getData() >= 7) {
-								continue;
-							}
-							if (decreseitem1(player, 351, 15, true) == false)
-								return;
-							b2.setData((byte) 7);
-
-							seedglow(b2, player);
-
-							break;
-
-						}
-
-					}
-				}
-			}
-
-		}
-	}
-
+	
 	// redim" + tr.gettr("for") + "each world each protect = 100
 
 	class soiladdseedc implements Runnable {
@@ -4997,120 +5067,7 @@ public class dewset extends dewset_interface {
 	}
 
 	// decrese item 1
-	public boolean decreseitem1(Player player, int itemid, int itemdata, boolean forcetruedata) {
-		ItemStack itm = null;
-		int lenl = 0;
-
-		if (itemid == 0)
-			return false;
-
-		for (lenl = 0; lenl < player.getInventory().getContents().length; lenl++) {
-			if (player.getInventory().getItem(lenl) == null) {
-				continue;
-			}
-
-			itm = player.getInventory().getItem(lenl);
-
-			if (itemid == 8 || itemid == 9 || itemid == 326)
-				return true;
-			else if (itemid == 44 || itemid == 43) {
-				if (itm.getTypeId() != 44 && itm.getTypeId() != 43) {
-					continue;
-				}
-			}
-
-			// piston
-			else if (itemid == 33 || itemid == 34 || itemid == 29) {
-				if (itm.getTypeId() != 33 && itm.getTypeId() != 34 && itm.getTypeId() != 29) {
-					continue;
-				}
-			}
-
-			// dirt
-			else if (itemid == 2 || itemid == 3 || itemid == 60) {
-				if (itm.getTypeId() != 3 && itm.getTypeId() != 2 && itm.getTypeId() != 60) {
-					continue;
-				}
-			}
-			// repeater
-			else if (itemid == 356 || itemid == 93 || itemid == 94) {
-				if (itm.getTypeId() != 356 && itm.getTypeId() != 93 && itm.getTypeId() != 94) {
-					continue;
-				}
-			}
-			// redstone torch
-			else if (itemid == 75 || itemid == 76) {
-				if (itm.getTypeId() != 75 && itm.getTypeId() != 76) {
-					continue;
-				}
-			}
-			// redstone wire
-			else if (itemid == 331 || itemid == 55) {
-				if (itm.getTypeId() != 331 && itm.getTypeId() != 55) {
-					continue;
-				}
-			}
-			// pumpkin
-			else if (itemid == 361 || itemid == 104) {
-				if (itm.getTypeId() != 361 && itm.getTypeId() != 104) {
-					continue;
-				}
-			}
-			// melon
-			else if (itemid == 362 || itemid == 105) {
-				if (itm.getTypeId() != 362 && itm.getTypeId() != 105) {
-					continue;
-				}
-			}
-
-			// sugar
-			else if (itemid == 338 || itemid == 83) {
-				if (itm.getTypeId() != 338 && itm.getTypeId() != 83) {
-					continue;
-				}
-			}
-
-			// wheat
-			else if (itemid == 295 || itemid == 59) {
-				if (itm.getTypeId() != 295 && itm.getTypeId() != 59) {
-					continue;
-				}
-			}
-			// carrot
-			else if (itemid == 391 || itemid == 141) {
-				if (itm.getTypeId() != 391 && itm.getTypeId() != 141) {
-					continue;
-				}
-			}
-			// potato
-			else if (itemid == 392 || itemid == 142) {
-				if (itm.getTypeId() != 392 && itm.getTypeId() != 142) {
-					continue;
-				}
-			} else if (itm.getTypeId() != itemid) {
-				continue;
-			}
-
-			if (forcetruedata == true)
-				if (itm.getData().getData() != itemdata) {
-					continue;
-				}
-
-			if (itm.getAmount() != 1) {
-				itm.setAmount(itm.getAmount() - 1);
-				return true;
-			} else {
-				ItemStack emy = player.getItemInHand();
-				emy.setTypeId(0);
-
-				player.getInventory().setItem(lenl, emy);
-
-				return true;
-			}
-
-		}
-		return false;
-	}
+	
 
 	public void DeleteRecursive_mom(HashMap<String, Location> bd, World world, int firstAdded, LXRXLZRZType ee,
 			ArrayList<IDDataType> item, int chunklimit, int search) {
@@ -5951,10 +5908,7 @@ public class dewset extends dewset_interface {
 
 	}
 
-	public void seedglow(Block block, Player player) {
-		seedglowc arr = new seedglowc(block, player);
-		Bukkit.getScheduler().scheduleSyncDelayedTask(ac, arr);
-	}
+
 
 	public void showpos(Player player, int idc) {
 		player.sendMessage("cur select " + "(" + selectx1[idc] + "," 
