@@ -109,12 +109,10 @@ public class DigEventListener2 implements Listener {
 				e.getClickedInventory().setItem(menuslot, it);
 				// dprint.r.printC("player added " + menuslot);
 			} catch (NullPointerException eee) {
-				eee.printStackTrace();
-				return;
-			} catch (Exception eee) {
-				eee.printStackTrace();
+				// eee.printStackTrace();
 				return;
 			}
+
 			if (e.getSlot() == menuslot) {
 				// dprint.r.printAll("seem");
 				// if
@@ -295,17 +293,22 @@ public class DigEventListener2 implements Listener {
 		saveinventoryfile(playerName);
 
 	}
-	
+
 	@EventHandler
 	public void eventja(InventoryMoveItemEvent e) {
-		
+
 		if (!tr.isrunworld(ac.getName(), e.getDestination().getLocation().getWorld().getName()))
 			return;
 
 		try {
 			
+			
 
 			ItemStack x = e.getItem();
+			
+			if (x == null) {
+				return;
+			}
 
 			if (x.getItemMeta().getDisplayName().equalsIgnoreCase("next")) {
 				e.setCancelled(true);
@@ -314,9 +317,10 @@ public class DigEventListener2 implements Listener {
 				e.setCancelled(true);
 			}
 
-
 		} catch (NullPointerException eee) {
-
+			return;
+		} catch (java.lang.ArrayIndexOutOfBoundsException eee) {
+			return;
 		}
 
 	}
@@ -327,7 +331,6 @@ public class DigEventListener2 implements Listener {
 			return;
 
 		try {
-
 
 			if (e.getItem().getItemStack().getItemMeta().getDisplayName().equalsIgnoreCase("next")) {
 				e.setCancelled(true);

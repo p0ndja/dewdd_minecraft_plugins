@@ -5,10 +5,12 @@
  */
 package dewddinvert;
 
+import java.util.LinkedList;
 import java.util.Random;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
+import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.CreatureSpawner;
@@ -16,6 +18,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.block.BlockFormEvent;
+import org.bukkit.event.block.BlockFromToEvent;
 import org.bukkit.event.block.BlockPhysicsEvent;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
@@ -31,7 +35,7 @@ public class DigEventListener2 implements Listener {
 	 * synchronized public void run() {
 	 */
 	public long lastClean = 0;
-	public long MaxDelay = 20000;
+	public long MaxDelay = 10000;
 
 	public static boolean isRunWorld(String worldName) {
 		return tr.isrunworld(ac.getName(), worldName);
@@ -52,8 +56,172 @@ public class DigEventListener2 implements Listener {
 		return false;
 
 	}
+	
+	class SpawnerBlockType {
+		public CreatureSpawner abc ;
+		public int x;
+		public int y ; 
+		public int z;
+	}
 
 	class CleanThisChunk_c implements Runnable {
+		Chunk chunk;
+
+		public void run() {
+
+			World world = chunk.getWorld();
+			if (world == null) {
+				return;
+			}
+			if (!isRunWorld(world.getName())) {
+				return;
+			}
+
+			// printA("cleaning Area : " + (chunk.getX() *16) + ",?," +
+			// (chunk.getZ() *16)+ " > " + chunkdel_max );
+			// printC("cleaning Area : " + (chunk.getX() *16) + ",?," +
+			// (chunk.getZ() *16) );
+			// printA("cleaning area... " + (chunk.getX() *16) + ",?," +
+			// (chunk.getZ() *16)+ " > " + chunkdel_max );
+
+			Block block = null;
+			Block block2 = null;
+
+			if (isCleanedChunk(chunk) == true) {
+				return;
+			}
+
+			Block block3 = null;
+			block3 = getBlockOfChunk(chunk);
+
+			dprint.r.printC("invert " + chunk.getX() * 16 + "," + chunk.getZ() * 16);
+			dprint.r.printC("invert " + chunk.getX() * 16 + "," + chunk.getZ() * 16);
+
+			int bid[][][] = new int[16][256][16];
+			/*for (int i = 0   ; i < 16 ; i ++ ) {
+				bid[i] = new int[256][];
+				for (int j = 0 ; j < 256 ; j++ ) {
+					bid[i][j] = new int[16];
+				}
+			}*/
+			
+			
+			byte bdata[][][] = new byte[16][256][16];
+			
+			
+			LinkedList<SpawnerBlockType> spawner  = new LinkedList<SpawnerBlockType>();
+			
+			
+			/*for (int i = 0   ; i < 16 ; i ++ ) {
+				bdata[i] = new byte[256][];
+				for (int j = 0 ; j < 256 ; j++ ) {
+					bdata[i][j] = new byte[16];
+				}
+			}*/
+			for (int y = 0; y < 256; y++) {
+
+				// printC("cleaning... : " + (chunk.getX() *16) + "," +
+				// y + "," + (chunk.getZ() *16)
+				// +" > " + chunkdel_max);
+				// printA("cleaning... : " + (chunk.getX() *16) + "," +
+				// y + "," + (chunk.getZ() *16));
+				
+				int gz = -1;
+				int gx = -1 ;
+
+				for (int z = ((chunk.getZ() * 16)); z <= ((chunk.getZ() * 16) + 15); z++) {
+					gz ++;
+					gx = -1;
+					for (int x = ((chunk.getX() * 16)); x <= ((chunk.getX() * 16) + 15); x++) {
+						gx ++;
+					//	dprint.r.printAll(gx + "," + gz);
+						
+
+						block = world.getBlockAt(x, y, z);
+						
+						bid[gx][y][gz]  = block.getTypeId();
+						bdata[gx][y][gz] = block.getData();
+						
+						if (block.getType() == Material.MOB_SPAWNER) {
+							SpawnerBlockType sbt = new SpawnerBlockType();
+							sbt.x = gx;
+							sbt.y = y;
+							sbt.z  = gz;
+							CreatureSpawner cc = (CreatureSpawner)block.getState();
+							sbt.abc = cc;
+							
+							spawner.add(sbt);
+							
+						}
+						
+						block.setType(Material.AIR);
+					}
+				}
+
+			} // time
+			
+			int curY = 255;
+			for (int y = 0; y < 256; y++) {
+				curY = 255 - y;
+				// printC("cleaning... : " + (chunk.getX() *16) + "," +
+				// y + "," + (chunk.getZ() *16)
+				// +" > " + chunkdel_max);
+				// printA("cleaning... : " + (chunk.getX() *16) + "," +
+				// y + "," + (chunk.getZ() *16));
+
+				int gz = -1;
+				int gx = -1;
+				for (int z = ((chunk.getZ() * 16)); z <= ((chunk.getZ() * 16) + 15); z++) {
+					gz ++ ;
+					gx = -1;
+					for (int x = ((chunk.getX() * 16)); x <= ((chunk.getX() * 16) + 15); x++) {
+						gx ++;
+						block = world.getBlockAt(x, curY, z);
+						/*bid[x][y][z]  = block.getTypeId();
+						bdata[x][y][z] = block.getData();*/
+						
+						block.setTypeIdAndData(bid[gx][y][gz], bdata[gx][y][gz], false);
+						
+						if (block.getType() == Material.MOB_SPAWNER) {
+							// load spawner
+							for (int lop = 0 ; lop < spawner.size() ; lop ++ ) {
+								SpawnerBlockType tmp = spawner.get(lop);
+								if (tmp.x == gx && tmp.y == y && tmp.z == gz) {
+									CreatureSpawner cc = (CreatureSpawner)block.getState();
+									cc.setSpawnedType(tmp.abc.getSpawnedType());
+									cc.update(true);
+								}
+							}
+							
+						}
+						
+					}
+				}
+
+			} // time
+			
+			
+
+			// add to new chunk
+			block2 = world.getBlockAt(chunk.getX() * 16, 253, chunk.getZ() * 16);
+			block2.setTypeId(19);
+
+			/*
+			 * for (Entity en: chunk.getWorld().getEntities()){ if (en.getType()
+			 * == EntityType.DROPPED_ITEM){ en.remove(); } }
+			 */
+
+			dprint.r.printC("invert cleaned Area : " + (chunk.getX() * 16) + ",?," + (chunk.getZ() * 16));
+			// printA("cleaned Area : " + (chunk.getX() *16) + ",?," +
+			// (chunk.getZ() *16)+ " > " + chunkdel_max );
+			// printA("Cleaned Area " + (chunk.getX() *16) + ",?," +
+			// (chunk.getZ() *16)+ " > " + chunkdel_max );
+
+		} // sync
+
+	} // project
+
+	class CleanThisChunk_c2 implements Runnable {
 		Chunk chunk;
 
 		public void run() {
@@ -184,9 +352,10 @@ public class DigEventListener2 implements Listener {
 
 							} // time 1
 							else if (t2time == 2) {
-								/*if (block.getType().isBlock() == true) {
-									continue;
-								}*/
+								/*
+								 * if (block.getType().isBlock() == true) {
+								 * continue; }
+								 */
 
 								block2 = world.getBlockAt(x, 253 - (y - (126 + 1)), z);
 								block2.setTypeId(block.getTypeId());
@@ -211,8 +380,6 @@ public class DigEventListener2 implements Listener {
 			block2 = world.getBlockAt(chunk.getX() * 16, 253, chunk.getZ() * 16);
 			block2.setTypeId(19);
 
-			
-			 
 			/*
 			 * for (Entity en: chunk.getWorld().getEntities()){ if (en.getType()
 			 * == EntityType.DROPPED_ITEM){ en.remove(); } }
@@ -241,22 +408,21 @@ public class DigEventListener2 implements Listener {
 			for (int gz = -17; gz <= 17; gz += 16) {
 				Chunk chunk = player.getWorld().getChunkAt((int) ((player.getLocation().getX() + gx) / 16),
 						(int) ((player.getLocation().getZ() + gz) / 16));
-				
+
 				if (isCleanedChunk(chunk) == true) {
 					continue;
 				}
-				
+
 				if (lastClean == 0) {
 					lastClean = System.currentTimeMillis();
 				}
-				
+
 				if (System.currentTimeMillis() - lastClean <= MaxDelay) {
 					return;
-				}
-				else {
+				} else {
 					lastClean = System.currentTimeMillis();
 				}
-				
+
 				cleanthischunkt(chunk);
 			}
 		}
@@ -311,6 +477,35 @@ public class DigEventListener2 implements Listener {
 	}
 
 	@EventHandler
+	public void eventja(BlockFormEvent e) {
+		if (!isRunWorld(e.getBlock().getWorld().getName())) {
+			return;
+		}
+
+		if (isCleanedChunk(e.getBlock().getChunk()) == false) {
+			e.setCancelled(true);
+		}
+
+	}
+
+	@EventHandler
+	public void eventja(BlockFromToEvent e) {
+		if (!isRunWorld(e.getBlock().getWorld().getName())) {
+			return;
+		}
+
+		if (isCleanedChunk(e.getBlock().getChunk()) == false) {
+			e.setCancelled(true);
+
+		}
+
+		if (isCleanedChunk(e.getToBlock().getChunk()) == false) {
+			e.setCancelled(true);
+		}
+
+	}
+
+	@EventHandler
 	public void eventja(BlockPhysicsEvent e) {
 		if (!isRunWorld(e.getBlock().getWorld().getName())) {
 			return;
@@ -330,7 +525,15 @@ public class DigEventListener2 implements Listener {
 
 		if (e.getBlock().getTypeId() == 19 && e.getBlock().getY() == 253) {
 			e.setCancelled(true);
+			return;
 		}
+		
+		if (isCleanedChunk(e.getPlayer().getLocation().getChunk()) == true) {
+			return;
+		}
+
+		Player player = e.getPlayer();
+		cleannearchunk(player);
 	}
 
 	@EventHandler
@@ -364,12 +567,12 @@ public class DigEventListener2 implements Listener {
 			return;
 		}
 
-		if (randomGenerator.nextInt(100) > 90) {
-			
+		if (randomGenerator.nextInt(100) > 110) {
+
 			if (isCleanedChunk(e.getPlayer().getLocation().getChunk()) == true) {
 				return;
 			}
-			
+
 			Player player = e.getPlayer();
 			cleannearchunk(player);
 		}
