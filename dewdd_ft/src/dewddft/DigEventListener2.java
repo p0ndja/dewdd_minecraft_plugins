@@ -95,6 +95,15 @@ public class DigEventListener2 implements Listener {
 									}
 
 									if (sign.getLine(0).equalsIgnoreCase("[autosell]")) {
+										b3.breakNaturally();
+										int xxxx = 10;
+										if (xxxx == 10) {
+											dprint.r.printAll(tr.gettr("[autosell] closed pls /warp shop instead"));
+
+											return;
+
+										}
+
 										double lowest = 100000;
 										double temp = 0;
 
@@ -594,6 +603,15 @@ public class DigEventListener2 implements Listener {
 
 		if (rnd.nextInt(100) < 95)
 			return;
+
+		// dprint.r.printAll().sendMessage(tr.gettr("/dft shop closed use /warp
+		// shop instead"));
+
+		int xx = 10;
+		if (xx == 10) {
+			return;
+		}
+
 		autosell abr = new autosell(e.getBlock());
 		Bukkit.getScheduler().scheduleSyncDelayedTask(ac, abr);
 
@@ -810,73 +828,71 @@ public class DigEventListener2 implements Listener {
 
 		int min = 3;
 		int max = 10;
-		
+
 		boolean used[] = new boolean[allBlockInGame.size()];
-		for (int i = 0 ; i < allBlockInGame.size() ; i ++) {
+		for (int i = 0; i < allBlockInGame.size(); i++) {
 			used[i] = false;
 		}
-		
+
 		int countUsed = 0;
 
 		int inf1 = 0;
 		int inf2 = 0;
 
-			while( countUsed < allBlockInGame.size() && inf1 <= 50000 ) {
-				inf1 ++;
-				// random Item
-				AllShop newShop = new AllShop();
+		while (countUsed < allBlockInGame.size() && inf1 <= 50000) {
+			inf1++;
+			// random Item
+			AllShop newShop = new AllShop();
 
-				int maxSlot = rnd.nextInt(max) + min;
+			int maxSlot = rnd.nextInt(max) + min;
+			do {
+
+				int ranid = 0;
+
+				boolean found = false;
+
 				do {
-			
+					inf2++;
 
-					int ranid = 0;
-
-					boolean found = false;
-
-					do {
-						inf2++;
-						
-						found = true;
-						ranid = rnd.nextInt(allBlockInGame.size());
-						if (used[ranid] == true) {
-							found = false;
-							continue;
-						}
-						
-						used[ranid] = true;
-						countUsed ++;
-						
-						for (int j = 0; j < sellmax; j++) {
-							SellType allItemRand = allBlockInGame.get(ranid);
-
-							if (sell[j].name.equalsIgnoreCase(allItemRand.name) && sell[j].data == allItemRand.data) {
-								found = false;
-								break;
-
-							}
-						}
-					} while (found == false && inf2 <= 50000);
-
-					// random add to shop
-					SellType allItemRand = allBlockInGame.get(ranid);
-					newShop.item[newShop.size] = allItemRand.name;
-					newShop.data[newShop.size] = allItemRand.data;
-					newShop.amount[newShop.size] = rnd.nextInt(allItemRand.makStack);
-					if (newShop.amount[newShop.size] <= 0) {
-						newShop.amount[newShop.size] = 1;
+					found = true;
+					ranid = rnd.nextInt(allBlockInGame.size());
+					if (used[ranid] == true) {
+						found = false;
+						continue;
 					}
 
-					newShop.size++;
+					used[ranid] = true;
+					countUsed++;
 
-				} while (newShop.size <= maxSlot && newShop.size < 10);
+					for (int j = 0; j < sellmax; j++) {
+						SellType allItemRand = allBlockInGame.get(ranid);
 
-				newShop.playPrice = minShopPrice + (rnd.nextInt(maxShopPrice));
+						if (sell[j].name.equalsIgnoreCase(allItemRand.name) && sell[j].data == allItemRand.data) {
+							found = false;
+							break;
 
-				allShop.add(newShop);
+						}
+					}
+				} while (found == false && inf2 <= 50000);
 
-			}
+				// random add to shop
+				SellType allItemRand = allBlockInGame.get(ranid);
+				newShop.item[newShop.size] = allItemRand.name;
+				newShop.data[newShop.size] = allItemRand.data;
+				newShop.amount[newShop.size] = rnd.nextInt(allItemRand.makStack);
+				if (newShop.amount[newShop.size] <= 0) {
+					newShop.amount[newShop.size] = 1;
+				}
 
+				newShop.size++;
+
+			} while (newShop.size <= maxSlot && newShop.size < 10);
+
+			newShop.playPrice = minShopPrice + (rnd.nextInt(maxShopPrice));
+
+			allShop.add(newShop);
+
+		}
 
 	}
 
@@ -890,7 +906,13 @@ public class DigEventListener2 implements Listener {
 		Player p = e.getPlayer();
 
 		if (e.getMessage().equalsIgnoreCase("/dft shop") || e.getMessage().equalsIgnoreCase("/shop")) {
-			// p.sendMessage("here");
+			p.sendMessage(tr.gettr("/dft shop closed use /warp shop instead"));
+
+			int xx = 10;
+			if (xx == 10) {
+				return;
+			}
+
 			randomShop();
 			Inventory myInventory = Bukkit.createInventory(null, 54, "dew shop");
 			inventory.put(p, myInventory);
@@ -905,8 +927,8 @@ public class DigEventListener2 implements Listener {
 		if (m[0].equalsIgnoreCase("/dft")) {
 			if (m.length == 1) {
 
-				p.sendMessage("/dft shop");
-				p.sendMessage("/dft list");
+				// p.sendMessage("/dft shop");
+				// p.sendMessage("/dft list");
 				p.sendMessage("/dft bleed");
 				p.sendMessage("/dft autoshoot <EntityType> <amount> <mode>");
 				p.sendMessage("/dft reload");
@@ -923,7 +945,7 @@ public class DigEventListener2 implements Listener {
 				}
 			if (m[1].equalsIgnoreCase("monkillhuman")) {
 				if (m.length != 5) {
-					p.sendMessage("/sky monkillhuman <second> <delaytick> <radius>");
+					p.sendMessage("/dft monkillhuman <second> <delaytick> <radius>");
 					return;
 				}
 
@@ -939,7 +961,7 @@ public class DigEventListener2 implements Listener {
 				new monkillhuman(sec, tick, rad);
 			} else if (m[1].equalsIgnoreCase("monkill")) {
 				if (m.length != 5) {
-					p.sendMessage("/sky monkill <second> <delaytick> <radius>");
+					p.sendMessage("/dft monkill <second> <delaytick> <radius>");
 					return;
 				}
 
@@ -956,7 +978,7 @@ public class DigEventListener2 implements Listener {
 
 			} else if (m[1].equalsIgnoreCase("setname")) {
 				if (m.length != 3) {
-					p.sendMessage("/sky setname <name>");
+					p.sendMessage("/dft setname <name>");
 					return;
 				}
 
@@ -1020,7 +1042,7 @@ public class DigEventListener2 implements Listener {
 
 			else if (m[1].equalsIgnoreCase("setnpcname")) {
 				if (m.length != 3) {
-					p.sendMessage("/sky setnpcname <name>");
+					p.sendMessage("/dft setnpcname <name>");
 					return;
 				}
 

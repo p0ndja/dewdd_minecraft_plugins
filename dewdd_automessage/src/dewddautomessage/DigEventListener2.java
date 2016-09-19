@@ -25,8 +25,11 @@ import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerExpChangeEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.server.ServerCommandEvent;
 import org.bukkit.plugin.java.JavaPlugin;
+
+import dewddtran.tr;
 
 class Dewminecraft {
 
@@ -172,6 +175,20 @@ public class DigEventListener2 implements Listener {
 		runpro(event.getMessage());
 	}
 
+	
+	@EventHandler
+	public void eventja(PlayerJoinEvent event) {
+		Player player = event.getPlayer();
+		
+		Bukkit.getScheduler().scheduleSyncDelayedTask(ac, new Runnable() {
+
+			@Override
+			public void run() {
+				player.sendMessage(tr.gettr("on_automessage_playerjoin_tell_him_this_word"));
+			}
+		}, 100);
+	}
+	
 	@EventHandler
 	public void eventja(PlayerDropItemEvent event) {
 		dew.automessage(event.getPlayer());

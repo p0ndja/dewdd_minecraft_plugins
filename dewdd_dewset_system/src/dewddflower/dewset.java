@@ -509,7 +509,7 @@ public class dewset extends dewset_interface {
 				return;
 			}
 
-			copyItemFrame(playerLocation, lx, ly, lz, mx, my, mz, selectx1, selecty1,
+			copyItemFrame(playerLocation,Bukkit.getWorld(selectworldname), lx, ly, lz, mx, my, mz, selectx1, selecty1,
 					selectz1, arxx, player, "dewcopy");
 
 			dprint.r.printC("ptdew&dewdd : dewcopy " + tr.gettr("done") + " : " + this.player.getName());
@@ -518,9 +518,9 @@ public class dewset extends dewset_interface {
 		}
 	}
 	
-	public void copyItemFrame(Location playerLocation,int lx,int ly,int lz , int mx , int my , int mz 
+	public void copyItemFrame(Location playerLocation,World originalWorld,int lx,int ly,int lz , int mx , int my , int mz 
 			 , int selectx1 , int selecty1,int selectz1, boolean arxx,Player player , String text) {
-		for (Entity en : playerLocation.getWorld().getEntities()) {
+		for (Entity en : originalWorld.getEntities()) {
 			if (en == null) {
 				continue;
 			}
@@ -2507,7 +2507,7 @@ public class dewset extends dewset_interface {
 				playerLocation2.setZ(lz + ndz);
 				
 				
-				copyItemFrame(playerLocation2, lx, ly, lz, mx, my, mz, lx, ly,
+				copyItemFrame(playerLocation2,this.playerLocation.getWorld(), lx, ly, lz, mx, my, mz, lx, ly,
 						lz, arxx, player, "dewStack");
 				
 				this.amount1 = 1;
