@@ -6025,16 +6025,17 @@ public class dewset extends dewset_interface {
 		return -1;
 	}
 
-	public String getmaterialrealname(String gname) {
-
+	public LinkedList<String> getmaterialrealname(String gname) {
+		LinkedList<String> ab = new LinkedList<String>();
+		
 		for (Material en : Material.values())
 			if (en.name().toLowerCase().indexOf(gname.toLowerCase()) > -1) {
 
 				dprint.r.printC("found material real name = " + en.name());
-				return en.name();
+				ab.add( en.name());
 			}
 
-		return gname;
+		return ab;
 	}
 
 	// riceblockiron
@@ -6216,14 +6217,16 @@ public class dewset extends dewset_interface {
 		
 		private int a1;
 		private byte a2;
+		
 
 		public gift_thread(Player player , int a1 , byte a2) {
 			this.player = player ;
 			this.a1 = a1;
 			this.a2 = a2;
 			
+			long lo =  (rnd.nextInt(20)+1) * 20;
 			
-			Bukkit.getScheduler().scheduleSyncDelayedTask(ac, this, rnd.nextInt(20) * 20);
+			Bukkit.getScheduler().scheduleSyncDelayedTask(ac, this, lo);
 			
 		}
 

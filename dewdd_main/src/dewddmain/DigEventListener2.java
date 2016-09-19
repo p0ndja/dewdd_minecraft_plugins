@@ -6,6 +6,7 @@
 package dewddmain;
 
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.Random;
 
 import org.bukkit.Bukkit;
@@ -402,7 +403,7 @@ public class DigEventListener2 implements Listener {
 					String[] m2 = m[1].split(":");
 
 					int itemid = 0;
-					byte dataid = 0;
+					byte dataid = -29;
 
 					player.sendMessage("m2[0] = " + m2[0] + " search.. = " + dew.getmaterialrealname(m2[0]));
 
@@ -423,7 +424,10 @@ public class DigEventListener2 implements Listener {
 							if (en.name().toLowerCase().indexOf(m2[0].toLowerCase()) > -1) {
 
 								player.sendMessage(dprint.r.color("found material real name = " + en.name()));
-								itemid = Material.getMaterial(dew.getmaterialrealname(m2[0])).getId();
+								
+									
+								
+								itemid = Material.getMaterial(en.name()).getId();
 								if (m2.length == 2) {
 									dataid = Byte.parseByte(m2[1]);
 								}
@@ -1142,10 +1146,10 @@ public class DigEventListener2 implements Listener {
 							} else {
 								itemid = Material.getMaterial(Integer.parseInt(m2[0])).getId();
 							}
-						} else if (Material.getMaterial(dew.getmaterialrealname(m2[0])) == null) {
+						} else if (Material.getMaterial(m2[0]) == null) {
 							player.sendMessage(tr.gettr("error_argument_1_what_the_hell_item"));
 						} else {
-							itemid = Material.getMaterial(dew.getmaterialrealname(m2[0])).getId();
+							itemid = Material.getMaterial(m2[0]).getId();
 						}
 
 						if (m2.length == 2) {
@@ -1178,10 +1182,10 @@ public class DigEventListener2 implements Listener {
 						} else {
 							a3 = Material.getMaterial(Integer.parseInt(m2[0])).getId();
 						}
-					} else if (Material.getMaterial(dew.getmaterialrealname(m2[0])) == null) {
+					} else if (Material.getMaterial(m2[0]) == null) {
 						player.sendMessage(tr.gettr("error_argument_1_what_the_hell_item"));
 					} else {
-						a3 = Material.getMaterial(dew.getmaterialrealname(m2[0])).getId();
+						a3 = Material.getMaterial(m2[0]).getId();
 					}
 
 					// data if 2
@@ -1202,10 +1206,10 @@ public class DigEventListener2 implements Listener {
 						} else {
 							a3 = Material.getMaterial(Integer.parseInt(m2[0])).getId();
 						}
-					} else if (Material.getMaterial(dew.getmaterialrealname(m2[0])) == null) {
+					} else if (Material.getMaterial(m2[0]) == null) {
 						player.sendMessage(tr.gettr("error_argument_1_what_the_hell_item"));
 					} else {
-						a3 = Material.getMaterial(dew.getmaterialrealname(m2[0])).getId();
+						a3 = Material.getMaterial(m2[0]).getId();
 					}
 
 					// a2
@@ -1221,10 +1225,10 @@ public class DigEventListener2 implements Listener {
 						} else {
 							a1 = Material.getMaterial(Integer.parseInt(m2[0])).getId();
 						}
-					} else if (Material.getMaterial(dew.getmaterialrealname(m2[0])) == null) {
+					} else if (Material.getMaterial(m2[0]) == null) {
 						player.sendMessage(tr.gettr("error_argument_1_what_the_hell_item"));
 					} else {
-						a1 = Material.getMaterial(dew.getmaterialrealname(m2[0])).getId();
+						a1 = Material.getMaterial(m2[0]).getId();
 					}
 
 					// a2
@@ -1258,10 +1262,10 @@ public class DigEventListener2 implements Listener {
 						} else {
 							a3 = Material.getMaterial(Integer.parseInt(m2[0])).getId();
 						}
-					} else if (Material.getMaterial(dew.getmaterialrealname(m2[0])) == null) {
+					} else if (Material.getMaterial(m2[0]) == null) {
 						player.sendMessage(tr.gettr("error_argument_1_what_the_hell_item"));
 					} else {
-						a3 = Material.getMaterial(dew.getmaterialrealname(m2[0])).getId();
+						a3 = Material.getMaterial(m2[0]).getId();
 					}
 
 					// data if 2
@@ -1281,10 +1285,10 @@ public class DigEventListener2 implements Listener {
 						} else {
 							a3 = Material.getMaterial(Integer.parseInt(m2[0])).getId();
 						}
-					} else if (Material.getMaterial(dew.getmaterialrealname(m2[0])) == null) {
+					} else if (Material.getMaterial(m2[0]) == null) {
 						player.sendMessage(tr.gettr("error_argument_1_what_the_hell_item"));
 					} else {
-						a3 = Material.getMaterial(dew.getmaterialrealname(m2[0])).getId();
+						a3 = Material.getMaterial(m2[0]).getId();
 					}
 
 					// a2
@@ -1301,10 +1305,10 @@ public class DigEventListener2 implements Listener {
 						} else {
 							a1 = Material.getMaterial(Integer.parseInt(m2[0])).getId();
 						}
-					} else if (Material.getMaterial(dew.getmaterialrealname(m2[0])) == null) {
+					} else if (Material.getMaterial(m2[0]) == null) {
 						player.sendMessage(tr.gettr("error_argument_1_what_the_hell_item"));
 					} else {
-						a1 = Material.getMaterial(dew.getmaterialrealname(m2[0])).getId();
+						a1 = Material.getMaterial(m2[0]).getId();
 					}
 
 					// a2
