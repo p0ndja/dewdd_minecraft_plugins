@@ -51,13 +51,13 @@ public class Core {
 	}
 
 	public static boolean printpls = false;
-	
+
 	public static String sellablePath = File.separator + "ramdisk" + File.separator + "sellableblock.txt";
 	public static String tmpSellPath = File.separator + "ramdisk" + File.separator + "ptdew_dewdd_sell.txt";
 	public static String tmpAllShopPath = File.separator + "ramdisk" + File.separator + "ptdew_dewdd_allshop.txt";
 
 	public static String tmpLVPath = File.separator + "ramdisk" + File.separator + "ptdew_dewdd_lv.txt";
-	
+
 	public static String missionPath = File.separator + "ramdisk" + File.separator + "missionblock.txt";
 	public static int dnaSize = 4300;
 
@@ -91,8 +91,7 @@ public class Core {
 
 	public static AllBlockInGameType[] allBlockInGameAsList = new AllBlockInGameType[1000];
 	public static int allBlockInGameAsListSize = 0;
-	
-	
+
 	private int curChro = 0;
 
 	private double[] chromosome;
@@ -179,11 +178,14 @@ public class Core {
 				double g = decodeRandomGive01_() * allBlockInGameAsListSize;
 
 				int index = (int) (g);
-				if (index >= allBlockInGameAsListSize) index = allBlockInGameAsListSize - 1;
-				
+				if (index >= allBlockInGameAsListSize)
+					index = allBlockInGameAsListSize - 1;
 
 				e.rewardIndex[j] = index;
 				e.rewardAmount[j] = (int) Math.round(decodeRandomGive01_() * allBlockInGameAsList[index].maxStack);
+
+				if (e.rewardAmount[j] <= 0)
+					e.rewardAmount[j] = 1;
 
 			}
 
@@ -238,7 +240,6 @@ public class Core {
 		tmpType.outputAllShop.clear();
 
 		// count before convert
-		
 
 		// check is the last shop ( have enough item >= minshop)
 
@@ -262,8 +263,6 @@ public class Core {
 			tmpType.shopSlotMax--;
 
 		}
-
-		
 
 		// to time convert to All Shop
 
@@ -301,7 +300,8 @@ public class Core {
 
 		// check that all item in shop has all item in game
 
-		if (printpls) d.pl("curItemIndex " + curItemIndex);
+		if (printpls)
+			d.pl("curItemIndex " + curItemIndex);
 
 		// check item Lost Again
 		/*
@@ -321,7 +321,8 @@ public class Core {
 		 * exp.printStackTrace(); System.exit(0); } }
 		 */
 
-		if (printpls)d.pl("converted tmpShop to AllShop ");
+		if (printpls)
+			d.pl("converted tmpShop to AllShop ");
 	}
 
 	public double decodeRandomGive01_() {
@@ -378,7 +379,8 @@ public class Core {
 			if (countItem > allBlockInGameAsListSize) {
 				int tmb = (countItem - allBlockInGameAsListSize);
 
-				if (printpls) d.pl("decodeRandumSumAmount Shouldn't be here : " + tmb);
+				if (printpls)
+					d.pl("decodeRandumSumAmount Shouldn't be here : " + tmb);
 
 				countItem = allBlockInGameAsListSize - 1;
 				para.amount[countItem] = tmb;
@@ -399,13 +401,15 @@ public class Core {
 		while (countItem < allBlockInGameAsListSize) {
 			// d.pl("countItem , " + countItem + " , curChro " + curChro);
 
-			double max = (maxItemForCompleteMission - minItemForCompleteMission); // 1 / 7
+			double max = (maxItemForCompleteMission - minItemForCompleteMission); // 1
+																					// /
+																					// 7
 
 			double tmpReadChro = decodeRandomGive01_(); // random
 
 			double curAmount = Math.round(tmpReadChro * max) + minItemForCompleteMission; // 3
-																			// -
-																			// 7
+			// -
+			// 7
 
 			para.amount[countItem] = (int) curAmount;
 			if (para.amount[countItem] <= 0) {
@@ -418,7 +422,8 @@ public class Core {
 			if (countItem > allBlockInGameAsListSize) {
 				int tmb = (countItem - allBlockInGameAsListSize);
 
-				if (printpls) d.pl("decodeRandumSumAmount Shouldn't be here : " + tmb);
+				if (printpls)
+					d.pl("decodeRandumSumAmount Shouldn't be here : " + tmb);
 
 				countItem = allBlockInGameAsListSize - 1;
 				para.amount[countItem] = tmb;
@@ -427,7 +432,7 @@ public class Core {
 		}
 
 	}
-	
+
 	public void decodeRandomUniqueItem(ParameterRandomUniqueItem para) {
 		para.index = new int[allBlockInGameAsListSize];
 		boolean tmpBoolean[] = new boolean[allBlockInGameAsListSize];
@@ -443,7 +448,7 @@ public class Core {
 
 			getNextUnuseMissionItem((int) (tmpReadChro * swapMultipy),
 
-			tmpBoolean);
+					tmpBoolean);
 
 			para.index[countItem] = curMissionItemSwapPosition;
 
@@ -472,10 +477,15 @@ public class Core {
 
 			double rendomStack01 = decodeRandomGive01_();
 
-		//	bo.curAmount = (int) Math.round(rendomStack01 * allBlockInGameAsList[cur].maxStack);
-			bo.curAmount = (int) Math.round(rendomStack01 * allBlockInGameAsList[cur].limitSell);
-			
-			
+			if (allBlockInGameAsList[cur].limitSell > 0) {
+				// bo.curAmount = (int) Math.round(rendomStack01 *
+				// allBlockInGameAsList[cur].maxStack);
+				bo.curAmount = (int) Math.round(rendomStack01 * allBlockInGameAsList[cur].limitSell);
+			} else {
+
+				bo.curAmount = (int) Math.round(rendomStack01 * allBlockInGameAsList[cur].maxStack);
+			}
+
 			if (bo.curAmount <= 0)
 				bo.curAmount = 1;
 
@@ -551,7 +561,7 @@ public class Core {
 		} // mission
 
 		// count all item again
-		
+
 	}
 
 	public void dnaDecoder(double[] chromosome, LinkedList<AllShop> tmpAllShop, LinkedList<SellableType> tmpSell,
@@ -669,7 +679,8 @@ public class Core {
 		 * exp.printStackTrace(); System.exit(0); } }
 		 */
 
-		if (printpls)d.pl("abc");
+		if (printpls)
+			d.pl("abc");
 		d.pl("end curChro " + curChro);
 	}
 
@@ -817,7 +828,7 @@ public class Core {
 				}
 				allBlockInGame.put(miss.theName + ":" + miss.data, miss);
 				allBlockInGameAsList[allBlockInGameAsListSize] = miss;
-				allBlockInGameAsListSize ++;
+				allBlockInGameAsListSize++;
 			}
 
 			d.pl(" Loaded " + filena);
@@ -923,10 +934,8 @@ public class Core {
 		}
 		return tmp2;
 	}
-	
 
 	public void save_tmpAllShop(LinkedList<AllShop> tmpAllShop) {
-
 
 		String filena = tmpAllShopPath;
 		File fff = new File(filena);
@@ -935,25 +944,23 @@ public class Core {
 		try {
 			fff.createNewFile();
 
-		 d.pl("ptdew&dewdd: Start saving " + filena);
+			d.pl("ptdew&dewdd: Start saving " + filena);
 			fwriter = new FileWriter(fff);
 
 			for (int y = 0; y < tmpAllShop.size(); y++) {
 				AllShop sty = tmpAllShop.get(y);
 				// price , size
-				
+
 				String wr = "" + sty.playPrice + " " + sty.size;
 				fwriter.write(wr + System.getProperty("line.separator"));
-				
-				for (int z = 0 ; z < sty.size ; z ++ ) {
-					
+
+				for (int z = 0; z < sty.size; z++) {
+
 					wr = "" + sty.item[z] + ":" + sty.data[z] + " " + sty.amount[z];
 					fwriter.write(wr + System.getProperty("line.separator"));
-					
+
 				}
-				
-				
-		
+
 			}
 
 			fwriter.close();
@@ -966,9 +973,8 @@ public class Core {
 		}
 
 	}
-	
-	public void save_tmpSell(LinkedList<SellableType> tmpSell) {
 
+	public void save_tmpSell(LinkedList<SellableType> tmpSell) {
 
 		String filena = tmpSellPath;
 		File fff = new File(filena);
@@ -977,14 +983,13 @@ public class Core {
 		try {
 			fff.createNewFile();
 
-		 d.pl("ptdew&dewdd: Start saving " + filena);
+			d.pl("ptdew&dewdd: Start saving " + filena);
 			fwriter = new FileWriter(fff);
 
 			for (int y = 0; y < tmpSell.size(); y++) {
 				SellableType sty = tmpSell.get(y);
 				AllBlockInGameType abt = Core.allBlockInGameAsList[sty.index];
-				
-				
+
 				String wr = "" + abt.getIDData() + " " + sty.sellPerPrice;
 
 				fwriter.write(wr + System.getProperty("line.separator"));
@@ -1001,11 +1006,8 @@ public class Core {
 		}
 
 	}
-	
-	
 
 	public void save_tmpLV(LinkedList<LV1000Type> tmpLV) {
-
 
 		String filena = tmpLVPath;
 		File fff = new File(filena);
@@ -1014,36 +1016,35 @@ public class Core {
 		try {
 			fff.createNewFile();
 
-		 d.pl("ptdew&dewdd: Start saving " + filena);
+			d.pl("ptdew&dewdd: Start saving " + filena);
 			fwriter = new FileWriter(fff);
 
 			for (int y = 0; y < tmpLV.size(); y++) {
 				LV1000Type sty = tmpLV.get(y);
-				
+
 				// price , size
-				
+
 				String wr = "" + sty.needSize + " " + sty.rewardSize;
 				fwriter.write(wr + System.getProperty("line.separator"));
-				
-				for (int z = 0 ; z < sty.needSize ; z ++ ) {
+
+				for (int z = 0; z < sty.needSize; z++) {
 					AllBlockInGameType ooo = Core.allBlockInGameAsList[sty.needIndex[z]];
-					
+
 					wr = "" + ooo.getIDData() + " " + sty.needAmount[z];
-					
+
 					fwriter.write(wr + System.getProperty("line.separator"));
-					
+
 				}
-				
-				
-				for (int z = 0 ; z < sty.rewardSize ; z ++ ) {
+
+				for (int z = 0; z < sty.rewardSize; z++) {
 					AllBlockInGameType ooo = Core.allBlockInGameAsList[sty.rewardIndex[z]];
-					
+
 					wr = "" + ooo.getIDData() + " " + sty.rewardAmount[z];
-					
+
 					fwriter.write(wr + System.getProperty("line.separator"));
-					
+
 				}
-		
+
 			}
 
 			fwriter.close();
@@ -1056,5 +1057,5 @@ public class Core {
 		}
 
 	}
-	
+
 }

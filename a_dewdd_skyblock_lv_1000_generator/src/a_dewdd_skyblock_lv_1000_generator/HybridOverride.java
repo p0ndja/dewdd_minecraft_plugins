@@ -572,8 +572,8 @@ public class HybridOverride extends Hybrid{
 				AllBlockInGameType eg = Core.allBlockInGameAsList[i];
 				AllBlockInGameType myeg = ps.allMyInventory.get(eg.getIDData());
 
-				if (eg.atTheEndNeed > 0) {
-					double theDiff = Math.abs(eg.atTheEndNeed - myeg.curAmount);
+				if (eg.limitSell > 0) {
+					double theDiff = Math.abs(eg.limitSell - myeg.curAmount);
 					fitAtTheEndItem -= theDiff;
 					continue;
 
@@ -581,16 +581,18 @@ public class HybridOverride extends Hybrid{
 			}
 
 			tmpFitness = fitCurLV + fitMoneyLeft + fitMaxMoney + fitAtTheEndItem;
-			tmpFitness = fitCurLV  + fitMaxMoney ;
+			tmpFitness = (fitCurLV)  + (fitMaxMoney) ;
 
 			
 			d.pl("fitness " + tmpFitness + ", f curLV " + fitCurLV + " , f money left " + fitMoneyLeft
 					+ " ,f Max money " + fitMaxMoney + " , fit at the end " + fitAtTheEndItem);
 
-			fitness += tmpFitness;
+			fitness +=1/tmpFitness;
 		}
 
-		return fitness / avg;
+		double av =  fitness / avg;
+		
+		return av;
 
 	}
 

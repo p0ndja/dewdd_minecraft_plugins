@@ -50,9 +50,9 @@ public class Main {
 		HybridOverride hy = new HybridOverride();
 
 		hy.setDnaLength(Core.dnaSize);
-		//hy.setHashMapMode(false);
+		hy.setHashMapMode(false);
 		hy.setMaxEpochs(10000);
-		hy.setExitError(Double.MIN_VALUE);
+		hy.setExitError(-Double.MAX_VALUE);
 
 		// set chromosome here
 
@@ -61,7 +61,7 @@ public class Main {
 		if (args.length == 0) {
 			args = new String[2];
 			args[0] = "evu";
-			args[1] = "100";
+			args[1] = "10";
 		}
 		
 			if (args[0].equalsIgnoreCase("evu")) {
