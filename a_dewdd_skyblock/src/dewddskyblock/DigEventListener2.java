@@ -1198,7 +1198,7 @@ public class DigEventListener2 implements Listener {
 
 			// p.sendMessage("allDone " + allDone);
 			if (allDone == false) {
-				// p.sendMessage(dprint.r.color(tr.gettr("sky_lv_item_not_enough_to_complete_lv_so_return_all_item")));
+				// p.sendMessage(dprint.r.color(tr.gettr("sky_c_item_not_enough_to_complete_c_so_return_all_item")));
 
 				// drop item
 
@@ -1213,7 +1213,7 @@ public class DigEventListener2 implements Listener {
 
 			} else {
 				p.sendMessage(dprint.r
-						.color(tr.gettr("sky_lv_got_all_item_to_completed_cur_lv_") + api_skyblock.rs[idx].mission));
+						.color(tr.gettr("sky_c_got_all_item_to_completed_cur_c_") + api_skyblock.rs[idx].mission));
 
 				api_skyblock.rs[idx].mission++;
 				dew.saveRSProtectFile();
@@ -1320,7 +1320,7 @@ public class DigEventListener2 implements Listener {
 				player.sendMessage(dprint.r.color("/skyblock owner <player>"));
 				player.sendMessage(dprint.r.color("/skyblock exitFromThisHome <owner name>"));
 
-				player.sendMessage(dprint.r.color("/skyblock lv"));
+				player.sendMessage(dprint.r.color("/skyblock c"));
 				player.sendMessage(dprint.r.color("/skyblock go <player>"));
 				player.sendMessage(dprint.r.color("/skyblock goid <id>"));
 				player.sendMessage(dprint.r.color("/skyblock gorandom"));
@@ -1517,8 +1517,8 @@ public class DigEventListener2 implements Listener {
 					Bukkit.getScheduler().scheduleSyncDelayedTask(ac, dp);
 				}
 
-				else if (m[1].equalsIgnoreCase("resetlv")) {
-					if (player.hasPermission(Constant.presetlv) == false) {
+				else if (m[1].equalsIgnoreCase("resetc")) {
+					if (player.hasPermission(Constant.presetc) == false) {
 						player.sendMessage(dprint.r.color(tr.gettr("you_don't_have_permission") + Constant.pskyblock));
 						return;
 					}
@@ -1534,15 +1534,15 @@ public class DigEventListener2 implements Listener {
 					if (m.length == 2) {
 
 						api_skyblock.rs[getid].mission = 0;
-						dprint.r.printAll(tr.gettr("reseted_lv_of_is_this_guys") + api_skyblock.rs[getid].p[0]);
+						dprint.r.printAll(tr.gettr("reseted_c_of_is_this_guys") + api_skyblock.rs[getid].p[0]);
 
-						dew.printToAllPlayerOnRS(getid, tr.gettr("cur_lv_is") + (api_skyblock.rs[getid].mission));
+						dew.printToAllPlayerOnRS(getid, tr.gettr("cur_c_is") + (api_skyblock.rs[getid].mission));
 
 					} else if (m.length == 3) {
 						api_skyblock.rs[getid].mission = (Integer.parseInt(m[2]));
-						dprint.r.printAll(tr.gettr("reseted_lv_of_is_this_guys") + api_skyblock.rs[getid].p[0]);
+						dprint.r.printAll(tr.gettr("reseted_c_of_is_this_guys") + api_skyblock.rs[getid].p[0]);
 
-						dew.printToAllPlayerOnRS(getid, tr.gettr("cur_lv_is") + (api_skyblock.rs[getid].mission));
+						dew.printToAllPlayerOnRS(getid, tr.gettr("cur_c_is") + (api_skyblock.rs[getid].mission));
 
 					} else {
 						player.sendMessage(tr.gettr("/sky resetlv <lv>"));
@@ -1773,7 +1773,7 @@ public class DigEventListener2 implements Listener {
 
 				}
 
-				else if (m[1].equalsIgnoreCase("lv")) {
+				else if (m[1].equalsIgnoreCase("c")) {
 
 					int getid = api_skyblock.getprotectid(player.getLocation().getBlock());
 
@@ -1789,13 +1789,13 @@ public class DigEventListener2 implements Listener {
 					}
 
 					if (api_skyblock.rs[getid].mission >= api_skyblock.lv1000.size()) {
-						player.sendMessage(dprint.r.color(tr.gettr("sky_lv_all_lv_done_thanks_to_play")));
+						player.sendMessage(dprint.r.color(tr.gettr("sky_c_all_c_done_thanks_to_play")));
 						return;
 
 					}
 
-					player.sendMessage(dprint.r.color(tr.gettr("cur_lv_is") + (api_skyblock.rs[getid].mission)));
-					dew.printToAllPlayerOnRS(getid, (tr.gettr("cur_lv_is") + api_skyblock.rs[getid].mission));
+					player.sendMessage(dprint.r.color(tr.gettr("cur_c_is") + (api_skyblock.rs[getid].mission)));
+					dew.printToAllPlayerOnRS(getid, (tr.gettr("cur_c_is") + api_skyblock.rs[getid].mission));
 
 					Inventory inv = Bukkit.createInventory(null, 54, "sky lv");
 					updateLVInventory(inv, player);
@@ -2327,7 +2327,7 @@ public class DigEventListener2 implements Listener {
 			player.sendMessage(tr.gettr("type_this_command_for_create_new_skyblock"));
 
 		} else {
-			player.sendMessage(tr.gettr("cur_lv_is") + (api_skyblock.rs[rsid].mission));
+			player.sendMessage(tr.gettr("cur_c_is") + (api_skyblock.rs[rsid].mission));
 
 		}
 

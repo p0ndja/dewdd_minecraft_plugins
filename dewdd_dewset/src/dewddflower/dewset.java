@@ -4975,7 +4975,7 @@ public class dewset extends dewset_interface {
 
 	public int runtime = 1000;
 
-	public long sleeptime = 60L;
+	public long sleeptime = 10L;
 
 	public Block selectblock[] = new Block[selectmax + 1];
 
@@ -6209,85 +6209,110 @@ public class dewset extends dewset_interface {
 		String aa = "ptdew_dewdd_" + dewworldlist[idworld] + ".txt";
 		return aa;
 	}
+	
+	
+	class gift_thread implements Runnable {
+		private Player player;
+		
+		private int a1;
+		private byte a2;
 
-	public void gift(Player player, int a1, byte a2) {
-		int moveyet = 0;
-		boolean okok = false;
+		public gift_thread(Player player , int a1 , byte a2) {
+			this.player = player ;
+			this.a1 = a1;
+			this.a2 = a2;
+			
+			
+			Bukkit.getScheduler().scheduleSyncDelayedTask(ac, this, rnd.nextInt(20) * 20);
+			
+		}
 
-		Block b = null;
+		@Override
+		public void run() {
+			int moveyet = 0;
+			boolean okok = false;
 
-		ArrayList<Block> blockList = new ArrayList<Block>();
-		blockList.clear();
+			Block b = null;
 
-		for (int y = -10; y <= +10; y++)
-			for (int z = -10; z <= +10; z++)
-				for (int x = -10; x <= +10; x++) {
+			ArrayList<Block> blockList = new ArrayList<Block>();
+			blockList.clear();
 
-					Block curBlock = giftblock.getRelative(x, y, z);
-					searchRecursiveBlock(blockList, curBlock, Material.CHEST, (byte) -29);
-					searchRecursiveBlock(blockList, curBlock, Material.TRAPPED_CHEST, (byte) -29);
-				}
+			for (int y = -10; y <= +10; y++)
+				for (int z = -10; z <= +10; z++)
+					for (int x = -10; x <= +10; x++) {
 
-		for (int y = -10; y <= +10; y++)
-			for (int z = -10; z <= +10; z++)
-				for (int x = -10; x <= +10; x++) {
-
-					Block curBlock = player.getLocation().getBlock().getRelative(x, y, z);
-					searchRecursiveBlock(blockList, curBlock, Material.CHEST, (byte) -29);
-					searchRecursiveBlock(blockList, curBlock, Material.TRAPPED_CHEST, (byte) -29);
-				}
-
-		player.sendMessage("blockList.size() == " + blockList.size() + "  , gift position " + giftblock.getX() + ","
-				+ giftblock.getY() + "," + giftblock.getZ());
-
-		for (int index = 0; index < blockList.size(); index++) {
-
-			b = blockList.get(index);
-
-			if (checkpermissionarea(b, player, "right") == true) {
-				continue;
-			}
-
-			if (b.getTypeId() == Material.CHEST.getId() || b.getTypeId() == Material.TRAPPED_CHEST.getId()) {
-				Chest c = (Chest) b.getState();
-
-				for (ItemStack ic : c.getInventory().getContents()) {
-					if (ic == null) {
-						continue;
+						Block curBlock = giftblock.getRelative(x, y, z);
+						searchRecursiveBlock(blockList, curBlock, Material.CHEST, (byte) -29);
+						searchRecursiveBlock(blockList, curBlock, Material.TRAPPED_CHEST, (byte) -29);
 					}
 
-					okok = false;
-					if (ic.getTypeId() == a1)
-						if (a2 == -29) {
-							okok = true;
-						} else if (a2 == ic.getData().getData()) {
-							okok = true;
+			for (int y = -10; y <= +10; y++)
+				for (int z = -10; z <= +10; z++)
+					for (int x = -10; x <= +10; x++) {
+
+						Block curBlock = player.getLocation().getBlock().getRelative(x, y, z);
+						searchRecursiveBlock(blockList, curBlock, Material.CHEST, (byte) -29);
+						searchRecursiveBlock(blockList, curBlock, Material.TRAPPED_CHEST, (byte) -29);
+					}
+
+			player.sendMessage("blockList.size() == " + blockList.size() + "  , gift position " + giftblock.getX() + ","
+					+ giftblock.getY() + "," + giftblock.getZ());
+
+			for (int index = 0; index < blockList.size(); index++) {
+
+				b = blockList.get(index);
+
+				if (checkpermissionarea(b, player, "right") == true) {
+					continue;
+				}
+
+				if (b.getTypeId() == Material.CHEST.getId() || b.getTypeId() == Material.TRAPPED_CHEST.getId()) {
+					Chest c = (Chest) b.getState();
+
+					for (ItemStack ic : c.getInventory().getContents()) {
+						if (ic == null) {
+							continue;
 						}
 
-					if (moveyet > 10) {
-						player.sendMessage(
-								dprint.r.color("ptdew&dewdd : " + tr.gettr("gift_you_got_item_10_times_enough")));
-						return;
-					}
+						okok = false;
+						if (ic.getTypeId() == a1)
+							if (a2 == -29) {
+								okok = true;
+							} else if (a2 == ic.getData().getData()) {
+								okok = true;
+							}
 
-					if (okok == true) {
-						ItemStack gj = new ItemStack(ic);
-						player.getLocation().getWorld().dropItem(player.getLocation(), gj);
-						moveyet++;
-						c.getInventory().remove(ic);
-						c.update();
-						player.sendMessage(dprint.r.color(moveyet + " ... " + gj.getTypeId() + ":" + gj.getData()
-								+ tr.gettr("amount") + " = " + gj.getAmount()));
-					}
+						if (moveyet > 10) {
+							player.sendMessage(
+									dprint.r.color("ptdew&dewdd : " + tr.gettr("gift_you_got_item_10_times_enough")));
+							return;
+						}
 
+						if (okok == true) {
+							ItemStack gj = new ItemStack(ic);
+							player.getLocation().getWorld().dropItem(player.getLocation(), gj);
+							moveyet++;
+							c.getInventory().remove(ic);
+							c.update();
+							player.sendMessage(dprint.r.color(moveyet + " ... " + gj.getTypeId() + ":" + gj.getData()
+									+ tr.gettr("amount") + " = " + gj.getAmount()));
+						}
+
+					}
 				}
+
 			}
 
+			if (moveyet == 0) {
+				player.sendMessage(dprint.r.color(tr.gettr("gift_not_found_item")));
+			}
+			
 		}
+		
+	}
 
-		if (moveyet == 0) {
-			player.sendMessage(dprint.r.color(tr.gettr("gift_not_found_item")));
-		}
+	public void gift(Player player, int a1, byte a2) {
+		gift_thread xyz = new gift_thread(player,a1,a2);
 
 	}
 

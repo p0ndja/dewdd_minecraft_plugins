@@ -330,9 +330,14 @@ public class DigEventListener2 implements Listener {
 
 	@EventHandler
 	public void eventja(PlayerQuitEvent event) {
+		if (Bukkit.getOnlinePlayers().size()>1) {
+				return;
+			}
+		
 		for (World wx : Bukkit.getWorlds()) {
 
 			boolean playernear = false;
+			
 
 			for (Chunk cj : wx.getLoadedChunks()) {
 				playernear = false;
@@ -350,7 +355,7 @@ public class DigEventListener2 implements Listener {
 
 				if (playernear == false) {
 					cj.unload(true);
-					dprint.r.printAll("ptdew&dewdd: unloaded chunk at (" + cj.getX() * 16 + "," + cj.getZ() * 16 + ")");
+					dprint.r.printA("ptdew&dewdd: unloaded chunk at (" + cj.getX() * 16 + "," + cj.getZ() * 16 + ")");
 				}
 
 			}

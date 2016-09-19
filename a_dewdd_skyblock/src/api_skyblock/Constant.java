@@ -16,7 +16,7 @@ public class Constant {
 	public static String rsLV_filename = "ptdew_dewdd_lv.txt";
 
 	public static String poveride = "dewdd.skyblock.overide";
-	public static String presetlv = "dewdd.skyblock.resetlv";
+	public static String presetc = "dewdd.skyblock.resetlv";
 
 	
 	public static int LV_2_USE_BONE_MEAL_AMOUNT = 45;

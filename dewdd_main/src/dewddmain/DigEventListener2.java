@@ -2877,7 +2877,7 @@ public class DigEventListener2 implements Listener {
 		event.getPlayer().addPotionEffect(PotionEffectType.REGENERATION.createEffect(200, 1), false);
 
 		int perhell = dew.randomG.nextInt(6000);
-		if (perhell <= 20)
+		if (perhell <= 5)
 			if (event.getFrom().getWorld().getName().equalsIgnoreCase("world") == true
 					&& event.getTo().getWorld().getName().equalsIgnoreCase("world") == true) {
 
