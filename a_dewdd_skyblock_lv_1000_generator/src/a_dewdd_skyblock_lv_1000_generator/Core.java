@@ -472,8 +472,10 @@ public class Core {
 
 			double rendomStack01 = decodeRandomGive01_();
 
-			bo.curAmount = (int) Math.round(rendomStack01 * allBlockInGameAsList[cur].maxStack);
-
+		//	bo.curAmount = (int) Math.round(rendomStack01 * allBlockInGameAsList[cur].maxStack);
+			bo.curAmount = (int) Math.round(rendomStack01 * allBlockInGameAsList[cur].limitSell);
+			
+			
 			if (bo.curAmount <= 0)
 				bo.curAmount = 1;
 
@@ -801,9 +803,9 @@ public class Core {
 				miss.isBlock = Boolean.parseBoolean(m[3]);
 
 				if (m.length == 5) {
-					miss.atTheEndNeed = Integer.parseInt(m[4]);
+					miss.limitSell = Integer.parseInt(m[4]);
 				} else {
-					miss.atTheEndNeed = 0;
+					miss.limitSell = 0;
 				}
 
 				// d.pl("...");

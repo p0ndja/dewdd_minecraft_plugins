@@ -6,7 +6,7 @@ public class AllBlockInGameType {
 	public int maxStack;
 	public boolean isBlock = false;
 
-	public int atTheEndNeed = 0;
+	public int limitSell = 0;
 
 	public int curAmount = 0;
 
@@ -16,7 +16,7 @@ public class AllBlockInGameType {
 		abc.data = this.data;
 		abc.maxStack = this.maxStack;
 		abc.isBlock = this.isBlock;
-		abc.atTheEndNeed = this.atTheEndNeed;
+		abc.limitSell = this.limitSell;
 
 		return abc;
 	}

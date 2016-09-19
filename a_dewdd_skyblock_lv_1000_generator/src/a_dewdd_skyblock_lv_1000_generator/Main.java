@@ -50,8 +50,9 @@ public class Main {
 		HybridOverride hy = new HybridOverride();
 
 		hy.setDnaLength(Core.dnaSize);
-		
-		hy.setMaxEpochs(1000000);
+		//hy.setHashMapMode(false);
+		hy.setMaxEpochs(10000);
+		hy.setExitError(Double.MIN_VALUE);
 
 		// set chromosome here
 
@@ -76,6 +77,7 @@ public class Main {
 				
 				hy.setAllChromosomeGen1(seo);
 				hy.prepareToRunGA();
+				
 
 				EventListenerOverride evn = new EventListenerOverride();
 
