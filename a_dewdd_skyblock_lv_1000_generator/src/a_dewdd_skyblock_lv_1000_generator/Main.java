@@ -80,8 +80,7 @@ public class Main {
 		HybridOverride hy = new HybridOverride();
 
 		hy.setChromosomeLength(Core.dnaSize);
-		hy.setFitnessStop(100);
-		hy.setPopulationSize(1000);
+		hy.setPopulationSize(100);
 		hy.setRunCount(1000);
 
 		hy.prepareToRunGA();

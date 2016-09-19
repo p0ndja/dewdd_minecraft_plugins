@@ -19,7 +19,7 @@ public class HybridOverride extends Hybrid {
 		
 		Main.co.dnaDecoder(dna, tmpAllShop, tmpSell, tmpLV);
 
-		boolean printPls = true;
+		boolean printPls = false;
 
 		for (int i = 0; i < tmpSell.size(); i++) {
 
@@ -124,7 +124,9 @@ public class HybridOverride extends Hybrid {
 					if (Main.co.allBlockInGameAsList.get(k).theName.equalsIgnoreCase(need.theName)) {
 
 						if (needSlotUsedIt[k] == true) {
+							if (printPls == true) {
 							d.pl(" **  need dupli " + need.theName + ":" + need.data);
+							}
 							duplicate++;
 						}
 						needSlotUsedIt[k] = true;
@@ -135,7 +137,9 @@ public class HybridOverride extends Hybrid {
 
 			}
 			
+			if (printPls == true) {
 			d.pl(" >>> need duplicate " + duplicate);
+			}
 		//	duplicate = 0;
 
 			for (int j = 0; j < curLV.rewardSize; j++) {
@@ -152,7 +156,9 @@ public class HybridOverride extends Hybrid {
 					if (Main.co.allBlockInGameAsList.get(k).data == reward.data)
 					if (Main.co.allBlockInGameAsList.get(k).theName.equalsIgnoreCase(reward.theName)) {
 						if (rewardSlotUsedIt[k] == true) {
+							if (printPls == true) {
 							d.pl(" *** ** reward dupli " + reward.theName + ":" + reward.data);
+							}
 							//duplicate++;
 						}
 						rewardSlotUsedIt[k] = true;
@@ -297,7 +303,7 @@ public class HybridOverride extends Hybrid {
 			
 			boolean notFill = false;
 			while (notFill == false && moneyNotFoundxD == false) {
-				
+				d.pl("not fill " + notFill + " , moneyNotFound " + moneyNotFoundxD);
 				// check are there item not fill
 				 notFill = false;
 				 

@@ -51,7 +51,7 @@ public class Core {
 	public static String sellablePath = File.separator + "ramdisk" + File.separator + "sellableblock.txt";
 
 	public static String missionPath = File.separator + "ramdisk" + File.separator + "missionblock.txt";
-	public static int dnaSize = 4000;
+	public static int dnaSize = 3200;
 
 	public static int maxItemForCompleteMission = 10;
 	public static int minItemForCompleteMission = 3;
@@ -64,6 +64,8 @@ public class Core {
 
 	public static int minShopSize = 3;
 	public static int swapMultipy = 100;
+	
+	
 
 	public static double SellMaxCost = 1000;
 
