@@ -30,14 +30,8 @@ commands:
   dg:
     description: absorb all items in map
     usage: /<command>
-  yes:
-    description: I can see
-    usage: /<command>
-  no:
-    description: where are me?
-    usage: /<command>
-  dig_speed:
-    description: enchant dig_speed
+  drop:
+    description: drop your item
     usage: /<command>
   drops:
     description: show amount of droped item in map

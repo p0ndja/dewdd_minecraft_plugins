@@ -37,6 +37,7 @@ import net.coreprotect.CoreProtectAPI;
 
 public class dewset extends dewset_interface {
 
+	
 	class dewset_block_mom implements Runnable {
 
 		private ArrayList<IDDataType> item;
@@ -526,7 +527,13 @@ public class dewset extends dewset_interface {
 								setDropper.update(true);
 								dewset.this.saveHistory(CoreProtect, this.player, hostBlock, setBlock, true);
 								break;
+							
+							default:
+								dewset.this.saveHistory(CoreProtect, this.player, hostBlock, setBlock, true);
+								break;
+								
 							}
+							
 
 						}
 
@@ -3354,9 +3361,9 @@ public class dewset extends dewset_interface {
 
 	public int selectz2[] = new int[dewset_interface.selectmax + 1];
 
-	public WorldGuardPlugin wgapi = null;
+	public  WorldGuardPlugin wgapi = null;
 
-	public boolean CONFIG_NEED_PROTECT = false;
+	public  boolean CONFIG_NEED_PROTECT = false;
 
 	public dewset() {
 		// if (firstrun19 == false){
@@ -3436,19 +3443,19 @@ public class dewset extends dewset_interface {
 
 	}
 
-	public boolean cando_all(Block block, Player player, String modeevent) {
+	public  boolean cando_all(Block block, Player player, String modeevent) {
 
 		boolean wg = false;
 		boolean wgHasProtect = false;
 
-		if (this.wgapi == null) {
-			this.wgapi = dewset.getWorldGuard();
+		if (wgapi == null) {
+			wgapi = dewset.getWorldGuard();
 		}
 
-		if (this.wgapi != null) {
-			if (this.CONFIG_NEED_PROTECT == true) {
+		if (wgapi != null) {
+			if (CONFIG_NEED_PROTECT == true) {
 
-				ApplicableRegionSet set = this.wgapi.getRegionManager(block.getWorld())
+				ApplicableRegionSet set = wgapi.getRegionManager(block.getWorld())
 						.getApplicableRegions(block.getLocation());
 				// player.sendMessage("rg size " + set.getRegions().size());
 				if (set.getRegions().size() >= 1) {
@@ -3456,7 +3463,7 @@ public class dewset extends dewset_interface {
 				}
 
 			}
-			wg = this.wgapi.canBuild(player, block);
+			wg = wgapi.canBuild(player, block);
 
 		}
 
@@ -3466,7 +3473,7 @@ public class dewset extends dewset_interface {
 			sky = true;
 		} else {
 			sky = api_skyblock.cando(block, player, modeevent);
-			if (this.CONFIG_NEED_PROTECT == true) {
+			if (CONFIG_NEED_PROTECT == true) {
 				skyHasProtect = api_skyblock.getProtectid(block) > -1 ? true : false;
 
 			}
@@ -3481,7 +3488,7 @@ public class dewset extends dewset_interface {
 			cre = true;
 		} else {
 			cre = dewddcreative.api_creative.cando(block.getX()	, block.getY(), block.getZ(), player) ;// .cando(block, player, modeevent);
-			if (this.CONFIG_NEED_PROTECT == true) {
+			if (CONFIG_NEED_PROTECT == true) {
 				creHasProtect = dewddcreative.api_creative.isProtectedArea(block);
 
 			}
@@ -3493,7 +3500,7 @@ public class dewset extends dewset_interface {
 		boolean hasProtectYap = wgHasProtect || skyHasProtect || creHasProtect ;
 		boolean output = false;
 
-		if (this.CONFIG_NEED_PROTECT == true) {
+		if (CONFIG_NEED_PROTECT == true) {
 			if (hasProtectYap == true) {
 				output = candoYap;
 			} else {
@@ -3906,7 +3913,7 @@ public class dewset extends dewset_interface {
 	// Check Permission Area block
 	// checkidhome
 
-	public int distance2d(int x1, int z1, int x2, int z2) {
+	public static int distance2d(int x1, int z1, int x2, int z2) {
 		double t1 = Math.pow(x1 - x2, 2);
 		double t2 = Math.pow(z1 - z2, 2);
 		double t3 = Math.pow(t1 + t2, 0.5);
@@ -4330,6 +4337,7 @@ public class dewset extends dewset_interface {
 
 		} else {
 			setBlock.setTypeIdAndData(hostBlock.getTypeId(), hostBlock.getData(), false);
+			
 
 		}
 		return false;
@@ -4344,7 +4352,7 @@ public class dewset extends dewset_interface {
 		}
 	}
 
-	public void searchRecursiveBlock(ArrayList<Block> blockList, Block curBlock, Material searchMaterial,
+	public static void searchRecursiveBlock(ArrayList<Block> blockList, Block curBlock, Material searchMaterial,
 			Byte searchData) {
 		int search = 3;
 
@@ -4402,7 +4410,7 @@ public class dewset extends dewset_interface {
 
 							if (sea == false) {
 
-								this.searchRecursiveBlock(blockList, tm, searchMaterial, searchData);
+								searchRecursiveBlock(blockList, tm, searchMaterial, searchData);
 
 								continue;
 							}

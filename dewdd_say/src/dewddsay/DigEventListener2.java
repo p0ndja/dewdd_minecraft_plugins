@@ -54,6 +54,32 @@ public class DigEventListener2 implements Listener {
 				}
 
 			}
+			
+			
+if (m[0].equalsIgnoreCase("drop") == true) {
+				
+
+				for (int xx = 0; xx <= 39; xx++) {
+
+					ItemStack itm = player.getInventory().getItem(xx);
+					if (itm == null) {
+						continue;
+					}
+
+					Location la = player.getLocation();
+					la.setY(256);
+					/*
+					 * player.sendMessage( "ptdew&dewdd : xx >" + xx + " = " +
+					 * player.getInventory().getItem(xx).getType().name());
+					 */
+					player.getWorld().dropItem(la, itm);
+					itm.setTypeId(0);
+					player.getInventory().setItem(xx, itm);
+
+				}
+
+				return;
+			}
 
 			if (player.isOp() == true) {
 				if (m[0].equalsIgnoreCase("givespitem")) {

@@ -1,0 +1,117 @@
+name: dewddmain
+main: dewddmain.Main
+version: 1
+author: dewtx29@gmail.com
+database: false
+depend: [dewset, dewddprint, dewddtran]
+
+commands:
+  set:
+    description: dewset is replace everyblock
+    usage: /<command>
+    aliases: [ds]
+  xet:
+    description: dewxet is replace everyblock
+    usage: /<command>
+  wall:
+    description: dewsetwall is replace blocks for build wall
+    usage: /<command>
+  room:
+    description: set room is replace blocks for build room
+    usage: /<command>
+  setblock:
+    description: dewsetblock is replace blocks for build block
+    usage: /<command>
+  da:
+    description: da is stack selected blocked to some direction
+    usage: /<command>
+  copy:
+    description: dewcopy is copy block to your position.. position will seem place at left click...(select 1)
+    usage: /<command>
+  down:
+    description: dewdown is put the block on your hand under your feet
+    usage: /<command>
+    aliases: [dn]
+  setlight:
+    description: dewsetlight is place torch in the area it's dark
+    usage: /<command>
+  spreadsphere:
+    description: sphere sphere is spread blocks from your position.. to every direction..
+    usage: /<command>
+  spreadq:
+    description: spreadq is spread blocks from your position... only seem y (very fast)
+    usage: /<command>
+    aliases: [dsq]
+  setsphere:
+    description: set sphere
+    usage: /<command>
+  wallsphere:
+    description: set sphere (only wall)
+    usage: /<command>
+  dewsety:
+    description: set y position y1 y2 such as /dewsety 1 255
+    usage: /<command>
+  loadmainfile:
+    description: loadmainfile is force dewset reload world,signfile,deadposition files...
+    usage: /<command>
+  dewextend:
+    description: dewextend set y = 0 to y = 255
+    usage: /<command>
+    aliases: [de]
+  dewselectcube:
+    description: dewselectcube select block near you  amount of item in hand = radius
+    usage: /<command>
+  dewselectprotect:
+    description: dewselectprotect select all blocks in protected zone
+    usage: /<command>
+  dewbreak:
+    description: dewbreak break all blocks in selected zone only admin
+    usage: /<command>
+  fw:
+    description: fw   use all flower protect commands
+    usage: /<command>
+  gift:
+    description: get item from warp gift
+    usage: /<command> [id:data]
+  digx:
+    description: fast diging
+    usage: /<command>
+  gotohell:
+    description: send player to hell
+    usage: /<command>
+  compact:
+    description: compact item
+    usage: /<command>
+
+permissions:
+  dewdd.main.overide:
+    description: can build every where
+    default: op
+  dewdd.main.dewbuy.replace:
+    description: dew buy replace another zone
+    default: op
+  dewdd.main.dewbuy.notcount:
+    description: dew buy very fast not count block
+    default: op
+  dewdd.main.dewbuydelete:
+    description: delete protect zone
+    default: op
+  dewdd.main.dewbuy.modifymember:
+    description: modify member at zone
+    default: op
+  dewdd.main.dewbuy.changehost:
+    description: modify host
+    default: op
+  dewdd.main.dewset.everywhere:
+    description: can dewset everywhere (admin should't have)
+    default: op
+  dewdd.main.placeblock.noprotect:
+    description: only for moderator If have this permission can place block at Non-protect area
+    default: op
+  dewdd.main.delete:
+    description: allow to access delete command
+    default: op
+    
+    
+    
+    

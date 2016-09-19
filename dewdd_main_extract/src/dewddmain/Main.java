@@ -3,7 +3,7 @@
  *      E-Mail: dewtx29@gmail.com
  *      facebook: https://www.facebook.com/dewddminecraft
  */
-package dewdddfree;
+package dewddmain;
 
 import java.util.logging.Logger;
 
@@ -18,17 +18,22 @@ public class Main extends JavaPlugin {
 	@Override
 	public void onDisable() {
 		getServer().getPluginManager().disablePlugin(this);
-		dprint.r.printAll("ptdew&dewdd : " + tr.gettr("unloaded_plugin") + " dewdd dfree");
+		dprint.r.printAll("ptdew&dewdd : " + tr.gettr("unloaded_plugin") + "  dewdd main");
 	}
 
 	@Override
 	public void onEnable() {
 
-		log = this.getLogger();
+		log = getLogger();
 
 		ax.ac = this;
+		// ax.dew = new Dewddminecraft();
+		// ax.dew.loadmainfile();
+		// ax.dew.ac = this;
+
 		getServer().getPluginManager().registerEvents(ax, this);
-		dprint.r.printAll("ptdew&dewdd : " + tr.gettr("loaded_plugin") + " loaded dewdd dfree");
+
+		dprint.r.printAll("ptdew&dewdd : " + tr.gettr("loaded_plugin") + "  dewdd main");
 
 	}
 

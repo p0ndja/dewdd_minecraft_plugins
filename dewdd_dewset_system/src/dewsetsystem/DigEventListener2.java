@@ -180,7 +180,7 @@ public class DigEventListener2 implements Listener {
 
 			DigEventListener2.this.dew.sleeptime = (int) tr.gettrint("dewset sleeptime as tick");
 			int value = ((int) tr.gettrint("CONFIG dewset only work in protected zone set to 1 for enable"));
-			DigEventListener2.this.dew.CONFIG_NEED_PROTECT = value == 1 ? true : false;
+			dew.CONFIG_NEED_PROTECT = value == 1 ? true : false;
 			// player.sendMessage("need protect " + dew.CONFIG_NEED_PROTECT);
 
 			String[] m = this.message.split("\\s+");
@@ -676,7 +676,7 @@ public class DigEventListener2 implements Listener {
 			// check host block
 
 			boolean goodc1 = false;
-			goodc1 = this.dew.cando_all(block, player, "damage");
+			goodc1 = dew.cando_all(block, player, "damage");
 			if (goodc1 == false) { // don't have permission
 
 				return;
@@ -786,7 +786,7 @@ public class DigEventListener2 implements Listener {
 		Block block = event.getClickedBlock();
 
 		boolean goodc1 = false;
-		goodc1 = this.dew.cando_all(block, player, "right");
+		goodc1 = dew.cando_all(block, player, "right");
 
 		if (goodc1 == false) {
 
