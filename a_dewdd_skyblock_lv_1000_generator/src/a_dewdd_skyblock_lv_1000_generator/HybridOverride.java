@@ -12,7 +12,7 @@ import ga_optimization_api.Chromosome;
 import ga_optimization_api.Hybrid;
 import ga_optimization_api.HybridMultithreading;
 
-public class HybridOverride extends HybridMultithreading {
+public class HybridOverride extends Hybrid{
 
 	public static int maxUnUnique = 0;
 
