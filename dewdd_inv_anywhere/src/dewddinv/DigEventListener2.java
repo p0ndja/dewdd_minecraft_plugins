@@ -59,9 +59,9 @@ public class DigEventListener2 implements Listener {
 	int backslot = 0;
 	int menuslot = 17;
 
-	int picback = Material.LEAVES.getId();
-	int picgo = Material.LEAVES.getId();
-	int picmenu = Material.LEAVES.getId();
+	int picback = Material.CHEST.getId();
+	int picgo = Material.CHEST.getId();
+	int picmenu = Material.CHEST.getId();
 
 	public JavaPlugin ac = null;
 	ArrayList<DewInv> inv = new ArrayList<DewInv>();
@@ -281,6 +281,8 @@ public class DigEventListener2 implements Listener {
 			}
 
 		}
+		
+		
 
 		Position newPosi = new Position();
 		newPosi.x = loc.getBlockX();
@@ -319,6 +321,16 @@ public class DigEventListener2 implements Listener {
 		}
 
 		if (e.getInventory().getType() != InventoryType.CHEST) {
+			return;
+		}
+		
+		try {
+		if (e.getInventory().getLocation().getBlock().getType() != Material.CHEST) {
+			
+			return;
+		}
+		}
+		catch (Exception eee) {
 			return;
 		}
 
@@ -539,6 +551,24 @@ public class DigEventListener2 implements Listener {
 
 					if (b3.getTypeId() != 54) {
 						p.sendMessage("please stand on chest block id 54");
+						return;
+					}
+					
+					// check permission
+					if (api_private.DewddPrivate.hasProtect(b3)) {
+						if (api_private.DewddPrivate.cando(b3, e.getPlayer())  && api_private.DewddPrivate.nearPrivateSign(b3)) {
+							/*addNewInventory(b3.getLocation(), inv.get(getid(e.getPlayer().getName())),
+									e.getPlayer().getName());*/
+
+						}
+						else {
+							p.sendMessage("this is not your chest");
+							return;
+						}
+
+					}
+					else {
+						p.sendMessage("need [private] sign near your chest");
 						return;
 					}
 
