@@ -125,6 +125,9 @@ public class DigEventListener2 implements Listener {
 		public void run() {
 			if (b == null) return;
 
+			
+			//dprint.r.printAll("autocut");
+			
 			switch (b.getType()) {
 			case PUMPKIN:
 			case MELON_BLOCK:
@@ -132,12 +135,14 @@ public class DigEventListener2 implements Listener {
 			case RED_MUSHROOM:
 				break;
 			case COBBLESTONE:
+				//dprint.r.printAll("0 autocut");
 				if (api_skyblock.rs[curRSID].mission == 0) {
 					
-					
+					//dprint.r.printAll("0 alling nextMission");
 					dew.nextMission(curRSID);
 					
 				}
+				
 				break;
 
 			case NETHER_WARTS:
@@ -393,13 +398,18 @@ public class DigEventListener2 implements Listener {
 		// loop all player is there in that zone ?
 
 		for (int lop = 0; lop < api_skyblock.RSMaxPlayer; lop++)
-			for (Player pl : Bukkit.getOnlinePlayers())
+			for (Player pl : Bukkit.getOnlinePlayers()) {
+				if (pl == null){
+					continue;
+				}
 				if (api_skyblock.rs[getid].p[lop]
 						.equalsIgnoreCase(pl.getName())) {
 
 					e.setCancelled(true);
 					return;
 				}
+				
+			}
 
 	}
 
@@ -710,6 +720,8 @@ public class DigEventListener2 implements Listener {
 
 		Player player = e.getPlayer();
 		String m[] = e.getMessage().split("\\s+");
+		
+		
 
 		if (m[0].equalsIgnoreCase("/skyblock") || m[0].equalsIgnoreCase("/sky")) {
 
@@ -727,6 +739,7 @@ public class DigEventListener2 implements Listener {
 				player.sendMessage(dprint.r.color("/skyblock remove <player>"));
 				player.sendMessage(dprint.r.color("/skyblock list"));
 				player.sendMessage(dprint.r.color("/skyblock owner <player>"));
+				player.sendMessage(dprint.r.color("/skyblock resetlv"));
 
 				player.sendMessage(dprint.r.color("/skyblock lv"));
 				player.sendMessage(dprint.r.color("/skyblock go <player>"));
@@ -805,6 +818,22 @@ public class DigEventListener2 implements Listener {
 
 					dew.saversprotectfile();
 					return;
+				}
+				else if (m[1].equalsIgnoreCase("resetlv")) {
+					int getid = api_skyblock.getprotectid(player.getLocation()
+							.getBlock());
+
+					if (getid == -1) {
+						player.sendMessage(dprint.r.color(tr
+								.gettr("this_zone_don't_have_protect")));
+						return;
+
+					}
+					
+					dew.rs[getid].mission = 0;
+					dprint.r.printAll(tr.gettr("reseted_lv_of_is_this_guys") + dew.rs[getid].p[0]);
+
+					
 				}
 				else if (m[1].equalsIgnoreCase("go")) {
 					// go

@@ -133,18 +133,18 @@ public class api_skyblock {
 					}
 				}
 
-				if (checkrs == false) {
+				/*if (checkrs == true) {
 					// check top and down y section
 					// I don't need to replace old skyblock anymore
 
 					for (int i = 0; i < 256; i++) {
 
 						if (player.getWorld().getBlockAt(x, i, z).getType() != Material.AIR) {
-							checkrs = true;
+							checkrs = false;
 							break;
 						}
 					}
-				}
+				}*/
 
 				if (checkrs == false) {
 					buildcomplete = false;
@@ -317,67 +317,144 @@ public class api_skyblock {
 	public void nextMission(int rsID) {
 		printToAllPlayerOnRS(rsID, (getMissionHeader(rs[rsID].mission) + " " + tr.gettr("mission_complete")));
 
-		applyReward(rs[rsID].mission);
+		//dprint.r.printAll("0 calling apply reward");
+		applyReward(rsID);
 
 		printToAllPlayerOnRS(rsID, tr.gettr("next_mission"));
 
 		rs[rsID].mission++;
+		
+		printToAllPlayerOnRS(rsID, (getMissionHeader(rs[rsID].mission) + " " + tr.gettr("mission_complete")));
+
+		
+		saversprotectfile();
 
 	}
-	
-	
-	public void giveItemToAllPlayerInRS(int rsID , ItemStack itm) {
+
+	public void giveItemToAllPlayerInRS(int rsID, ItemStack itm) {
 		for (int i = 0; i < RSMaxPlayer; i++) {
 			Player player = Bukkit.getPlayer(rs[rsID].p[i]);
-			
-			
+
 			if (player == null) {
 				continue;
 			}
 
 			player.getInventory().addItem(itm);
 		}
+
+	}
+
+	public Block searchSpaceCube(Block startPoint, int radiusCubeNeed, int rad) {
+		int x = startPoint.getX();
+		int y = startPoint.getY();
+		int z = startPoint.getZ();
+
+		// rad = 100;
+
+		boolean foundx = false;
+		Block b;
+
+		int timeSearch = 0;
+		do {
+			
+			timeSearch ++;
+			if (timeSearch > 100) {
+				rad ++;
+			}
+			
+			
+			int x2 = x + (rnd.nextInt(rad * 2) - rad);
+			int y2 = y +( rnd.nextInt(rad * 2) - rad);
+			int z2 = z + (rnd.nextInt(rad * 2) - rad);
+
+			b = startPoint.getWorld().getBlockAt(x2, y2, z2);
+foundx = true;
+			for (int x3 = x2; x3 <= x2 +radiusCubeNeed; x3++) {
+			for (int y3 = y2; y3 <= y2 + radiusCubeNeed; y3++) {
+			for (int z3 = z2; z3 <= y2 +radiusCubeNeed; z3++) {
+						Block bSpace = b.getWorld().getBlockAt(x3, y3, z3);
+						if (bSpace.getType() != Material.AIR) {
+							foundx = false;
+							break;
+						}
+
+					}
+
+					if (foundx == false) {
+						break;
+					}
+
+				}
+
+				if (foundx == false) {
+					break;
+				}
+
+			}
+
+		} while (foundx == false);
+
+		return b;
+
+	}
+
+	public Block getBlockMiddleRS(int rsID) {
 		
+		Block b = Bukkit.getWorld("world").getBlockAt(rs[rsID].x, rs[rsID].y, rs[rsID].z);
+
+		return b;
 	}
 
 	public void applyReward(int rsID) {
-		
-		dprint.r.printAll("appyreward " + rsID + " mission " + rs[rsID].mission);
+
+		//dprint.r.printAll("appyreward " + rsID + " mission " + rs[rsID].mission);
 		switch (rs[rsID].mission) {
 		case 0: // get cobble stone
+
+			//dprint.r.printAll("nope");
+
+			// ItemStack itm = new ItemStack(Material.IRON_AXE , 1);
+
+			// giveItemToAllPlayerInRS(rsID, itm.getData().toItemStack(1));
+
+			Block bo = getBlockMiddleRS(rsID);
+			Block bo2 = searchSpaceCube(bo, 5, 5);
 			
-			dprint.r.printAll("nope");
+			for (int i = 0; i < 5 ; i ++ ) {
+				for (int i2 = 0; i2 < 5 ; i2 ++ ) {
+					for (int i3 = 0; i3 < 5 ; i3 ++ ) {
+						
+						Block bo3 = bo2.getRelative(i, i2, i3);
+						if (bo3.getType() != Material.AIR) {
+							dprint.r.printAll(tr.gettr("error while applyReward lv 0 block is != air"));
+							break;
+						}
+						
+						if (rnd.nextInt(100) > 80) {
+						bo3.setType(Material.STONE);
+						}
+						
+					}	
+				}
+			}
 			
-			ItemStack itm = new ItemStack(Material.IRON_AXE , 1);
-			
-			giveItemToAllPlayerInRS(rsID, itm.getData().toItemStack(1));
-			printToAllPlayerOnRS(rsID, tr.gettr("got_reward_lv_" + rs[rsID].mission));
-			
+			dprint.r.printAll(tr.gettr("generated_small_island_at") + " " + bo2.getX() + "," + bo2.getY() + "," + bo2.getZ());
+			dprint.r.printAll( tr.gettr("got_reward_lv_" + rs[rsID].mission));
 
 			break;
 		case 1:
 
-
-			 itm = new ItemStack(Material.IRON_AXE , 1);
-			giveItemToAllPlayerInRS(rsID, itm);
 			printToAllPlayerOnRS(rsID, tr.gettr("got_reward_lv_" + rs[rsID].mission));
-			
 
 			break;
 		case 2:
 
-			 itm = new ItemStack(Material.IRON_AXE , 1);
-			giveItemToAllPlayerInRS(rsID, itm);
 			printToAllPlayerOnRS(rsID, tr.gettr("got_reward_lv_" + rs[rsID].mission));
-			
 
 			break;
 		default:
 
-			 itm = new ItemStack(Material.IRON_AXE , 1);
-			giveItemToAllPlayerInRS(rsID, itm);
 			printToAllPlayerOnRS(rsID, tr.gettr("got_reward_lv_" + rs[rsID].mission));
-			
 
 			break;
 		}
@@ -718,7 +795,10 @@ public class api_skyblock {
 
 				if (m.length == 24) {
 					rs[rsMax - 1].mission = (int) Double.parseDouble(m[23]);
+
 				}
+
+				// rs[rsMax - 1].mission = 0;
 
 			}
 
