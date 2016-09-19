@@ -875,7 +875,7 @@ public class DigEventListener2 implements Listener {
 		String m[] = e.getMessage().split("\\s+");
 		Player p = e.getPlayer();
 
-		if (e.getMessage().equalsIgnoreCase("/dft shop")) {
+		if (e.getMessage().equalsIgnoreCase("/dft shop") || e.getMessage().equalsIgnoreCase("/shop")) {
 			// p.sendMessage("here");
 			Inventory myInventory = Bukkit.createInventory(null, 54, "dew shop");
 			inventory.put(p, myInventory);
@@ -889,13 +889,14 @@ public class DigEventListener2 implements Listener {
 
 		if (m[0].equalsIgnoreCase("/dft")) {
 			if (m.length == 1) {
-				p.sendMessage("/dft reload");
+				
+				p.sendMessage("/dft shop");
 				p.sendMessage("/dft list");
 				p.sendMessage("/dft bleed");
 				p.sendMessage("/dft autoshoot <EntityType> <amount> <mode>");
-
+				p.sendMessage("/dft reload");
 				p.sendMessage("/dft setnpcname <name>");
-				p.sendMessage("/dft setle <name>");
+				p.sendMessage("/dft setname <name>");
 
 				p.sendMessage("/dft monkill <second> <delaytick> <radius>");
 				p.sendMessage("/dft monkillhuman <second> <delaytick> <radius>");
@@ -934,9 +935,9 @@ public class DigEventListener2 implements Listener {
 
 					new monkill(sec, tick, rad);
 
-				} else if (m[1].equalsIgnoreCase("setle")) {
+				} else if (m[1].equalsIgnoreCase("setname")) {
 					if (m.length != 3) {
-						p.sendMessage("/sky setle <name>");
+						p.sendMessage("/sky setname <name>");
 						return;
 					}
 
