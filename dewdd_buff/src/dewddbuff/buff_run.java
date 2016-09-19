@@ -9,7 +9,6 @@ import java.util.Random;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
-import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.block.Block;
 import org.bukkit.enchantments.Enchantment;
@@ -21,10 +20,8 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockFromToEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
-import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerExpChangeEvent;
-import org.bukkit.event.player.PlayerInventoryEvent;
 import org.bukkit.event.player.PlayerLevelChangeEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
@@ -36,7 +33,6 @@ import com.earth2me.essentials.api.NoLoanPermittedException;
 import com.earth2me.essentials.api.UserDoesNotExistException;
 
 import dewddtran.tr;
-import net.minecraft.server.v1_8_R3.EnchantmentManager;
 
 public class buff_run implements Listener {
 
@@ -402,7 +398,7 @@ public class buff_run implements Listener {
 		}
 
 		for (Player pla : player.getWorld().getPlayers()) {
-			pla.playSound(player, Sound.NOTE_PIANO, rnd.nextInt(50), rnd.nextFloat() + 1);
+			pla.playSound(player, Sound.BLOCK_NOTE_HARP, rnd.nextInt(50), rnd.nextFloat() + 1);
 		}
 	}
 

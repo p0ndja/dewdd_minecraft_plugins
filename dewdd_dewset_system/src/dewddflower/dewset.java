@@ -3269,7 +3269,7 @@ public class dewset extends dewset_interface {
 			}
 
 			for (Player pla : this.player.getWorld().getPlayers()) {
-				pla.playSound(this.player, Sound.NOTE_PIANO, dewset.this.randomG.nextInt(50),
+				pla.playSound(this.player, Sound.BLOCK_NOTE_HARP, dewset.this.randomG.nextInt(50),
 						dewset.this.randomG.nextFloat() + 1);
 			}
 		}

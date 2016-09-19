@@ -17,7 +17,6 @@ import java.util.HashMap;
 import java.util.Random;
 
 import org.bukkit.Bukkit;
-import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
@@ -173,73 +172,6 @@ public class DigEventListener2 implements Listener {
 					}
 
 				}
-			}
-		}
-	}
-
-	class autoshoot implements Runnable {
-
-		private int second;
-		private EntityType ent;
-		private Player p;
-		private int mode;
-
-		public autoshoot(int second, EntityType ent, Player p, int mode) {
-			this.second = second;
-			this.ent = ent;
-			this.p = p;
-			this.mode = mode;
-			Bukkit.getScheduler().scheduleSyncDelayedTask(ac, this, rnd.nextInt(40));
-		}
-
-		@Override
-		public void run() {
-			second--;
-
-			if (second <= 0)
-				return;
-
-			boolean shootcomplete = false;
-
-			for (Entity en : p.getWorld().getEntities()) {
-				if (en == null) {
-					continue;
-				}
-				if (en.getType() == ent)
-					if (en instanceof LivingEntity) {
-						LivingEntity er = (LivingEntity) en;
-						switch (mode) {
-						case 1:
-							er.shootArrow();
-
-							break;
-						case 2:
-							er.throwEgg();
-
-							break;
-						case 3:
-							er.throwSnowball();
-
-							break;
-
-						case 4:
-							er.teleport(er.getEyeLocation());
-
-							break;
-
-						case 5:
-							er.getWorld().strikeLightning(er.getEyeLocation());
-
-							break;
-
-						}
-
-						shootcomplete = true;
-					}
-			}
-
-			if (shootcomplete == true) {
-				new autoshoot(second, ent, p, mode);
 			}
 		}
 	}
@@ -1151,23 +1083,8 @@ public class DigEventListener2 implements Listener {
 							+ DigEventListener2.sell[i].price));
 				}
 
-			} else if (m[1].equalsIgnoreCase("autoshoot")) {
-				if (!p.hasPermission(pautoshoot) || m.length != 5) {
-					p.sendMessage("/dft autoshoot <entitytype> <amount> <mode>  (only op!");
-					return;
-				}
-
-				EntityType ent = EntityType.fromName(m[2]);
-				if (ent == null) {
-					for (EntityType ent2 : EntityType.values()) {
-						p.sendMessage(ent2.getName());
-					}
-					return;
-				}
-
-				new autoshoot(Integer.parseInt(m[3]), ent, p, Integer.parseInt(m[4]));
-
-			} else if (m[1].equalsIgnoreCase("bleed")) {
+			} 
+			 else if (m[1].equalsIgnoreCase("bleed")) {
 				if (!p.hasPermission(pbleed)) {
 					p.sendMessage("/dft bleed   (only op!");
 					return;

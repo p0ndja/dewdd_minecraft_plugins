@@ -10,7 +10,7 @@ import java.util.Random;
 import org.bukkit.Bukkit;
 import org.bukkit.block.Block;
 import org.bukkit.block.Hopper;
-import org.bukkit.entity.CreatureType;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Vehicle;
 import org.bukkit.event.EventHandler;
@@ -142,53 +142,55 @@ public class DigEventListener2 implements Listener {
 		if (e.getEntity() == null) {
 			return;
 		}
-		if (e.getCreatureType() == null) {
+		if (e.getEntityType() == null) {
 			return;
 		}
 
-		if (e.getCreatureType() == CreatureType.VILLAGER) {
+		EntityType et = e.getEntityType();
+		
+		if (et == EntityType.VILLAGER) {
 			return;
 		}
 
-		if (e.getCreatureType() == CreatureType.WOLF) {
+		if (et == EntityType.WOLF) {
 			return;
 		}
 
-		if (e.getCreatureType() == CreatureType.CHICKEN) {
+		if (et == EntityType.CHICKEN) {
 			return;
 		}
 
-		if (e.getCreatureType() == CreatureType.COW) {
+		if (et == EntityType.COW) {
 			return;
 		}
 
-		if (e.getCreatureType() == CreatureType.SHEEP) {
+		if (et == EntityType.SHEEP) {
 			return;
 		}
 
-		if (e.getCreatureType() == CreatureType.MUSHROOM_COW) {
+		if (et == EntityType.MUSHROOM_COW) {
 			return;
 		}
 
-		if (e.getCreatureType() == CreatureType.PIG) {
+		if (et == EntityType.PIG) {
 			return;
 		}
 
-		if (e.getCreatureType() == CreatureType.SNOWMAN) {
+		if (et == EntityType.SNOWMAN) {
 			return;
 		}
 
-		if (e.getCreatureType() == CreatureType.SQUID) {
+		if (et == EntityType.SQUID) {
 			return;
 		}
 
-		if (e.getCreatureType() == CreatureType.WOLF) {
+		if (et == EntityType.WOLF) {
 			return;
 		}
 
 		dprint.r.printC("Creature Spawn Event at " + (int) e.getLocation().getX() + "," + (int) e.getLocation().getY()
 				+ "," + (int) e.getLocation().getZ() + "  " + e.getLocation().getWorld().getName() + " type = "
-				+ e.getCreatureType().getName());
+				+ et.getName());
 		e.setCancelled(true);
 
 		if (bmonlight == true) {

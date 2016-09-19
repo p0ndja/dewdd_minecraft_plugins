@@ -5,24 +5,17 @@
  */
 package dewddskyblock;
 
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Random;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
-import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
-import org.bukkit.block.Chest;
 import org.bukkit.block.Sign;
 import org.bukkit.enchantments.Enchantment;
-import org.bukkit.entity.CreatureType;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
@@ -67,7 +60,6 @@ import org.bukkit.event.world.ChunkPopulateEvent;
 import org.bukkit.event.world.ChunkUnloadEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.util.Vector;
@@ -78,8 +70,8 @@ import api_skyblock.RSData;
 import api_skyblock.api_skyblock;
 import dewddtran.tr;
 import li.Constant_Protect;
-import li.LXRXLZRZType;
-import net.minecraft.server.v1_8_R3.EntityPlayer;
+import net.minecraft.server.v1_9_R1.EntityPlayer;
+
 
 public class DigEventListener2 implements Listener {
 
@@ -400,7 +392,7 @@ public class DigEventListener2 implements Listener {
 
 								int count = countNearlyCreature(EntityType.ZOMBIE, cd, 10);
 								if (count <= 5) {
-									player.getWorld().spawnCreature(cd.getRelative(0, 5, 0).getLocation(),
+									player.getWorld().spawnEntity(cd.getRelative(0, 5, 0).getLocation(),
 											EntityType.ZOMBIE);
 
 								}
@@ -715,42 +707,45 @@ public class DigEventListener2 implements Listener {
 			return;
 		}
 
+		EntityType et = e.getEntityType();
+		
 		if (e.getEntity() == null)
 			return;
-		if (e.getCreatureType() == null)
+		if (et == null)
 			return;
 
-		if (e.getCreatureType() == CreatureType.VILLAGER)
+		
+		if (et == EntityType.VILLAGER)
 			return;
 
-		if (e.getCreatureType() == CreatureType.WOLF)
+		if (et == EntityType.WOLF)
 			return;
 
-		if (e.getCreatureType() == CreatureType.CHICKEN)
+		if (et == EntityType.CHICKEN)
 			return;
 
-		if (e.getCreatureType() == CreatureType.COW)
+		if (et == EntityType.COW)
 			return;
 
-		if (e.getCreatureType() == CreatureType.SHEEP)
+		if (et == EntityType.SHEEP)
 			return;
 
-		if (e.getCreatureType() == CreatureType.MUSHROOM_COW)
+		if (et == EntityType.MUSHROOM_COW)
 			return;
 
-		if (e.getCreatureType() == CreatureType.PIG)
+		if (et == EntityType.PIG)
 			return;
 
-		if (e.getCreatureType() == CreatureType.SNOWMAN)
+		if (et == EntityType.SNOWMAN)
 			return;
 
-		if (e.getCreatureType() == CreatureType.SQUID)
+		if (et == EntityType.SQUID)
 			return;
 
-		if (e.getCreatureType() == CreatureType.WOLF)
+		if (et == EntityType.WOLF)
 			return;
 
-		if (e.getCreatureType() == CreatureType.RABBIT)
+		if (et == EntityType.RABBIT)
 			return;
 
 		int getid = api_skyblock.getProtectid(e.getLocation().getBlock());

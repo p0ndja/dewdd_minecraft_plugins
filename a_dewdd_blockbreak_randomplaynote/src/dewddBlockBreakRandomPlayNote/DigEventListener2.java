@@ -37,7 +37,7 @@ public class DigEventListener2 implements Listener {
 		if (this.rnd.nextInt(100) > 10) return;
 
 		for (Player pla : player.getWorld().getPlayers())
-			pla.playSound(player, Sound.NOTE_PIANO, this.rnd.nextInt(50),
+			pla.playSound(player, Sound.BLOCK_NOTE_HARP, this.rnd.nextInt(50),
 					this.rnd.nextFloat() + 1);
 	}
 }
