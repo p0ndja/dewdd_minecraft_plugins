@@ -5,6 +5,8 @@
  */
 package dewddskyblock;
 
+import java.util.Random;
+
 import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
 import org.bukkit.Material;
@@ -136,13 +138,13 @@ public class DigEventListener2 implements Listener {
 
 			if (xy == false) {
 
-				CallNextMission no = new CallNextMission(curRSID,Missional.LV_0_COBBLESTONE_MACHINE);
-				Bukkit.getScheduler().scheduleSyncDelayedTask(ac, no,1);
+				CallNextMission no = new CallNextMission(curRSID, Missional.LV_0_COBBLESTONE_MACHINE);
+				Bukkit.getScheduler().scheduleSyncDelayedTask(ac, no, 1);
 			}
 
 		}
 	}
-	
+
 	class LV5DestroyNetherRact implements Runnable {
 		private Block signBlock;
 		private int curRSID;
@@ -155,24 +157,21 @@ public class DigEventListener2 implements Listener {
 
 		@Override
 		public void run() {
-			//dprint.r.printAll("lv5 class");
-			
+			// dprint.r.printAll("lv5 class");
+
 			if (signBlock.getType() == Material.SIGN_POST) {
-				//dprint.r.printAll("lv5 class sign");
-				
+				// dprint.r.printAll("lv5 class sign");
 
 				Block nether = readBlockFromSign(signBlock);
 				if (nether.getType() != Material.NETHERRACK) {
-				
-					//dprint.r.printAll("lv5 class nether");
-					
-				CallNextMission oo = new CallNextMission(curRSID,Missional.LV_5_ZOMBIE_ATTACK_1);
-				Bukkit.getScheduler().scheduleSyncDelayedTask(ac, oo);
+
+					// dprint.r.printAll("lv5 class nether");
+
+					CallNextMission oo = new CallNextMission(curRSID, Missional.LV_5_ZOMBIE_ATTACK_1);
+					Bukkit.getScheduler().scheduleSyncDelayedTask(ac, oo);
 				}
 
 			}
-			
-			
 
 		}
 	}
@@ -182,14 +181,14 @@ public class DigEventListener2 implements Listener {
 		private int curRSID;
 		private Missional curMission;
 
-		public CallNextMission(int rsid,Missional curMission) {
+		public CallNextMission(int rsid, Missional curMission) {
 			this.curMission = curMission;
 			this.curRSID = rsid;
 		}
 
 		@Override
 		public void run() {
-			dew.nextMission(curRSID,curMission);
+			dew.nextMission(curRSID, curMission);
 		}
 
 	}
@@ -218,7 +217,6 @@ public class DigEventListener2 implements Listener {
 				break;
 			case COBBLESTONE:
 				// dprint.r.printAll("0 autocut");
-			
 
 				break;
 
@@ -253,7 +251,8 @@ public class DigEventListener2 implements Listener {
 					return;
 
 				switch (b.getType()) {
-				case WHEAT:case SEEDS:
+				case WHEAT:
+				case SEEDS:
 					b.breakNaturally();
 					b.setType(Material.WHEAT);
 					b.setData((byte) 0);
@@ -409,11 +408,9 @@ public class DigEventListener2 implements Listener {
 
 							cd.setType(Material.NETHERRACK);
 							cd.getRelative(BlockFace.UP).setType(Material.FIRE);
-								
-							
+
 							if (cd.getType() == Material.NETHERRACK) {
-								
-								
+
 								player.getWorld().setTime(16000);
 
 								// search monster
@@ -426,7 +423,6 @@ public class DigEventListener2 implements Listener {
 								}
 
 							}
-						
 
 						}
 
@@ -468,6 +464,7 @@ public class DigEventListener2 implements Listener {
 	public JavaPlugin ac = null;
 
 	public api_skyblock dew = null;
+	Random rnd = new Random();
 
 	public DigEventListener2() {
 		delay dl = new delay();
@@ -545,16 +542,16 @@ public class DigEventListener2 implements Listener {
 						CallNextMission bb = new CallNextMission(getid, Missional.LV_0_COBBLESTONE_MACHINE);
 						Bukkit.getScheduler().scheduleSyncDelayedTask(ac, bb, 1);
 					}
-					
+
 					break;
 				case LV_1_BREAK_STONE:
 
 					// search nearest stone
-					 bd = Bukkit.getWorld("world").getBlockAt(api_skyblock.rs[getid].x, api_skyblock.rs[getid].y,
+					bd = Bukkit.getWorld("world").getBlockAt(api_skyblock.rs[getid].x, api_skyblock.rs[getid].y,
 							api_skyblock.rs[getid].z);
 
 					LV1DestroyStone ee = new LV1DestroyStone(bd, getid);
-					Bukkit.getScheduler().scheduleSyncDelayedTask(ac, ee,1);
+					Bukkit.getScheduler().scheduleSyncDelayedTask(ac, ee, 1);
 					break;
 
 				case LV_5_ZOMBIE_ATTACK_1:
@@ -566,11 +563,10 @@ public class DigEventListener2 implements Listener {
 					Block signBlock = block.getWorld().getBlockAt(dew.rs[getid].x, 1, dew.rs[getid].z);
 
 					if (signBlock.getType() == Material.SIGN_POST) {
-						
+
 						LV5DestroyNetherRact eo = new LV5DestroyNetherRact(signBlock, getid);
-						Bukkit.getScheduler().scheduleSyncDelayedTask(ac, eo,1);
+						Bukkit.getScheduler().scheduleSyncDelayedTask(ac, eo, 1);
 					}
-					
 
 					break;
 
@@ -666,7 +662,7 @@ public class DigEventListener2 implements Listener {
 
 						if (api_skyblock.rs[getid].tmpForCountingBone1 >= Constant.LV_2_USE_BONE_MEAL_AMOUNT) {
 
-							CallNextMission ee = new CallNextMission(getid,Missional.LV_2_USE_BONE_MEAL);
+							CallNextMission ee = new CallNextMission(getid, Missional.LV_2_USE_BONE_MEAL);
 							Bukkit.getScheduler().scheduleSyncDelayedTask(ac, ee);
 						}
 					}
@@ -677,7 +673,7 @@ public class DigEventListener2 implements Listener {
 
 					if (block.getY() == 1) {
 
-						CallNextMission ee = new CallNextMission(getid,Missional.LV_4_PLACE_Y1);
+						CallNextMission ee = new CallNextMission(getid, Missional.LV_4_PLACE_Y1);
 						Bukkit.getScheduler().scheduleSyncDelayedTask(ac, ee);
 
 					}
@@ -1066,6 +1062,10 @@ public class DigEventListener2 implements Listener {
 
 				player.sendMessage(dprint.r.color("/skyblock lv"));
 				player.sendMessage(dprint.r.color("/skyblock go <player>"));
+				player.sendMessage(dprint.r.color("/skyblock goid <id>"));
+				player.sendMessage(dprint.r.color("/skyblock gorandom"));
+
+				player.sendMessage(dprint.r.color("/skyblock max"));
 
 				player.sendMessage("***************************");
 				player.sendMessage("Admin Section");
@@ -1077,8 +1077,8 @@ public class DigEventListener2 implements Listener {
 				return;
 
 			} else if (m.length == 2 || m.length == 3)
-				if (m[1].equalsIgnoreCase("rsmax"))
-					player.sendMessage(dprint.r.color("rsmax = " + api_skyblock.rsMax));
+				if (m[1].equalsIgnoreCase("max"))
+					player.sendMessage(dprint.r.color(tr.gettr("amount_of_unique_island_is") + api_skyblock.rsMax));
 				else if (m[1].equalsIgnoreCase("buyhere")) {
 					// for buy these zone
 
@@ -1194,7 +1194,47 @@ public class DigEventListener2 implements Listener {
 							return;
 						}
 
-				} else if (m[1].equalsIgnoreCase("home")) {
+				} else if (m[1].equalsIgnoreCase("goid")) {
+					// go
+
+					if (m.length != 3) {
+						player.sendMessage(dprint.r.color("/sky goid <id>"));
+						player.sendMessage(dprint.r.color("/sky goid <0 to " + dew.rsMax + ">"));
+
+						return;
+					}
+
+					int idid = Integer.parseInt(m[2]);
+					if (idid < 0 || idid >= dew.rsMax) {
+						player.sendMessage(dprint.r.color("/sky goid <0 to " + dew.rsMax + ">"));
+
+						return;
+					}
+
+					Block block = player.getWorld().getBlockAt(api_skyblock.rs[idid].x, api_skyblock.rs[idid].y + 10,
+							api_skyblock.rs[idid].z);
+					block.getChunk().load();
+					player.teleport(block.getLocation());
+					player.sendMessage(dprint.r.color("teleported you to (" + block.getX() + "," + block.getY() + ","
+							+ block.getZ() + ") of " + api_skyblock.rs[idid].p[0]));
+					return;
+				}
+				else if (m[1].equalsIgnoreCase("gorandom")) {
+					// go
+
+					
+					int idid = rnd .nextInt(dew.rsMax);
+				
+					Block block = player.getWorld().getBlockAt(api_skyblock.rs[idid].x, api_skyblock.rs[idid].y + 10,
+							api_skyblock.rs[idid].z);
+					block.getChunk().load();
+					player.teleport(block.getLocation());
+					player.sendMessage(dprint.r.color("teleported you to (" + block.getX() + "," + block.getY() + ","
+							+ block.getZ() + ") of " + api_skyblock.rs[idid].p[0]));
+					return;
+				}
+
+				else if (m[1].equalsIgnoreCase("home")) {
 
 					int manyhome[] = new int[100];
 					int manyhomemax = 0;
@@ -1269,7 +1309,13 @@ public class DigEventListener2 implements Listener {
 
 					}
 
-					player.sendMessage(dprint.r.color("LV = " + api_skyblock.rs[getid].mission.toID()));
+					if (dew.getplayerinslot(player.getName(), getid) == -1) {
+						player.sendMessage(
+								dprint.r.color(tr.gettr("owner_of_this_island_name") + " = " + dew.rs[getid].p[0]));
+					}
+
+					player.sendMessage(dprint.r.color("LV = " + api_skyblock.rs[getid].mission.toID()) + " = "
+							+ dew.getFullMissionHeadAndCurLevel(dew.rs[getid].mission));
 					dew.printToAllPlayerOnRS(getid, Constant.getMissionHeader(dew.rs[getid].mission));
 				}
 
@@ -1476,7 +1522,7 @@ public class DigEventListener2 implements Listener {
 								e.getItemDrop().getItemStack().setType(Material.CLAY);
 								e.getItemDrop().getItemStack().setAmount(10);
 
-								CallNextMission ee = new CallNextMission(getid,Missional.LV_3_DROP_TOUCH);
+								CallNextMission ee = new CallNextMission(getid, Missional.LV_3_DROP_TOUCH);
 								Bukkit.getScheduler().scheduleSyncDelayedTask(ac, ee);
 								return;
 							}
@@ -1490,7 +1536,7 @@ public class DigEventListener2 implements Listener {
 								e.getItemDrop().getItemStack().setType(Material.LAPIS_ORE);
 								e.getItemDrop().getItemStack().setAmount(10);
 
-								CallNextMission ee = new CallNextMission(getid,Missional.LV_6_DROP_WHEAT);
+								CallNextMission ee = new CallNextMission(getid, Missional.LV_6_DROP_WHEAT);
 								Bukkit.getScheduler().scheduleSyncDelayedTask(ac, ee);
 								return;
 							}
@@ -1498,9 +1544,7 @@ public class DigEventListener2 implements Listener {
 					}
 					break;
 				}
-				
-					
-				
+
 			}
 
 		}
@@ -1521,6 +1565,26 @@ public class DigEventListener2 implements Listener {
 
 		Player player = e.getPlayer();
 		Block block = e.getClickedBlock();
+
+		if (player.getItemInHand() != null) {
+			if (player.getItemInHand().getType() == Material.APPLE) {
+				if (player.getItemInHand().getItemMeta().getDisplayName().equalsIgnoreCase("/sky gorandom")) {
+
+					
+					int idid = rnd .nextInt(dew.rsMax);
+				
+					 Block cdd = player.getWorld().getBlockAt(api_skyblock.rs[idid].x, api_skyblock.rs[idid].y + 10,
+							api_skyblock.rs[idid].z);
+					 cdd.getChunk().load();
+					player.teleport(cdd.getLocation());
+					player.sendMessage(dprint.r.color("teleported you to (" + cdd.getX() + "," + cdd.getY() + ","
+							+ cdd.getZ() + ") of " + api_skyblock.rs[idid].p[0]));
+					return;
+				}
+					
+
+			}
+		}
 
 		if (block.getType() == Material.SIGN_POST || block.getType() == Material.WALL_SIGN) {
 

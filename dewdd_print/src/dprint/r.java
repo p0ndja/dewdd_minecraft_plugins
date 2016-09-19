@@ -12,22 +12,28 @@ import org.bukkit.entity.Player;
 
 public class r {
 	static Random	rnd	= new Random();
+	
+	
+	public static int randomColorInt( ) {
+		int x =  rnd.nextInt(8)+ 1;
+		return x;
+	}
 
 	public static String color(String abc) {
-		return "§" + rnd.nextInt(9) + abc;
+		return "§" + randomColorInt() + abc;
 	}
 
 	public static void printA(String abc) {
 
 		for (Player p : Bukkit.getOnlinePlayers()) {
-			p.sendMessage("§" + rnd.nextInt(9) + abc);
+			p.sendMessage("§" + randomColorInt() + abc);
 		}
 	}
 
 	public static void printAdmin(String abc) {
 		for (Player pla : Bukkit.getOnlinePlayers()) {
 			if (api_admin.dewddadmin.is2admin(pla) == true) {
-				pla.sendMessage("§" + rnd.nextInt(9) + abc);
+				pla.sendMessage("§" + randomColorInt() + abc);
 			}
 		}
 	}
@@ -44,14 +50,14 @@ public class r {
 	public static void printFly(String abc) {
 		for (Player pl : Bukkit.getOnlinePlayers()) {
 			if (pl.getAllowFlight() == true) {
-				pl.sendMessage("§" + rnd.nextInt(9) + abc);
+				pl.sendMessage("§" + randomColorInt() + abc);
 			}
 		}
 
 	}
 
 	public static void printP(String abc, Player p) {
-		p.sendMessage("§" + rnd.nextInt(9) + abc);
+		p.sendMessage("§" + randomColorInt() + abc);
 
 	}
 
