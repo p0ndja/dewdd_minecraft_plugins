@@ -137,7 +137,7 @@ public class DigEventListener2 implements Listener {
 			switch (b.getType()) {
 			case PUMPKIN:
 			case MELON_BLOCK:
-				return;
+				break;
 			case BROWN_MUSHROOM:
 			case RED_MUSHROOM:
 				break;

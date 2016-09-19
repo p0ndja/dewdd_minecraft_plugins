@@ -41,367 +41,275 @@ import li.LXRXLZRZType;
 import li.Useful;
 
 public class api_skyblock {
-	
-	/*class LoListType {
-		public Location location ;
-		public boolean searchYet = false;
-	}
-	
-	class SkyLVType {
-		public int		id;
-		public byte		data;
-		public int		targetamount;
-		public int		nowamount;
-		public double	percent;
 
-	}
-	
-	public String getKeyFromLocation(Location lo) {
-		String abc = lo.getBlockX() + "," + lo.getBlockY() + "," + lo.getBlockZ();
-		return abc;
-	}
-	
-	class checkrateis implements Runnable {
+	/*
+	 * class LoListType { public Location location ; public boolean searchYet =
+	 * false; }
+	 * 
+	 * class SkyLVType { public int id; public byte data; public int
+	 * targetamount; public int nowamount; public double percent;
+	 * 
+	 * }
+	 * 
+	 * public String getKeyFromLocation(Location lo) { String abc =
+	 * lo.getBlockX() + "," + lo.getBlockY() + "," + lo.getBlockZ(); return abc;
+	 * }
+	 * 
+	 * class checkrateis implements Runnable {
+	 * 
+	 * private Block startblock; private int mode; private ArrayList<SkyLVType>
+	 * skyLVType = new ArrayList<SkyLVType>(); private
+	 * HashMap<String,LoListType> loList = new HashMap<String,LoListType>();
+	 * private int curloid = 0;
+	 * 
+	 * public checkrateis(Block startblock, int mode,ArrayList<SkyLVType>
+	 * skyLVType, HashMap<String,LoListType> loList,int curloid) {
+	 * this.startblock = startblock; this.mode = mode; this.skyLVType =
+	 * skyLVType; this.loList = loList; this.curloid = curloid;
+	 * 
+	 * Bukkit.getScheduler().scheduleSyncDelayedTask(ac, this, rnd.nextInt(20) +
+	 * 1); }
+	 * 
+	 * 
+	 * 
+	 * public void run() { long startTime = System.currentTimeMillis(); long
+	 * nowTime = System.currentTimeMillis(); long maxTime = 1000;
+	 * 
+	 * int maxblock = 50; if (lastMessage.equalsIgnoreCase("cancel")) { return;
+	 * }
+	 * 
+	 * if (dewddtps.tps.getTPS() < 18) { lastcri = now; checkrateis abc = new
+	 * checkrateis(startblock, mode); return; }
+	 * 
+	 * startTime = nowTime;
+	 * 
+	 * int proid = getProtectid(startblock); if (proid == -1) {
+	 * dprint.r.printAll(tr.gettr("this_is_not_anyone_zone")); return; }
+	 * 
+	 * 
+	 * Block mid = startblock.getWorld().getBlockAt(rs[proid].x, rs[proid].y,
+	 * rs[proid].z); // add some block near it Block t;
+	 * 
+	 * boolean fo = false;
+	 * 
+	 * if (mode == 0) { if (loList.size() == 0) {
+	 * dprint.r.printAll(tr.gettr("starting_checkpercent_of_is") +
+	 * rs[proid].p[0]); dprint.r.printAll(tr.gettr("counting_amo_block"));
+	 * 
+	 * loList.clear();
+	 * 
+	 * for (int z = -5; z <= 5; z++) for (int y = -5; y <= 5; y++) for (int x =
+	 * -5; x <= 5; x++) { t = mid.getRelative(x, y, z); if (t.getTypeId() == 0)
+	 * continue;
+	 * 
+	 * // check is it have that block
+	 * 
+	 * 
+	 * fo = false; String theKey = getKeyFromLocation(t.getLocation());
+	 * LoListType theLo = loList.get(theKey); if (theLo == null) { fo = false;
+	 * 
+	 * } else { fo = true; }
+	 * 
+	 * if (fo == true) continue;
+	 * 
+	 * LoListType newLo = new LoListType(); newLo.location = t.getLocation();
+	 * newLo.searchYet = false;
+	 * 
+	 * }
+	 * 
+	 * mode = 1; dprint.r.printAll(tr
+	 * .gettr("amo_of_block_of_this_island_is_loop1" + proid + " = ") +
+	 * loList.size());
+	 * 
+	 * dprint.r.printAll(tr.gettr("starting_searching_loop2" + proid ) );
+	 * 
+	 * } // size is 0
+	 * 
+	 * } // mode 0
+	 * 
+	 * // search another block left if (mode == 1) { boolean stillFound = false;
+	 * startTime = System.currentTimeMillis(); // loop until can't add new block
+	 * 
+	 * long curLo = 0; for (LoListType sk : loList.values()) { curLo ++;
+	 * 
+	 * if (sk.searchYet == true) { continue; }
+	 * 
+	 * for (int z = -1; z <= 1; z++) for (int y = -1; y <= 1; y++) for (int x =
+	 * -1; x <= 1; x++) { t = sk.location.getBlock().getRelative(x, y, z);
+	 * 
+	 * if (t.getTypeId() == 0) continue;
+	 * 
+	 * // check is it have that block fo = false;
+	 * 
+	 * String theKey = getKeyFromLocation(t.getLocation()); LoListType lo =
+	 * loList.get(theKey); fo = lo == null ? false: true;
+	 * 
+	 * if (fo == true) continue;
+	 * 
+	 * loList.put(theKey, lo) ;
+	 * 
+	 * sk.searchYet = true;
+	 * 
+	 * dprint.r.printAll("added " + t.getType().name() + " = " + t.getX() + ","
+	 * + t.getY() + "," + t.getZ() + " total " + csmax);
+	 * 
+	 * 
+	 * }
+	 * 
+	 * 
+	 * // pause system nowTime = System.currentTimeMillis(); if (nowTime -
+	 * startTime > maxTime) { dprint.r.printAll(tr.gettr("counting_rate_is") +
+	 * curLo + "/" + loList.size() + "  > " + ((curLo * 100) /
+	 * (loList.size()+1)) + "%"); startTime = System.currentTimeMillis(); }
+	 * checkrateis abc = new checkrateis(startblock,
+	 * mode,skyLVType,loList,curloid); curloid = 0; return;
+	 * 
+	 * 
+	 * }
+	 * 
+	 * mode = 2;
+	 * 
+	 * dprint.r.printAll(tr .gettr("amo_of_block_of_this_island_is_loop2") +
+	 * loList.size());
+	 * 
+	 * dprint.r.printAll(tr.gettr("starting_calc_rate_of_is"));
+	 * 
+	 * } // mode 1 // after got all of block check the score
+	 * 
+	 * if (mode == 2) {
+	 * 
+	 * if (curloid == 0) {
+	 * 
+	 * String mr[] = tr.loadfile("dewdd_skyblock", "drate.txt"); String m[];
+	 * String m2;
+	 * 
+	 * skyLVType.clear();
+	 * 
+	 * 
+	 * //dprint.r.printAll("lvBlocksMax " + crimax);
+	 * 
+	 * for (int i = 0; i < mr.length; i++) { m2 = mr[i];
+	 * 
+	 * m = m2.split("\\s+");
+	 * 
+	 * SkyLVType cri = new SkyLVType();
+	 * 
+	 * cri.id = Integer.parseInt(m[0]); cri.data = Byte.,,,,parseByte(m[1]);
+	 * cri.targetamount = Integer.parseInt(m[2]); cri.nowamount = 0;
+	 * 
+	 * skyLVType.add(cri); }
+	 * 
+	 * curLoID = 0; dprint.r.printAll(tr.gettr("loaded_drate_file"));
+	 * dprint.r.printAll(tr.gettr("starting_count_percent")); } // cs 0
+	 * 
+	 * // time to count the block
+	 * 
+	 * int csstart = curLoID;
+	 * 
+	 * while (curLoID < csmax) { startTime = System.currentTimeMillis();
+	 * 
+	 * // search for (int j = 0; j < crimax; j++) { if (cs[curLoID].getTypeId()
+	 * == cri[j].id) { if (cs[curLoID].getData() == cri[j].data || cri[j].data
+	 * == -29) {
+	 * 
+	 * cri[j].nowamount++; break;
+	 * 
+	 * }
+	 * 
+	 * } }
+	 * 
+	 * curLoID++;
+	 * 
+	 * if (nowTime - startTime > 30000) {
+	 * dprint.r.printAll(tr.gettr("percent_of_processing_is") + (curLoID * 100)
+	 * / csmax + "%");
+	 * 
+	 * startTime = System.currentTimeMillis(); }
+	 * 
+	 * if (curLoID - csstart >= maxblock) { checkrateis abc = new
+	 * checkrateis(startblock, mode); return; } }
+	 * 
+	 * dprint.r.printAll(tr .gettr("calc_percent_of_each_block_complete"));
+	 * dprint.r.printAll(tr
+	 * .gettr("starting_showing_percent_of_each_block_type"));
+	 * 
+	 * double eachper = getpercent(1); dprint.r.printAll(tr.gettr("eachper") +
+	 * eachper);
+	 * 
+	 * // count percent of each block for (int i = 0; i < crimax; i++) {
+	 * 
+	 * if (cri[i].nowamount > cri[i].targetamount) cri[i].nowamount =
+	 * cri[i].targetamount;
+	 * 
+	 * cri[i].percent = (eachper * cri[i].nowamount) / (cri[i].targetamount);
+	 * 
+	 * }
+	 * 
+	 * // bubble sort
+	 * 
+	 * dprint.r.printAll(tr.gettr("sorting_rank_is")); int swapc = 0;
+	 * 
+	 * boolean xx = false; if (xx == false) { for (int i = 0; i < crimax; i++) {
+	 * for (int j = 0; j < (crimax - 1 - i); j++) {
+	 * 
+	 * if (cri[j].percent < cri[j + 1].percent) { // swap it cridata ttt = new
+	 * cridata();
+	 * 
+	 * ttt.percent = cri[j].percent; ttt.id = cri[j].id; ttt.data = cri[j].data;
+	 * ttt.targetamount = cri[j].targetamount; ttt.nowamount = cri[j].nowamount;
+	 * 
+	 * cri[j].percent = cri[j + 1].percent; cri[j].id = cri[j + 1].id;
+	 * cri[j].data = cri[j + 1].data; cri[j].nowamount = cri[j + 1].nowamount;
+	 * cri[j].targetamount = cri[j + 1].targetamount;
+	 * 
+	 * cri[j + 1].percent = ttt.percent; cri[j + 1].id = ttt.id; cri[j + 1].data
+	 * = ttt.data; cri[j + 1].nowamount = ttt.nowamount; cri[j + 1].targetamount
+	 * = ttt.targetamount;
+	 * 
+	 * swapc++; }
+	 * 
+	 * }
+	 * 
+	 * } }
+	 * 
+	 * dprint.r.printAll(tr.gettr("sorted_rank_amount_is") + swapc); lastcri =
+	 * System.currentTimeMillis(); for (int i = 0; i < crimax; i++) {
+	 * 
+	 * if (cri[i].nowamount >= cri[i].targetamount || cri[i].nowamount == 0)
+	 * continue;
+	 * 
+	 * String na = i + " _ " + cri[i].id + " > " +
+	 * Material.getMaterial(cri[i].id).name(); dprint.r.printAll(na + " = " +
+	 * cri[i].nowamount + "/" + cri[i].targetamount + " (" + cri[i].percent +
+	 * "%)"); }
+	 * 
+	 * double sumper = 0.0;
+	 * 
+	 * for (int i = 0; i < crimax; i++) {
+	 * 
+	 * sumper += cri[i].percent; }
+	 * 
+	 * dprint.r.printAll(tr.gettr("sum_per_rate_of_island") + rs[proid].p[0] +
+	 * " = " + sumper + "%");
+	 * 
+	 * rs[proid].percent = sumper;
+	 * 
+	 * if (sumper == 0) rs[proid].p[0] = ""; saversprotectfile();
+	 * loadrsprotectfile();
+	 * 
+	 * return;
+	 * 
+	 * } // mode 2
+	 * 
+	 * } }
+	 */
 
-		private Block	startblock;
-		private int		mode;
-		private ArrayList<SkyLVType> skyLVType = new ArrayList<SkyLVType>();
-		private HashMap<String,LoListType> loList = new HashMap<String,LoListType>();
-		private int curloid = 0;
-
-		public checkrateis(Block startblock, int mode,ArrayList<SkyLVType> skyLVType,
-				HashMap<String,LoListType> loList,int curloid) {
-			this.startblock = startblock;
-			this.mode = mode;
-			this.skyLVType = skyLVType;
-			this.loList = loList;
-			this.curloid = curloid;
-
-			Bukkit.getScheduler().scheduleSyncDelayedTask(ac, this,
-					rnd.nextInt(20) + 1);
-		}
-		
-		
-
-		public void run() {
-			long startTime = System.currentTimeMillis();
-			long nowTime = System.currentTimeMillis();
-			long maxTime = 1000;
-			
-			int maxblock = 50;
-			if (lastMessage.equalsIgnoreCase("cancel")) {
-				return;
-			}
-
-			if (dewddtps.tps.getTPS() < 18) {
-				lastcri = now;
-				checkrateis abc = new checkrateis(startblock, mode);
-				return;
-			}
-
-			startTime = nowTime;
-
-			int proid = getProtectid(startblock);
-			if (proid == -1) {
-				dprint.r.printAll(tr.gettr("this_is_not_anyone_zone"));
-				return;
-			}
-
-
-			Block mid = startblock.getWorld().getBlockAt(rs[proid].x,
-					rs[proid].y, rs[proid].z);
-			// add some block near it
-			Block t;
-
-			boolean fo = false;
-
-			if (mode == 0) {
-				if (loList.size() == 0) {
-					dprint.r.printAll(tr.gettr("starting_checkpercent_of_is")
-							+ rs[proid].p[0]);
-					dprint.r.printAll(tr.gettr("counting_amo_block"));
-
-					loList.clear();
-
-					for (int z = -5; z <= 5; z++)
-						for (int y = -5; y <= 5; y++)
-							for (int x = -5; x <= 5; x++) {
-								t = mid.getRelative(x, y, z);
-								if (t.getTypeId() == 0) continue;
-
-								// check is it have that block
-								
-								
-								fo = false;
-								String theKey = getKeyFromLocation(t.getLocation());
-								LoListType theLo = loList.get(theKey);
-								if (theLo == null) {
-									fo = false;
-									
-								}
-								else {
-									fo = true;
-								}
-								
-								if (fo == true) continue;
-
-								LoListType newLo = new LoListType();
-								newLo.location = t.getLocation();
-								newLo.searchYet = false;
-
-							}
-
-					mode = 1;
-					dprint.r.printAll(tr
-							.gettr("amo_of_block_of_this_island_is_loop1" + proid + " = ")
-							+ loList.size());
-
-					dprint.r.printAll(tr.gettr("starting_searching_loop2" + proid )
-							);
-
-				} // size is 0
-
-			} // mode 0
-			
-			// search another block left
-			if (mode == 1) {
-				boolean stillFound = false; 
-startTime = System.currentTimeMillis();
-				// loop until can't add new block
-
-			long curLo = 0;
-				for (LoListType sk : loList.values()) {
-					curLo ++;
-					
-					if (sk.searchYet == true) {
-						continue;
-					}
-
-					for (int z = -1; z <= 1; z++)
-						for (int y = -1; y <= 1; y++)
-							for (int x = -1; x <= 1; x++) {
-								t = sk.location.getBlock().getRelative(x, y, z);
-
-								if (t.getTypeId() == 0) continue;
-
-								// check is it have that block
-								fo = false;
-
-								String theKey = getKeyFromLocation(t.getLocation());
-									LoListType lo = loList.get(theKey);
-								fo = lo == null ? false: true;
-
-								if (fo == true) continue;
-
-								loList.put(theKey, lo) ;
-								
-								sk.searchYet  = true;
-								
-								 * dprint.r.printAll("added " +
-								 * t.getType().name() + " = " + t.getX() + "," +
-								 * t.getY() + "," + t.getZ() + " total " +
-								 * csmax);
-								 
-
-							}
-
-				
-						// pause system
-					nowTime = System.currentTimeMillis();
-						if (nowTime - startTime > maxTime) {
-							dprint.r.printAll(tr.gettr("counting_rate_is")
-									+ curLo + "/" + loList.size() + "  > "
-									+ ((curLo * 100) / (loList.size()+1)) + "%");
-							startTime = System.currentTimeMillis();
-						}
-						checkrateis abc = new checkrateis(startblock, mode,skyLVType,loList,curloid);
-						curloid = 0;
-						return;
-					
-
-				}
-
-				mode = 2;
-
-				dprint.r.printAll(tr
-						.gettr("amo_of_block_of_this_island_is_loop2") + loList.size());
-
-				dprint.r.printAll(tr.gettr("starting_calc_rate_of_is"));
-
-			} // mode 1
-				// after got all of block check the score
-
-			if (mode == 2) {
-				
-				if (curloid == 0) {
-
-					String mr[] = tr.loadfile("dewdd_skyblock", "drate.txt");
-					String m[];
-					String m2;
-
-					skyLVType.clear();
-
-					
-					//dprint.r.printAll("lvBlocksMax " + crimax);
-
-					for (int i = 0; i < mr.length; i++) {
-						m2 = mr[i];
-
-						m = m2.split("\\s+");
-						
-						SkyLVType cri = new SkyLVType();
-
-						cri.id = Integer.parseInt(m[0]);
-						cri.data = Byte.,,,,parseByte(m[1]);
-						cri.targetamount = Integer.parseInt(m[2]);
-						cri.nowamount = 0;
-
-						skyLVType.add(cri);
-					}
-
-					curLoID = 0;
-					dprint.r.printAll(tr.gettr("loaded_drate_file"));
-					dprint.r.printAll(tr.gettr("starting_count_percent"));
-				} // cs 0
-
-				// time to count the block
-
-				int csstart = curLoID;
-
-				while (curLoID < csmax) {
-					startTime = System.currentTimeMillis();
-
-					// search
-					for (int j = 0; j < crimax; j++) {
-						if (cs[curLoID].getTypeId() == cri[j].id) {
-							if (cs[curLoID].getData() == cri[j].data
-									|| cri[j].data == -29) {
-
-								cri[j].nowamount++;
-								break;
-
-							}
-
-						}
-					}
-
-					curLoID++;
-
-					if (nowTime - startTime > 30000) {
-						dprint.r.printAll(tr.gettr("percent_of_processing_is")
-								+ (curLoID * 100) / csmax + "%");
-
-						startTime = System.currentTimeMillis();
-					}
-
-					if (curLoID - csstart >= maxblock) {
-						checkrateis abc = new checkrateis(startblock, mode);
-						return;
-					}
-				}
-
-				dprint.r.printAll(tr
-						.gettr("calc_percent_of_each_block_complete"));
-				dprint.r.printAll(tr
-						.gettr("starting_showing_percent_of_each_block_type"));
-
-				double eachper = getpercent(1);
-				dprint.r.printAll(tr.gettr("eachper") + eachper);
-
-				// count percent of each block
-				for (int i = 0; i < crimax; i++) {
-
-					if (cri[i].nowamount > cri[i].targetamount)
-						cri[i].nowamount = cri[i].targetamount;
-
-					cri[i].percent = (eachper * cri[i].nowamount)
-							/ (cri[i].targetamount);
-
-				}
-
-				// bubble sort
-
-				dprint.r.printAll(tr.gettr("sorting_rank_is"));
-				int swapc = 0;
-
-				boolean xx = false;
-				if (xx == false) {
-					for (int i = 0; i < crimax; i++) {
-						for (int j = 0; j < (crimax - 1 - i); j++) {
-
-							if (cri[j].percent < cri[j + 1].percent) {
-								// swap it
-								cridata ttt = new cridata();
-
-								ttt.percent = cri[j].percent;
-								ttt.id = cri[j].id;
-								ttt.data = cri[j].data;
-								ttt.targetamount = cri[j].targetamount;
-								ttt.nowamount = cri[j].nowamount;
-
-								cri[j].percent = cri[j + 1].percent;
-								cri[j].id = cri[j + 1].id;
-								cri[j].data = cri[j + 1].data;
-								cri[j].nowamount = cri[j + 1].nowamount;
-								cri[j].targetamount = cri[j + 1].targetamount;
-
-								cri[j + 1].percent = ttt.percent;
-								cri[j + 1].id = ttt.id;
-								cri[j + 1].data = ttt.data;
-								cri[j + 1].nowamount = ttt.nowamount;
-								cri[j + 1].targetamount = ttt.targetamount;
-
-								swapc++;
-							}
-
-						}
-
-					}
-				}
-
-				dprint.r.printAll(tr.gettr("sorted_rank_amount_is") + swapc);
-				lastcri = System.currentTimeMillis();
-				for (int i = 0; i < crimax; i++) {
-
-					if (cri[i].nowamount >= cri[i].targetamount
-							|| cri[i].nowamount == 0) continue;
-
-					String na = i + " _ " + cri[i].id + " > "
-							+ Material.getMaterial(cri[i].id).name();
-					dprint.r.printAll(na + " = " + cri[i].nowamount + "/"
-							+ cri[i].targetamount + " (" + cri[i].percent
-							+ "%)");
-				}
-
-				double sumper = 0.0;
-
-				for (int i = 0; i < crimax; i++) {
-
-					sumper += cri[i].percent;
-				}
-
-				dprint.r.printAll(tr.gettr("sum_per_rate_of_island")
-						+ rs[proid].p[0] + " = " + sumper + "%");
-
-				rs[proid].percent = sumper;
-
-				if (sumper == 0) rs[proid].p[0] = "";
-				saversprotectfile();
-				loadrsprotectfile();
-
-				return;
-
-			} // mode 2
-
-		}
-	}*/
-	
 	class SmallIslandType {
 		public HashMap<String, AllBlockInGameType> allBlockInGame;
 		public ArrayList<AllBlockInGameType> allBlockInGameAsList;
 	}
 
-	public  SmallIslandType loadMissionBlockFile() {
+	public SmallIslandType loadMissionBlockFile() {
 
 		HashMap<String, AllBlockInGameType> allBlockInGame = new HashMap<String, AllBlockInGameType>();
 		ArrayList<AllBlockInGameType> allBlockInGameAsList = new ArrayList<AllBlockInGameType>();
@@ -472,8 +380,8 @@ startTime = System.currentTimeMillis();
 			return null;
 		}
 	}
-	
-	public  void addSmallIslandNearThisBlock(Block block, long delay) {
+
+	public void addSmallIslandNearThisBlock(Block block, long delay) {
 		SmallIslandType sit = loadMissionBlockFile();
 		AddSmallIslandNearThisPosition aa = new AddSmallIslandNearThisPosition(block, sit, true);
 		Thread abc = new Thread(aa);
@@ -501,8 +409,6 @@ startTime = System.currentTimeMillis();
 
 				}
 
-				
-				
 				boolean foundChest = true;
 				do {
 					foundChest = false;
@@ -520,7 +426,6 @@ startTime = System.currentTimeMillis();
 							break;
 						}
 
-						
 					}
 
 				} while (foundChest == true);
@@ -533,8 +438,8 @@ startTime = System.currentTimeMillis();
 
 		@Override
 		public void run() {
-			
-			long start  = System.currentTimeMillis();
+
+			long start = System.currentTimeMillis();
 
 			boolean isDone = true;
 
@@ -569,24 +474,22 @@ startTime = System.currentTimeMillis();
 
 				int tmpX = block.getX() + x1;
 				int tmpZ = block.getZ() + z1;
-				
+
 				int countFoundSpace = 0;
 				do {
 					foundSpace = true;
 					int maxRadi = 120;
 
-					int radi = rnd.nextInt(maxRadi )+minCubeSize;
+					int radi = rnd.nextInt(maxRadi) + minCubeSize;
 
-					x1 = rnd.nextInt(radi * 2 ) - radi;
+					x1 = rnd.nextInt(radi * 2) - radi;
 					z1 = rnd.nextInt(radi * 2) - radi;
 					y1 = rnd.nextInt(255 - 10) + 5;
 
 					tmpX = block.getX() + x1;
 					tmpZ = block.getZ() + z1;
-					
-					
-					if ( Math.abs(tmpX - block.getX()) <= 25 && 
-							Math.abs(tmpZ - block.getZ()) <= 25) {
+
+					if (Math.abs(tmpX - block.getX()) <= 25 && Math.abs(tmpZ - block.getZ()) <= 25) {
 						foundSpace = false;
 						continue;
 					}
@@ -604,23 +507,23 @@ startTime = System.currentTimeMillis();
 							}
 						}
 					}
-					countFoundSpace ++;
+					countFoundSpace++;
 				} while (foundSpace == false && countFoundSpace < 10000);
-				
+
 				if (foundSpace == false) {
 					return;
 				}
 				// random Add Block
-				
+
 				int curSkip = rnd.nextInt(100);
 				for (int x2 = tmpX - curCubeSize; x2 <= tmpX + curCubeSize; x2++) {
 					for (int z2 = tmpZ - curCubeSize; z2 <= tmpZ + curCubeSize; z2++) {
 						for (int y2 = y1 - curCubeSize; y2 <= y1 + curCubeSize; y2++) {
 
-							if (rnd.nextInt() >= curSkip){
+							if (rnd.nextInt() >= curSkip) {
 								continue;
 							}
-							
+
 							Block b2 = block.getWorld().getBlockAt(x2, y2, z2);
 							// add random Block
 							int rand = 0;
@@ -637,7 +540,7 @@ startTime = System.currentTimeMillis();
 										break;
 									}
 								}
-								count ++;
+								count++;
 
 							} while (sit.allBlockInGameAsList.size() > 0 && count <= 1000);
 
@@ -652,159 +555,161 @@ startTime = System.currentTimeMillis();
 						}
 					}
 				}
-				
-				
-			/*	dprint.r.printAll("block is null " + (block == null));
-				dprint.r.printAll("block location is null " + (block.getLocation() == null));
-				
-				
-				dprint.r.printAll(
-						tr.gettr("skyblock_added_small_Island_at") + tr.locationToString(block.getLocation()));
-*/
+
+				/*
+				 * dprint.r.printAll("block is null " + (block == null));
+				 * dprint.r.printAll("block location is null " +
+				 * (block.getLocation() == null));
+				 * 
+				 * 
+				 * dprint.r.printAll( tr.gettr("skyblock_added_small_Island_at")
+				 * + tr.locationToString(block.getLocation()));
+				 */
 
 				// after create done 1 island
 				// thread sleep
-				
-				
+
 				// clear drop
-				
+
 				for (Entity en : block.getWorld().getEntities()) {
 					if (en == null) {
 						continue;
 					}
-					
+
 					if (en.getType() == EntityType.DROPPED_ITEM) {
 						Block b2 = block.getWorld().getBlockAt(tmpX, y1, tmpZ);
-						if (en.getLocation().distance(b2.getLocation())<= 20) {
+						if (en.getLocation().distance(b2.getLocation()) <= 20) {
 							en.remove();
 						}
 					}
 				}
-				
+
 				Block b2 = block.getWorld().getBlockAt(tmpX, y1, tmpZ);
-			//	dprint.r.printAll("added new small island at " + b2.getX() + "," + b2.getY()  + "," + b2.getZ());
-				
+				// dprint.r.printAll("added new small island at " + b2.getX() +
+				// "," + b2.getY() + "," + b2.getZ());
+
 				AddSmallIslandNearThisPosition theNew = new AddSmallIslandNearThisPosition(block, sit, false);
-				
+
 				Thread abc = new Thread(theNew);
-				
-				long end  = System.currentTimeMillis();
-				long diff = end  - start;
-				
-				Bukkit.getScheduler().scheduleSyncDelayedTask(ac, abc, (diff/20)*3);
+
+				long end = System.currentTimeMillis();
+				long diff = end - start;
+
+				Bukkit.getScheduler().scheduleSyncDelayedTask(ac, abc, (diff / 20) * 3);
 
 			} else if (isDone == true) {
-				
+
 				boolean isDone2 = true;
-				
-				do {
-				
-				// check
-				for (int i = 0; i < sit.allBlockInGameAsList.size(); i++) {
-					AllBlockInGameType a = sit.allBlockInGameAsList.get(i);
-
-					if (a.isBlock == false) {
-						if (a.curAmount > 0) {
-							isDone2 = false;
-							break;
-						}
-
-					}
-				}
-
-				
-				
-				//dprint.r.printAll("adding inventory");
-				
-				// time to add chest
-				boolean foundSpace = true;
-				int x1 = 0;
-				int z1 = 0;
-				int y1 = 0;
-
-				int tmpX = 0;
-				int tmpZ = 0;
 
 				do {
-					foundSpace = true;
-					int maxRadi = 120;
 
-					int radi = rnd.nextInt(maxRadi )+3;
+					// check
+					for (int i = 0; i < sit.allBlockInGameAsList.size(); i++) {
+						AllBlockInGameType a = sit.allBlockInGameAsList.get(i);
 
-					x1 = rnd.nextInt(radi *2 ) - radi;
-					z1 = rnd.nextInt(radi * 2) - radi;
-					y1 = rnd.nextInt(255 - 10) + 5;
-
-					tmpX = block.getX() + x1;
-					tmpZ = block.getZ() + z1;
-
-					// check space
-
-					for (int xxx = -1; xxx <= 1; xxx++) {
-						Block b2 = block.getWorld().getBlockAt(tmpX + xxx, y1, tmpZ);
-						if (b2.getType() != Material.AIR) {
-							foundSpace = false;
-						}
-
-					}
-
-					for (int xxx = -1; xxx <= 1; xxx++) {
-						Block b2 = block.getWorld().getBlockAt(tmpX, y1, tmpZ + xxx);
-						if (b2.getType() != Material.AIR) {
-							foundSpace = false;
-						}
-
-					}
-
-				} while (foundSpace == false);
-				
-				Block b2 = block.getWorld().getBlockAt(tmpX , y1, tmpZ);
-				b2.setType(Material.CHEST);
-			//	b2.setData((byte)rnd.nextInt(4));
-				
-				Chest chest = (Chest)b2.getState();
-				Inventory inv = chest.getInventory();
-				int count = 0;
-				do {
-				
-				int rand = 0;
-				AllBlockInGameType a = null;
-				do {
-					if (sit.allBlockInGameAsList.size() > 0) {
-					rand = rnd.nextInt(sit.allBlockInGameAsList.size());
-					}
-					else {
-						chest.update();
-						return;
-					}
-					a = sit.allBlockInGameAsList.get(rand);
-					if (a.curAmount <= 0) {
-						sit.allBlockInGameAsList.remove(rand);
-					} else {
 						if (a.isBlock == false) {
-							break;
+							if (a.curAmount > 0) {
+								isDone2 = false;
+								break;
+							}
+
 						}
 					}
 
-				} while (sit.allBlockInGameAsList.size() > 0);
-				
-				ItemStack itm = new ItemStack(Material.getMaterial(a.theName),1);
-				itm.getData().setData((byte) a.data);
-				int tmpSize = rnd.nextInt(itm.getType().getMaxStackSize()+1)+1;
-				inv.addItem(itm.getData().toItemStack(tmpSize));
-				a.curAmount -= 64;
-				count ++ ;
-				
-				}while(inv.firstEmpty() > - 1 && count < 100);
-				
-				chest.update();
-			/*	dprint.r.printAll(
-						tr.gettr("skyblock_added_small_Island_at") + tr.locationToString(block.getLocation()));
+					// dprint.r.printAll("adding inventory");
 
-			*/
-				
-			} while (isDone2 == false);
-			 	
+					// time to add chest
+					boolean foundSpace = true;
+					int x1 = 0;
+					int z1 = 0;
+					int y1 = 0;
+
+					int tmpX = 0;
+					int tmpZ = 0;
+
+					do {
+						foundSpace = true;
+						int maxRadi = 120;
+
+						int radi = rnd.nextInt(maxRadi) + 3;
+
+						x1 = rnd.nextInt(radi * 2) - radi;
+						z1 = rnd.nextInt(radi * 2) - radi;
+						y1 = rnd.nextInt(255 - 10) + 5;
+
+						tmpX = block.getX() + x1;
+						tmpZ = block.getZ() + z1;
+
+						// check space
+
+						for (int xxx = -1; xxx <= 1; xxx++) {
+							Block b2 = block.getWorld().getBlockAt(tmpX + xxx, y1, tmpZ);
+							if (b2.getType() != Material.AIR) {
+								foundSpace = false;
+							}
+
+						}
+
+						for (int xxx = -1; xxx <= 1; xxx++) {
+							Block b2 = block.getWorld().getBlockAt(tmpX, y1, tmpZ + xxx);
+							if (b2.getType() != Material.AIR) {
+								foundSpace = false;
+							}
+
+						}
+
+					} while (foundSpace == false);
+
+					Block b2 = block.getWorld().getBlockAt(tmpX, y1, tmpZ);
+					b2.setType(Material.CHEST);
+					// b2.setData((byte)rnd.nextInt(4));
+
+					Chest chest = (Chest) b2.getState();
+					Inventory inv = chest.getInventory();
+					int count = 0;
+					do {
+
+						int rand = 0;
+						AllBlockInGameType a = null;
+						do {
+							if (sit.allBlockInGameAsList.size() > 0) {
+								rand = rnd.nextInt(sit.allBlockInGameAsList.size());
+							} else {
+								chest.update();
+								return;
+							}
+							a = sit.allBlockInGameAsList.get(rand);
+							if (a.curAmount <= 0) {
+								sit.allBlockInGameAsList.remove(rand);
+							} else {
+								if (a.isBlock == false) {
+									break;
+								}
+							}
+
+						} while (sit.allBlockInGameAsList.size() > 0);
+
+						ItemStack itm = new ItemStack(Material.getMaterial(a.theName), 1);
+						itm.getData().setData((byte) a.data);
+						int tmpSize = rnd.nextInt(itm.getType().getMaxStackSize() + 1) + 1;
+						inv.addItem(itm.getData().toItemStack(tmpSize));
+						
+						
+						a.curAmount -= 64;
+						count++;
+
+					} while (inv.firstEmpty() > -1 && count < 100);
+
+					chest.update();
+					/*
+					 * dprint.r.printAll(
+					 * tr.gettr("skyblock_added_small_Island_at") +
+					 * tr.locationToString(block.getLocation()));
+					 * 
+					 */
+
+				} while (isDone2 == false);
+
 			}
 
 			// if not
@@ -813,8 +718,6 @@ startTime = System.currentTimeMillis();
 
 		}
 	}
-	
-	
 
 	class AdjustProtect implements Runnable {
 		private Block midBlockX0Z0;
@@ -829,8 +732,7 @@ startTime = System.currentTimeMillis();
 			this.player = player;
 
 		}
-		
-		
+
 		public AdjustProtect(Block midBlockX0Z0, Player player, int curI, RSData tmprs[], int curNewID) {
 			this.midBlockX0Z0 = midBlockX0Z0;
 			this.player = player;
@@ -1038,12 +940,11 @@ startTime = System.currentTimeMillis();
 
 			int searchRadius = 2;
 			int searchCount = 0;
-			
+
 			double thelx = tr.gettrint("sky random search lx");
 			double therx = tr.gettrint("sky random search rx");
 			double thelz = tr.gettrint("sky random search lz");
 			double therz = tr.gettrint("sky random search rz");
-			
 
 			while (buildcomplete == false) {
 				searchCount++;
@@ -1057,17 +958,18 @@ startTime = System.currentTimeMillis();
 
 				x = rnd.nextInt(searchRadius) * 300 * (rnd.nextInt(2) == 1 ? 1 : -1);
 				z = rnd.nextInt(searchRadius) * 300 * (rnd.nextInt(2) == 1 ? 1 : -1);
-				
+
 				if (x < thelx || x > therx) {
 					continue;
 				}
 				if (z < thelz || z > therz) {
 					continue;
 				}
-				
+
 				y = rnd.nextInt(200) + 50;
 
-				//dprint.r.printAll("searching..." + x + "," + y + "," + z + " searchCount " + searchCount + ", " + searchRadius);
+				// dprint.r.printAll("searching..." + x + "," + y + "," + z + "
+				// searchCount " + searchCount + ", " + searchRadius);
 
 				boolean checkrs = true;
 
@@ -1089,15 +991,15 @@ startTime = System.currentTimeMillis();
 					}
 				}
 
-				//dprint.r.printAll("checkRS " + checkrs + ", buildComplete" + buildcomplete);
-				
-				
+				// dprint.r.printAll("checkRS " + checkrs + ", buildComplete" +
+				// buildcomplete);
+
 				if (checkrs == false) {
 					buildcomplete = false;
-					//dprint.r.printAll("checkrs = false " + buildcomplete);
-					
+					// dprint.r.printAll("checkrs = false " + buildcomplete);
+
 				} else { // if x y z this can do
-					
+
 					dprint.r.printAll("random " + x + "," + y + "," + z);
 
 					int oldID = getOWNIslandID(player.getName(), false);
@@ -1251,10 +1153,9 @@ startTime = System.currentTimeMillis();
 
 					dprint.r.printA(tr.gettr("if_you_want_to_back_to_is_type") + " /skyblock home " + player.getName());
 
-					dprint.r.printA(tr.gettr("anyway_you_shold_sethome_and_home_for_shorten_typing") + " /skyblock home " + player.getName());
+					dprint.r.printA(tr.gettr("anyway_you_shold_sethome_and_home_for_shorten_typing")
+							+ " /skyblock home " + player.getName());
 
-					
-					
 					lastcreate = System.currentTimeMillis();
 
 					player.sendMessage(tr.gettr("cur_c_is") + (rs[newid].mission));
@@ -1264,16 +1165,17 @@ startTime = System.currentTimeMillis();
 					// save file
 					saveRSProtectFile();
 					buildcomplete = true;
-					
+
 					addSmallIslandNearThisBlock(block, 20);
-					
+
 				}
-				
-				//dprint.r.printAll("looping " + checkrs + " , " + buildcomplete);
+
+				// dprint.r.printAll("looping " + checkrs + " , " +
+				// buildcomplete);
 
 			} // loop build complete
-			
-		//	dprint.r.printAll("build comople " + buildcomplete + " , " );
+
+			// dprint.r.printAll("build comople " + buildcomplete + " , " );
 		}
 	}
 
@@ -1836,7 +1738,7 @@ startTime = System.currentTimeMillis();
 			break;
 		}
 	}
-	
+
 	public boolean checkIsThatAreBlockOrNot_old(Block midBlockX0Z0, Player player) {
 		int count = 0;
 		boolean thereBlock = false;
@@ -1923,7 +1825,6 @@ startTime = System.currentTimeMillis();
 
 		}
 
-		
 		return thereBlock;
 	}
 
@@ -1986,7 +1887,7 @@ startTime = System.currentTimeMillis();
 		}
 
 	}
-	
+
 	public String ItemStackToStringWithTypeIDAndData(ItemStack itm) {
 		String oo = "";
 
@@ -1999,7 +1900,7 @@ startTime = System.currentTimeMillis();
 
 		return oo;
 	}
-	
+
 	class drawProtectLine implements Runnable {
 
 		private Block block;
@@ -2060,7 +1961,7 @@ startTime = System.currentTimeMillis();
 		}
 
 	}
-	
+
 	public int[] recusiveSearchItemInChest(Block chestpls, String[] stringItemStack, Block[] bBlock,
 			int[] stringSizeAndBlockSize) {
 		// add
@@ -2136,7 +2037,7 @@ startTime = System.currentTimeMillis();
 		}
 		return stringSizeAndBlockSize;
 	}
-	
+
 	public void commandRuning(String m[], Player player) {
 
 		if (m[0].equalsIgnoreCase("/skyblock") || m[0].equalsIgnoreCase("/sky")) {
@@ -2232,9 +2133,9 @@ startTime = System.currentTimeMillis();
 					for (int lop2 = 0; lop2 < api_skyblock.rsMax; lop2++) {
 						Block blo = player.getWorld().getBlockAt(api_skyblock.rs[lop2].x, api_skyblock.rs[lop2].y,
 								api_skyblock.rs[lop2].z);
-						
+
 						delay += 200;
-						addSmallIslandNearThisBlock(blo,delay);
+						addSmallIslandNearThisBlock(blo, delay);
 					}
 
 				} else if (m[1].equalsIgnoreCase("deleteybelow5")) {
@@ -2469,15 +2370,14 @@ startTime = System.currentTimeMillis();
 
 					Block thetop = Useful.getTopBlockHigh(block);
 					if (thetop == null) {
-						
+
 						block.setType(Material.GLASS);
 						player.sendMessage(dprint.r.color(
 								tr.gettr("can't warp to this sky island cuz there are no middle block to stand")));
-						//return;
+						// return;
 						thetop = Useful.getTopBlockHigh(block);
 					}
-					
-					
+
 					player.teleport(thetop.getLocation());
 
 					player.sendMessage(dprint.r.color("teleported you to (" + block.getX() + "," + block.getY() + ","
@@ -2494,14 +2394,14 @@ startTime = System.currentTimeMillis();
 
 					Block thetop = Useful.getTopBlockHigh(block);
 					if (thetop == null) {
-						
+
 						block.setType(Material.GLASS);
 						player.sendMessage(dprint.r.color(
 								tr.gettr("can't warp to this sky island cuz there are no middle block to stand")));
-						//return;
+						// return;
 						thetop = Useful.getTopBlockHigh(block);
 					}
-					
+
 					player.teleport(thetop.getLocation());
 
 					player.sendMessage(dprint.r.color("teleported you to (" + block.getX() + "," + block.getY() + ","
@@ -2572,11 +2472,11 @@ startTime = System.currentTimeMillis();
 								block.getChunk().load();
 								Block thetop = Useful.getTopBlockHigh(block);
 								if (thetop == null) {
-									
+
 									block.setType(Material.GLASS);
-									player.sendMessage(dprint.r.color(
-											tr.gettr("can't warp to this sky island cuz there are no middle block to stand")));
-									//return;
+									player.sendMessage(dprint.r.color(tr.gettr(
+											"can't warp to this sky island cuz there are no middle block to stand")));
+									// return;
 									thetop = Useful.getTopBlockHigh(block);
 								}
 								player.teleport(thetop.getLocation());
@@ -2942,7 +2842,7 @@ startTime = System.currentTimeMillis();
 				}
 		}
 	}
-	
+
 	public void updateLVInventory(Inventory inv, Player player) {
 		int idx = api_skyblock.getProtectid(player.getLocation().getBlock());
 		int id = api_skyblock.getplayerinslot(player.getName(), idx);
@@ -2961,9 +2861,9 @@ startTime = System.currentTimeMillis();
 
 			ItemStack itm = new ItemStack(lv.getMaterial(lv.needNameData[i]),
 
-			lv.needAmount[i], lv.getData(lv.needNameData[i]));
+					lv.needAmount[i], lv.getData(lv.needNameData[i]));
 
-			itm.addUnsafeEnchantment(Enchantment.DAMAGE_UNDEAD, 1);
+			//itm.addUnsafeEnchantment(Enchantment.DAMAGE_UNDEAD, 1);
 
 			ItemMeta mm = itm.getItemMeta();
 			mm.setDisplayName(lv.needNameData[i] + " NEED");
@@ -2980,7 +2880,7 @@ startTime = System.currentTimeMillis();
 
 			ItemStack itm = new ItemStack(lv.getMaterial(lv.rewardNameData[i]),
 
-			lv.rewardAmount[i], lv.getData(lv.rewardNameData[i]));
+					lv.rewardAmount[i], lv.getData(lv.rewardNameData[i]));
 
 			itm.addUnsafeEnchantment(Enchantment.DIG_SPEED, 1);
 
@@ -2996,7 +2896,7 @@ startTime = System.currentTimeMillis();
 		// update inventory
 
 	}
-	
+
 	class DeleteYBelow5 implements Runnable {
 		private HashMap<String, Location> bd;
 		private World world;
@@ -3217,7 +3117,6 @@ startTime = System.currentTimeMillis();
 		File dir = new File(Constant.folder_name);
 		dir.mkdir();
 		System.out.println(dir.getAbsolutePath());
-		
 
 		String filena = Constant.folder_name + File.separator + worldf;
 		File fff = new File(filena);
@@ -3340,7 +3239,7 @@ startTime = System.currentTimeMillis();
 
 			in.close();
 		} catch (Exception e) {// Catch exception if any
-			dprint.r.printAll("Error load " + filena + e.getMessage() );
+			dprint.r.printAll("Error load " + filena + e.getMessage());
 			e.printStackTrace();
 		}
 	}
@@ -3351,7 +3250,6 @@ startTime = System.currentTimeMillis();
 		File dir = new File(Constant.folder_name);
 		dir.mkdir();
 		System.out.println(dir.getAbsolutePath());
-		
 
 		String filena = Constant.folder_name + File.separator + worldf;
 		File fff = new File(filena);
@@ -3474,11 +3372,11 @@ startTime = System.currentTimeMillis();
 
 			in.close();
 		} catch (Exception e) {// Catch exception if any
-			System.out.println("Error load " + filena + e.getMessage() );
+			System.out.println("Error load " + filena + e.getMessage());
 			e.printStackTrace();
 		}
 	}
-	
+
 	public synchronized void nextMission(int rsID, int cur) {
 		printToAllPlayerOnRS(rsID, ((rs[rsID].mission) + " " + tr.gettr("mission_complete")));
 
@@ -3487,8 +3385,8 @@ startTime = System.currentTimeMillis();
 
 		printToAllPlayerOnRS(rsID, tr.gettr("next_mission"));
 
-		dprint.r.printC(tr.gettr("owner_of_island_name") + rs[rsID].p[0] + " " + tr.gettr("did_mission_complete")
-				+ " " + (rs[rsID].mission));
+		dprint.r.printC(tr.gettr("owner_of_island_name") + rs[rsID].p[0] + " " + tr.gettr("did_mission_complete") + " "
+				+ (rs[rsID].mission));
 
 		int tmpID = (cur);
 		tmpID++;

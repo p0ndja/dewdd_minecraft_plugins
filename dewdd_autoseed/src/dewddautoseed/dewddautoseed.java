@@ -56,7 +56,7 @@ public class dewddautoseed implements Listener {
 				toSet = Material.CARROT;
 				break;
 
-			case NETHER_WARTS:
+			case NETHER_STALK:
 
 				toSet = Material.NETHER_WARTS;
 				break;
