@@ -18,7 +18,7 @@ public class Core {
 	LinkedList<SellableType> sellAsList = new LinkedList<SellableType>();
 	LinkedList<AllBlockInGameType> allBlockInGameAsList = new LinkedList<AllBlockInGameType>();
 
-	public static int dnaSize = 4000;
+	public static int dnaSize = 2000;
 
 	public static int maxItemForCompleteMission = 10;
 	public static int minItemForCompleteMission = 3;
@@ -42,7 +42,7 @@ public class Core {
 
 	// 415 unique item
 
-	public void dnaDecoder(double[] chromosome, LinkedList<AllShop> tmpAllShop, LinkedList<SellableType> tmpSell,
+	public void dnaDecoder(final double[] chromosome, LinkedList<AllShop> tmpAllShop, LinkedList<SellableType> tmpSell,
 			LinkedList<LV1000Type> tmpLV) {
 
 		LinkedList<Double> tmpReading = new LinkedList<Double>();
@@ -57,6 +57,12 @@ public class Core {
 		}
 
 		int curChro = 0;
+		
+		boolean usedItNeedList[] = new boolean[Main.co.allBlockInGameAsList.size()];
+		boolean usedItRewardList[] = new boolean[Main.co.allBlockInGameAsList.size()];
+		int tmpUseItLVUniqueCount = 0;
+		int tmpUsedItRewardUniqueCount = 0;
+		
 		while (curChro < dnaSize) {
 			// d.pl("while " + curChro + " / " + dnaSize);
 
@@ -64,39 +70,62 @@ public class Core {
 
 			// deal with player sell price
 			if (tmpSell.size() < sell.size()) {
+				
+				double tmpReadChro = Math.abs(chromosome[curChro]);
+			
 
-				if (chromosome[curChro] <= 0) {
-					curChro++;
-					continue;
-
-				} else {
+				
 					SellableType x = sellAsList.get(tmpSell.size()).copyIt();
 
-					x.sellPerPrice = chromosome[curChro] * SellMaxCost;
+					x.sellPerPrice = tmpReadChro * SellMaxCost;
 					tmpSell.add(x);
 					// d.pl("chro sell = " + curChro);
 					curChro++;
 					continue;
-				}
+				
 
 			}
 
 			// ****************************************************
 
 			// price shift <amount> shift <amount> shift <amount>
+			
+			
 
-			if (tmpAllShopUniqueDone < allBlockInGameAsList.size()) {
+			if (tmpAllShopUniqueDone <= allBlockInGameAsList.size() ) {
+				d.pl("tmpAllShop > "  + curChro);
+				
+				d.pl("tmpAllShop : " + tmpAllShopUniqueDone + " = " + (allBlockInGameAsList.size() ));
+				
+					if ( allBlockInGameAsList.size() - minShopSize != tmpAllShopUniqueDone ) {
+						d.pl("last shop can't have item to fit minshopsize");
+						
+					}
+				
 
-				if (tmpReading.size() >= (1 + (minShopSize * 2)) && tmpReading.size() <= (1 + maxShopSize * 2)
-						&& tmpReading.size() % 2 == 1) {
+				if (  (tmpAllShop.size() < allBlockInGameAsList.size()-1  && tmpReading.size() >= (1 + (minShopSize * 2)) && tmpReading.size() <= (1 + maxShopSize * 2)
+						&& tmpReading.size() % 2 == 1)
+						
+						|| ( (tmpAllShop.size() == allBlockInGameAsList.size()-1  && tmpReading.size() >= (1 + (minShopSize * 2)) && tmpReading.size() <= (1 + maxShopSize * 2)
+						&& tmpReading.size() % 2 == 1))
+						
+						) {
 
-					if (chromosome[curChro] <= 0 || tmpReading.size() <= (1 + maxShopSize * 2)) { // that
+					
+					
+					double tmpReadChro = chromosome[curChro];
+				
+					
+					if (tmpReadChro <= 0 || tmpReading.size() == (1 + maxShopSize * 2)) { // that
 																									// mean
 																									// do
 																									// it
 																									// now
-						// d.pl("size = " + tmpReading.size() + " .. " + curChro
-						// + " unique " + tmpAllShopUniqueDone);
+						tmpReadChro = Math.abs(chromosome[curChro]);
+						d.pl(" the shop curchro " + curChro + " | " + tmpReading.size() + " | " + tmpAllShop.size() + " | " + tmpAllShopUniqueDone);
+						
+						 d.pl("size = " + tmpReading.size() + " .. " + curChro
+						 + " unique " + tmpAllShopUniqueDone);
 
 						AllShop x = new AllShop();
 
@@ -132,7 +161,9 @@ public class Core {
 
 					}
 
-				} else { // add to tmpReading
+				} 
+				
+				else { // add to tmpReading
 
 					tmpReading.add(Math.abs(chromosome[curChro]));
 
@@ -143,7 +174,9 @@ public class Core {
 
 			} // mission
 
-			// d.pl("done shop");
+			
+			d.pl("tmpAllShop " + tmpAllShop.size() + " , unique " + tmpAllShopUniqueDone);
+			 d.pl("done shop");
 			// ****************************************************
 			// ****************************************************
 
@@ -156,10 +189,9 @@ public class Core {
 			// <lv type> shift : amount ?:?:? ?:?:?
 			// <10 times for block> <amount> <10 times for item> <amount>
 
-			boolean usedItNeedList[] = new boolean[Main.co.allBlockInGameAsList.size()];
-			boolean usedItRewardList[] = new boolean[Main.co.allBlockInGameAsList.size()];
-			int tmpUseItLVUniqueCount = 0;
-			int tmpUsedItRewardUniqueCount = 0;
+		
+			//d.pl("space " + curChro);
+			
 			
 			for (int i = 0; i < Main.co.allBlockInGameAsList.size(); i++) {
 				usedItNeedList[i] = false;

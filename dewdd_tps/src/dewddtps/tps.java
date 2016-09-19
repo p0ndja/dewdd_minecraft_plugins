@@ -70,8 +70,8 @@ public class tps implements Runnable {
 
 		double re = (((maxtick) / (plusall / 1000)));
 
-		return re <= 5 ? rnd.nextInt(20) + 1 : re;
-
+		//return re <= 5 ? rnd.nextInt(20) + 1 : re;
+		return re <= 5 ? 20 : re;
 	}
 
 	public void run() {

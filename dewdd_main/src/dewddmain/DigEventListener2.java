@@ -1676,8 +1676,27 @@ public class DigEventListener2 implements Listener {
 
 			// call fixtool
 
+			String itName[] = player.getItemInHand().getItemMeta().getDisplayName().split(" ");
+			
+			//player.sendMessage("itName " + itName[0] + " " + itName[1]);
+			
+			if (itName.length == 3) {
+				if (itName[0].equalsIgnoreCase("55")) {
+					
+					dew.amountRecursiveCount = 0;
+					
+					int ig1 = block.getTypeId();
+					byte ig2 = block.getData();
+					
+					
+					//player.sendMessage("ptdew&dewdd : 55 runing..." + ig1 + ":" + ig2);
+					dew.item55delete(block, player, ig1, ig2, Integer.parseInt(itName[1]), Integer.parseInt(itName[2]));
+					//player.sendMessage("ptdew&dewdd : 55 done...");
+				}
+				
+			}
 			dew.randomplaynote(player.getLocation());
-
+			
 		}
 
 	}
@@ -1740,13 +1759,26 @@ public class DigEventListener2 implements Listener {
 				// player.sendMessage("iteminhand= " +
 				// player.getItemInHand().getTypeId());
 
-				if (player.getItemInHand().getTypeId() == 55) {
-					dew.amount2 = 0;
-					dew.amount3 = 0;
+				
 
-					player.sendMessage("ptdew&dewdd : 55 runing...");
-					dew.item55delete(block, player, block.getTypeId(), block.getData());
-					player.sendMessage("ptdew&dewdd : 55 done...");
+				String itName[] = player.getItemInHand().getItemMeta().getDisplayName().split(" ");
+				
+				//player.sendMessage("itName " + itName[0] + " " + itName[1]);
+				
+				if (itName.length == 3) {
+					if (itName[0].equalsIgnoreCase("55")) {
+						
+						dew.amountRecursiveCount = 0;
+						
+						int ig1 = block.getTypeId();
+						byte ig2 = block.getData();
+						
+						
+						//player.sendMessage("ptdew&dewdd : 55 runing..." + ig1 + ":" + ig2);
+						dew.item55delete(block, player, ig1, ig2, Integer.parseInt(itName[1]), Integer.parseInt(itName[2]));
+							//player.sendMessage("ptdew&dewdd : 55 done...");
+					}
+					
 				}
 
 				if (player.getItemInHand().getTypeId() == Material.REDSTONE_TORCH_OFF.getId()
