@@ -2523,8 +2523,8 @@ public class dewset extends dewset_interface {
 		public void run() {
 			player.sendMessage(dprint.r.color("ptdew&dewdd : dewextend" + tr.gettr("starting")));
 			int getid = getfreeselect(player);
-			selecty1[getid] = 1;
-			selecty2[getid] = 254;
+			selecty1[getid] = 0;
+			selecty2[getid] = 255;
 
 			player.sendMessage(dprint.r.color(
 					"ptdew&dewdd : selected area = (" + selectx1[getid] + "," + selecty1[getid] + "," + selectz1[getid]
@@ -4975,7 +4975,7 @@ public class dewset extends dewset_interface {
 
 	public int runtime = 1000;
 
-	public long sleeptime = 20L;
+	public long sleeptime = 60L;
 
 	public Block selectblock[] = new Block[selectmax + 1];
 

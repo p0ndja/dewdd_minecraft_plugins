@@ -533,7 +533,7 @@ public class DigEventListener2 implements Listener {
 		Block block = e.getClickedBlock();
 		Player player = e.getPlayer();
 
-		if (block.getType() == Material.CHEST) {
+		if (block.getType() == Material.CHEST || block.getType() == Material.TRAPPED_CHEST) {
 
 			int x = 0;
 			int y = 0;
