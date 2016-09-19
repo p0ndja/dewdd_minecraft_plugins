@@ -12,8 +12,9 @@ import java.net.Socket;
 import javazoom.jl.decoder.JavaLayerException;
 import javazoom.jl.player.Player;
 
-public class TCPServer {
-	public static void runSound() {
+class runSound implements Runnable{
+	@Override
+	public void run() {
 
 		String bip = File.separator + "mi" + File.separator + "lobby" + File.separator + "plugins" + File.separator
 				+ "dewdd_joinsound" + File.separator + "join.mp3";
@@ -34,6 +35,16 @@ public class TCPServer {
 			e.printStackTrace();
 		}
 
+		
+	}
+}
+
+public class TCPServer {
+	
+	public static void runSound() {
+		runSound xx = new runSound();
+		Thread yy = new Thread(xx);
+		yy.start();
 	}
 	
 

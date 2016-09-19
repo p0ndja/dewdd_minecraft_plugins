@@ -17,6 +17,7 @@ import java.util.HashMap;
 import java.util.Random;
 
 import org.bukkit.Bukkit;
+import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
@@ -280,7 +281,8 @@ public class DigEventListener2 implements Listener {
 
 				}
 
-				while (dewddflower.Main.ds == null) {
+				dew = new dewset();
+			/*	while (dewddflower.Main.ds == null) {
 
 					i++;
 					Thread.sleep(1000);
@@ -288,8 +290,8 @@ public class DigEventListener2 implements Listener {
 
 					// dew = dewddflower.Main.ds;
 
-				}
-				dew = dewddflower.Main.ds;
+				}*/
+				//dew = dewddflower.Main.ds;
 
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
@@ -337,14 +339,27 @@ public class DigEventListener2 implements Listener {
 				}
 				return;
 			} else if (give.equalsIgnoreCase("giveitem")) {
-
+				
 				for (Player pr : Bukkit.getOnlinePlayers()) {
-					if (pr.isFlying()){
+					if (pr.getGameMode() == GameMode.CREATIVE){
+						if (!pr.hasPermission("essentials.gamemode")) {
+							pr.kickPlayer(tr.gettr("banned cuz you can be game mode but not Admin Or GameMode Group"));
+							pr.setBanned(true);
+				
+							continue;
+						}
+					}
+					
+					if (pr.isFlying() && pr.getGameMode() != GameMode.SPECTATOR){
 						if (!pr.hasPermission("essentials.fly")) {
 							pr.kickPlayer(tr.gettr("kick_cuz can fly but not vip"));
 							continue;
 						}
 					}
+					
+					
+					
+					
 					// check that player have item name
 
 					boolean don = false;
@@ -619,7 +634,7 @@ public class DigEventListener2 implements Listener {
 		return price;
 	}
 
-	public dewset dew = dewddflower.Main.ds;
+	public dewset dew = null;
 
 	public JavaPlugin ac = null;
 
@@ -946,7 +961,7 @@ public class DigEventListener2 implements Listener {
 						return;
 					}
 
-					boolean pro = dewset.cando_all(p.getLocation().getBlock(), p.getPlayer(), "build");
+					boolean pro = dew.cando_all(p.getLocation().getBlock(), p.getPlayer(), "build");
 					if (pro == false) {
 						p.sendMessage(tr.gettr("not_your_zone"));
 						return;
@@ -1011,7 +1026,7 @@ public class DigEventListener2 implements Listener {
 						return;
 					}
 
-					boolean pro = dewset.cando_all(p.getLocation().getBlock(), p.getPlayer(), "build");
+					boolean pro = dew.cando_all(p.getLocation().getBlock(), p.getPlayer(), "build");
 					if (pro == false) {
 						p.sendMessage(tr.gettr("not_your_zone"));
 						return;

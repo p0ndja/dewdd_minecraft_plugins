@@ -7,9 +7,11 @@ package dewdddfree;
 
 import java.util.Random;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
+import org.bukkit.block.Chest;
 import org.bukkit.block.Dispenser;
 import org.bukkit.block.Sign;
 import org.bukkit.enchantments.Enchantment;
@@ -461,7 +463,679 @@ public class DigEventListener2 implements Listener {
 		}
 
 	}
+	
 
+	public boolean isunsortid(ItemStack impo) {
+
+		if (impo.getType().getMaxDurability() > 0)
+			return true;
+
+		if (impo.getEnchantments().size() > 0)
+			return true;
+
+		switch (impo.getTypeId()) {
+		case 403: // enchant book
+		case 373: // potion
+		case 401: // rocket
+		case 402: // firework star
+		case 397: // mod head
+		case 395: // empty map
+		case 144: // head
+		case 387: // writting book
+		case 386: // book and quill
+		case 351:// ink
+
+			return true;
+		default:
+			return false;
+		}
+	}
+
+	class autosortchest2_class implements Runnable {
+		private Block block;
+		private Player player;
+
+		public autosortchest2_class(Block block, Player player) {
+			this.block = block;
+			this.player = player;
+		}
+		
+
+		@Override
+		public void run() {
+
+			if (block.getTypeId() != Material.CHEST.getId() && block.getTypeId() != Material.TRAPPED_CHEST.getId()) {
+
+				player.sendMessage(dprint.r.color(tr.gettr("auto_sort_chest_2_is_not_chest")));
+				return;
+			}
+
+			Chest chest = (Chest) block.getState();
+			int leng = chest.getInventory().getSize();
+
+			int sid[] = new int[leng];
+			ItemStack sdata[] = new ItemStack[leng];
+			int samount[] = new int[leng];
+
+			// clear
+			int l1 = 0;
+			for (l1 = 0; l1 < leng; l1++) {
+				sid[l1] = -1;
+				samount[l1] = 0;
+			}
+
+			// loop all
+			for (ItemStack it : chest.getInventory().getContents()) {
+
+				if (it == null) {
+					continue;
+				}
+
+				if (isunsortid(it) == true) {
+					continue;
+				}
+
+				// add to my array
+				// find
+
+				boolean founded = false;
+
+				for (l1 = 0; l1 < leng; l1++)
+					// player.sendMessage(dprint.r.color("finding old data " +
+					// l1);
+					if (sid[l1] == it.getTypeId())
+						// player.sendMessage(dprint.r.color("ax " + sid[l1]);
+						if (sdata[l1].getData().getData() == it.getData().getData()) {
+
+							founded = true;
+
+							// player.sendMessage(dprint.r.color("s=" + l1 +
+							// ",id:" + sid[l1] +
+							// ",data:"
+							// + sdata[l1] + ",amount" + samount[l1]);
+							samount[l1] += it.getAmount();
+							break;
+						}
+
+				// if not found
+				if (founded == false) {
+					// player.sendMessage(dprint.r.color("can't find old slot");
+
+					founded = false;
+					for (l1 = 0; l1 < leng; l1++)
+						// find empty
+						if (sid[l1] == -1) {
+							sid[l1] = it.getTypeId();
+							sdata[l1] = it;
+							samount[l1] = it.getAmount();
+							founded = true;
+							break;
+						}
+
+					if (founded = false) {
+						player.sendMessage(dprint.r.color(tr.gettr("error_auto_sort_chest2_can't_find_empty_slot")));
+						return;
+					}
+
+				}
+
+			} // loop all itemstack
+
+			// now add back : O
+
+			// clear inventory chest
+			for (int itx = 0; itx < chest.getInventory().getSize(); itx++) {
+
+				if (chest.getInventory().getItem(itx) == null) {
+					continue;
+				}
+
+				if (isunsortid(chest.getInventory().getItem(itx)) == true) {
+					continue;
+				}
+
+				chest.getInventory().clear(itx);
+			}
+			// chest.getInventory().clear();
+
+			// now add back : (
+
+			for (l1 = 0; l1 < leng; l1++) {
+				if (sid[l1] == -1) {
+					continue;
+				}
+
+				// add until empty slot
+				while (samount[l1] > 0)
+					if (samount[l1] >= 64) {
+						// player.sendMessage(dprint.r.color("adding > " +
+						// sid[l1] +
+						// tr.gettr("amount") + "= " +
+						// samount[l1]);
+						sdata[l1].setAmount(64);
+						chest.getInventory().addItem(sdata[l1]);
+						samount[l1] -= 64;
+					} else {
+						// player.sendMessage(dprint.r.color("adding > " +
+						// sid[l1] +
+						// tr.gettr("amount") + " = " +
+						// samount[l1]);
+
+						sdata[l1].setAmount(samount[l1]);
+						chest.getInventory().addItem(sdata[l1]);
+
+						samount[l1] -= samount[l1];
+					}
+
+				// player.sendMessage(dprint.r.color("x data " +
+				// chest.getInventory().getItem(0).getData().getData());
+
+			}
+
+			for (@SuppressWarnings("unused")
+			Object obj : sid) {
+				obj = null;
+			}
+			sid = null;
+			for (@SuppressWarnings("unused")
+			Object obj : sdata) {
+				obj = null;
+			}
+			sdata = null;
+			for (@SuppressWarnings("unused")
+			Object obj : samount) {
+				obj = null;
+			}
+			samount = null;
+
+		}
+	}
+	
+	public void autosortchest2(Block block, Player player) {
+		autosortchest2_class ar = new autosortchest2_class(block, player);
+		Bukkit.getScheduler().scheduleSyncDelayedTask(ac, ar);
+	}
+	
+	public long sleeptime = 20;
+
+	class chestabsorb_c implements Runnable {
+
+		public chestabsorb_c() {
+			Bukkit.getScheduler().scheduleSyncDelayedTask(ac, this, sleeptime);
+		}
+
+		@Override
+		public void run() {
+			int d4 = 20;
+			Block block = null;
+			Block block2 = null;
+			int d5 = 1;
+			Chest chest = null;
+			int slotp = -1;
+
+			for (Player player : Bukkit.getOnlinePlayers()) {
+			
+				// search nearby box and sign ... ummm yes
+				block = player.getLocation().getBlock();
+
+				/*
+				 * if (checkpermissionarea(block)== false) { not protect area
+				 * continue; }
+				 */
+				if (dew.cando_all(block, player, "build") == false) {
+					// build
+					continue;
+				}
+
+				for (int gx = 0 - d4; gx <= 0 + d4; gx++) {
+					for (int gy = 0 - d4; gy <= 0 + d4; gy++) {
+						for (int gz = 0 - d4; gz <= 0 + d4; gz++) {
+							// first search sign
+							block = player.getLocation().getBlock().getRelative(gx, gy, gz);
+							if (block == null) {
+								continue;
+							}
+
+							if (block.getTypeId() != 63 && block.getTypeId() != 68) {
+								continue;
+							}
+
+							Sign sign = (Sign) block.getState();
+							if (sign.getLine(0).equalsIgnoreCase("dewtobox")) {
+								sign.setLine(0, "[dewtobox]");
+								sign.update(true);
+							}
+
+							if (sign.getLine(0).equalsIgnoreCase("[dewtobox]") == true) {
+								// player.sendMessage(dprint.r.color("found
+								// dewtobox sign : "
+								// +
+								// block.getLocation().getBlockX() + ","
+								// + block.getLocation().getBlockY() + "," +
+								// block.getLocation().getBlockZ());
+
+								int intb = Integer.parseInt(sign.getLine(1));
+								if (intb == 0) {
+									continue;
+								}
+
+								// after found sign so find box
+
+								// box
+								for (int ax = 0 - d5; ax <= 0 + d5; ax++) {
+									for (int ay = 0 - d5; ay <= 0 + d5; ay++) {
+										for (int az = 0 - d5; az <= 0 + d5; az++) {
+											block2 = block.getRelative(ax, ay, az);
+											if (block2 == null) {
+												continue;
+											}
+
+											if (block2.getTypeId() != 54) {
+												continue;
+											}
+
+											// player.sendMessage(dprint.r.color("found
+											// dewtobox chest : "
+											// +
+											// block2.getLocation().getBlockX()
+											// +
+											// ","
+											// +
+											// block2.getLocation().getBlockY()
+											// +
+											// "," +
+											// block2.getLocation().getBlockZ());
+
+											slotp = player.getInventory().first(intb);
+											if (slotp == -1) {
+												continue;
+											}
+
+											chest = (Chest) block2.getState();
+
+											int chestslot = -1;
+											chestslot = chest.getInventory().firstEmpty();
+											if (chestslot == -1) {
+												continue;
+											}
+
+											// ready to move
+											chest.getInventory().addItem(player.getInventory().getItem(slotp));
+
+											player.getInventory().clear(slotp);
+
+											player.sendMessage(
+													dprint.r.color("[dewtobox] " + tr.gettr("moved") + intb));
+
+											// added
+
+											// if true
+											// check is empty
+											// check item of player
+
+										}
+									}
+								}
+
+							} // dew to box
+
+						} // loop
+					}
+				}
+
+			} // player
+		}
+	}
+	
+
+	public Block chestnearsign(Block temp) {
+		int d5 = 1;
+		Block typebox = null;
+
+		Block b3 = null;
+		for (int ax = -d5; ax <= d5; ax++) {
+			for (int ay = -d5; ay <= d5; ay++) {
+				for (int az = -d5; az <= +d5; az++) {
+
+					b3 = temp.getRelative(ax, ay, az);
+
+					if (b3.getTypeId() != 54) {
+						continue;
+					}
+
+					/*
+					 * dprint.r.printAll("chestnearsign " + b3.getTypeId() +
+					 * " > " + b3.getX() + "," + b3.getZ());
+					 */
+					// search chest type
+					typebox = b3;
+					break;
+				}
+			}
+		}
+
+		return typebox;
+	}
+
+	
+
+	public Block protochest(Block block, int d4, String sorttype) {
+		Block temp = null;
+		Sign sign2 = null;
+		Block typebox = null;
+
+		// search sign
+
+		for (int gx2 = 0 - d4; gx2 <= 0 + d4; gx2++) {
+			for (int gy2 = 0 - d4; gy2 <= 0 + d4; gy2++) {
+				for (int gz2 = 0 - d4; gz2 <= 0 + d4; gz2++) {
+					temp = block.getRelative(gx2, gy2, gz2);
+					if (temp.getTypeId() != 63 && temp.getTypeId() != 68) {
+						continue;
+					}
+
+					sign2 = (Sign) temp.getState();
+					if (sign2.getLine(0).equalsIgnoreCase("dewsorttype")) {
+						sign2.setLine(0, "[dewsorttype]");
+						sign2.update(true);
+					}
+
+					if (sign2.getLine(0).equalsIgnoreCase("[dewsorttype]")) {
+						if (sign2.getLine(1).equalsIgnoreCase(sorttype)) {
+							// found proto type
+
+							// searh box of proto sign
+							typebox = chestnearsign(temp);
+							if (typebox != null) {
+								return typebox;
+							}
+
+						}
+					}
+				} // search sign
+			}
+		}
+
+		return typebox;
+
+	}
+	class chestabsorb_c2 implements Runnable {
+
+		private long lastsort2;
+
+		public chestabsorb_c2() {
+			Bukkit.getScheduler().scheduleSyncDelayedTask(ac, this, sleeptime);
+		}
+
+		@Override
+		public void run() {
+
+			long nn = System.currentTimeMillis();
+
+			if (nn - lastsort2 < 100) {
+				Bukkit.getScheduler().scheduleSyncDelayedTask(ac, this, 10);
+				return;
+			}
+
+			lastsort2 = nn;
+
+			int d4 = 30;
+			Block block = null;
+
+			for (Player player : Bukkit.getOnlinePlayers()) {
+				
+				// search nearby box and sign ... ummm yes
+				block = player.getLocation().getBlock();
+
+				/*
+				 * if (checkpermissionarea(block)== false) { not protect area
+				 * continue; }
+				 */
+				if (dew.cando_all(block, player, "build") == false) {
+					// build
+					continue;
+				}
+
+				// player.sendMessage(dprint.r.color("searching... dewsortbox
+				// sign");
+
+				// search any sign near player
+				for (int gx = 0 - d4; gx <= 0 + d4; gx++) {
+					for (int gy = 0 - d4; gy <= 0 + d4; gy++) {
+						for (int gz = 0 - d4; gz <= 0 + d4; gz++) {
+							lastsort2 = nn;
+
+							// first search sign
+							block = player.getLocation().getBlock().getRelative(gx, gy, gz);
+
+							if (block.getTypeId() != 63 && block.getTypeId() != 68) {
+								continue;
+							}
+
+							// dewsortbox
+							// dewsorttype
+
+							Sign sign = (Sign) block.getState();
+							if (sign.getLine(0).equalsIgnoreCase("dewsortbox")) {
+								sign.setLine(0, "[dewsortbox]");
+								sign.update(true);
+							}
+
+							if (sign.getLine(0).equalsIgnoreCase("[dewsortbox]") == true) {
+
+								/*
+								 * player.sendMessage(dprint.r.color(
+								 * "cur found dewsortbox sign at " +
+								 * block.getX() + "," + block.getY() + "," +
+								 * block.getZ());
+								 */
+
+								String sorttype = sign.getLine(1);
+								if (sorttype.equalsIgnoreCase("")) {
+									player.sendMessage(dprint.r.color(tr.gettr("sorttype_name_must_not_null")));
+									continue;
+								}
+
+								// got sign type
+								// search current chest
+								Block curchest = chestnearsign(block);
+
+								if (curchest == null) {
+									player.sendMessage(dprint.r.color("curchest == null"));
+
+									continue;
+
+								}
+
+								Block curprochest = protochest(block, d4, sorttype);
+								if (curprochest == null) {
+									player.sendMessage(
+											dprint.r.color("curprochest == null > " + d4 + " , " + sorttype));
+
+									continue;
+
+								}
+
+								// player.sendMessage(dprint.r.color("opening
+								// curchest..."+
+								// curchest.getTypeId());
+								Chest curchest1 = (Chest) curchest.getState();
+								// player.sendMessage(dprint.r.color("opening
+								// curchest done");
+
+								// player.sendMessage(dprint.r.color("opening
+								// curprochest..."+
+								// curprochest.getTypeId());
+
+								Chest curchestin = (Chest) curprochest.getState();
+								// player.sendMessage(dprint.r.color("opening
+								// curprochest done");
+
+								// player.sendMessage(dprint.r.color("opened
+								// both chest");
+								// after got cur chest
+								// search another dewsortbox for swap
+								// *********************
+								Block temp = null;
+								for (int jx = 0 - d4; jx <= 0 + d4; jx++) {
+									for (int jy = 0 - d4; jy <= 0 + d4; jy++) {
+										for (int jz = 0 - d4; jz <= 0 + d4; jz++) {
+											if (jx == 0 && jy == 0 && jz == 0) {
+												continue;
+											}
+											// first search sign
+											temp = block.getLocation().getBlock().getRelative(jx, jy, jz);
+
+											if (temp.getTypeId() != 63 && temp.getTypeId() != 68) {
+												continue;
+											}
+
+											// dewsortbox
+											// dewsorttype
+
+											Sign js = (Sign) temp.getState();
+
+											if (js.getLine(0).equalsIgnoreCase("[dewsortbox]") == true) {
+
+												/*
+												 * player.sendMessage(dprint.r.
+												 * color (
+												 * "swap found dewsortbox at " +
+												 * temp.getX() + "," +
+												 * temp.getY() + "," +
+												 * temp.getZ());
+												 */
+
+												String jsorttype = js.getLine(1);
+												if (jsorttype.equalsIgnoreCase("")) {
+													// player.sendMessage(dprint.r.color("swap_sorttype_name_must_not_null");
+													continue;
+												}
+
+												// got sign type
+												// search current chest
+												Block swapchest = chestnearsign(temp);
+												if (swapchest == null) {
+													// player.sendMessage(dprint.r.color("swapchest
+													// == null");
+													continue;
+												}
+
+												if (swapchest.getLocation().distance(curchest.getLocation()) <= 1) {
+													continue;
+												}
+
+												Block swapprochest = protochest(temp, d4, jsorttype);
+												if (swapprochest == null) {
+													// player.sendMessage(dprint.r.color("swapprochest
+													// == null");
+													continue;
+												}
+
+												// player.sendMessage(dprint.r.color("opening
+												// swapprochest...");
+
+												Chest swapchestin = (Chest) swapprochest.getState();
+												// player.sendMessage(dprint.r.color("opening
+												// swapchest...");
+
+												Chest swapchest1 = (Chest) swapchest.getState();
+
+												// player.sendMessage(dprint.r.color("opened
+												// both chest swap");
+
+												for (int ikn = 0; ikn < curchest1.getInventory().getSize(); ikn++) {
+													ItemStack i1 = curchest1.getInventory().getItem(ikn);
+
+													if (i1 == null) {
+														continue;
+													}
+
+													// search 1 is not in
+													// 1prototype
+													int i1proslot = curchestin.getInventory().first(i1.getType());
+													if (i1proslot > -1) {
+														// player.sendMessage(dprint.r.color("i1proslot
+														// > -1");
+														continue;
+													}
+
+													// if not found it's mean
+													// wrong item in cur chest
+
+													// check it that item in
+													// second prototype
+
+													if (swapchestin.getInventory().first(i1.getType()) == -1) {
+														// player.sendMessage(dprint.r.color("swapchestin
+														// can't found i1
+														// item");
+														continue;
+													}
+
+													// time to swap item
+													// search free item on
+													// second
+
+													int freeslot = swapchest1.getInventory().firstEmpty();
+													if (freeslot == -1) {
+														// player.sendMessage(dprint.r.color("free
+														// slot of swapchest 1
+														// is -1");
+														continue;
+													}
+
+													// time to move
+													// player.sendMessage(dprint.r.color("moviing
+													// item");
+													swapchest1.getInventory().setItem(freeslot, i1);
+													curchest1.getInventory().setItem(ikn, new ItemStack(0));
+
+													player.sendMessage(dprint.r.color(
+															"swaped item " + i1.getType().name() + " " + i1.getAmount())
+															+ " from " + curchest.getX() + "," + curchest.getY() + ","
+															+ curchest.getZ() + "[" + sorttype + "]" + " to "
+															+ swapchest.getX() + "," + swapchest.getY() + ","
+															+ swapchest.getZ() + "[" + jsorttype + "]");
+
+													lastsort2 = nn;
+
+													new chestabsorb_c2();
+													return;
+
+												}
+												// how to swap
+												// loop all of item of source
+
+											}
+										} // search another chest
+									}
+								}
+
+								// **********************
+								// search another chest block for swap item
+
+							} // dew to box
+
+						} // searh any sign near player
+					}
+				}
+
+			} // player
+		}
+	}
+	
+	public void chestabsorb() {
+
+		new chestabsorb_c();
+	}
+
+	public void chestabsorb2() {
+
+		new chestabsorb_c2();
+	}
+	
+	
 	@EventHandler
 	public void eventja(PlayerInteractEvent e) {
 		if (!tr.isrunworld(ac.getName(), e.getPlayer().getWorld().getName())) {
@@ -497,7 +1171,7 @@ public class DigEventListener2 implements Listener {
 
 							if (sign.getLine(0).equalsIgnoreCase("[autosort]") == true) {
 
-								dew.autosortchest2(block, player);
+								autosortchest2(block, player);
 
 								return;
 
@@ -551,7 +1225,7 @@ public class DigEventListener2 implements Listener {
 			Sign sign = (Sign) block.getState();
 
 			if (sign.getLine(0) != null) {
-				dewddflower.Main.ds.linkurl(player, sign.getLine(0));
+				dew.linkurl(player, sign.getLine(0));
 			}
 
 			if (sign.getLine(0).equalsIgnoreCase("dewtobox")) {
@@ -560,7 +1234,7 @@ public class DigEventListener2 implements Listener {
 			}
 			if (sign.getLine(0).equalsIgnoreCase("[dewtobox]") == true) {
 				// player.sendMessage("dewtobox run");
-				dewddflower.Main.ds.chestabsorb();
+				chestabsorb();
 			}
 
 			if (sign.getLine(0).equalsIgnoreCase("dewsortbox")) {
@@ -570,7 +1244,7 @@ public class DigEventListener2 implements Listener {
 
 			if (sign.getLine(0).equalsIgnoreCase("[dewsortbox]") || sign.getLine(0).equalsIgnoreCase("[dewsorttype]")) {
 				// player.sendMessage("dewtobox run");
-				dewddflower.Main.ds.chestabsorb2();
+			   chestabsorb2();
 			}
 
 			// exchange

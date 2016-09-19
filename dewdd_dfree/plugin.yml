@@ -3,7 +3,7 @@ main: dewdddfree.Main
 version: 1
 author: dewtx29@gmail.com
 database: false
-depend: [dewset, dewddtran, dewddprint]
+depend: [dewsetsystem, dewddtran, dewddprint]
 
 commands:
   dewenchant:
