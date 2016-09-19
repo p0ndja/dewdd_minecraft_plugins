@@ -15,6 +15,10 @@ import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.Chest;
 import org.bukkit.block.CreatureSpawner;
+import org.bukkit.block.Dispenser;
+import org.bukkit.block.Dropper;
+import org.bukkit.block.Furnace;
+import org.bukkit.block.Hopper;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -119,7 +123,6 @@ public class DigEventListener2 implements Listener {
 
 			LinkedList<SpawnerBlockType> spawner = new LinkedList<SpawnerBlockType>();
 			LinkedList<ChestBlockType> chester = new LinkedList<ChestBlockType>();
-			
 
 			/*
 			 * for (int i = 0 ; i < 16 ; i ++ ) { bdata[i] = new byte[256][];
@@ -160,26 +163,111 @@ public class DigEventListener2 implements Listener {
 
 							spawner.add(sbt);
 							break;
+						case TRAPPED_CHEST:
 						case CHEST:
-							Chest chest = (Chest)block.getState();
+
+							Chest chest = (Chest) block.getState();
 							ChestBlockType cbt = new ChestBlockType();
-							cbt.x = gx ; 
-							cbt.y = y ;
+							cbt.x = gx;
+							cbt.y = y;
 							cbt.z = gz;
-						
+
 							Inventory inv = chest.getInventory();
-							for (int lop = 0 ; lop < inv.getSize() ; lop ++ ) {
+							for (int lop = 0; lop < inv.getSize(); lop++) {
 								ItemStack itm = inv.getItem(lop);
 								if (itm == null) {
 									continue;
 								}
-								
+
 								cbt.item.add(itm.clone());
 							}
-							
+
+							chester.add(cbt);
+							break;
+
+						case DROPPER:
+
+							Dropper dropper = (Dropper) block.getState();
+							cbt = new ChestBlockType();
+							cbt.x = gx;
+							cbt.y = y;
+							cbt.z = gz;
+
+							inv = dropper.getInventory();
+							for (int lop = 0; lop < inv.getSize(); lop++) {
+								ItemStack itm = inv.getItem(lop);
+								if (itm == null) {
+									continue;
+								}
+
+								cbt.item.add(itm.clone());
+							}
+
+							chester.add(cbt);
+							break;
+						case DISPENSER:
+
+							Dispenser dispenser = (Dispenser) block.getState();
+							cbt = new ChestBlockType();
+							cbt.x = gx;
+							cbt.y = y;
+							cbt.z = gz;
+
+							inv = dispenser.getInventory();
+							for (int lop = 0; lop < inv.getSize(); lop++) {
+								ItemStack itm = inv.getItem(lop);
+								if (itm == null) {
+									continue;
+								}
+
+								cbt.item.add(itm.clone());
+							}
+
+							chester.add(cbt);
+							break;
+
+						case FURNACE:
+
+							Furnace furnace = (Furnace) block.getState();
+							cbt = new ChestBlockType();
+							cbt.x = gx;
+							cbt.y = y;
+							cbt.z = gz;
+
+							inv = furnace.getInventory();
+							for (int lop = 0; lop < inv.getSize(); lop++) {
+								ItemStack itm = inv.getItem(lop);
+								if (itm == null) {
+									continue;
+								}
+
+								cbt.item.add(itm.clone());
+							}
+
+							chester.add(cbt);
+							break;
+						case HOPPER:
+
+							Hopper hopper = (Hopper) block.getState();
+							cbt = new ChestBlockType();
+							cbt.x = gx;
+							cbt.y = y;
+							cbt.z = gz;
+
+							inv = hopper.getInventory();
+							for (int lop = 0; lop < inv.getSize(); lop++) {
+								ItemStack itm = inv.getItem(lop);
+								if (itm == null) {
+									continue;
+								}
+
+								cbt.item.add(itm.clone());
+							}
+
 							chester.add(cbt);
 							break;
 						}
+						
 
 						block.setType(Material.AIR);
 					}
@@ -211,7 +299,7 @@ public class DigEventListener2 implements Listener {
 
 						block.setTypeIdAndData(bid[gx][y][gz], bdata[gx][y][gz], false);
 
-						switch (block.getType() ) {
+						switch (block.getType()) {
 						case MOB_SPAWNER:
 							// load spawner
 							for (int lop = 0; lop < spawner.size(); lop++) {
@@ -228,15 +316,80 @@ public class DigEventListener2 implements Listener {
 								ChestBlockType tmp = chester.get(lop);
 								if (tmp.x == gx && tmp.y == y && tmp.z == gz) {
 									Chest cc = (Chest) block.getState();
-									
-									for (int lop2 = 0 ; lop2 < tmp.item.size()  ; lop2 ++ ) {
+
+									for (int lop2 = 0; lop2 < tmp.item.size(); lop2++) {
 										cc.getInventory().addItem(tmp.item.get(lop2));
 									}
-									
-									
+
 									cc.update(true);
 								}
 							}
+							break;
+							
+						case DISPENSER:
+							for (int lop = 0; lop < chester.size(); lop++) {
+								ChestBlockType tmp = chester.get(lop);
+								if (tmp.x == gx && tmp.y == y && tmp.z == gz) {
+									Dispenser cc = (Dispenser) block.getState();
+
+									for (int lop2 = 0; lop2 < tmp.item.size(); lop2++) {
+										cc.getInventory().addItem(tmp.item.get(lop2));
+									}
+
+									cc.update(true);
+								}
+							}
+							break;
+							
+							
+						case DROPPER:
+							for (int lop = 0; lop < chester.size(); lop++) {
+								ChestBlockType tmp = chester.get(lop);
+								if (tmp.x == gx && tmp.y == y && tmp.z == gz) {
+									Dropper cc = (Dropper) block.getState();
+
+									for (int lop2 = 0; lop2 < tmp.item.size(); lop2++) {
+										cc.getInventory().addItem(tmp.item.get(lop2));
+									}
+
+									cc.update(true);
+								}
+							}
+							break;
+						case FURNACE:
+							for (int lop = 0; lop < chester.size(); lop++) {
+								ChestBlockType tmp = chester.get(lop);
+								if (tmp.x == gx && tmp.y == y && tmp.z == gz) {
+									Furnace cc = (Furnace) block.getState();
+
+									for (int lop2 = 0; lop2 < tmp.item.size(); lop2++) {
+										cc.getInventory().addItem(tmp.item.get(lop2));
+									}
+
+									cc.update(true);
+								}
+							}
+							break;
+							
+							
+						case HOPPER:
+							for (int lop = 0; lop < chester.size(); lop++) {
+								ChestBlockType tmp = chester.get(lop);
+								if (tmp.x == gx && tmp.y == y && tmp.z == gz) {
+									Hopper cc = (Hopper) block.getState();
+
+									for (int lop2 = 0; lop2 < tmp.item.size(); lop2++) {
+										cc.getInventory().addItem(tmp.item.get(lop2));
+									}
+
+									cc.update(true);
+								}
+							}
+							break;
+							
+							
+							
+								
 						}
 
 					}
