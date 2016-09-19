@@ -1548,9 +1548,6 @@ public class dewset extends dewset_interface {
 			player.sendMessage(dprint.r.color(tr.gettr("dewbuy_before_add_sign_world") + rsWorld.size()
 					+ tr.gettr("sign_max") + (worldid.rs.size())));
 
-			player.sendMessage(dprint.r.color(tr.gettr("dewbuy_after_add_sign_world") + rsWorld.size()
-					+ tr.gettr("sign_max") + (worldid.rs.size())));
-
 			RSData newrs = new RSData();
 			newrs.p = new String[FWMaxPlayer];
 
@@ -1568,7 +1565,11 @@ public class dewset extends dewset_interface {
 				newrs.p[gggg] = "null";
 			}
 
-			savesignfile(-1, worldid);
+			worldid.rs.add(newrs);
+			player.sendMessage(dprint.r.color(tr.gettr("dewbuy_after_add_sign_world") + rsWorld.size()
+					+ tr.gettr("sign_max") + (worldid.rs.size())));
+
+			savesignfile(worldid);
 			loadsignfile();
 			dprint.r.printAll("ptdew&dewdd : " + player.getName() + " " + tr.gettr("buy") + tr.gettr(tr.gettr("done")));
 			isok = true;
@@ -1629,11 +1630,17 @@ public class dewset extends dewset_interface {
 				return;
 			}
 
-			dprint.r.printAll("ptdew&dewdd : '" + player.getName() + "'" + tr.gettr("starting") + " dewbuydelete "
+			dprint.r.printA("ptdew&dewdd : '" + player.getName() + "'" + tr.gettr("starting") + " dewbuydelete "
 					+ player.getItemInHand().getTypeId() + ":" + player.getItemInHand().getData());
 
-			savesignfile(getid, worldid);
+			dprint.r.printA("before size " + worldid.rs.size());
+			worldid.rs.remove(getid);
+			dprint.r.printA("after size " + worldid.rs.size());
+
+			savesignfile(worldid);
+			dprint.r.printA("save.. size " + worldid.rs.size());
 			loadsignfile();
+			dprint.r.printA("reload size " + worldid.rs.size());
 
 			dprint.r.printAll("ptdew&dewdd : " + player.getName() + " dewbuydelete " + tr.gettr(tr.gettr("done")));
 		}
@@ -1700,16 +1707,16 @@ public class dewset extends dewset_interface {
 					e.printStackTrace();
 				}
 
-				RSData newrs = new RSData();
-				newrs.p = new String[FWMaxPlayer];
+				tmprs.p = new String[FWMaxPlayer];
 
 				for (int g = 0; g < 20; g++) {
-					newrs.p[g] = "null";
+					tmprs.p[g] = "null";
 				}
 
-				newrs.p[0] = player.getName();
+				tmprs.p[0] = player.getName();
+
 				dprint.r.printAll("ptdew&dewdd : " + player.getName() + " dewbuyzone " + tr.gettr("complete") + "...");
-				savesignfile(-1, worldid);
+				savesignfile(worldid);
 
 			} else {
 				player.sendMessage(dprint.r.color("ptdew&dewdd : " + tr.gettr("dewbuyzone_thiszone_not_for_sell")));
@@ -4807,12 +4814,21 @@ public class dewset extends dewset_interface {
 	public static int getProtectid(Block block, RSWorld worldid) {
 		// must check world
 
-		for (int lop = 0; lop < worldid.rs.size(); lop++) {
-			RSData rs = worldid.rs.get(lop);
+		for (int every = 0; every <= 1; every++) {
 
-			if (block.getX() >= (rs.x1) && block.getX() <= (rs.x2) && block.getY() >= (rs.y1) && block.getY() <= (rs.y2)
-					&& block.getZ() >= (rs.z1) && block.getZ() <= (rs.z2)) {
-				return lop;
+			for (int lop = 0; lop < worldid.rs.size(); lop++) {
+				RSData rs = worldid.rs.get(lop);
+				if (rs.p[0].equalsIgnoreCase(Constant_Protect.flag_everyone)) {
+					if (every == 0) {
+						continue;
+					}
+				}
+				
+
+				if (block.getX() >= (rs.x1) && block.getX() <= (rs.x2) && block.getY() >= (rs.y1)
+						&& block.getY() <= (rs.y2) && block.getZ() >= (rs.z1) && block.getZ() <= (rs.z2)) {
+					return lop;
+				}
 			}
 		}
 
@@ -5218,7 +5234,7 @@ public class dewset extends dewset_interface {
 					if (player.hasPermission(pmainoveride) == true) {
 						logic1 = true;
 					}
-				return true;
+				return logic1;
 
 			} // right click or not
 
@@ -5343,13 +5359,13 @@ public class dewset extends dewset_interface {
 		Block block = player.getLocation().getBlock();
 		int getid = dewset.getProtectid(block, worldid);
 		RSData tmprs;
-		
+
 		if (getid == -1) {
 			tmprs = null;
 		} else {
 			tmprs = worldid.rs.get(getid);
 		}
-		
+
 		int meInSlot = 0;
 		if (getid == -1) {
 			meInSlot = -1;
@@ -6265,11 +6281,11 @@ public class dewset extends dewset_interface {
 
 	}
 
-	public void savesignfile(int exceptint, RSWorld worldid) {
+	public void savesignfile(RSWorld worldid) {
 		File dir = new File(folder_name);
 		dir.mkdir();
 
-		String filena = folder_name + File.separator + worldid.worldName;
+		String filena = folder_name + File.separator + getSignWorldFleName(worldid);
 		File fff = new File(filena);
 
 		FileWriter fwriter;
@@ -6283,11 +6299,6 @@ public class dewset extends dewset_interface {
 			// System.getProperty("line.separator"));
 
 			for (int loopSign = 0; loopSign < worldid.rs.size(); loopSign++) {
-
-				if (exceptint > -1)
-					if (loopSign == exceptint) {
-						continue;
-					}
 
 				// System.getProperty("line.separator")
 				RSData tmprs = worldid.rs.get(loopSign);
@@ -6308,7 +6319,7 @@ public class dewset extends dewset_interface {
 					}
 
 				fwriter.write(System.getProperty("line.separator"));
-
+				fwriter.flush();
 				// dprint.r.printC ("ptdew&dewdd : Saved y= " + y );
 
 			}

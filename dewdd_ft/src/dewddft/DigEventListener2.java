@@ -937,7 +937,7 @@ public class DigEventListener2 implements Listener {
 					}
 
 					boolean pro = dewset.cando(p.getLocation().getBlock(), p.getPlayer(), "build");
-					if (pro == true) {
+					if (pro == false) {
 						p.sendMessage(tr.gettr("not_your_zone"));
 						return;
 					}
@@ -1002,7 +1002,7 @@ public class DigEventListener2 implements Listener {
 					}
 
 					boolean pro = dewset.cando(p.getLocation().getBlock(), p.getPlayer(), "build");
-					if (pro == true) {
+					if (pro == false) {
 						p.sendMessage(tr.gettr("not_your_zone"));
 						return;
 					}
