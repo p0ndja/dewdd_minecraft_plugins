@@ -60,7 +60,7 @@ public class Core {
 
 		boolean usedItNeedList[] = new boolean[Main.co.allBlockInGameAsList.size()];
 		boolean usedItRewardList[] = new boolean[Main.co.allBlockInGameAsList.size()];
-		int tmpUseItNeedUniqueCount = 0;
+		int tmpUsedItNeedUniqueCount = 0;
 		int tmpUsedItRewardUniqueCount = 0;
 		
 		for (int i = 0; i < Main.co.allBlockInGameAsList.size(); i++) {
@@ -203,7 +203,7 @@ public class Core {
 				// it's mean LV break drop place MODE
 
 				// add lv need item list
-				for (int i = 0; i < maxItemForCompleteMission && curChro < dnaSize && tmpUseItNeedUniqueCount < allBlockInGameAsList.size(); i++) {
+				for (int i = 0; i < maxItemForCompleteMission && curChro < dnaSize && tmpUsedItNeedUniqueCount < allBlockInGameAsList.size(); i++) {
 					double tmpReadChro = chromosome[curChro];
 					if (i < minItemForCompleteMission) {
 						tmpReadChro = Math.abs(tmpReadChro);
@@ -236,7 +236,13 @@ public class Core {
 					x.needAmount[x.needSize] = (int) (tmpAmountInt);
 
 					x.needSize++;
-					tmpUseItNeedUniqueCount++;
+					tmpUsedItNeedUniqueCount++;
+					if (tmpUsedItNeedUniqueCount >= allBlockInGameAsList.size()) {
+						tmpUsedItNeedUniqueCount = 0;
+						for (int kk = 0; kk < allBlockInGameAsList.size() ; kk++ ){
+							usedItNeedList[kk] = false;
+						}
+					}
 				}
 
 				// add reward part
@@ -277,6 +283,9 @@ public class Core {
 					tmpUsedItRewardUniqueCount++;
 					if (tmpUsedItRewardUniqueCount >= allBlockInGameAsList.size()) {
 						tmpUsedItRewardUniqueCount = 0;
+						for (int kk = 0; kk < allBlockInGameAsList.size() ; kk++ ){
+							usedItRewardList[kk] = false;
+						}
 					}
 				}
 
