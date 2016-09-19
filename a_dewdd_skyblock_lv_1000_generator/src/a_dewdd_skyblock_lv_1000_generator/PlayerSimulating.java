@@ -26,7 +26,7 @@ public class PlayerSimulating {
 		String glowInGrass[] = new String[5];
 		glowInGrass[0] = "WHEAT";
 		glowInGrass[1] = "PUMPKIN";
-		glowInGrass[2] = "POTATO";
+		glowInGrass[2] = "POTATO_ITEM";
 		glowInGrass[3] = "CARROT_ITEM";
 		glowInGrass[4] = "MELON";
 
@@ -75,16 +75,16 @@ public class PlayerSimulating {
 						Farm tmpFarm = farmMap.get(lowestString);
 						if (tmpFarm != null) {
 
-							tmpFarm.itemId = lowestString;
+							tmpFarm.itemIdData = lowestString;
 							tmpFarm.countTick[tmpFarm.sizeFarm] = 0;
 							tmpFarm.sizeFarm++;
 
 							plant.curAmount--;
 							grass.curAmount--;
 
-							curSecond += 5;
+							
 
-							d.pl("buy : " + tmpFarm.itemId + " , sizeFarm " + tmpFarm.sizeFarm);
+							d.pl(curSecond +  " > buy : " + tmpFarm.itemIdData + " , sizeFarm " + tmpFarm.sizeFarm);
 
 						}
 					}
@@ -140,16 +140,16 @@ public class PlayerSimulating {
 						Farm tmpFarm = farmMap.get(lowestString);
 						if (tmpFarm != null) {
 
-							tmpFarm.itemId = lowestString;
+							tmpFarm.itemIdData = lowestString;
 							tmpFarm.countTick[tmpFarm.sizeFarm] = 0;
 							tmpFarm.sizeFarm++;
 
 							plant.curAmount--;
 							sand.curAmount--;
 
-							curSecond += 6;
+						
 
-							d.pl("buy : " + tmpFarm.itemId + " , sizeFarm " + tmpFarm.sizeFarm);
+							d.pl(curSecond + " > buy : " + tmpFarm.itemIdData + " , sizeFarm " + tmpFarm.sizeFarm);
 
 						}
 					}
@@ -209,16 +209,16 @@ public class PlayerSimulating {
 						Farm tmpFarm = farmMap.get(lowestString);
 						if (tmpFarm != null) {
 
-							tmpFarm.itemId = lowestString;
+							tmpFarm.itemIdData = lowestString;
 							tmpFarm.countTick[tmpFarm.sizeFarm] = 0;
 							tmpFarm.sizeFarm++;
 
 							plant.curAmount--;
 							darkBlock.curAmount--;
 
-							curSecond += 6;
+					
 
-							d.pl("buy : " + tmpFarm.itemId + " , sizeFarm " + tmpFarm.sizeFarm);
+							d.pl(curSecond + " > buy : " + tmpFarm.itemIdData + " , sizeFarm " + tmpFarm.sizeFarm);
 
 						}
 					}
@@ -279,16 +279,16 @@ public class PlayerSimulating {
 								Farm tmpFarm = farmMap.get(lowestString);
 								if (tmpFarm != null) {
 
-									tmpFarm.itemId = lowestString;
+									tmpFarm.itemIdData = lowestString;
 									tmpFarm.countTick[tmpFarm.sizeFarm] = 0;
 									tmpFarm.sizeFarm++;
 
 									plant.curAmount--;
 									wartBlock.curAmount--;
 
-									curSecond += 6;
+									
 
-									d.pl("buy : " + tmpFarm.itemId + " , sizeFarm " + tmpFarm.sizeFarm);
+									d.pl(curSecond + " > buy : " + tmpFarm.itemIdData + " , sizeFarm " + tmpFarm.sizeFarm);
 
 								}
 							}
@@ -309,14 +309,14 @@ public class PlayerSimulating {
 		tmpAdd[3] = "CACTUS";
 		tmpAdd[4] = "SUGAR_CANE";
 		tmpAdd[5] = "PUMPKIN";
-		tmpAdd[6] = "POTATO";
+		tmpAdd[6] = "POTATO_ITEM";
 		tmpAdd[7] = "CARROT_ITEM";
 		tmpAdd[8] = "MELON";
 		tmpAdd[9] = "NETHER_STALK";
 
 		for (int i = 0; i < tmpAdd.length; i++) {
 			Farm x = new Farm();
-			x.itemId = tmpAdd[i] + ":0";
+			x.itemIdData = tmpAdd[i] + ":0";
 			x.countTick[x.sizeFarm] = 0;
 
 			x.sizeFarm++;
@@ -350,7 +350,7 @@ public class PlayerSimulating {
 		allMyInventory.clear();
 
 		for (int i = 0; i < Main.co.allBlockInGame.size(); i++) {
-			AllBlockInGameType x = Main.co.allBlockInGame.get(i).copyIt();
+			AllBlockInGameType x = Main.co.allBlockInGameAsList.get(i).copyIt();
 			x.curAmount = 0;
 
 			allMyInventory.put(x.theName + ":" + x.data, x);
@@ -365,7 +365,7 @@ public class PlayerSimulating {
 class Farm {
 
 	// 1 block 1 plant
-	public String itemId = ""; // SEEDS:0 , RED_MUSHROOM:0 , BROWN_MUSHROOM ,
+	public String itemIdData = ""; // SEEDS:0 , RED_MUSHROOM:0 , BROWN_MUSHROOM ,
 								// CACTUS ,
 								// SUGAR_CANE , PUMPKIN , POTATO , WHEAT ,
 								// CARROT_ITEM , MELON , NETHER_STALK

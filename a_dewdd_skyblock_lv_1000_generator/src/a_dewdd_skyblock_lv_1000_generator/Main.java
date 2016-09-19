@@ -116,8 +116,39 @@ class HybridOverride extends Hybrid {
 		
 		// grass , dirt
 		
-		ps.letPlantAllThingAsItCan();
-
+		while ( ps.curSecond <= Core.MaxTickToCompleteAllLV) {
+			ps.letPlantAllThingAsItCan();
+			
+			// glow all plant
+			
+			for (Farm f : ps.farmMap.values()) {
+				for (int i = 0 ; i < f.sizeFarm ; i ++ ){
+					f.countTick[i] ++;
+					
+					SellableType tmpTimeToGlow =  Main.co.sell.get(f.itemIdData);
+					if (tmpTimeToGlow == null) {
+						d.pl("ERROR > fitness   tmpTimeToGlow == null ");
+						//Exception e = new Exception();
+						return 0;
+						
+						
+					}
+					else {
+						if (f.countTick[i] >= tmpTimeToGlow.timeToGet) {
+							// now can be harvest
+							f.countTick[i] = 0;
+							ps.allMyInventory.get(f.itemIdData).curAmount ++;
+							
+							
+						}
+					}
+					
+					
+				}
+			}
+		
+			ps.curSecond ++;
+		}
 		return 0;
 
 	}
@@ -135,28 +166,28 @@ public class Main {
 		co = new Core();
 
 		co.loadSellableFile();
-		LinkedList<SellableType> sorted = co.sortSell(co.sell);
+		/*LinkedList<SellableType> sorted = co.sortSell(co.sell);
 
 		d.pl("");
 		d.pl("");
 		d.pl("sellable max " + sorted.size());
 
 		for (int i = 0; i < sorted.size(); i++) {
-			/*
+			
 			 * d.pl(sorted.get(i).theName +
 			 * 
 			 * ":" + sorted.get(i).data + ":" + sorted.get(i).maxStack + ":" +
 			 * co.convertTimeToString(sorted.get(i).timeToGet));
-			 */
+			 
 
-		}
+		}*/
 
 		d.pl("");
 		d.pl("*******************");
 		d.pl("");
 
 		co.loadMissionBlockFile();
-		LinkedList<AllBlockInGameType> mis = co.allBlockInGame;
+		LinkedList<AllBlockInGameType> mis = co.allBlockInGameAsList;
 
 		d.pl("*** mission size = " + mis.size());
 
