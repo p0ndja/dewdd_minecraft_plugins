@@ -1,6 +1,6 @@
 package a_dewdd_skyblock_lv_1000_generator;
 
-public class MissionType {
+public class AllBlockInGameType {
 	public String theName ;
 	public byte data;
 	public int maxStack;
@@ -9,8 +9,8 @@ public class MissionType {
 	public boolean useIt = false;
 	
 	
-	public MissionType copyIt() {
-		MissionType abc = new MissionType();
+	public AllBlockInGameType copyIt() {
+		AllBlockInGameType abc = new AllBlockInGameType();
 		abc.theName = this.theName;
 		abc.data   =  this.data;
 		abc.maxStack = this.maxStack;

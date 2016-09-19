@@ -12,7 +12,7 @@ public class Core {
 	public static String missionPath = File.separator + "ramdisk" + File.separator + "missionblock.txt";
 
 	LinkedList<SellableType> sell = new LinkedList<SellableType>();
-	LinkedList<MissionType> mission = new LinkedList<MissionType>();
+	LinkedList<AllBlockInGameType> mission = new LinkedList<AllBlockInGameType>();
 
 	public static int dnaSize = 4000;
 
@@ -459,7 +459,7 @@ public class Core {
 				m = strLine.split(":");
 				// Print the content on the console
 
-				MissionType miss = new MissionType();
+				AllBlockInGameType miss = new AllBlockInGameType();
 				miss.theName = m[0];
 				miss.data = Byte.parseByte(m[1]);
 				miss.maxStack = Integer.parseInt(m[2]);
