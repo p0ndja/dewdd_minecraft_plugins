@@ -10,7 +10,6 @@ import java.util.Random;
 
 import ga_optimization_api.Chromosome;
 import ga_optimization_api.Hybrid;
-import ga_optimization_api.HybridMultithreading;
 
 public class HybridOverride extends Hybrid{
 

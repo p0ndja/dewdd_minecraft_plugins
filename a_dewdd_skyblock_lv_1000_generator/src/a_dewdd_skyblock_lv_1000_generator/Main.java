@@ -53,7 +53,12 @@ public class Main {
 		// set chromosome here
 
 		LinkedList<Chromosome> seo = hy.loadAndSortTheBestFromRamdisk();
-
+		
+		if (args.length == 0) {
+			args = new String[2];
+			args[0] = "evu";
+			args[1] = "100";
+		}
 		
 			if (args[0].equalsIgnoreCase("evu")) {
 				
