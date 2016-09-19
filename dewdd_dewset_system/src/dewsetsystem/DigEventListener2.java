@@ -6,11 +6,13 @@
 package dewsetsystem;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Random;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -21,6 +23,7 @@ import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.potion.PotionEffectType;
 
@@ -28,7 +31,6 @@ import dewddflower.dewset;
 import dewddflower.dewset_interface;
 import dewddtran.tr;
 import li.IDDataType;
-import net.minecraft.server.v1_9_R1.Chunk;
 
 public class DigEventListener2 implements Listener {
 
@@ -820,10 +822,47 @@ public class DigEventListener2 implements Listener {
 		public void run() {
 
 			if (dew.cando_all(block, player, "break")) {
-			
+				
+				
+
 				dew.saveHistoryBreaking(dew.getCoreProtect(), player, block, block);
-					block.breakNaturally();
+
+				ItemStack item = player.getItemInHand();
+
+				player.getItemInHand().setDurability((short) (player.getItemInHand().getDurability() - 1));
+
+			/*	if (item.getType() == Material.SHEARS) {
+					ItemStack tmp  = new ItemStack(block.getType());
+					tmp.setAmount(1);
+					tmp.getData().setData(block.getData());
 					
+					block.getWorld().dropItem(block.getLocation(), 
+							tmp);
+				
+					block.setType(Material.AIR);
+					return;
+				}
+				*/
+				
+				if (item.getEnchantmentLevel(Enchantment.SILK_TOUCH) > 0) {
+					
+					//item.addEnchantment(Enchantment.SILK_TOUCH, 1);
+					/*Collection<ItemStack> ee =block.getDrops(item);
+					for (ItemStack ito : ee) {
+						block.getWorld().dropItem(block.getLocation(), ito);
+					}*/
+					block.getWorld().dropItem(block.getLocation(), 
+							new ItemStack(block.getType(), 1,(short)0, block.getData()));
+				
+					block.setType(Material.AIR);
+					
+					return;
+				}
+				else {
+					block.breakNaturally();
+					return;
+				}
+
 			}
 
 		}
@@ -857,6 +896,10 @@ public class DigEventListener2 implements Listener {
 
 					this.dew.dewsetLightAround(player, item);
 				}
+				
+				/*if (block.getType() == Material.LEAVES || block.getType() == Material.LEAVES_2) {
+					return;
+				}*/
 
 				if (player.hasPermission(dewset.pmainfasterbreak)) {
 
@@ -879,15 +922,13 @@ public class DigEventListener2 implements Listener {
 					case DIAMOND_PICKAXE:
 					case DIAMOND_SPADE:
 					case DIAMOND_AXE:
-					case SHEARS:
-					
 
 						FasterBreak fb = new FasterBreak(block, player);
 						Thread thh = new Thread(fb);
 						Bukkit.getScheduler().scheduleSyncDelayedTask(ac, thh);
 						player.addPotionEffect(PotionEffectType.FAST_DIGGING.createEffect(10, 100));
 						e.setCancelled(true);
-						
+
 						break;
 
 					}

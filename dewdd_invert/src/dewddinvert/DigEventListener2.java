@@ -13,6 +13,7 @@ import org.bukkit.Chunk;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
+import org.bukkit.block.Chest;
 import org.bukkit.block.CreatureSpawner;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -25,6 +26,8 @@ import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
+import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import dewddtran.tr;
@@ -56,12 +59,21 @@ public class DigEventListener2 implements Listener {
 		return false;
 
 	}
-	
+
 	class SpawnerBlockType {
-		public CreatureSpawner abc ;
+		public CreatureSpawner abc;
 		public int x;
-		public int y ; 
+		public int y;
 		public int z;
+	}
+
+	class ChestBlockType {
+		public int x;
+		public int y;
+		public int z;
+
+		public LinkedList<ItemStack> item = new LinkedList<ItemStack>();
+
 	}
 
 	class CleanThisChunk_c implements Runnable {
@@ -98,26 +110,22 @@ public class DigEventListener2 implements Listener {
 			dprint.r.printC("invert " + chunk.getX() * 16 + "," + chunk.getZ() * 16);
 
 			int bid[][][] = new int[16][256][16];
-			/*for (int i = 0   ; i < 16 ; i ++ ) {
-				bid[i] = new int[256][];
-				for (int j = 0 ; j < 256 ; j++ ) {
-					bid[i][j] = new int[16];
-				}
-			}*/
-			
-			
+			/*
+			 * for (int i = 0 ; i < 16 ; i ++ ) { bid[i] = new int[256][]; for
+			 * (int j = 0 ; j < 256 ; j++ ) { bid[i][j] = new int[16]; } }
+			 */
+
 			byte bdata[][][] = new byte[16][256][16];
+
+			LinkedList<SpawnerBlockType> spawner = new LinkedList<SpawnerBlockType>();
+			LinkedList<ChestBlockType> chester = new LinkedList<ChestBlockType>();
 			
-			
-			LinkedList<SpawnerBlockType> spawner  = new LinkedList<SpawnerBlockType>();
-			
-			
-			/*for (int i = 0   ; i < 16 ; i ++ ) {
-				bdata[i] = new byte[256][];
-				for (int j = 0 ; j < 256 ; j++ ) {
-					bdata[i][j] = new byte[16];
-				}
-			}*/
+
+			/*
+			 * for (int i = 0 ; i < 16 ; i ++ ) { bdata[i] = new byte[256][];
+			 * for (int j = 0 ; j < 256 ; j++ ) { bdata[i][j] = new byte[16]; }
+			 * }
+			 */
 			for (int y = 0; y < 256; y++) {
 
 				// printC("cleaning... : " + (chunk.getX() *16) + "," +
@@ -125,41 +133,60 @@ public class DigEventListener2 implements Listener {
 				// +" > " + chunkdel_max);
 				// printA("cleaning... : " + (chunk.getX() *16) + "," +
 				// y + "," + (chunk.getZ() *16));
-				
+
 				int gz = -1;
-				int gx = -1 ;
+				int gx = -1;
 
 				for (int z = ((chunk.getZ() * 16)); z <= ((chunk.getZ() * 16) + 15); z++) {
-					gz ++;
+					gz++;
 					gx = -1;
 					for (int x = ((chunk.getX() * 16)); x <= ((chunk.getX() * 16) + 15); x++) {
-						gx ++;
-					//	dprint.r.printAll(gx + "," + gz);
-						
+						gx++;
+						// dprint.r.printAll(gx + "," + gz);
 
 						block = world.getBlockAt(x, y, z);
-						
-						bid[gx][y][gz]  = block.getTypeId();
+
+						bid[gx][y][gz] = block.getTypeId();
 						bdata[gx][y][gz] = block.getData();
-						
-						if (block.getType() == Material.MOB_SPAWNER) {
+
+						switch (block.getType()) {
+						case MOB_SPAWNER:
 							SpawnerBlockType sbt = new SpawnerBlockType();
 							sbt.x = gx;
 							sbt.y = y;
-							sbt.z  = gz;
-							CreatureSpawner cc = (CreatureSpawner)block.getState();
+							sbt.z = gz;
+							CreatureSpawner cc = (CreatureSpawner) block.getState();
 							sbt.abc = cc;
-							
+
 							spawner.add(sbt);
-							
-						}
+							break;
+						case CHEST:
+							Chest chest = (Chest)block.getState();
+							ChestBlockType cbt = new ChestBlockType();
+							cbt.x = gx ; 
+							cbt.y = y ;
+							cbt.z = gz;
 						
+							Inventory inv = chest.getInventory();
+							for (int lop = 0 ; lop < inv.getSize() ; lop ++ ) {
+								ItemStack itm = inv.getItem(lop);
+								if (itm == null) {
+									continue;
+								}
+								
+								cbt.item.add(itm.clone());
+							}
+							
+							chester.add(cbt);
+							break;
+						}
+
 						block.setType(Material.AIR);
 					}
 				}
 
 			} // time
-			
+
 			int curY = 255;
 			for (int y = 0; y < 256; y++) {
 				curY = 255 - y;
@@ -172,35 +199,50 @@ public class DigEventListener2 implements Listener {
 				int gz = -1;
 				int gx = -1;
 				for (int z = ((chunk.getZ() * 16)); z <= ((chunk.getZ() * 16) + 15); z++) {
-					gz ++ ;
+					gz++;
 					gx = -1;
 					for (int x = ((chunk.getX() * 16)); x <= ((chunk.getX() * 16) + 15); x++) {
-						gx ++;
+						gx++;
 						block = world.getBlockAt(x, curY, z);
-						/*bid[x][y][z]  = block.getTypeId();
-						bdata[x][y][z] = block.getData();*/
-						
+						/*
+						 * bid[x][y][z] = block.getTypeId(); bdata[x][y][z] =
+						 * block.getData();
+						 */
+
 						block.setTypeIdAndData(bid[gx][y][gz], bdata[gx][y][gz], false);
-						
-						if (block.getType() == Material.MOB_SPAWNER) {
+
+						switch (block.getType() ) {
+						case MOB_SPAWNER:
 							// load spawner
-							for (int lop = 0 ; lop < spawner.size() ; lop ++ ) {
+							for (int lop = 0; lop < spawner.size(); lop++) {
 								SpawnerBlockType tmp = spawner.get(lop);
 								if (tmp.x == gx && tmp.y == y && tmp.z == gz) {
-									CreatureSpawner cc = (CreatureSpawner)block.getState();
+									CreatureSpawner cc = (CreatureSpawner) block.getState();
 									cc.setSpawnedType(tmp.abc.getSpawnedType());
 									cc.update(true);
 								}
 							}
-							
+							break;
+						case CHEST:
+							for (int lop = 0; lop < chester.size(); lop++) {
+								ChestBlockType tmp = chester.get(lop);
+								if (tmp.x == gx && tmp.y == y && tmp.z == gz) {
+									Chest cc = (Chest) block.getState();
+									
+									for (int lop2 = 0 ; lop2 < tmp.item.size()  ; lop2 ++ ) {
+										cc.getInventory().addItem(tmp.item.get(lop2));
+									}
+									
+									
+									cc.update(true);
+								}
+							}
 						}
-						
+
 					}
 				}
 
 			} // time
-			
-			
 
 			// add to new chunk
 			block2 = world.getBlockAt(chunk.getX() * 16, 253, chunk.getZ() * 16);
@@ -527,7 +569,7 @@ public class DigEventListener2 implements Listener {
 			e.setCancelled(true);
 			return;
 		}
-		
+
 		if (isCleanedChunk(e.getPlayer().getLocation().getChunk()) == true) {
 			return;
 		}
