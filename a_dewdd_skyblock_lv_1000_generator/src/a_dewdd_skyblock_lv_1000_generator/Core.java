@@ -251,8 +251,13 @@ public class Core {
 			if (fou == true) {
 				continue;
 			} else {
+				
 				d.pl("count item in shop " + countItemInShop + "/" + allBlockInGameAsList.size());
 				d.pl("item not found in shop");
+				
+				Exception e = new Exception("error item lost");
+				e.printStackTrace();
+				System.exit(0);
 			}
 
 		}
@@ -264,6 +269,7 @@ public class Core {
 		ParameterRandomUniqueItem rUnique = new ParameterRandomUniqueItem();
 		decodeRandomUniqueItem(rUnique);
 
+		
 		ParameterRandomAmountItem amountUniqueItemPerLV = new ParameterRandomAmountItem();
 		decodeRandomSumAmount417ForAllShop(amountUniqueItemPerLV);
 
@@ -280,8 +286,8 @@ public class Core {
 			l.needIndex = new int[amountUniqueItemPerLV.amount[curLV]];
 			l.needSize = 0;
 
-			d.pl("decode lv need " + curLV + " = " + amountUniqueItemPerLV.amount[curLV] + " cur chro " + curChro
-					+ " , cur " + cur);
+		/*	d.pl("decode lv need " + curLV + " = " + amountUniqueItemPerLV.amount[curLV] + " cur chro " + curChro
+					+ " , cur " + cur);*/
 
 			// add all item need it current level
 			for (int j = 0; j < amountUniqueItemPerLV.amount[curLV] && cur < allBlockInGameAsList.size(); j++) {
@@ -329,8 +335,8 @@ public class Core {
 			e.rewardAmount = new int[amountReward];
 			e.rewardIndex = new int[amountReward];
 
-			d.pl("decode lv reward " + i + " = " + amountReward + " cur chro " + curChro);
-
+		/*	d.pl("decode lv reward " + i + " = " + amountReward + " cur chro " + curChro);
+*/
 			for (int j = 0; j < amountReward; j++) {
 				double g = decodeRandomGive01_() * allBlockInGameAsList.size();
 
@@ -365,7 +371,7 @@ public class Core {
 
 		int countItem = 0;
 		while (countItem < allBlockInGameAsList.size()) {
-			d.pl("countItem , " + countItem + " , curChro " + curChro);
+			//d.pl("countItem , " + countItem + " , curChro " + curChro);
 
 			double max = (maxShopSize - minShopSize); // 1 / 7
 
