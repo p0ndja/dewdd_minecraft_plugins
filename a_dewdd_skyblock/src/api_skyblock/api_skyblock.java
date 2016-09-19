@@ -61,7 +61,7 @@ public class api_skyblock {
 			int y = 0;
 			int z = 0;
 			
-			int searchRadius = 300;
+			int searchRadius = 1;
 			int searchCount = 0;
 			
 
@@ -69,33 +69,35 @@ public class api_skyblock {
 				searchCount ++;
 				
 				if (searchCount > 50) {
-					searchRadius += 50;
+					searchRadius += 1;
 				}
 				
 				// random x y z this is not near old rs list
 				buildcomplete = true;
 
-				x = rnd.nextInt(20) * searchRadius * (rnd.nextInt(1) == 1 ? 1 : -1);
-				z = rnd.nextInt(20) * searchRadius * (rnd.nextInt(1) == 1 ? 1 : -1);
+				x = rnd.nextInt(searchRadius) * 300 * (rnd.nextInt(1) == 1 ? 1 : -1);
+				z = rnd.nextInt(searchRadius) * 300 * (rnd.nextInt(1) == 1 ? 1 : -1);
 				y = rnd.nextInt(200) + 50;
+				
+				dprint.r.printAll("searching..." + x + "," + y + "," + z);
 
 				boolean checkrs = true;
 
 				for (int lop = 0; lop < rsMax; lop++) {
 					if (rs[lop].x == x && rs[lop].z == z) {
-
+						dprint.r.printAll(">>> owner " + rs[lop].p[0]);
 						checkrs = false;
 						break;
 					}
 				}
 
-				if (checkrs == true) { // check top and down y section // I
-
-					for (int i = 0; i < 256; i++) {
-
-						if (player.getWorld().getBlockAt(x, i, z).getType() != Material.AIR) {
+				
+				if (checkrs == true) {
+					for (int i = 1 ; i < 200 ; i++ ) {
+						
+						Block bd = player.getWorld().getBlockAt(x	, i	, z);
+						if (bd.getType() != Material.AIR) {
 							checkrs = false;
-							break;
 						}
 					}
 				}
