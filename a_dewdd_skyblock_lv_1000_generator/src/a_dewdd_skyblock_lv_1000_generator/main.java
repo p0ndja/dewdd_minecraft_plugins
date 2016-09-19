@@ -32,10 +32,10 @@ public class main {
 		d.pl("sellable max " + sorted.size());
 		
 		for (int i = 0 ; i < sorted.size() ; i++ ){
-			d.pl( sorted.get(i).theName  +
-					
-					":" + sorted.get(i).data + ":" + sorted.get(i).maxStack +
-					":" + co.convertTimeToString( sorted.get(i).timeToGet) ) ;
+		/*	d.pl(sorted.get(i).theName +
+
+			":" + sorted.get(i).data + ":" + sorted.get(i).maxStack + ":"
+					+ co.convertTimeToString(sorted.get(i).timeToGet));*/
 			
 		}
 		
