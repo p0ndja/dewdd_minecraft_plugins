@@ -132,6 +132,17 @@ public class Core {
 
 	public void convertTmpShopPriceAmountOfItemInShopToAllShopType(ParameterShopPriceToAllShopType tmpType) {
 		tmpType.outputAllShop.clear();
+		
+		// count before convert
+		int tmpCount = 0;
+		for (int i = 0; i < tmpType.shopSlotMax; i++) {
+			for (int j = 0 ; j < tmpType.amount[i] ; j ++ ) { 
+				tmpCount ++ ;
+			}
+			
+		}
+		
+		d.pl("before convert tmpCount = " + tmpCount);
 
 		// check is the last shop ( have enough item >= minshop)
 
@@ -140,11 +151,11 @@ public class Core {
 			for (int i = 0; i < tmpType.shopSlotMax - 1; i++) {
 				if (tmpType.amount[i] < maxShopSize) {
 					tmpType.amount[i]++;
-					tmpType.amount[tmpType.shopSlotMax - 1] = 0;
+					tmpType.amount[tmpType.shopSlotMax - 1] --;
 					tmpType.price[tmpType.shopSlotMax - 1] = 0;
-					tmpType.shopSlotMax--;
+					
 
-					if (tmpType.shopSlotMax == 0) {
+					if (tmpType.amount[tmpType.shopSlotMax - 1] == 0) {
 
 						break;
 
@@ -152,8 +163,22 @@ public class Core {
 
 				}
 			}
+			
+			
+			 tmpType.shopSlotMax--;
 
 		}
+		
+		 tmpCount = 0;
+			for (int i = 0; i < tmpType.shopSlotMax; i++) {
+				for (int j = 0 ; j < tmpType.amount[i] ; j ++ ) { 
+					tmpCount ++ ;
+				}
+				
+			}
+			
+			d.pl("shift last shop  tmpCount = " + tmpCount);
+
 
 		// to time convert to All Shop
 
@@ -197,6 +222,7 @@ public class Core {
 
 		// check that all item in shop has all item in game
 
+		d.pl("curItemIndex " + curItemIndex);
 		int countItemInShop = 0;
 
 		for (int i = 0; i < allBlockInGameAsList.size(); i++) {
@@ -204,12 +230,14 @@ public class Core {
 			boolean fou = false;
 
 			// search
+			
 
 			for (int j = 0; j < tmpType.outputAllShop.size(); j++) {
 				AllShop shp = tmpType.outputAllShop.get(j);
 
 				for (int k = 0; k < shp.size; k++) {
 					countItemInShop++;
+					
 					if (shp.item[k].equalsIgnoreCase(all.theName)) {
 						if (shp.data[k] == all.data) {
 							fou = true;
@@ -221,7 +249,7 @@ public class Core {
 			}
 
 			if (fou == true) {
-				break;
+				continue;
 			} else {
 				d.pl("count item in shop " + countItemInShop + "/" + allBlockInGameAsList.size());
 				d.pl("item not found in shop");
@@ -455,7 +483,23 @@ public class Core {
 			paraShopPrice.shopSlotMax++;
 
 		} // mission
+		
+		
+		
+		// count all item again
+		int cou = 0;
+		for (int i = 0 ; i < paraShopPrice.shopSlotMax ; i ++ ) {
+			
+			for (int j = 0 ; j < paraShopPrice.amount[i] ; j ++ ) {
+				cou ++;
+			}
+			
+		}
 
+		d.pl("count paraShopPrice amount [] + + +  = " + cou + " / " + allBlockInGameAsList.size());
+		if (cou < allBlockInGameAsList.size()) {
+			d.pl("error ");
+		}
 	}
 
 	public void decodeTmpAllItemInShop(ParameterAllItemInShopType paraItemsInShop) {
@@ -472,11 +516,7 @@ public class Core {
 			bo.theName = allBlockInGameAsList.get(cur).theName;
 			bo.data = allBlockInGameAsList.get(cur).data;
 
-			if (bo.theName.equalsIgnoreCase("RAW_BEEF")) {
-				if (bo.data > 0) {
-					d.pl("raw_BEEF DATA > 0 ");
-				}
-			}
+			
 			// ........
 
 			double rendomStack01 = decodeRandomGive01_();
@@ -705,11 +745,7 @@ public class Core {
 				miss.theName = m[0];
 				miss.data = Byte.parseByte(m[1]);
 
-				if (miss.theName.equalsIgnoreCase("RAW_BEEF")) {
-					if (miss.data > 0) {
-						d.pl("raw_beef load data > 0");
-					}
-				}
+				
 
 				miss.maxStack = Integer.parseInt(m[2]);
 				miss.isBlock = Boolean.parseBoolean(m[3]);
