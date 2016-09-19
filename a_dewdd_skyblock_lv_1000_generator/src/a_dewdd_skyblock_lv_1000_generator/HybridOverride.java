@@ -380,14 +380,16 @@ public class HybridOverride extends HybridMultithreading {
 			ps.money = 0;
 			for (int i = 0; i < Core.sellAsList.size(); i++) {
 				SellableType se = Core.sellAsList.get(i);
-				SellableType seTmpSe = tmpSell.get(i);
+				SellableType seTmpSe =  tmpSell.get(i);
+				
+				AllBlockInGameType seTmpSeBlock = Core.allBlockInGameAsList.get(  seTmpSe.index);
 
 				double tmpMoney = 0;
 				tmpMoney = se.allItemYouCanFind * seTmpSe.sellPerPrice;
 				if (printPls == true)
-					d.pl("sell " + se.allItemYouCanFind + " * " + seTmpSe.sellPerPrice + " = " + (tmpMoney) +
+					d.pl(i + " sell "  + seTmpSeBlock.getIDData() + " > " + se.allItemYouCanFind + " * " + seTmpSe.sellPerPrice + " = " + (tmpMoney) +
 
-					" index " + se.index);
+					" index " +  seTmpSe.index);
 				ps.money += tmpMoney;
 
 			}
