@@ -18,7 +18,7 @@ class HybridOverride extends Hybrid {
 		
 		Main.co.dnaDecoder(dna, tmpAllShop, tmpSell, tmpLV);
 
-		boolean printPls = false;
+		boolean printPls = true;
 
 		for (int i = 0; i < tmpSell.size(); i++) {
 
@@ -55,10 +55,15 @@ class HybridOverride extends Hybrid {
 			}
 
 			for (int j = 0; j < tmpLV.get(i).needSize; j++) {
+				LV1000Type tmpsubLV = tmpLV.get(i);
+				
+				
 				if (printPls == true) {
-					d.pl("need slot " + j + " = " + tmpLV.get(i).needItem[j] + ":" + tmpLV.get(i).needData[j] + ":"
-							+ tmpLV.get(i).needAmount[j]);
+					d.pl("need slot " + j + " = " + tmpsubLV.needItem[j] + ":" + tmpsubLV.needData[j] + ":"
+							+ tmpsubLV.needAmount[j]);
 				}
+				
+				
 
 			}
 

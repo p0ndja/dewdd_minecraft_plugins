@@ -18,8 +18,6 @@ public class Core {
 	class ParameterLVType {
 		public LinkedList<LV1000Type> outputLV = new LinkedList<LV1000Type>();
 
-		public boolean[] usedItNeedList;
-		public boolean[] usedItRewardList;
 
 	}
 
@@ -54,7 +52,7 @@ public class Core {
 	public static String sellablePath = File.separator + "ramdisk" + File.separator + "sellableblock.txt";
 
 	public static String missionPath = File.separator + "ramdisk" + File.separator + "missionblock.txt";
-	public static int dnaSize = 5000;
+	public static int dnaSize = 11000;
 
 	public static int maxItemForCompleteMission = 10;
 	public static int minItemForCompleteMission = 3;
@@ -200,15 +198,6 @@ public class Core {
 		ParameterRandomUniqueItem rUnique = new ParameterRandomUniqueItem();
 		decodeRandomUniqueItem(rUnique);
 
-		int rAmountStack[] = new int[allBlockInGameAsList.size()];
-		for (int i = 0; i < allBlockInGameAsList.size(); i++) {
-
-			double c01 = decodeRandomGive01_();
-			rAmountStack[i] = (int) Math.round(c01 * allBlockInGameAsList.get(rUnique.index[i]).maxStack);
-			if (rAmountStack[i] <= 0)
-				rAmountStack[i] = 1;
-
-		}
 
 		ParameterRandomAmountItem amountUniqueItemPerLV = new ParameterRandomAmountItem();
 		decodeRandomSumAmount417ForAllShop(amountUniqueItemPerLV);
@@ -225,8 +214,12 @@ public class Core {
 			l.needData = new byte[amountUniqueItemPerLV.amount[i]];
 			l.needSize = 0;
 
+			d.pl("decode lv need " + i +" = " +
+			amountUniqueItemPerLV.amount[i] + " cur chro " + curChro + " , cur " + cur);
+			
+			
 			// add all item need it current level
-			for (int j = 0; j < amountUniqueItemPerLV.amount[i]; j++) {
+			for (int j = 0; j < amountUniqueItemPerLV.amount[i] && cur < allBlockInGameAsList.size(); j++) {
 				AllBlockInGameType eof = allBlockInGameAsList.get(rUnique.index[cur]);
 
 				l.needItem[j] = eof.theName;
@@ -237,9 +230,11 @@ public class Core {
 				}
 
 				l.needSize++;
+				cur ++;
 
 			}
-
+			
+			paraLV.outputLV.add(l);
 		}
 	}
 	
@@ -268,11 +263,14 @@ public class Core {
 			
 			e.rewardData = new byte[amountReward];
 			e.rewardAmount = new int[amountReward];
-			e.needItem = new String [amountReward];
+			e.rewardItem = new String [amountReward];
+			
+			d.pl("decode lv reward " + i +" = " +
+					amountReward + " cur chro " + curChro);
 			
 			for (int j = 0 ; j < amountReward ; j ++ ) {
 				double g = decodeRandomGive01_() * allBlockInGameAsList.size();
-				g = Math.round(g);
+				
 				int index =  (int) (g);
 				
 				e.rewardData[j] = allBlockInGameAsList.get(index).data;
@@ -297,6 +295,8 @@ public class Core {
 		addNeedItemToLV(paraLV);
 		
 		addRewardItemToLV(paraLV);
+		
+	
 		
 	}
 
@@ -553,12 +553,11 @@ public class Core {
 			usedItRewardList[i] = false;
 		}
 
-		tmp4.usedItNeedList = usedItNeedList;
-		tmp4.usedItRewardList = usedItRewardList;
 
 		decodeTmpLV(tmp4);
 
 		d.pl("abc");
+		d.pl("end curChro " + curChro );
 	}
 
 	public void getNextBlockSwapMissionType(int swapNextxTime, int iNeedBlock, boolean usedItList[]) {
