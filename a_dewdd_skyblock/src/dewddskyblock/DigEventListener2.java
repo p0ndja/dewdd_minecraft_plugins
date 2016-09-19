@@ -1327,6 +1327,7 @@ public class DigEventListener2 implements Listener {
 				player.sendMessage(dprint.r.color("/skyblock go <player>"));
 				player.sendMessage(dprint.r.color("/skyblock goid <id>"));
 				player.sendMessage(dprint.r.color("/skyblock gorandom"));
+				player.sendMessage(dprint.r.color("/skyblock flag"));
 
 				player.sendMessage(dprint.r.color("/skyblock delete"));
 				player.sendMessage(dprint.r.color("/skyblock buyhere"));
@@ -1411,7 +1412,23 @@ public class DigEventListener2 implements Listener {
 					LXRXLZRZType ee = api_skyblock.getPositionLXRXLZRZ();
 
 					player.sendMessage("xy " + ee.lx + "," + ee.lz + " to " + ee.rx + "," + ee.rz);
+				} else if (m[1].equalsIgnoreCase("flag")) {
+					
 
+					player.sendMessage(dprint.r.color(tr.gettr("skyblock add these flag to your zone to activate something")));
+					
+					player.sendMessage(dprint.r.color((Constant.flag_autoabsorb + " " +tr.gettr("flag " + Constant.flag_autoabsorb + " meaning"))));
+					player.sendMessage(dprint.r.color((Constant.flag_autocut + " " +tr.gettr("flag " + Constant.flag_autocut + " meaning"))));
+					player.sendMessage(dprint.r.color((Constant.flag_everyone + " " +tr.gettr("flag " + Constant.flag_everyone + " meaning"))));
+					player.sendMessage(dprint.r.color((Constant.flag_explode + " " +tr.gettr("flag " + Constant.flag_explode + " meaning"))));
+					player.sendMessage(dprint.r.color((Constant.flag_monster + " " +tr.gettr("flag " + Constant.flag_monster + " meaning"))));
+					player.sendMessage(dprint.r.color((Constant.flag_noprotect + " " +tr.gettr("flag " + Constant.flag_noprotect + " meaning"))));
+					player.sendMessage(dprint.r.color((Constant.flag_pvp + " " +tr.gettr("flag " + Constant.flag_pvp + " meaning"))));
+					
+					
+
+				
+					
 				} else if (m[1].equalsIgnoreCase("buyhere")) {
 					// for buy these zone
 

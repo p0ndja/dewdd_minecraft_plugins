@@ -445,6 +445,12 @@ public class api_skyblock {
 
 		// found
 		int getslot = getplayerinslot(player.getName(), getid);
+		
+		if (getplayerinslot(Constant.flag_noprotect, getid) > -1 ) {
+
+			return true;
+		}
+		
 		if (getplayerinslot(Constant.flag_everyone, getid) > -1 && mode.equalsIgnoreCase("right")) {
 
 			// player.sendMessage(dprint.r.color("this is not your skyblock ,

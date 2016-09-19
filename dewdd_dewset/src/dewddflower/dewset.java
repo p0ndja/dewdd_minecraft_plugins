@@ -30,6 +30,10 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import com.earth2me.essentials.api.Economy;
+import com.earth2me.essentials.api.NoLoanPermittedException;
+import com.earth2me.essentials.api.UserDoesNotExistException;
+
 import api_skyblock.api_skyblock;
 import dewddtran.tr;
 
@@ -1583,33 +1587,37 @@ public class dewset extends dewset_interface {
 			}
 
 			// String abab = dewsignname[homeid][18] ;
-			if (dewsignname[getworldid(player.getWorld().getName())][homeid][18].equalsIgnoreCase(flag_sell) == true) {
+			if (dewsignname[getworldid(player.getWorld().getName())][homeid][0].equalsIgnoreCase(flag_sell) == true) {
 				dprint.r.printAll("ptdew&dewdd : '" + player.getName() + "'" + tr.gettr("starting") + " dewbuyzone "
 						+ player.getItemInHand().getTypeId() + ":" + player.getItemInHand().getData());
 
-				int mon = Integer.parseInt(dewsignname[getworldid(player.getWorld().getName())][homeid][19]);
+				int mon = Integer.parseInt(dewsignname[getworldid(player.getWorld().getName())][homeid][1]);
 				player.sendMessage(dprint.r.color("ptdew&dewdd : " + tr.gettr("dewbuyzone_thiszonepriceis") + mon));
 
-				/*
-				 * try { if (Economy.getMoney(player.getName()) < mon) {
-				 * player.sendMessage(dprint.r.color("ptdew&dewdd : " +
-				 * tr.gettr("don't_have_enough_money") + " for" +
-				 * tr.gettr("buy") + "this zone > " + mon)); return; } } catch
-				 * (UserDoesNotExistException e) {
-				 * 
-				 * e.printStackTrace(); }
-				 * 
-				 * try { Economy.subtract(player.getName(), mon); } catch
-				 * (UserDoesNotExistException | NoLoanPermittedException e) {
-				 * 
-				 * e.printStackTrace(); }
-				 */
-				for (int g = 0; g <= 19; g++) {
+				try {
+					if (Economy.getMoney(player.getName()) < mon) {
+						player.sendMessage(dprint.r.color("ptdew&dewdd : " + tr.gettr("don't_have_enough_money")
+								+ " for" + tr.gettr("buy") + "this zone > " + mon));
+						return;
+					}
+				} catch (UserDoesNotExistException e) {
+
+					e.printStackTrace();
+				}
+
+				try {
+					Economy.subtract(player.getName(), mon);
+				} catch (UserDoesNotExistException | NoLoanPermittedException e) {
+
+					e.printStackTrace();
+				}
+
+				for (int g = 0; g < 20; g++) {
 					dewsignname[getworldid(player.getWorld().getName())][homeid][g] = "null";
 				}
 
 				dewsignname[getworldid(player.getWorld().getName())][homeid][0] = player.getName();
-				dprint.r.printAll("ptdew&dewdd : " + player.getName() + "dewbuyzone " + tr.gettr("complete") + "...");
+				dprint.r.printAll("ptdew&dewdd : " + player.getName() + " dewbuyzone " + tr.gettr("complete") + "...");
 				savesignfile(-1, getworldid(block2.getWorld().getName()));
 
 			} else {
@@ -1783,6 +1791,8 @@ public class dewset extends dewset_interface {
 
 		@Override
 		public void run() {
+			
+			
 			long starttime = System.currentTimeMillis();
 			long endtime = 0;
 
@@ -1799,9 +1809,9 @@ public class dewset extends dewset_interface {
 							dewcopy_thread xgn2 = new dewcopy_thread(player, mx, my, mz, lx, ly, lz, xlx, ylx, zlx,
 									amountloop, selectx1, selecty1, selectz1, selectworldname, playerLocation);
 
-							dprint.r.printC("dewcopy  " + tr.gettr("recall") + " " + xlx + " , " + ylx + " , " + zlx);
+							dprint.r.printC("time out dewcopy  " + tr.gettr("recall") + " " + xlx + " , " + ylx + " , " + zlx);
 							dprint.r.printC(
-									"low " + lx + " , " + ly + " , " + lz + " high " + mx + "," + my + "," + mz);
+									"low " + lx + " , " + ly + " , " + lz + " high " + mx + "," + my + "," + mz + " amountloop " + amountloop);
 
 							Bukkit.getScheduler().scheduleSyncDelayedTask(ac, xgn2, sleeptime);
 
@@ -1815,12 +1825,17 @@ public class dewset extends dewset_interface {
 																	// only
 																	// block
 							if (hostBlock.getType().isBlock() == false) {
+								zlx++;
 								continue;
 							}
-						} else if (amountloop == 2 || amountloop == 4)
+						}
+						
+						if (amountloop == 2 || amountloop == 4) {
 							if (hostBlock.getType().isBlock() == true) {
+								zlx++;
 								continue;
 							}
+						}
 
 						Block setBlock = playerLocation.getBlock().getRelative(hostBlock.getX() - selectx1,
 								hostBlock.getY() - selecty1, hostBlock.getZ() - selectz1);
@@ -1836,9 +1851,9 @@ public class dewset extends dewset_interface {
 								return;
 							}
 
-						if (setBlock.getType() != hostBlock.getType() && setBlock.getData() != hostBlock.getData()) {
+						//if (setBlock.getType() != hostBlock.getType() && setBlock.getData() != hostBlock.getData()) {
 							setBlock.setTypeIdAndData(hostBlock.getTypeId(), hostBlock.getData(), false);
-						}
+						//}
 
 						if (hostBlock.getType() == Material.SIGN_POST || hostBlock.getType() == Material.WALL_SIGN) {
 
@@ -1861,15 +1876,18 @@ public class dewset extends dewset_interface {
 
 				xlx++;
 			}
+			
 			xlx = lx;
+			
 
 			amountloop++;
+			
 			if (amountloop <= 4) {
 				dewcopy_thread xgn2 = new dewcopy_thread(player, mx, my, mz, lx, ly, lz, xlx, ylx, zlx, amountloop,
 						selectx1, selecty1, selectz1, selectworldname, playerLocation);
 
 				dprint.r.printC("dewcopy  " + tr.gettr("recall") + " " + xlx + " , " + ylx + " , " + zlx);
-				dprint.r.printC("low " + lx + " , " + ly + " , " + lz + " high " + mx + "," + my + "," + mz);
+				dprint.r.printC("low " + lx + " , " + ly + " , " + lz + " high " + mx + "," + my + "," + mz  + " amountloop " + amountloop );
 
 				Bukkit.getScheduler().scheduleSyncDelayedTask(ac, xgn2, sleeptime);
 				return;
@@ -5404,7 +5422,7 @@ public class dewset extends dewset_interface {
 	@Override
 	public boolean dewps_list(Player player) {
 		Block block = player.getLocation().getBlock();
-		
+
 		int xyz = checkpermissionarea(block, true);
 		if (xyz == -1) {
 			player.sendMessage(dprint.r.color("ptdew&dewdd : " + tr.gettr("tree_check_protect_and_not_found")));
@@ -6201,16 +6219,16 @@ public class dewset extends dewset_interface {
 						moden = 0;
 						break;
 					}
-					
-					
-					/*if (dewsignx1[wlo][dewsignmax[wlo] - 1]== 0 &&
-							dewsigny1[wlo][dewsignmax[wlo] - 1] == 0 &&
-							dewsignz1[wlo][dewsignmax[wlo] - 1] == 0 && 
-						dewsignx2[wlo][dewsignmax[wlo] - 1] == 0 &&
-						dewsigny2[wlo][dewsignmax[wlo] - 1] == 0 && 
-						dewsignz2[wlo][dewsignmax[wlo] - 1] == 0) {
-							dewsignmax[wlo]--;
-						}*/
+
+					/*
+					 * if (dewsignx1[wlo][dewsignmax[wlo] - 1]== 0 &&
+					 * dewsigny1[wlo][dewsignmax[wlo] - 1] == 0 &&
+					 * dewsignz1[wlo][dewsignmax[wlo] - 1] == 0 &&
+					 * dewsignx2[wlo][dewsignmax[wlo] - 1] == 0 &&
+					 * dewsigny2[wlo][dewsignmax[wlo] - 1] == 0 &&
+					 * dewsignz2[wlo][dewsignmax[wlo] - 1] == 0) {
+					 * dewsignmax[wlo]--; }
+					 */
 
 					moden++;
 
@@ -6662,8 +6680,6 @@ public class dewset extends dewset_interface {
 		seedglowc arr = new seedglowc(block, player);
 		Bukkit.getScheduler().scheduleSyncDelayedTask(ac, arr);
 	}
-
-	
 
 	public void soiladdseedrecusive(Block block, Player player, int seedid, boolean first) {
 

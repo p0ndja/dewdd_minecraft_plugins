@@ -88,11 +88,23 @@ commands:
   dewbreak:
     description: dewbreak break all blocks in selected zone only admin
     usage: /<command>
+  dewbuyzone:
+    description: dewbuyzone   for buy this zone
+    usage: /<command>
+  dewgo:
+    description: dewgo <protect id>   warp to location of those protect id
+    usage: /<command> <protect id>
+  dewbuy:
+    description: dewbuy  for buy protect 
+    usage: /<command>
   dewadd:
-    description: dewadd=<playername>   add player to protect zone
+    description: dewadd <playername>   add player to protect zone
     usage: /<command> <player>
+  dewaddat:
+    description: dewaddat <slot> <playername>   add player to specific slot to protect zone
+    usage: /<command> <slot> <player>
   dewremove:
-    description: dewremove=<playername> remove player from protect zone
+    description: dewremove <playername> remove player from protect zone
     usage: /<command> <player>
   gift:
     description: get item from warp gift

@@ -11,6 +11,8 @@ public class Constant {
 	public static String flag_pvp = "<pvp>";
 	public static String flag_autocut = "<autocut>";
 	public static String flag_autoabsorb = "<autoabsorb>";
+	public static String flag_noprotect = "<disable>";
+	
 	public static String folder_name = "plugins" + File.separator + "dewdd_skyblock";
 
 	public static String rsProtect_filename = "ptdew_dewdd_rs_protect.txt";
