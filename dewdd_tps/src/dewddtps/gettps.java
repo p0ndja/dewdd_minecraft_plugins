@@ -18,17 +18,17 @@ public class gettps implements Listener {
 
 		public void run() {
 
-			dprint.r.printC("Online Player = "
+		/*	dprint.r.printC("Online Player = "
 					+ Bukkit.getOnlinePlayers().length);
-
+*/
 			if (Bukkit.getOnlinePlayers().length == 0) {
 
 				for (World w : Bukkit.getWorlds()) {
 					for (org.bukkit.Chunk chunk : w.getLoadedChunks()) {
-						dprint.r.printC("unload chunk cuz no player = "
+						/*dprint.r.printC("unload chunk cuz no player = "
 								+ (chunk.getX() * 16) + ","
 								+ (chunk.getZ() * 16) + " as  "
-								+ chunk.getWorld().getName());
+								+ chunk.getWorld().getName());*/
 						chunk.unload(true);
 					}
 				}

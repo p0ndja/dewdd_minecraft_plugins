@@ -158,7 +158,7 @@ public class api_skyblock {
 				else { // if x y z this can do
 					dprint.r.printAll("random " + x + "," + y + "," + z);
 
-					int newid = getnewrsid(player, true);
+					int newid = getOWNIslandID(player, true);
 					// get free slot for this player
 					rs[newid].x = x;
 					rs[newid].y = y;
@@ -333,6 +333,64 @@ public class api_skyblock {
 		public double	percent;
 
 	}
+	
+	public String getMissionHeader(int mission) {
+		String header = "skyblock_mission_header_";
+		
+		String aa = "";
+		switch (mission) {
+		case 0: // get cobble stone
+			aa = tr.gettr(header + mission);
+			
+			break;
+		case 1:
+			
+			aa = tr.gettr(header + mission);
+			break;
+		case 2:
+			aa = tr.gettr(header + mission);
+			break;
+		default:
+			aa = tr.gettr(header + "default");
+			break;
+		}
+		
+		return aa;
+	}
+	
+	
+	public void startMissionNotificationLoopShowing() {
+		Bukkit.getScheduler().cancelTasks(ac);
+
+		Bukkit.getScheduler().scheduleSyncRepeatingTask(ac, new missionNotification(),
+				1, 1200);
+	}
+	class missionNotification implements Runnable{
+
+		@Override
+		public void run() {
+			
+			for (Player player : Bukkit.getOnlinePlayers()) {
+				if (player == null) {
+					continue;
+				}
+				
+				
+				int id = getOWNIslandID(player, false);
+				// island not found
+				if (id == -1) {
+					continue;
+				}
+				
+				String header = getMissionHeader(rs[id].mission);
+				player.sendMessage(tr.gettr("is_cur_level_mission_showing_" ) +" " +  "header");
+				
+				// check his 
+			}
+			
+		}
+		
+	}
 
 	public class rsdata {
 		public int		x;
@@ -365,7 +423,7 @@ public class api_skyblock {
 
 		// found
 		int getslot = getplayerinslot(player.getName(), getid);
-		if (getplayerinslot("<everyone>", getid) > -1
+		if (getplayerinslot(flag_everyone, getid) > -1
 				&& mode.equalsIgnoreCase("right")) {
 
 			// player.sendMessage(dprint.r.color("this is not your skyblock , host is "
@@ -428,14 +486,14 @@ public class api_skyblock {
 
 	public String				flag_autocut	= "<autocut>";
 	public String				flag_autoabsorb	= "<autoabsorb>";
-	public String				flag_everyone	= "<everyone>";
+	public static String				flag_everyone	= "<everyone>";
 
 	public static int			rsmaxp			= 20;
 
 	public String				folder_name		= "plugins" + File.separator
 														+ "dewdd_skyblock";
 
-	public static rsdata		rs[]			= new rsdata[100];
+	public static  rsdata		rs[]			= new rsdata[100];
 
 	public static int			rsmax			= 0;
 
@@ -510,9 +568,11 @@ public class api_skyblock {
 		int t4 = (int) t3;
 		return t4;
 	}
+	
+	
 
-	public int getnewrsid(Player player, boolean rebuild) {
-		// loop for check exits rs id and return or net build new one
+	public int getOWNIslandID(Player player, boolean rebuild) {
+		// loop for check exits rs id and return or not build new one
 
 		// find
 		for (int lop = 0; lop < rsmax; lop++) {
@@ -536,10 +596,7 @@ public class api_skyblock {
 		return rsmax - 1; // rsmax -1 ; (
 	}
 
-	public double getpercent(int criid) {
-		// dprint.r.printAll("crimax getpercent is " + crimax);
-		return (crimax + 1) / 100;
-	}
+
 
 	public boolean is8_10block(int impo) {
 

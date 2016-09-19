@@ -55,6 +55,36 @@ import api_skyblock.api_skyblock;
 import dewddtran.tr;
 
 public class DigEventListener2 implements Listener {
+	 
+		
+	class delay extends Thread {
+
+		@Override
+		public void run() {
+			while (ac == null) {
+				try {
+					Thread.sleep(1000);
+				}
+				catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+
+				// dprint.r.printC("ft waiting ac != null");
+
+			}
+
+			dew.startMissionNotificationLoopShowing();
+		}
+	}
+	
+	public DigEventListener2() {
+		delay dl =  new delay();
+		Thread dlt = new Thread(dl);
+		
+	
+	}
+	
 	class autoabsorb implements Runnable {
 		private Block		b;
 		private int			pid;
@@ -79,6 +109,7 @@ public class DigEventListener2 implements Listener {
 
 		}
 	}
+	
 
 	class autocut implements Runnable {
 		private Block	b;
