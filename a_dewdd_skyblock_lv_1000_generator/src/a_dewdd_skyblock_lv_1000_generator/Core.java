@@ -23,6 +23,17 @@ public class Core {
 
 	}
 
+	class ParameterRandomAmountItem {
+		// int [] index = new int[allBlockInGameAsList.size()];
+		int[] amount;
+
+	}
+
+	class ParameterRandomUniqueItem {
+		// int [] index = new int[allBlockInGameAsList.size()];
+		int[] index;
+	}
+
 	class ParameterShopPriceAmountOfItemInShopType {
 		int shopSlotMax;
 
@@ -30,7 +41,6 @@ public class Core {
 		int[] amount;
 
 	}
-
 	class ParameterShopPriceToAllShopType {
 		LinkedList<AllBlockInGameType> inputAllItemInShop;
 		double[] price;
@@ -41,33 +51,34 @@ public class Core {
 	}
 
 	public static String sellablePath = File.separator + "ramdisk" + File.separator + "sellableblock.txt";
-	public static String missionPath = File.separator + "ramdisk" + File.separator + "missionblock.txt";
 
+	public static String missionPath = File.separator + "ramdisk" + File.separator + "missionblock.txt";
 	public static int dnaSize = 2000;
 
 	public static int maxItemForCompleteMission = 10;
 	public static int minItemForCompleteMission = 3;
 
 	public static int maxRewardDiffBlockType = 10;
-	public static int minRewardDiffBlockType = 1;
 
+	public static int minRewardDiffBlockType = 1;
 	public static long MaxTickToCompleteAllLV = 60 * 60 * 24 * 31;
 
 	public static int maxShopSize = 10;
-	public static int minShopSize = 3;
 
+	public static int minShopSize = 3;
 	public static int swapMultipy = 100;
 
 	public static double SellMaxCost = 1000;
+
 	public static double ShopMaxCost = 10000;
-
 	public static int maxLV = 100;
-
 	private int curChro = 0;
-	private double[] chromosome;
-	private int curMissionItemSwapPosition;
 
 	// 415 unique item
+
+	private double[] chromosome;
+
+	private int curMissionItemSwapPosition;
 
 	HashMap<String, SellableType> sell = new HashMap<String, SellableType>();
 
@@ -153,7 +164,7 @@ public class Core {
 		int curItemIndex = 0;
 
 		for (int i = 0; i < tmpType.shopSlotMax; i++) {
-			d.pl("convert tmp loop " + i + "/" + tmpType.shopSlotMax);
+			//d.pl("convert tmp loop " + i + "/" + tmpType.shopSlotMax);
 
 			AllShop ab = new AllShop();
 
@@ -183,46 +194,12 @@ public class Core {
 		d.pl("converted tmpShop to AllShop ");
 	}
 
-	class ParameterRandomUniqueItem {
-		// int [] index = new int[allBlockInGameAsList.size()];
-		int[] index;
+	public void decodeLV(ParameterLVType paraLV) {
+		// add need item
+		
 	}
 
-	public void decodeRandomUniqueItem(ParameterRandomUniqueItem para) {
-		para.index = new int[allBlockInGameAsList.size()];
-		boolean tmpBoolean[] = new boolean[allBlockInGameAsList.size()];
-
-		for (int i = 0; i < allBlockInGameAsList.size(); i++) {
-			para.index[i] = 0;
-			tmpBoolean[i] = false;
-		}
-
-		int countItem = 0;
-		while (countItem < allBlockInGameAsList.size()) {
-			double tmpReadChro = Math.abs(chromosome[curChro]);
-
-			getNextUnuseMissionItem((int) (tmpReadChro * swapMultipy),
-
-					tmpBoolean);
-
-			curChro++;
-
-			para.index[countItem] = curMissionItemSwapPosition;
-
-			countItem++;
-
-			continue;
-		}
-
-	}
-
-	class ParameterRandomAmountItem {
-		// int [] index = new int[allBlockInGameAsList.size()];
-		int[] amount;
-
-	}
-
-	public void decodeRandomAmounteItem(ParameterRandomAmountItem para) {
+	public void decodeRandomSumAmountItem(ParameterRandomAmountItem para) {
 		para.amount = new int[allBlockInGameAsList.size()];
 
 		for (int i = 0; i < allBlockInGameAsList.size(); i++) {
@@ -256,7 +233,16 @@ public class Core {
 
 	}
 
-	public int decodeRandomStackGive01_() {
+	public double decodeRandomGiveDouble_() {
+		double tmpReadChro = 0;
+		tmpReadChro = Math.abs(chromosome[curChro]);
+		curChro ++;
+		
+
+		return tmpReadChro;
+	}
+	
+	public int decodeRandomGive01_() {
 		double tmpReadChro = 0;
 		tmpReadChro = Math.abs(chromosome[curChro]);
 
@@ -275,46 +261,52 @@ public class Core {
 		return returner;
 	}
 
-	public void decodeLV(ParameterLVType paraLV) {
-		// add need item
-		
+	public void decodeRandomUniqueItem(ParameterRandomUniqueItem para) {
+		para.index = new int[allBlockInGameAsList.size()];
+		boolean tmpBoolean[] = new boolean[allBlockInGameAsList.size()];
+
+		for (int i = 0; i < allBlockInGameAsList.size(); i++) {
+			para.index[i] = 0;
+			tmpBoolean[i] = false;
+		}
+
+		int countItem = 0;
+		while (countItem < allBlockInGameAsList.size()) {
+			double tmpReadChro = decodeRandomGiveDouble_();
+
+			getNextUnuseMissionItem((int) (tmpReadChro * swapMultipy),
+
+					tmpBoolean);
+
+
+			para.index[countItem] = curMissionItemSwapPosition;
+
+			countItem++;
+
+			continue;
+		}
+
 	}
 
-	public void decodeShopPriceAmountOfItemInShop(ParameterShopPriceAmountOfItemInShopType paraShopPrice) {
+	public void decodeTmpShopPriceAmountOfItemInShop(ParameterShopPriceAmountOfItemInShopType paraShopPrice) {
 
 		
 		
 		int countItem = 0;
 		while (countItem < allBlockInGameAsList.size()) {
 			
-			d.pl("sperateShop > curChro " + curChro);
-			d.pl("sperateShop : shopSlotMax = " + paraShopPrice.shopSlotMax + ", " + countItem + " = "
-					+ (allBlockInGameAsList.size()));
+			
 			
 	// price
-			double tmpReadChro = chromosome[curChro];
-			tmpReadChro = Math.abs(tmpReadChro);
-
-			d.pl(" the shop curchro " + curChro + " | " + tmpReadChro + " | "
-
-					+ paraShopPrice.shopSlotMax);
-
-			d.pl("size = " + tmpReadChro + " .. " + curChro + " unique " + paraShopPrice.shopSlotMax);
+			double tmpReadChro = decodeRandomGiveDouble_();
 
 		
 			paraShopPrice.price[paraShopPrice.shopSlotMax] = tmpReadChro * ShopMaxCost;
-			curChro++;
+			
 
 			// amount
 
-			tmpReadChro = Math.abs(tmpReadChro);
-
-			if (tmpReadChro < 0) {
-				tmpReadChro = 0;
-			}
-			if (tmpReadChro > 1) {
-				tmpReadChro = 1;
-			}
+			tmpReadChro = decodeRandomGive01_();
 
 			// 3 - 10
 
@@ -338,7 +330,6 @@ public class Core {
 
 			paraShopPrice.shopSlotMax++;
 
-			curChro++;
 
 		} // mission
 
@@ -361,7 +352,7 @@ public class Core {
 			bo.data = allBlockInGameAsList.get(para.index[cur]).data;
 			// ........
 
-			int rendomStack01 = decodeRandomStackGive01_();
+			int rendomStack01 = decodeRandomGive01_();
 
 			bo.curAmount = (int) (rendomStack01 * allBlockInGameAsList.get(cur).maxStack);
 	
@@ -377,14 +368,14 @@ public class Core {
 	public int decodeTmpSell(LinkedList<SellableType> tmpSell) {
 		while (tmpSell.size() < sell.size()) {
 
-			double tmpReadChro = Math.abs(chromosome[curChro]);
+			double tmpReadChro = decodeRandomGiveDouble_();
 
 			SellableType x = sellAsList.get(tmpSell.size()).copyIt();
 
 			x.sellPerPrice = tmpReadChro * SellMaxCost;
 			tmpSell.add(x);
-			// d.pl("chro sell = " + curChro);
-			curChro++;
+			
+		
 			continue;
 
 		}
@@ -433,7 +424,7 @@ public class Core {
 		tmp2.price = new double[maxShopBuffer];
 		tmp2.shopSlotMax = shopSlotMax;
 
-		decodeShopPriceAmountOfItemInShop(tmp2);
+		decodeTmpShopPriceAmountOfItemInShop(tmp2);
 
 		shopSlotMax = tmp2.shopSlotMax;
 
