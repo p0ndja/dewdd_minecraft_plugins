@@ -30,6 +30,61 @@ import org.bukkit.plugin.java.JavaPlugin;
 import dewddtran.tr;
 
 public class api_skyblock {
+	
+	public boolean checkIsThatAreBlockOrNot(Block midBlockX0Z0 , Player player) {
+		int count = 0;
+		boolean thereBlock = false;
+
+		int search = 10;
+		for (int x = -search; x <= search; x++) {
+			for (int y = 0; y <= 256; y++) {
+
+				for (int z = -search; z <= search; z++) {
+
+					Block bbo = midBlockX0Z0.getWorld().getBlockAt(midBlockX0Z0.getX() + x, y,
+							midBlockX0Z0.getZ() + z);
+
+					if (bbo.getType() != Material.AIR) {
+
+						player.sendMessage(bbo.getX() + "," + bbo.getY() + "," + bbo.getZ() + " = "
+								+ bbo.getType().name() + ":" + bbo.getData());
+						thereBlock = true;
+						break;
+					}
+				}
+
+				if (thereBlock == true) {
+					break;
+				}
+			}
+
+			if (thereBlock == true) {
+				break;
+			}
+
+		}
+
+		while (count < 100000 && thereBlock == false) {
+			count++;
+
+			int x = rnd.nextInt(300) - 150;
+			int y = rnd.nextInt(256);
+			int z = rnd.nextInt(300) - 150;
+
+			Block bbo = midBlockX0Z0.getWorld().getBlockAt(midBlockX0Z0.getX() + x, y, midBlockX0Z0.getZ() + z);
+
+			if (bbo.getType() != Material.AIR) {
+
+				player.sendMessage(bbo.getX() + "," + bbo.getY() + "," + bbo.getZ() + " = " + bbo.getType().name()
+						+ ":" + bbo.getData());
+				thereBlock = true;
+				break;
+			}
+
+		}
+		
+		return thereBlock;
+	}
 
 	class AdjustProtect implements Runnable {
 		private Block midBlockX0Z0;
@@ -43,56 +98,49 @@ public class api_skyblock {
 		
 		public void run() {
 			
-			int count = 0;
-			boolean thereBlock = false;
-
-			int search = 10;
-			for (int x = -search; x <= search; x++) {
-				for (int y = 0; y <= 256; y++) {
-
-					for (int z = -search; z <= search; z++) {
-
-						Block bbo = midBlockX0Z0.getWorld().getBlockAt(midBlockX0Z0.getX() + x, y,
-								midBlockX0Z0.getZ() + z);
-
-						if (bbo.getType() != Material.AIR) {
-
-							player.sendMessage(bbo.getX() + "," + bbo.getY() + "," + bbo.getZ() + " = "
-									+ bbo.getType().name() + ":" + bbo.getData());
-							thereBlock = true;
-							break;
-						}
-					}
-
-					if (thereBlock == true) {
-						break;
-					}
-				}
-
+			RSData tmprs[] = new RSData[Constant.rsBuffer];
+			int curID = 0;
+			
+			for (int i = 0; i < Constant.rsBuffer ; i++ ){
+				tmprs[i] = new RSData();
+				tmprs[i].p = new String [RSMaxPlayer];
+				
+			}
+			
+			
+			for (int i = 0; i < rsMax ; i ++ ){
+				Block bo = midBlockX0Z0.getWorld().getBlockAt(
+						rs[i].x, rs[i].y
+						, rs[i].z);
+				
+				boolean thereBlock = checkIsThatAreBlockOrNot(bo, player);
 				if (thereBlock == true) {
-					break;
+					// copy
+					
+					tmprs[curID]=    rs[i].copyIt();
+					
+					curID ++;
+					
+					
+					continue;
 				}
-
-			}
-
-			while (count < 100000 && thereBlock == false) {
-				count++;
-
-				int x = rnd.nextInt(300) - 150;
-				int y = rnd.nextInt(256);
-				int z = rnd.nextInt(300) - 150;
-
-				Block bbo = midBlockX0Z0.getWorld().getBlockAt(midBlockX0Z0.getX() + x, y, midBlockX0Z0.getZ() + z);
-
-				if (bbo.getType() != Material.AIR) {
-
-					player.sendMessage(bbo.getX() + "," + bbo.getY() + "," + bbo.getZ() + " = " + bbo.getType().name()
-							+ ":" + bbo.getData());
-					thereBlock = true;
-					break;
+				else {
+					// delete protec
+					continue;
+					
 				}
-
+				
+				
 			}
+			
+			
+			// copyBack 
+			rsMax = curID;
+			for (int i = 0 ; i < curID ; i ++ ) {
+				rs[i] = tmprs[i].copyIt();
+			}
+			
+			
 
 			//player.sendMessage("thereBlock " + thereBlock);
 			
@@ -905,8 +953,8 @@ public class api_skyblock {
 
 		try {
 
-			rs = new RSData[1000];
-			for (int lop = 0; lop < 1000; lop++) {
+			rs = new RSData[Constant.rsBuffer];
+			for (int lop = 0; lop < Constant.rsBuffer; lop++) {
 				rs[lop] = new RSData();
 			}
 			rsMax = 0;

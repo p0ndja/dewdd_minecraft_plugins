@@ -27,6 +27,8 @@ public class Constant {
 	public static int LV_2_USE_BONE_MEAL_AMOUNT = 45;
 	public static int LV_3_DROP_TOUCH_AMOUNT = 64;
 	public static int LV_6_DROP_WHEAT_AMOUNT = 64;
+
+	public static int rsBuffer = 1000;
 	
 	public static String getMissionHeader(int mission) {
 		String header = "skyblock_mission_header_";
