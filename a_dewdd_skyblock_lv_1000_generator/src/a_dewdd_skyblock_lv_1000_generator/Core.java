@@ -23,6 +23,8 @@ public class Core {
 	public static int minRewardDiffBlockType = 1;
 	public static int maxRewardDiffItemType = 10;
 	public static int minRewardDiffItemType = 0;
+	
+	public static long MaxTickToCompleteAllLV = 60 * 60 * 24 * 31;
 
 	public static int maxShopSize = 10;
 	public static int minShopSize = 3;

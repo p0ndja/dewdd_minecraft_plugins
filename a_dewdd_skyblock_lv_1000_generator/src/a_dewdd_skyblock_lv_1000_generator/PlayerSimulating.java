@@ -12,6 +12,7 @@ public class PlayerSimulating {
 	
 	public HashMap<Byte , Animal> animalMap = new HashMap<Byte , Animal>(); // egg id : animal
 	
+	public static int MaxSizeOfFarm = 6000;
 	
 	public PlayerSimulating() {
 		
@@ -33,8 +34,8 @@ public class PlayerSimulating {
 		for (int i = 0; i < tmpAdd.length ; i ++) {
 			Farm x = new Farm();
 			x.itemId = tmpAdd[i];
-			x.countTick = 0;
-			x.amount = 0;
+			/*x.countTick = 0;
+			x.amount = 0;*/
 			
 			farmMap.put(tmpAdd[i], x);
 		}
@@ -65,6 +66,8 @@ public class PlayerSimulating {
 		
 		for (int i = 0 ; i < Main.co.allBlockInGame.size() ; i++ ){
 			AllBlockInGameType x = Main.co.allBlockInGame.get(i).copyIt();
+			x.curAmount = 0;
+			
 			allMyInventory.put(x.theName + ":" + x.data, x);
 			
 		}
@@ -76,13 +79,13 @@ public class PlayerSimulating {
 }
 
 class Farm{
-	public String itemId ="";  // SEEDS:0 , RED_MUSHROOM:0 , BROWN_MUSHROOM , CACTUS , 
+	public String itemId = "";  // SEEDS:0 , RED_MUSHROOM:0 , BROWN_MUSHROOM , CACTUS , 
 	  							// SUGAR_CANE , PUMPKIN , POTATO , WHEAT , CARROT_ITEM , MELON , NETHER_STALK
 	
 	// amount always be 1
-	public int amount = 0;
+	public int amount[] = new int[PlayerSimulating.MaxSizeOfFarm];
 	
-	public long countTick = 0;
+	public long countTick[] = new long[PlayerSimulating.MaxSizeOfFarm];
 	
 }
 

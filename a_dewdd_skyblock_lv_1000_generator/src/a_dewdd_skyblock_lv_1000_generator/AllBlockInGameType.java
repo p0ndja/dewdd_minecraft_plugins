@@ -6,6 +6,8 @@ public class AllBlockInGameType {
 	public int maxStack;
 	public boolean isBlock = false;
 	
+	public int curAmount = 0;
+	
 	public boolean useIt = false;
 	
 	

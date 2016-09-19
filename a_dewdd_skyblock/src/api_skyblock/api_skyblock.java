@@ -178,6 +178,16 @@ public class api_skyblock {
 					itm = new ItemStack(Material.SAPLING, 3);
 					itm.getData().setData((byte) 3);
 					chest.getInventory().addItem(itm.getData().toItemStack(3));
+					
+					itm = new ItemStack(Material.SAPLING, 3);
+					itm.getData().setData((byte) 4);
+					chest.getInventory().addItem(itm.getData().toItemStack(3));
+					
+					itm = new ItemStack(Material.SAPLING, 3);
+					itm.getData().setData((byte) 5);
+					chest.getInventory().addItem(itm.getData().toItemStack(3));
+					
+					
 
 					itm = new ItemStack(Material.CARROT, 3);
 

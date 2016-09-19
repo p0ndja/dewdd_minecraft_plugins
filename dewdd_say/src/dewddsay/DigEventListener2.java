@@ -1072,7 +1072,7 @@ public class DigEventListener2 implements Listener {
 					}
 
 					player.sendMessage("ptdew&dewdd : Item = "
-							+ player.getItemInHand().getTypeId() + ":"
+							+ player.getItemInHand().getType().name() + ":"
 							+ player.getItemInHand().getData().getData());
 					canc = true;
 					return;
