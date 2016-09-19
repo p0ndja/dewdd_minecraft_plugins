@@ -41,6 +41,7 @@ public class Core {
 		int[] amount;
 
 	}
+
 	class ParameterShopPriceToAllShopType {
 		LinkedList<AllBlockInGameType> inputAllItemInShop;
 		double[] price;
@@ -53,7 +54,7 @@ public class Core {
 	public static String sellablePath = File.separator + "ramdisk" + File.separator + "sellableblock.txt";
 
 	public static String missionPath = File.separator + "ramdisk" + File.separator + "missionblock.txt";
-	public static int dnaSize = 2000;
+	public static int dnaSize = 5000;
 
 	public static int maxItemForCompleteMission = 10;
 	public static int minItemForCompleteMission = 3;
@@ -164,7 +165,7 @@ public class Core {
 		int curItemIndex = 0;
 
 		for (int i = 0; i < tmpType.shopSlotMax; i++) {
-			//d.pl("convert tmp loop " + i + "/" + tmpType.shopSlotMax);
+			// d.pl("convert tmp loop " + i + "/" + tmpType.shopSlotMax);
 
 			AllShop ab = new AllShop();
 
@@ -195,26 +196,53 @@ public class Core {
 	}
 
 	public void decodeTmpLV(ParameterLVType paraLV) {
-		
-		
+
 		// random unique item
 		ParameterRandomUniqueItem rUnique = new ParameterRandomUniqueItem();
 		decodeRandomUniqueItem(rUnique);
-		
-		int rAmount[] = new int[allBlockInGameAsList.size()];
-		for (int i = 0; i < allBlockInGameAsList.size(); i ++) {
-			
-			double  c01 = decodeRandomGive01_();
-			rAmount[i] =(int) ( c01 * allBlockInGameAsList.get(
-					rUnique.index[i]).maxStack);
-			if (rAmount[i] <= 0) rAmount[i] = 1;
-			
+
+		int rAmountStack[] = new int[allBlockInGameAsList.size()];
+		for (int i = 0; i < allBlockInGameAsList.size(); i++) {
+
+			double c01 = decodeRandomGive01_();
+			rAmountStack[i] = (int) (c01 * allBlockInGameAsList.get(rUnique.index[i]).maxStack);
+			if (rAmountStack[i] <= 0)
+				rAmountStack[i] = 1;
+
 		}
-		
-		
+
+		ParameterRandomAmountItem amountUniqueItemPerLV = new ParameterRandomAmountItem();
+		decodeRandomSumAmount417ForAllShop(amountUniqueItemPerLV);
+
 		// add need item
-		
-		
+
+		// loop all level
+		int cur = 0;
+		for (int i = 0; i < amountUniqueItemPerLV.amount.length; i++) {
+			LV1000Type l = new LV1000Type();
+
+			l.needAmount = new int[amountUniqueItemPerLV.amount[i]];
+			l.needItem = new String[amountUniqueItemPerLV.amount[i]];
+			l.needData = new byte[amountUniqueItemPerLV.amount[i]];
+			l.needSize = 0;
+
+			// add all item need it current level
+			for (int j = 0; j < amountUniqueItemPerLV.amount[i]; j++) {
+				AllBlockInGameType eof = allBlockInGameAsList.get(rUnique.index[cur]);
+
+				l.needItem[j] = eof.theName;
+				l.needData[j] = eof.data;
+				l.needAmount[j] = (int) (decodeRandomGive01_() * eof.maxStack);
+				if (l.needAmount[j] <= 0) {
+					l.needAmount[j] = 1;
+				}
+
+				l.needSize++;
+
+			}
+
+		}
+
 	}
 
 	public void decodeRandomSumAmount417ForAllShop(ParameterRandomAmountItem para) {
@@ -223,28 +251,33 @@ public class Core {
 		for (int i = 0; i < allBlockInGameAsList.size(); i++) {
 			para.amount[i] = 0;
 		}
+		
 
 		int countItem = 0;
 		while (countItem < allBlockInGameAsList.size()) {
-
+			d.pl("countItem , " + countItem + " , curChro " + curChro);
+			
 			double max = (maxShopSize - minShopSize); // 1 / 7
 
-			double tmpReadChro = Math.abs(chromosome[curChro]);
-			curChro++;
+			double tmpReadChro = decodeRandomGive01_(); // random
+			
+				double curAmount = (tmpReadChro * max) + minShopSize; // 3 - 7
+				
+				para.amount[countItem] = (int) curAmount;
+				if (para.amount[countItem] == 0) {
+					para.amount[countItem] = 1;
+				}
 
-			double curAmount = (tmpReadChro * max) + minShopSize;
-			para.amount[countItem] = (int) curAmount;
-
-			countItem += para.amount[countItem];
-
+			countItem ++;
+			
+			// 417 > 417
 			if (countItem > allBlockInGameAsList.size()) {
 				int tmb = (countItem - allBlockInGameAsList.size());
 				if (tmb < 0) {
 					d.pl("tmb : " + tmb);
 				}
-
+				countItem = allBlockInGameAsList.size() - 1;
 				para.amount[countItem] = tmb;
-				countItem = allBlockInGameAsList.size();
 
 			}
 		}
@@ -254,12 +287,11 @@ public class Core {
 	public double decodeRandomGiveDouble_() {
 		double tmpReadChro = 0;
 		tmpReadChro = Math.abs(chromosome[curChro]);
-		curChro ++;
-		
+		curChro++;
 
 		return tmpReadChro;
 	}
-	
+
 	public double decodeRandomGive01_() {
 		double tmpReadChro = 0;
 		tmpReadChro = Math.abs(chromosome[curChro]);
@@ -295,7 +327,6 @@ public class Core {
 
 					tmpBoolean);
 
-
 			para.index[countItem] = curMissionItemSwapPosition;
 
 			countItem++;
@@ -307,19 +338,13 @@ public class Core {
 
 	public void decodeTmpShopPriceAmountOfItemInShop(ParameterShopPriceAmountOfItemInShopType paraShopPrice) {
 
-		
-		
 		int countItem = 0;
 		while (countItem < allBlockInGameAsList.size()) {
-			
-			
-			
-	// price
+
+			// price
 			double tmpReadChro = decodeRandomGiveDouble_();
 
-		
 			paraShopPrice.price[paraShopPrice.shopSlotMax] = tmpReadChro * ShopMaxCost;
-			
 
 			// amount
 
@@ -347,7 +372,6 @@ public class Core {
 
 			paraShopPrice.shopSlotMax++;
 
-
 		} // mission
 
 	}
@@ -361,8 +385,6 @@ public class Core {
 
 			AllBlockInGameType bo = new AllBlockInGameType();
 
-
-
 			int cur = para.index[paraItemsInShop.outputAllItemInShop.size()];
 
 			bo.theName = allBlockInGameAsList.get(cur).theName;
@@ -372,12 +394,11 @@ public class Core {
 			double rendomStack01 = decodeRandomGive01_();
 
 			bo.curAmount = (int) (rendomStack01 * allBlockInGameAsList.get(cur).maxStack);
-	
-			if (bo.curAmount <=0 ) bo.curAmount = 1;
 
+			if (bo.curAmount <= 0)
+				bo.curAmount = 1;
 
 			paraItemsInShop.outputAllItemInShop.add(bo);
-
 
 		}
 
@@ -392,8 +413,7 @@ public class Core {
 
 			x.sellPerPrice = tmpReadChro * SellMaxCost;
 			tmpSell.add(x);
-			
-		
+
 			continue;
 
 		}
@@ -401,10 +421,10 @@ public class Core {
 		return curChro;
 	}
 
-	public void dnaDecoder(double[] chromosome,  LinkedList<AllShop> tmpAllShop, LinkedList<SellableType> tmpSell,
+	public void dnaDecoder(double[] chromosome, LinkedList<AllShop> tmpAllShop, LinkedList<SellableType> tmpSell,
 			LinkedList<LV1000Type> tmpLV) {
-		
-		this.chromosome  = chromosome;
+
+		this.chromosome = chromosome;
 
 		curChro = 0;
 
@@ -537,11 +557,9 @@ public class Core {
 
 		} while (true);
 
-		
 	}
 
 	public int getNextUnuseMissionItem(int swapNextxTime, boolean usedItList[]) {
-
 
 		int returnId = -1;
 
