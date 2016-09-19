@@ -55,6 +55,11 @@ public class DigEventListener2 implements Listener {
 			}
 
 			loadworldfile();
+			
+			unloadChunk uc = new unloadChunk();
+			Bukkit.getScheduler().scheduleSyncRepeatingTask(ac, uc, 1200, 1200);
+			
+			
 		}
 	}
 
@@ -321,7 +326,7 @@ public class DigEventListener2 implements Listener {
 	class unloadChunk implements Runnable {
 
 		public unloadChunk() {
-			Bukkit.getScheduler().scheduleSyncDelayedTask(ac, this, 60);
+			//Bukkit.getScheduler().scheduleSyncDelayedTask(ac, this, 60);
 		}
 
 		@Override
@@ -544,12 +549,12 @@ public class DigEventListener2 implements Listener {
 
 	@EventHandler
 	public void eventja(PlayerQuitEvent event) {
-		unloadChunk uc = new unloadChunk();
+	//	unloadChunk uc = new unloadChunk();
 	}
 
 	@EventHandler
 	public void eventja(PlayerTeleportEvent event) {
-		unloadChunk uc = new unloadChunk();
+	//	unloadChunk uc = new unloadChunk();
 	}
 
 	@EventHandler
