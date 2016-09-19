@@ -46,7 +46,7 @@ public class DigEventListener2 implements Listener {
 	 * synchronized public void run() {
 	 */
 	public long lastClean = System.currentTimeMillis();
-	public long MaxDelay = 10000;
+	public long MaxDelay = 5000;
 
 	public static boolean isRunWorld(String worldName) {
 		return tr.isrunworld(ac.getName(), worldName);
@@ -93,60 +93,317 @@ public class DigEventListener2 implements Listener {
 		public String l2;
 		public String l3;
 	}
-
-	class CleanThisChunk_c implements Runnable {
-		Chunk chunk;
-
+	
+	class CleanThisChunk_c_paste_part implements Runnable {
+		private Chunk chunk;
+		private int lastY = 0;
+		private int lastCurY = 0;
+		private int bid[][][];
+		private byte bdata[][][];
+		private World world ;
+		private LinkedList<SpawnerBlockType> spawner = new LinkedList<SpawnerBlockType>();
+		private LinkedList<ChestBlockType> chester = new LinkedList<ChestBlockType>();
+		private LinkedList<SignType> signer = new LinkedList<SignType>();
+		
+		private int maxYdo = 7;
+		
+		public CleanThisChunk_c_paste_part(World world,Chunk chunk ,
+				int lastY,int lastCurY,int bid[][][] , byte bdata[][][],
+				LinkedList<SpawnerBlockType> spawner , LinkedList<ChestBlockType> chester , 
+				LinkedList<SignType> signer) {
+			this.chunk = chunk;
+			this.lastCurY  = lastCurY;
+			this.lastY = lastY; // 255
+			this.bid = bid;
+			this.bdata =  bdata;
+			this.world = world;
+			this.spawner = spawner;
+			this.chester = chester;
+			this.signer = signer;
+			
+		}
+		
+		@Override
 		public void run() {
-
-			World world = chunk.getWorld();
-			if (world == null) {
-				return;
-			}
-			if (!isRunWorld(world.getName())) {
-				return;
-			}
-
-			// printA("cleaning Area : " + (chunk.getX() *16) + ",?," +
-			// (chunk.getZ() *16)+ " > " + chunkdel_max );
-			// printC("cleaning Area : " + (chunk.getX() *16) + ",?," +
-			// (chunk.getZ() *16) );
-			// printA("cleaning area... " + (chunk.getX() *16) + ",?," +
-			// (chunk.getZ() *16)+ " > " + chunkdel_max );
+			Block block;
+			lastClean = System.currentTimeMillis();
 			long startClean = System.currentTimeMillis();
+			Block block2;
+			
+			int countY = 0;
+			
+			int curY = lastCurY;// 255;
+			
+			for (int y = lastY; y < 256; y++) {
+				countY ++ ;
+				
+				lastClean = System.currentTimeMillis();
+				
+				if (countY >= maxYdo) {
+					// pause
+					
+					CleanThisChunk_c_paste_part newThread = new
+							CleanThisChunk_c_paste_part(world, chunk, y, 
+									curY, bid, bdata, spawner, chester, signer);
+					Bukkit.getScheduler().scheduleSyncDelayedTask(ac, newThread,1);
+					lastClean = System.currentTimeMillis();
+					//dprint.r.printAll("recall paste Y " + y + " , "  + curY);
+					
+					return;
+				}
+				
+				
+				
+				curY = 255 - y;
+				// printC("cleaning... : " + (chunk.getX() *16) + "," +
+				// y + "," + (chunk.getZ() *16)
+				// +" > " + chunkdel_max);
+				// printA("cleaning... : " + (chunk.getX() *16) + "," +
+				// y + "," + (chunk.getZ() *16));
+				
 
-			Block block = null;
-			Block block2 = null;
+				int gz = -1;
+				int gx = -1;
+				for (int z = ((chunk.getZ() * 16)); z <= ((chunk.getZ() * 16) + 15); z++) {
+					gz++;
+					gx = -1;
+					for (int x = ((chunk.getX() * 16)); x <= ((chunk.getX() * 16) + 15); x++) {
+						gx++;
+						
+						if (bid[gx][y][gz] == 0 && bid[gx][curY][gz] == 0) {
+							
+							continue;
+						}
+						
+						block = world.getBlockAt(x, curY, z);
+						/*
+						 * bid[x][y][z] = block.getTypeId(); bdata[x][y][z] =
+						 * block.getData();
+						 */
 
-			if (isCleanedChunk(chunk) == true) {
-				return;
+						block.setTypeIdAndData(bid[gx][y][gz], bdata[gx][y][gz], false);
+
+						switch (block.getType()) {
+						case MOB_SPAWNER:
+							// load spawner
+							for (int lop = 0; lop < spawner.size(); lop++) {
+								SpawnerBlockType tmp = spawner.get(lop);
+								if (tmp.x == gx && tmp.y == y && tmp.z == gz) {
+									CreatureSpawner cc = (CreatureSpawner) block.getState();
+									cc.setSpawnedType(tmp.abc.getSpawnedType());
+									cc.update(true);
+								}
+							}
+							break;
+						case CHEST:
+							for (int lop = 0; lop < chester.size(); lop++) {
+								ChestBlockType tmp = chester.get(lop);
+								if (tmp.x == gx && tmp.y == y && tmp.z == gz) {
+									Chest cc = (Chest) block.getState();
+
+									for (int lop2 = 0; lop2 < tmp.item.size(); lop2++) {
+										cc.getInventory().addItem(tmp.item.get(lop2));
+									}
+
+									cc.update(true);
+								}
+							}
+							break;
+
+						case DISPENSER:
+							for (int lop = 0; lop < chester.size(); lop++) {
+								ChestBlockType tmp = chester.get(lop);
+								if (tmp.x == gx && tmp.y == y && tmp.z == gz) {
+									Dispenser cc = (Dispenser) block.getState();
+
+									for (int lop2 = 0; lop2 < tmp.item.size(); lop2++) {
+										cc.getInventory().addItem(tmp.item.get(lop2));
+									}
+
+									cc.update(true);
+								}
+							}
+							break;
+
+						case DROPPER:
+							for (int lop = 0; lop < chester.size(); lop++) {
+								ChestBlockType tmp = chester.get(lop);
+								if (tmp.x == gx && tmp.y == y && tmp.z == gz) {
+									Dropper cc = (Dropper) block.getState();
+
+									for (int lop2 = 0; lop2 < tmp.item.size(); lop2++) {
+										cc.getInventory().addItem(tmp.item.get(lop2));
+									}
+
+									cc.update(true);
+								}
+							}
+							break;
+						case FURNACE:
+							for (int lop = 0; lop < chester.size(); lop++) {
+								ChestBlockType tmp = chester.get(lop);
+								if (tmp.x == gx && tmp.y == y && tmp.z == gz) {
+									Furnace cc = (Furnace) block.getState();
+
+									for (int lop2 = 0; lop2 < tmp.item.size(); lop2++) {
+										cc.getInventory().addItem(tmp.item.get(lop2));
+									}
+
+									cc.update(true);
+								}
+							}
+							break;
+
+						case HOPPER:
+							for (int lop = 0; lop < chester.size(); lop++) {
+								ChestBlockType tmp = chester.get(lop);
+								if (tmp.x == gx && tmp.y == y && tmp.z == gz) {
+									Hopper cc = (Hopper) block.getState();
+
+									for (int lop2 = 0; lop2 < tmp.item.size(); lop2++) {
+										cc.getInventory().addItem(tmp.item.get(lop2));
+									}
+
+									cc.update(true);
+								}
+							}
+							break;
+
+						case SIGN_POST:
+						case WALL_SIGN:
+							for (int lop = 0; lop < signer.size(); lop++) {
+								SignType tmp = signer.get(lop);
+								if (tmp.x == gx && tmp.y == y && tmp.z == gz) {
+
+									Sign cc = (Sign) block.getState();
+
+									cc.setLine(0, tmp.l0);
+									cc.setLine(1, tmp.l1);
+									cc.setLine(2, tmp.l2);
+									cc.setLine(3, tmp.l3);
+
+									cc.update(true);
+								}
+							}
+							break;
+
+						}
+
+					}
+				}
+
+			} // time
+
+			
+			//dprint.r.printC("pasting time used " + (System.currentTimeMillis() - startClean));
+
+			startClean = System.currentTimeMillis();
+			
+			
+			for (Entity en : chunk.getEntities()) {
+				if (en == null) {
+					continue;
+				}
+				// if (en.getType() == EntityType.item)
+
+				if (en.getType() == EntityType.PLAYER) {
+					if (en.getLocation().getY() > 128) {
+						continue;
+					}
+				}
+
+				Location loc2 = en.getLocation();
+				loc2.setY(256 - en.getLocation().getY());
+				en.teleport(loc2);
 			}
 
-			Block block3 = null;
-			block3 = getBlockOfChunk(chunk);
+			//dprint.r.printC("Entity copying time used " + (System.currentTimeMillis() - startClean));
 
-			dprint.r.printC("invert " + chunk.getX() * 16 + "," + chunk.getZ() * 16);
-			dprint.r.printC("invert " + chunk.getX() * 16 + "," + chunk.getZ() * 16);
-
-			int bid[][][] = new int[16][256][16];
-			/*
-			 * for (int i = 0 ; i < 16 ; i ++ ) { bid[i] = new int[256][]; for
-			 * (int j = 0 ; j < 256 ; j++ ) { bid[i][j] = new int[16]; } }
-			 */
-
-			byte bdata[][][] = new byte[16][256][16];
-
-			LinkedList<SpawnerBlockType> spawner = new LinkedList<SpawnerBlockType>();
-			LinkedList<ChestBlockType> chester = new LinkedList<ChestBlockType>();
-			LinkedList<SignType> signer = new LinkedList<SignType>();
+			startClean = System.currentTimeMillis();
+			
+			// add to new chunk
+			block2 = world.getBlockAt(chunk.getX() * 16, 255, chunk.getZ() * 16);
+			block2.setTypeId(19);
 
 			/*
-			 * for (int i = 0 ; i < 16 ; i ++ ) { bdata[i] = new byte[256][];
-			 * for (int j = 0 ; j < 256 ; j++ ) { bdata[i][j] = new byte[16]; }
-			 * }
+			 * for (Entity en: chunk.getWorld().getEntities()){ if (en.getType()
+			 * == EntityType.DROPPED_ITEM){ en.remove(); } }
 			 */
-			for (int y = 0; y < 256; y++) {
 
+		//	MaxDelay = System.currentTimeMillis() - startClean;
+			long timeUsed = System.currentTimeMillis() - startClean;
+
+			if (MaxDelay < 5000) {
+				MaxDelay = 5000;
+
+			}
+			if (MaxDelay > 60000) {
+				MaxDelay = 60000;
+			}
+			
+
+			dprint.r.printC("invert cleaned Area : " + (chunk.getX() * 16) + ",?," + (chunk.getZ() * 16));
+			
+			lastClean = System.currentTimeMillis();
+			// printA("cleaned Area : " + (chunk.getX() *16) + ",?," +
+			// (chunk.getZ() *16)+ " > " + chunkdel_max );
+			// printA("Cleaned Area " + (chunk.getX() *16) + ",?," +
+			// (chunk.getZ() *16)+ " > " + chunkdel_max );
+
+		}
+	}
+	
+	class CleanThisChunk_c_copy_part implements Runnable{
+		
+		private Chunk chunk;
+		private int lastY = 0;
+		private int bid[][][];
+		private byte bdata[][][];
+		private World world ;
+		private LinkedList<SpawnerBlockType> spawner = new LinkedList<SpawnerBlockType>();
+		private LinkedList<ChestBlockType> chester = new LinkedList<ChestBlockType>();
+		private LinkedList<SignType> signer = new LinkedList<SignType>();
+		
+		private int maxYdo = 7;
+		
+		public CleanThisChunk_c_copy_part(World world,Chunk chunk ,
+				int lastY,int bid[][][] , byte bdata[][][],
+				LinkedList<SpawnerBlockType> spawner , LinkedList<ChestBlockType> chester , 
+				LinkedList<SignType> signer) {
+			this.chunk = chunk;
+			this.lastY = lastY; // 255
+			this.bid = bid;
+			this.bdata =  bdata;
+			this.world = world;
+			this.spawner = spawner;
+			this.chester = chester;
+			this.signer = signer;
+			
+		}
+		
+		
+		@Override
+		public void run() {
+			// TODO Auto-generated method stub
+			
+			Block block;
+			long startClean = System.currentTimeMillis();
+			lastClean = System.currentTimeMillis();
+			
+			int countY = 0;
+			for (int y = this.lastY; y < 256; y++) {
+				countY ++;
+				lastClean = System.currentTimeMillis();
+				if (countY  > maxYdo) {
+					CleanThisChunk_c_copy_part newThread = 
+							new CleanThisChunk_c_copy_part(world, chunk, y,
+									bid, bdata, spawner, chester, signer);
+					Bukkit.getScheduler().scheduleSyncDelayedTask(ac, newThread,1);
+					lastClean = System.currentTimeMillis();
+					//dprint.r.printAll("recall copy Y " + y + " , "  + y);
+					
+					return;
+				}
 				// printC("cleaning... : " + (chunk.getX() *16) + "," +
 				// y + "," + (chunk.getZ() *16)
 				// +" > " + chunkdel_max);
@@ -299,192 +556,84 @@ public class DigEventListener2 implements Listener {
 							break;
 						}
 
-						block.setType(Material.AIR);
+						//block.setType(Material.AIR);
 					}
 				}
 
 			} // time
+			
+			
+		//	dprint.r.printC("copying time used " + (System.currentTimeMillis() - startClean));
 
-			int curY = 255;
-			for (int y = 0; y < 256; y++) {
-				curY = 255 - y;
-				// printC("cleaning... : " + (chunk.getX() *16) + "," +
-				// y + "," + (chunk.getZ() *16)
-				// +" > " + chunkdel_max);
-				// printA("cleaning... : " + (chunk.getX() *16) + "," +
-				// y + "," + (chunk.getZ() *16));
+			startClean = System.currentTimeMillis();
+			
+			
+			CleanThisChunk_c_paste_part newThread = new
+					CleanThisChunk_c_paste_part(world, chunk, 0, 
+							255, bid, bdata, spawner, chester, signer);
+			Bukkit.getScheduler().scheduleSyncDelayedTask(ac, newThread);
+			return;
+		}
+	}
 
-				int gz = -1;
-				int gx = -1;
-				for (int z = ((chunk.getZ() * 16)); z <= ((chunk.getZ() * 16) + 15); z++) {
-					gz++;
-					gx = -1;
-					for (int x = ((chunk.getX() * 16)); x <= ((chunk.getX() * 16) + 15); x++) {
-						gx++;
-						block = world.getBlockAt(x, curY, z);
-						/*
-						 * bid[x][y][z] = block.getTypeId(); bdata[x][y][z] =
-						 * block.getData();
-						 */
+	class CleanThisChunk_c implements Runnable {
+		Chunk chunk;
 
-						block.setTypeIdAndData(bid[gx][y][gz], bdata[gx][y][gz], false);
+		public void run() {
 
-						switch (block.getType()) {
-						case MOB_SPAWNER:
-							// load spawner
-							for (int lop = 0; lop < spawner.size(); lop++) {
-								SpawnerBlockType tmp = spawner.get(lop);
-								if (tmp.x == gx && tmp.y == y && tmp.z == gz) {
-									CreatureSpawner cc = (CreatureSpawner) block.getState();
-									cc.setSpawnedType(tmp.abc.getSpawnedType());
-									cc.update(true);
-								}
-							}
-							break;
-						case CHEST:
-							for (int lop = 0; lop < chester.size(); lop++) {
-								ChestBlockType tmp = chester.get(lop);
-								if (tmp.x == gx && tmp.y == y && tmp.z == gz) {
-									Chest cc = (Chest) block.getState();
-
-									for (int lop2 = 0; lop2 < tmp.item.size(); lop2++) {
-										cc.getInventory().addItem(tmp.item.get(lop2));
-									}
-
-									cc.update(true);
-								}
-							}
-							break;
-
-						case DISPENSER:
-							for (int lop = 0; lop < chester.size(); lop++) {
-								ChestBlockType tmp = chester.get(lop);
-								if (tmp.x == gx && tmp.y == y && tmp.z == gz) {
-									Dispenser cc = (Dispenser) block.getState();
-
-									for (int lop2 = 0; lop2 < tmp.item.size(); lop2++) {
-										cc.getInventory().addItem(tmp.item.get(lop2));
-									}
-
-									cc.update(true);
-								}
-							}
-							break;
-
-						case DROPPER:
-							for (int lop = 0; lop < chester.size(); lop++) {
-								ChestBlockType tmp = chester.get(lop);
-								if (tmp.x == gx && tmp.y == y && tmp.z == gz) {
-									Dropper cc = (Dropper) block.getState();
-
-									for (int lop2 = 0; lop2 < tmp.item.size(); lop2++) {
-										cc.getInventory().addItem(tmp.item.get(lop2));
-									}
-
-									cc.update(true);
-								}
-							}
-							break;
-						case FURNACE:
-							for (int lop = 0; lop < chester.size(); lop++) {
-								ChestBlockType tmp = chester.get(lop);
-								if (tmp.x == gx && tmp.y == y && tmp.z == gz) {
-									Furnace cc = (Furnace) block.getState();
-
-									for (int lop2 = 0; lop2 < tmp.item.size(); lop2++) {
-										cc.getInventory().addItem(tmp.item.get(lop2));
-									}
-
-									cc.update(true);
-								}
-							}
-							break;
-
-						case HOPPER:
-							for (int lop = 0; lop < chester.size(); lop++) {
-								ChestBlockType tmp = chester.get(lop);
-								if (tmp.x == gx && tmp.y == y && tmp.z == gz) {
-									Hopper cc = (Hopper) block.getState();
-
-									for (int lop2 = 0; lop2 < tmp.item.size(); lop2++) {
-										cc.getInventory().addItem(tmp.item.get(lop2));
-									}
-
-									cc.update(true);
-								}
-							}
-							break;
-
-						case SIGN_POST:
-						case WALL_SIGN:
-							for (int lop = 0; lop < signer.size(); lop++) {
-								SignType tmp = signer.get(lop);
-								if (tmp.x == gx && tmp.y == y && tmp.z == gz) {
-
-									Sign cc = (Sign) block.getState();
-
-									cc.setLine(0, tmp.l0);
-									cc.setLine(1, tmp.l1);
-									cc.setLine(2, tmp.l2);
-									cc.setLine(3, tmp.l3);
-
-									cc.update(true);
-								}
-							}
-							break;
-
-						}
-
-					}
-				}
-
-			} // time
-
-			for (Entity en : chunk.getEntities()) {
-				if (en == null) {
-					continue;
-				}
-				// if (en.getType() == EntityType.item)
-
-				if (en.getType() == EntityType.PLAYER) {
-					if (en.getLocation().getY() > 128) {
-						continue;
-					}
-				}
-
-				Location loc2 = en.getLocation();
-				loc2.setY(256 - en.getLocation().getY());
-				en.teleport(loc2);
+			World world = chunk.getWorld();
+			if (world == null) {
+				return;
+			}
+			if (!isRunWorld(world.getName())) {
+				return;
 			}
 
-			// add to new chunk
-			block2 = world.getBlockAt(chunk.getX() * 16, 255, chunk.getZ() * 16);
-			block2.setTypeId(19);
+			// printA("cleaning Area : " + (chunk.getX() *16) + ",?," +
+			// (chunk.getZ() *16)+ " > " + chunkdel_max );
+			// printC("cleaning Area : " + (chunk.getX() *16) + ",?," +
+			// (chunk.getZ() *16) );
+			// printA("cleaning area... " + (chunk.getX() *16) + ",?," +
+			// (chunk.getZ() *16)+ " > " + chunkdel_max );
+			long startClean = System.currentTimeMillis();
 
+			Block block = null;
+			Block block2 = null;
+
+			if (isCleanedChunk(chunk) == true) {
+				return;
+			}
+
+			Block block3 = null;
+			block3 = getBlockOfChunk(chunk);
+
+			dprint.r.printC("invert " + chunk.getX() * 16 + "," + chunk.getZ() * 16);
+			dprint.r.printC("invert " + chunk.getX() * 16 + "," + chunk.getZ() * 16);
+
+			int bid[][][] = new int[16][256][16];
 			/*
-			 * for (Entity en: chunk.getWorld().getEntities()){ if (en.getType()
-			 * == EntityType.DROPPED_ITEM){ en.remove(); } }
+			 * for (int i = 0 ; i < 16 ; i ++ ) { bid[i] = new int[256][]; for
+			 * (int j = 0 ; j < 256 ; j++ ) { bid[i][j] = new int[16]; } }
 			 */
 
-			MaxDelay = System.currentTimeMillis() - startClean;
+			byte bdata[][][] = new byte[16][256][16];
 
-			if (MaxDelay < 5000) {
-				MaxDelay = 5000;
+			LinkedList<SpawnerBlockType> spawner = new LinkedList<SpawnerBlockType>();
+			LinkedList<ChestBlockType> chester = new LinkedList<ChestBlockType>();
+			LinkedList<SignType> signer = new LinkedList<SignType>();
 
-			}
-			if (MaxDelay > 60000) {
-				MaxDelay = 60000;
-			}
-			lastClean = System.currentTimeMillis();
-
-			dprint.r.printC("invert cleaned Area : " + (chunk.getX() * 16) + ",?," + (chunk.getZ() * 16) + " maxDelay "
-					+ MaxDelay);
-			// printA("cleaned Area : " + (chunk.getX() *16) + ",?," +
-			// (chunk.getZ() *16)+ " > " + chunkdel_max );
-			// printA("Cleaned Area " + (chunk.getX() *16) + ",?," +
-			// (chunk.getZ() *16)+ " > " + chunkdel_max );
-
-		} // sync
+			/*
+			 * for (int i = 0 ; i < 16 ; i ++ ) { bdata[i] = new byte[256][];
+			 * for (int j = 0 ; j < 256 ; j++ ) { bdata[i][j] = new byte[16]; }
+			 * }
+			 */
+			
+			//Copying
+			
+			CleanThisChunk_c_copy_part newThread = new 
+					CleanThisChunk_c_copy_part(world, chunk, 0, bid, bdata, spawner, chester, signer);
+			Bukkit.getScheduler().scheduleSyncDelayedTask(ac, newThread,2);
+		} // run
 
 	} // project
 
@@ -754,6 +903,7 @@ public class DigEventListener2 implements Listener {
 		}
 
 	}
+	
 
 	@EventHandler
 	public void eventja(BlockFromToEvent e) {
