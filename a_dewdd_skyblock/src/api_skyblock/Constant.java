@@ -28,7 +28,7 @@ public class Constant {
 	
 		String aa = "";
 		switch (mission) {
-		case LV_0_COBBLESTONE_MACHINE: // get cobble stone
+		case LV_0_BREAK_COBBLESTONE: // get cobble stone
 			aa = tr.gettr(header + mission);
 	
 			break;

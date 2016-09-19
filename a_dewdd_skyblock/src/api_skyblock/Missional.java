@@ -2,7 +2,7 @@ package api_skyblock;
 
 public enum  Missional {
 	LV_NULL,
-	LV_0_COBBLESTONE_MACHINE,
+	LV_0_BREAK_COBBLESTONE,
 	LV_1_BREAK_STONE,
 	LV_2_USE_BONE_MEAL,
 	LV_3_DROP_TOUCH,
@@ -26,7 +26,7 @@ public enum  Missional {
 		
 		switch (m) {
 		case 0:
-			a = Missional.LV_0_COBBLESTONE_MACHINE;
+			a = Missional.LV_0_BREAK_COBBLESTONE;
 			break;
 		case 1:
 			a = Missional.LV_1_BREAK_STONE;
@@ -64,7 +64,7 @@ public enum  Missional {
 		
 		
 		switch (m) {
-		case LV_0_COBBLESTONE_MACHINE:
+		case LV_0_BREAK_COBBLESTONE:
 			id = 0;
 			break;
 		case LV_1_BREAK_STONE:

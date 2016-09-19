@@ -119,7 +119,7 @@ public class api_skyblock {
 					rs[newid].p[0] = player.getName();
 					rs[newid].p[1] = Constant.flag_autocut;
 					rs[newid].p[2] = Constant.flag_autoabsorb;
-					rs[newid].mission = Missional.LV_0_COBBLESTONE_MACHINE;
+					rs[newid].mission = Missional.LV_0_BREAK_COBBLESTONE;
 					player.getWorld().getBlockAt(x - 16, y, z - 16).getChunk().getX();
 					player.getWorld().getBlockAt(x - 16, y, z - 16).getChunk().getZ();
 
@@ -407,7 +407,7 @@ public class api_skyblock {
 	public void applyReward(int rsID) {
 
 		switch (rs[rsID].mission) {
-		case LV_0_COBBLESTONE_MACHINE: // get cobble stone
+		case LV_0_BREAK_COBBLESTONE: // get cobble stone
 
 			Block bo = getBlockMiddleRS(rsID);
 			Block bo2 = searchSpaceCube(bo, 5, 5);
@@ -866,6 +866,8 @@ public class api_skyblock {
 
 				if (m.length == 24) {
 					int bb = (int) Double.parseDouble(m[23]);
+					
+				//	bb = 0;
 					rs[rsMax - 1].mission = Missional.idToMission(bb);
 
 				}

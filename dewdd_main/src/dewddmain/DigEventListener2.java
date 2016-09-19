@@ -2954,10 +2954,10 @@ public class DigEventListener2 implements Listener {
 		}
 		else {
 
-			if (block.getTypeId() == Material.CHEST.getId()
+			/*if (block.getTypeId() == Material.CHEST.getId()
 					|| block.getTypeId() == Material.TRAPPED_CHEST.getId()) {
 				dew.autosortchest2(block, player);
-			}
+			}*/
 
 			if (player.getItemInHand().getTypeId() == Material.REDSTONE_TORCH_OFF
 					.getId()
@@ -2971,19 +2971,7 @@ public class DigEventListener2 implements Listener {
 
 				Sign sign = (Sign) block.getState();
 
-				if (sign.getLine(0) != null) {
-					dew.linkurl(player, sign.getLine(0));
-				}
-				if (sign.getLine(0).equalsIgnoreCase("[dewtobox]") == true) {
-					// player.sendMessage("dewtobox run");
-					dew.chestabsorb();
-				}
-
-				if (sign.getLine(0).equalsIgnoreCase("[dewsortbox]")
-						|| sign.getLine(0).equalsIgnoreCase("[dewsorttype]")) {
-					// player.sendMessage("dewtobox run");
-					dew.chestabsorb2();
-				}
+				
 
 				if (sign.getLine(0).endsWith("[dclear]") == true) {
 					if (api_admin.dewddadmin.is2admin(player) == false

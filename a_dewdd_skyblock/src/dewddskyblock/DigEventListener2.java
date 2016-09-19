@@ -477,14 +477,14 @@ public class DigEventListener2 implements Listener {
 
 				switch (api_skyblock.rs[getid].mission) {
 
-				case LV_0_COBBLESTONE_MACHINE:
+				case LV_0_BREAK_COBBLESTONE:
 
 					// search nearest stone
 					Block bd = Bukkit.getWorld("world").getBlockAt(api_skyblock.rs[getid].x, api_skyblock.rs[getid].y,
 							api_skyblock.rs[getid].z);
 
 					if (block.getType() == Material.COBBLESTONE) {
-						CallNextMission bb = new CallNextMission(getid, Missional.LV_0_COBBLESTONE_MACHINE);
+						CallNextMission bb = new CallNextMission(getid, Missional.LV_0_BREAK_COBBLESTONE);
 						Bukkit.getScheduler().scheduleSyncDelayedTask(ac, bb, 1);
 					}
 
@@ -1097,7 +1097,7 @@ public class DigEventListener2 implements Listener {
 
 					if (m.length == 2) {
 
-						api_skyblock.rs[getid].mission = Missional.LV_0_COBBLESTONE_MACHINE;
+						api_skyblock.rs[getid].mission = Missional.LV_0_BREAK_COBBLESTONE;
 						dprint.r.printAll(tr.gettr("reseted_lv_of_is_this_guys") + api_skyblock.rs[getid].p[0]);
 
 						dew.printToAllPlayerOnRS(getid, Constant.getMissionHeader(dew.rs[getid].mission));
@@ -1543,7 +1543,7 @@ public class DigEventListener2 implements Listener {
 				int pidmax = 0;
 
 				for (int i = 0; i < api_skyblock.rsMax; i++) {
-					if (api_skyblock.rs[i].mission != Missional.LV_0_COBBLESTONE_MACHINE) {
+					if (api_skyblock.rs[i].mission != Missional.LV_0_BREAK_COBBLESTONE) {
 						pid[pidmax] = i;
 						pidmax++;
 

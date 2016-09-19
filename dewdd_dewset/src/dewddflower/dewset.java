@@ -198,434 +198,7 @@ public class dewset extends dewset_interface {
 		}
 	}
 
-	class chestabsorb_c implements Runnable {
-
-		public chestabsorb_c() {
-			Bukkit.getScheduler().scheduleSyncDelayedTask(ac, this);
-		}
-
-		@Override
-		public void run() {
-			int d4 = 20;
-			Block block = null;
-			Block block2 = null;
-			int d5 = 1;
-			Chest chest = null;
-			int slotp = -1;
-
-			for (Player player : Bukkit.getOnlinePlayers()) {
-				if (api_admin.dewddadmin.is2moderator(player) == true) {
-					continue;
-				}
-				// search nearby box and sign ... ummm yes
-				block = player.getLocation().getBlock();
-
-				/*
-				 * if (checkpermissionarea(block)== false) { not protect area
-				 * continue; }
-				 */
-				if (checkpermissionarea(block, player, "build") == true) {
-					// build
-					continue;
-				}
-
-				for (int gx = 0 - d4; gx <= 0 + d4; gx++) {
-					for (int gy = 0 - d4; gy <= 0 + d4; gy++) {
-						for (int gz = 0 - d4; gz <= 0 + d4; gz++) {
-							// first search sign
-							block = player.getLocation().getBlock()
-									.getRelative(gx, gy, gz);
-							if (block == null) {
-								continue;
-							}
-
-							if (block.getTypeId() != 63
-									&& block.getTypeId() != 68) {
-								continue;
-							}
-
-							Sign sign = (Sign) block.getState();
-							if (sign.getLine(0).equalsIgnoreCase("[dewtobox]") == true) {
-								// player.sendMessage(dprint.r.color("found dewtobox sign : "
-								// +
-								// block.getLocation().getBlockX() + ","
-								// + block.getLocation().getBlockY() + "," +
-								// block.getLocation().getBlockZ());
-
-								int intb = Integer.parseInt(sign.getLine(1));
-								if (intb == 0) {
-									continue;
-								}
-
-								// after found sign so find box
-
-								// box
-								for (int ax = 0 - d5; ax <= 0 + d5; ax++) {
-									for (int ay = 0 - d5; ay <= 0 + d5; ay++) {
-										for (int az = 0 - d5; az <= 0 + d5; az++) {
-											block2 = block.getRelative(ax, ay,
-													az);
-											if (block2 == null) {
-												continue;
-											}
-
-											if (block2.getTypeId() != 54) {
-												continue;
-											}
-
-											// player.sendMessage(dprint.r.color("found dewtobox chest : "
-											// +
-											// block2.getLocation().getBlockX()
-											// +
-											// ","
-											// +
-											// block2.getLocation().getBlockY()
-											// +
-											// "," +
-											// block2.getLocation().getBlockZ());
-
-											slotp = player.getInventory()
-													.first(intb);
-											if (slotp == -1) {
-												continue;
-											}
-
-											chest = (Chest) block2.getState();
-
-											int chestslot = -1;
-											chestslot = chest.getInventory()
-													.firstEmpty();
-											if (chestslot == -1) {
-												continue;
-											}
-
-											// ready to move
-											chest.getInventory().addItem(
-													player.getInventory()
-															.getItem(slotp));
-
-											player.getInventory().clear(slotp);
-
-											player.sendMessage(dprint.r
-													.color("[dewtobox] "
-															+ tr.gettr("moved")
-															+ intb));
-
-											// added
-
-											// if true
-											// check is empty
-											// check item of player
-
-										}
-									}
-								}
-
-							} // dew to box
-
-						} // loop
-					}
-				}
-
-			} // player
-		}
-	}
-
-	class chestabsorb_c2 implements Runnable {
-
-		public chestabsorb_c2() {
-			Bukkit.getScheduler().scheduleSyncDelayedTask(ac, this, 1);
-		}
-
-		@Override
-		public void run() {
-
-			long nn = System.currentTimeMillis();
-
-			if (nn - lastsort2 < 100) {
-				Bukkit.getScheduler().scheduleSyncDelayedTask(ac, this, 10);
-				return;
-			}
-
-			lastsort2 = nn;
-
-			int d4 = 20;
-			Block block = null;
-
-			for (Player player : Bukkit.getOnlinePlayers()) {
-				if (api_admin.dewddadmin.is2moderator(player) == true) {
-					continue;
-				}
-				// search nearby box and sign ... ummm yes
-				block = player.getLocation().getBlock();
-
-				/*
-				 * if (checkpermissionarea(block)== false) { not protect area
-				 * continue; }
-				 */
-				if (checkpermissionarea(block, player, "build") == true) {
-					// build
-					continue;
-				}
-
-				// player.sendMessage(dprint.r.color("searching... dewsortbox sign");
-
-				// search any sign near player
-				for (int gx = 0 - d4; gx <= 0 + d4; gx++) {
-					for (int gy = 0 - d4; gy <= 0 + d4; gy++) {
-						for (int gz = 0 - d4; gz <= 0 + d4; gz++) {
-							lastsort2 = nn;
-
-							// first search sign
-							block = player.getLocation().getBlock()
-									.getRelative(gx, gy, gz);
-
-							if (block.getTypeId() != 63
-									&& block.getTypeId() != 68) {
-								continue;
-							}
-
-							// dewsortbox
-							// dewsorttype
-
-							Sign sign = (Sign) block.getState();
-							if (sign.getLine(0)
-									.equalsIgnoreCase("[dewsortbox]") == true) {
-
-								/*
-								 * player.sendMessage(dprint.r.color(
-								 * "cur found dewsortbox sign at " +
-								 * block.getX() + "," + block.getY() + "," +
-								 * block.getZ());
-								 */
-
-								String sorttype = sign.getLine(1);
-								if (sorttype.equalsIgnoreCase("")) {
-									player.sendMessage(dprint.r.color(tr
-											.gettr("sorttype_name_must_not_null")));
-									continue;
-								}
-
-								// got sign type
-								// search current chest
-								Block curchest = chestnearsign(block);
-
-								if (curchest == null) {
-									player.sendMessage(dprint.r
-											.color("curchest == null"));
-
-									continue;
-
-								}
-
-								Block curprochest = protochest(block, d4,
-										sorttype);
-								if (curprochest == null) {
-									player.sendMessage(dprint.r
-											.color("curprochest == null"));
-
-									continue;
-
-								}
-
-								// player.sendMessage(dprint.r.color("opening curchest..."+
-								// curchest.getTypeId());
-								Chest curchest1 = (Chest) curchest.getState();
-								// player.sendMessage(dprint.r.color("opening curchest done");
-
-								// player.sendMessage(dprint.r.color("opening curprochest..."+
-								// curprochest.getTypeId());
-
-								Chest curchestin = (Chest) curprochest
-										.getState();
-								// player.sendMessage(dprint.r.color("opening curprochest done");
-
-								// player.sendMessage(dprint.r.color("opened both chest");
-								// after got cur chest
-								// search another dewsortbox for swap
-								// *********************
-								Block temp = null;
-								for (int jx = 0 - d4; jx <= 0 + d4; jx++) {
-									for (int jy = 0 - d4; jy <= 0 + d4; jy++) {
-										for (int jz = 0 - d4; jz <= 0 + d4; jz++) {
-											if (jx == 0 && jy == 0 && jz == 0) {
-												continue;
-											}
-											// first search sign
-											temp = block.getLocation()
-													.getBlock()
-													.getRelative(jx, jy, jz);
-
-											if (temp.getTypeId() != 63
-													&& temp.getTypeId() != 68) {
-												continue;
-											}
-
-											// dewsortbox
-											// dewsorttype
-
-											Sign js = (Sign) temp.getState();
-											if (js.getLine(0).equalsIgnoreCase(
-													"[dewsortbox]") == true) {
-
-												/*
-												 * player.sendMessage(dprint.r.color
-												 * ("swap found dewsortbox at "
-												 * + temp.getX() + "," +
-												 * temp.getY() + "," +
-												 * temp.getZ());
-												 */
-
-												String jsorttype = js
-														.getLine(1);
-												if (jsorttype
-														.equalsIgnoreCase("")) {
-													// player.sendMessage(dprint.r.color("swap_sorttype_name_must_not_null");
-													continue;
-												}
-
-												// got sign type
-												// search current chest
-												Block swapchest = chestnearsign(temp);
-												if (swapchest == null) {
-													// player.sendMessage(dprint.r.color("swapchest  == null");
-													continue;
-												}
-
-												if (swapchest
-														.getLocation()
-														.distance(
-																curchest.getLocation()) <= 1) {
-													continue;
-												}
-
-												Block swapprochest = protochest(
-														temp, d4, jsorttype);
-												if (swapprochest == null) {
-													// player.sendMessage(dprint.r.color("swapprochest == null");
-													continue;
-												}
-
-												// player.sendMessage(dprint.r.color("opening swapprochest...");
-
-												Chest swapchestin = (Chest) swapprochest
-														.getState();
-												// player.sendMessage(dprint.r.color("opening swapchest...");
-
-												Chest swapchest1 = (Chest) swapchest
-														.getState();
-
-												// player.sendMessage(dprint.r.color("opened both chest swap");
-
-												for (int ikn = 0; ikn < curchest1
-														.getInventory()
-														.getSize(); ikn++) {
-													ItemStack i1 = curchest1
-															.getInventory()
-															.getItem(ikn);
-
-													if (i1 == null) {
-														continue;
-													}
-
-													// search 1 is not in
-													// 1prototype
-													int i1proslot = curchestin
-															.getInventory()
-															.first(i1.getType());
-													if (i1proslot > -1) {
-														// player.sendMessage(dprint.r.color("i1proslot > -1");
-														continue;
-													}
-
-													// if not found it's mean
-													// wrong item in cur chest
-
-													// check it that item in
-													// second prototype
-
-													if (swapchestin
-															.getInventory()
-															.first(i1.getType()) == -1) {
-														// player.sendMessage(dprint.r.color("swapchestin can't found i1 item");
-														continue;
-													}
-
-													// time to swap item
-													// search free item on
-													// second
-
-													int freeslot = swapchest1
-															.getInventory()
-															.firstEmpty();
-													if (freeslot == -1) {
-														// player.sendMessage(dprint.r.color("free slot of swapchest 1 is -1");
-														continue;
-													}
-
-													// time to move
-													// player.sendMessage(dprint.r.color("moviing item");
-													swapchest1.getInventory()
-															.setItem(freeslot,
-																	i1);
-													curchest1
-															.getInventory()
-															.setItem(
-																	ikn,
-																	new ItemStack(
-																			0));
-
-													player.sendMessage(dprint.r
-															.color("swaped item "
-																	+ i1.getType()
-																			.name()
-																	+ " "
-																	+ i1.getAmount())
-															+ " from "
-															+ curchest.getX()
-															+ ","
-															+ curchest.getY()
-															+ ","
-															+ curchest.getZ()
-															+ "["
-															+ sorttype
-															+ "]"
-															+ " to "
-															+ swapchest.getX()
-															+ ","
-															+ swapchest.getY()
-															+ ","
-															+ swapchest.getZ()
-															+ "["
-															+ jsorttype
-															+ "]");
-
-													lastsort2 = nn;
-
-													new chestabsorb_c2();
-													return;
-
-												}
-												// how to swap
-												// loop all of item of source
-
-											}
-										} // search another chest
-									}
-								}
-
-								// **********************
-								// search another chest block for swap item
-
-							} // dew to box
-
-						} // searh any sign near player
-					}
-				}
-
-			} // player
-		}
-	}
+	
 
 	class createmonster_c implements Runnable {
 		private EntityType	EntityTypeGot;
@@ -5329,15 +4902,6 @@ public class dewset extends dewset_interface {
 
 	}
 
-	public void chestabsorb() {
-
-		new chestabsorb_c();
-	}
-
-	public void chestabsorb2() {
-
-		new chestabsorb_c2();
-	}
 
 	public Block chestnearsign(Block temp) {
 		int d5 = 1;
@@ -6263,13 +5827,454 @@ public class dewset extends dewset_interface {
 		Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(ac, ab);
 	}
 
+
+	class chestabsorb_c implements Runnable {
+
+		public chestabsorb_c() {
+			Bukkit.getScheduler().scheduleSyncDelayedTask(ac, this);
+		}
+
+		@Override
+		public void run() {
+			int d4 = 20;
+			Block block = null;
+			Block block2 = null;
+			int d5 = 1;
+			Chest chest = null;
+			int slotp = -1;
+
+			for (Player player : Bukkit.getOnlinePlayers()) {
+				if (api_admin.dewddadmin.is2moderator(player) == true) {
+					continue;
+				}
+				// search nearby box and sign ... ummm yes
+				block = player.getLocation().getBlock();
+
+				/*
+				 * if (checkpermissionarea(block)== false) { not protect area
+				 * continue; }
+				 */
+				if (checkpermissionarea(block, player, "build") == true) {
+					// build
+					continue;
+				}
+
+				for (int gx = 0 - d4; gx <= 0 + d4; gx++) {
+					for (int gy = 0 - d4; gy <= 0 + d4; gy++) {
+						for (int gz = 0 - d4; gz <= 0 + d4; gz++) {
+							// first search sign
+							block = player.getLocation().getBlock()
+									.getRelative(gx, gy, gz);
+							if (block == null) {
+								continue;
+							}
+
+							if (block.getTypeId() != 63
+									&& block.getTypeId() != 68) {
+								continue;
+							}
+
+							Sign sign = (Sign) block.getState();
+							if (sign.getLine(0).equalsIgnoreCase("[dewtobox]") == true) {
+								// player.sendMessage(dprint.r.color("found dewtobox sign : "
+								// +
+								// block.getLocation().getBlockX() + ","
+								// + block.getLocation().getBlockY() + "," +
+								// block.getLocation().getBlockZ());
+
+								int intb = Integer.parseInt(sign.getLine(1));
+								if (intb == 0) {
+									continue;
+								}
+
+								// after found sign so find box
+
+								// box
+								for (int ax = 0 - d5; ax <= 0 + d5; ax++) {
+									for (int ay = 0 - d5; ay <= 0 + d5; ay++) {
+										for (int az = 0 - d5; az <= 0 + d5; az++) {
+											block2 = block.getRelative(ax, ay,
+													az);
+											if (block2 == null) {
+												continue;
+											}
+
+											if (block2.getTypeId() != 54) {
+												continue;
+											}
+
+											// player.sendMessage(dprint.r.color("found dewtobox chest : "
+											// +
+											// block2.getLocation().getBlockX()
+											// +
+											// ","
+											// +
+											// block2.getLocation().getBlockY()
+											// +
+											// "," +
+											// block2.getLocation().getBlockZ());
+
+											slotp = player.getInventory()
+													.first(intb);
+											if (slotp == -1) {
+												continue;
+											}
+
+											chest = (Chest) block2.getState();
+
+											int chestslot = -1;
+											chestslot = chest.getInventory()
+													.firstEmpty();
+											if (chestslot == -1) {
+												continue;
+											}
+
+											// ready to move
+											chest.getInventory().addItem(
+													player.getInventory()
+															.getItem(slotp));
+
+											player.getInventory().clear(slotp);
+
+											player.sendMessage(dprint.r
+													.color("[dewtobox] "
+															+ tr.gettr("moved")
+															+ intb));
+
+											// added
+
+											// if true
+											// check is empty
+											// check item of player
+
+										}
+									}
+								}
+
+							} // dew to box
+
+						} // loop
+					}
+				}
+
+			} // player
+		}
+	}
+
+	class chestabsorb_c2 implements Runnable {
+
+		public chestabsorb_c2() {
+			Bukkit.getScheduler().scheduleSyncDelayedTask(ac, this, 1);
+		}
+
+		@Override
+		public void run() {
+
+			long nn = System.currentTimeMillis();
+
+			if (nn - lastsort2 < 100) {
+				Bukkit.getScheduler().scheduleSyncDelayedTask(ac, this, 10);
+				return;
+			}
+
+			lastsort2 = nn;
+
+			int d4 = 20;
+			Block block = null;
+
+			for (Player player : Bukkit.getOnlinePlayers()) {
+				if (api_admin.dewddadmin.is2moderator(player) == true) {
+					continue;
+				}
+				// search nearby box and sign ... ummm yes
+				block = player.getLocation().getBlock();
+
+				/*
+				 * if (checkpermissionarea(block)== false) { not protect area
+				 * continue; }
+				 */
+				if (checkpermissionarea(block, player, "build") == true) {
+					// build
+					continue;
+				}
+
+				// player.sendMessage(dprint.r.color("searching... dewsortbox sign");
+
+				// search any sign near player
+				for (int gx = 0 - d4; gx <= 0 + d4; gx++) {
+					for (int gy = 0 - d4; gy <= 0 + d4; gy++) {
+						for (int gz = 0 - d4; gz <= 0 + d4; gz++) {
+							lastsort2 = nn;
+
+							// first search sign
+							block = player.getLocation().getBlock()
+									.getRelative(gx, gy, gz);
+
+							if (block.getTypeId() != 63
+									&& block.getTypeId() != 68) {
+								continue;
+							}
+
+							// dewsortbox
+							// dewsorttype
+
+							Sign sign = (Sign) block.getState();
+							if (sign.getLine(0)
+									.equalsIgnoreCase("[dewsortbox]") == true) {
+
+								/*
+								 * player.sendMessage(dprint.r.color(
+								 * "cur found dewsortbox sign at " +
+								 * block.getX() + "," + block.getY() + "," +
+								 * block.getZ());
+								 */
+
+								String sorttype = sign.getLine(1);
+								if (sorttype.equalsIgnoreCase("")) {
+									player.sendMessage(dprint.r.color(tr
+											.gettr("sorttype_name_must_not_null")));
+									continue;
+								}
+
+								// got sign type
+								// search current chest
+								Block curchest = chestnearsign(block);
+
+								if (curchest == null) {
+									player.sendMessage(dprint.r
+											.color("curchest == null"));
+
+									continue;
+
+								}
+
+								Block curprochest = protochest(block, d4,
+										sorttype);
+								if (curprochest == null) {
+									player.sendMessage(dprint.r
+											.color("curprochest == null"));
+
+									continue;
+
+								}
+
+								// player.sendMessage(dprint.r.color("opening curchest..."+
+								// curchest.getTypeId());
+								Chest curchest1 = (Chest) curchest.getState();
+								// player.sendMessage(dprint.r.color("opening curchest done");
+
+								// player.sendMessage(dprint.r.color("opening curprochest..."+
+								// curprochest.getTypeId());
+
+								Chest curchestin = (Chest) curprochest
+										.getState();
+								// player.sendMessage(dprint.r.color("opening curprochest done");
+
+								// player.sendMessage(dprint.r.color("opened both chest");
+								// after got cur chest
+								// search another dewsortbox for swap
+								// *********************
+								Block temp = null;
+								for (int jx = 0 - d4; jx <= 0 + d4; jx++) {
+									for (int jy = 0 - d4; jy <= 0 + d4; jy++) {
+										for (int jz = 0 - d4; jz <= 0 + d4; jz++) {
+											if (jx == 0 && jy == 0 && jz == 0) {
+												continue;
+											}
+											// first search sign
+											temp = block.getLocation()
+													.getBlock()
+													.getRelative(jx, jy, jz);
+
+											if (temp.getTypeId() != 63
+													&& temp.getTypeId() != 68) {
+												continue;
+											}
+
+											// dewsortbox
+											// dewsorttype
+
+											Sign js = (Sign) temp.getState();
+											if (js.getLine(0).equalsIgnoreCase(
+													"[dewsortbox]") == true) {
+
+												/*
+												 * player.sendMessage(dprint.r.color
+												 * ("swap found dewsortbox at "
+												 * + temp.getX() + "," +
+												 * temp.getY() + "," +
+												 * temp.getZ());
+												 */
+
+												String jsorttype = js
+														.getLine(1);
+												if (jsorttype
+														.equalsIgnoreCase("")) {
+													// player.sendMessage(dprint.r.color("swap_sorttype_name_must_not_null");
+													continue;
+												}
+
+												// got sign type
+												// search current chest
+												Block swapchest = chestnearsign(temp);
+												if (swapchest == null) {
+													// player.sendMessage(dprint.r.color("swapchest  == null");
+													continue;
+												}
+
+												if (swapchest
+														.getLocation()
+														.distance(
+																curchest.getLocation()) <= 1) {
+													continue;
+												}
+
+												Block swapprochest = protochest(
+														temp, d4, jsorttype);
+												if (swapprochest == null) {
+													// player.sendMessage(dprint.r.color("swapprochest == null");
+													continue;
+												}
+
+												// player.sendMessage(dprint.r.color("opening swapprochest...");
+
+												Chest swapchestin = (Chest) swapprochest
+														.getState();
+												// player.sendMessage(dprint.r.color("opening swapchest...");
+
+												Chest swapchest1 = (Chest) swapchest
+														.getState();
+
+												// player.sendMessage(dprint.r.color("opened both chest swap");
+
+												for (int ikn = 0; ikn < curchest1
+														.getInventory()
+														.getSize(); ikn++) {
+													ItemStack i1 = curchest1
+															.getInventory()
+															.getItem(ikn);
+
+													if (i1 == null) {
+														continue;
+													}
+
+													// search 1 is not in
+													// 1prototype
+													int i1proslot = curchestin
+															.getInventory()
+															.first(i1.getType());
+													if (i1proslot > -1) {
+														// player.sendMessage(dprint.r.color("i1proslot > -1");
+														continue;
+													}
+
+													// if not found it's mean
+													// wrong item in cur chest
+
+													// check it that item in
+													// second prototype
+
+													if (swapchestin
+															.getInventory()
+															.first(i1.getType()) == -1) {
+														// player.sendMessage(dprint.r.color("swapchestin can't found i1 item");
+														continue;
+													}
+
+													// time to swap item
+													// search free item on
+													// second
+
+													int freeslot = swapchest1
+															.getInventory()
+															.firstEmpty();
+													if (freeslot == -1) {
+														// player.sendMessage(dprint.r.color("free slot of swapchest 1 is -1");
+														continue;
+													}
+
+													// time to move
+													// player.sendMessage(dprint.r.color("moviing item");
+													swapchest1.getInventory()
+															.setItem(freeslot,
+																	i1);
+													curchest1
+															.getInventory()
+															.setItem(
+																	ikn,
+																	new ItemStack(
+																			0));
+
+													player.sendMessage(dprint.r
+															.color("swaped item "
+																	+ i1.getType()
+																			.name()
+																	+ " "
+																	+ i1.getAmount())
+															+ " from "
+															+ curchest.getX()
+															+ ","
+															+ curchest.getY()
+															+ ","
+															+ curchest.getZ()
+															+ "["
+															+ sorttype
+															+ "]"
+															+ " to "
+															+ swapchest.getX()
+															+ ","
+															+ swapchest.getY()
+															+ ","
+															+ swapchest.getZ()
+															+ "["
+															+ jsorttype
+															+ "]");
+
+													lastsort2 = nn;
+
+													new chestabsorb_c2();
+													return;
+
+												}
+												// how to swap
+												// loop all of item of source
+
+											}
+										} // search another chest
+									}
+								}
+
+								// **********************
+								// search another chest block for swap item
+
+							} // dew to box
+
+						} // searh any sign near player
+					}
+				}
+
+			} // player
+		}
+	}
+	
+
+	public void chestabsorb() {
+
+		new chestabsorb_c();
+	}
+
+	public void chestabsorb2() {
+
+		new chestabsorb_c2();
+	}
+	
 	public void linkurl(Player player, String url) {
 		if (url.endsWith("?fb") == true || url.endsWith("?facebook") == true) {
 			dprint.r.printA("ptdew&dewdd : my facebook > https://www.facebook.com/dewddminecraft");
 		}
 
 		if (url.endsWith("?e-mail") == true || url.endsWith("?mail") == true) {
-			dprint.r.printA("ptdew&dewdd : my e-mail > dew_patipat@hotmail.com");
+			dprint.r.printA("ptdew&dewdd : my e-mail > dewtx29@gmail.com");
 		}
 
 		if (url.endsWith("?youtube") == true || url.endsWith("?video") == true) {

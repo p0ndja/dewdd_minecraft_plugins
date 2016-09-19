@@ -8,6 +8,7 @@ package dewdddfree;
 import java.util.Random;
 
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.Dispenser;
 import org.bukkit.block.Sign;
@@ -32,6 +33,7 @@ import com.earth2me.essentials.api.Economy;
 import com.earth2me.essentials.api.NoLoanPermittedException;
 import com.earth2me.essentials.api.UserDoesNotExistException;
 
+import dewddflower.dewset;
 import dewddtran.tr;
 
 public class DigEventListener2 implements Listener {
@@ -48,6 +50,8 @@ public class DigEventListener2 implements Listener {
 	String		psetamount	= "dewdd.dfree.setamount";
 
 	Random		rnd			= new Random();
+	
+	dewset dew = new dewset();
 
 	public boolean dewnosign(Player player, String str) {
 		Block block = null;
@@ -554,8 +558,10 @@ public class DigEventListener2 implements Listener {
 
 		Block block = e.getClickedBlock();
 		Player player = e.getPlayer();
+		
+		
 
-		if (block.getTypeId() == 23) { // dis
+		if (block.getType() == Material.DISPENSER) { // dis
 			// [dfree]
 			// number
 			// search sign
@@ -587,9 +593,23 @@ public class DigEventListener2 implements Listener {
 
 		} // dis
 
-		if (block.getTypeId() == 63 || block.getTypeId() == 68) {
+		if (block.getType() == Material.SIGN_POST || block.getType() == Material.WALL_SIGN) {
 
 			Sign sign = (Sign) block.getState();
+			
+			if (sign.getLine(0) != null) {
+				dew.linkurl(player, sign.getLine(0));
+			}
+			if (sign.getLine(0).equalsIgnoreCase("[dewtobox]") == true) {
+				// player.sendMessage("dewtobox run");
+				dew.chestabsorb();
+			}
+
+			if (sign.getLine(0).equalsIgnoreCase("[dewsortbox]")
+					|| sign.getLine(0).equalsIgnoreCase("[dewsorttype]")) {
+				// player.sendMessage("dewtobox run");
+				dew.chestabsorb2();
+			}
 
 			// exchange
 			if (sign.getLine(0).endsWith("[dewexchange]") == true) {
