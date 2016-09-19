@@ -48,7 +48,9 @@ public class DecodeSubDNA implements Runnable {
 		int diffX = this.redex.output.loc.rx - this.redex.output.loc.lx;
 		int diffY = this.redex.output.loc.ry - this.redex.output.loc.ly;
 		int diffZ = this.redex.output.loc.rz - this.redex.output.loc.lz;
-
+		
+		diffX -= 6;
+		diffZ -= 6;
 		// decoding DNA in these range
 
 		int startPoint = 0;
@@ -63,7 +65,7 @@ public class DecodeSubDNA implements Runnable {
 		while ((startPoint + 4) < Redex.dnaLength) {
 			double tmpx = Math.abs(dna.dna[startPoint]) * diffX;
 			tmpx = tmpx % diffX;
-			int posx = (int) tmpx;
+			int posx = (int) tmpx + 3;
 
 			/*double tmpy = Math.abs(dna.dna[startPoint + 1]) * diffY;
 			tmpy = tmpy % diffY;
@@ -75,7 +77,7 @@ public class DecodeSubDNA implements Runnable {
 
 			double tmpz = Math.abs(dna.dna[startPoint + 2]) * diffZ;
 			tmpx = tmpz % diffZ;
-			int posz = (int) tmpz;
+			int posz = (int) tmpz + 3;
 
 			double tmpb = Math.abs(dna.dna[startPoint + 3]) * 4;
 			tmpb = tmpb % 4;

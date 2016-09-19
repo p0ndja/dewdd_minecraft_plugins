@@ -1,5 +1,7 @@
 package dewdd_redstone_experimental;
 
+import java.util.LinkedList;
+
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -64,6 +66,7 @@ public class CleanSubArea implements Runnable {
 					int gy = at.loc.ly + (y);
 					int gz = at.loc.lz + (z - this.redex.start.loc.lz);
 
+				
 					setBlock = at.world.getBlockAt(gx, gy, gz);
 
 					if (hostBlock.getType() == Material.BEACON) {
@@ -85,6 +88,8 @@ public class CleanSubArea implements Runnable {
 					setBlock.setTypeIdAndData(hostBlock.getType().getId(),
 							hostBlock.getData(), true);
 
+					// clean sub area
+
 				}
 			}
 		}
@@ -101,5 +106,30 @@ public class CleanSubArea implements Runnable {
 			Bukkit.getScheduler().scheduleSyncDelayedTask(DigEventListener2.ac,
 					sub2);
 		}
+
+		// After Clean Sub Area Need To Grab all Block on that layer
+
+		at.processAllBlockInCurY = new LinkedList<Block>();
+
+		for (int x = this.redex.start.loc.lx; x <= this.redex.start.loc.rx; x++) {
+
+			int y = at.processCurY;
+
+			for (int z = this.redex.start.loc.lz; z <= this.redex.start.loc.rz; z++) {
+
+				hostBlock = at.world.getBlockAt(x, y, z);
+				if (hostBlock.getType() != Material.AIR) {
+					at.processAllBlockInCurY.add(hostBlock);
+					// dprint.r.printAll("Material Type " +
+					// hostBlock.getType().name());
+
+				}
+			}
+
+		}
+
+		// dprint.r.printAll("process CurY " + at.processCurY + " size = " +
+		// at.processAllBlockInCurY.size());
+
 	}
 }

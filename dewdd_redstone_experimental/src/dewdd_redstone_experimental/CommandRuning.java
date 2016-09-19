@@ -4,6 +4,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 import dewddtran.tr;
+import li.LXRXLZRZType;
 
 public class CommandRuning implements Runnable {
 	private String	m[];
@@ -113,6 +114,16 @@ public class CommandRuning implements Runnable {
 							dprint.r.printAll("Fitness " + curid + " = "
 									+ this.redex.listEx.get(curid).score);
 						}
+					}
+					else if (this.m[1].equalsIgnoreCase("space")) {
+						
+							LXRXLZRZType all = new LXRXLZRZType(0, 0, 0, 100, 256, 100);
+							LXRXLZRZType cur = new LXRXLZRZType(0, 0, 0, 0, 0, 0);
+							CleanSpace cs = new CleanSpace(redex, all, cur);
+
+							Bukkit.getScheduler().scheduleSyncDelayedTask(DigEventListener2.ac,
+									cs, 1);
+						
 					}
 
 				}

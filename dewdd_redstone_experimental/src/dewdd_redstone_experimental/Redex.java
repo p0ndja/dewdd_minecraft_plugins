@@ -21,17 +21,17 @@ public class Redex {
 	// produce next gen
 
 
-	public static int				maxPopulation				= 100;
+	public static int				maxPopulation				= 1000;
 
-	public static long				maxNothingBetterInTick		= (60 * 1) * 10;				// 1
+	public static long				maxNothingBetterInTick		= (5 * 1) * 10;				// 1
 																								// minutes
 	public static long				maxNoRedstoneActivityInTick	= (5 * 1) * 10;
 	public static String			predex						= "dewdd.redex.run";
 
-	public static int				spaceBlockEachArea			= 5;
+	public static int				spaceBlockEachArea			= 0;
 	public static long				redstoneTimer				= 0;
 
-	public static int				dnaLength					= 3000;							// 1125;
+	public static int				dnaLength					= 1000;							// 1125;
 	public int						curMode						= 0;							// 0
 																								// is
 																								// redex
@@ -75,6 +75,9 @@ public class Redex {
 		this.hybrid.setDnaLength(Redex.dnaLength);
 		this.hybrid.setPopulationSize(Redex.maxPopulation);
 		this.hybrid.prepareToRunGA();
+		
+		hybrid.setMutatePercent(0.2);
+		
 		
 		eventListenerX = new EventListenerX(this);
 		this.hybrid.registerEvent(eventListenerX);

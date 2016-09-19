@@ -19,12 +19,16 @@ import org.bukkit.event.block.BlockPistonExtendEvent;
 import org.bukkit.event.block.BlockPistonRetractEvent;
 import org.bukkit.event.block.BlockRedstoneEvent;
 import org.bukkit.event.entity.ItemSpawnEvent;
+import org.bukkit.event.entity.SlimeSplitEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.world.ChunkUnloadEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import com.sun.org.apache.bcel.internal.generic.ATHROW;
+
 import dewddtran.tr;
+import net.minecraft.server.v1_9_R1.BlockSlime;
 
 class Delayed implements Runnable {
 	public Delayed() {
@@ -114,8 +118,8 @@ public class DigEventListener2 implements Listener {
 			}
 
 			if (lop == (e.getBlocks().size() - 1)) {
-				b2 = b2.getRelative(e.getDirection()).getRelative(e.getDirection());
-				
+				b2 = b2.getRelative(e.getDirection());
+
 				extendid = DigEventListener2.redex
 						.getIdOfThisLocation(b2.getLocation());
 				// dprint.r.printAll(tr.locationToString(b2.getLocation()));
@@ -159,12 +163,42 @@ public class DigEventListener2 implements Listener {
 		 * }
 		 */
 	}
+	
 
 	@EventHandler
 	public void eventja(BlockPistonRetractEvent e) {
 		if (!this.isrunworld(e.getBlock().getWorld().getName())) {
 			return;
 		}
+
+		Block b = e.getBlock();
+
+		// check 12 block
+
+		Block b2 = b.getRelative(e.getDirection());
+
+		int curid = DigEventListener2.redex
+				.getIdOfThisLocation(b.getLocation());
+		if (curid == -1) {
+			return;
+		}
+
+		AreaType at = redex.listEx.get(curid);
+
+		if (b2.getY() == at.processCurY) {
+			// search those block an the list
+
+			for (int lop = 0; lop < at.processAllBlockInCurY.size(); lop++) {
+				Block tmp = at.processAllBlockInCurY.get(lop);
+				if (tmp.getX() == b2.getX() && tmp.getZ() == b2.getZ()) {
+					dprint.r.printAll("Retract " + curid + " = " + at.processAllBlockInCurY.size());
+					at.processAllBlockInCurY.remove(tmp);
+					at.score ++;
+				}
+
+			}
+		}
+
 	}
 
 	@EventHandler
@@ -222,6 +256,7 @@ public class DigEventListener2 implements Listener {
 		Bukkit.getScheduler().scheduleSyncDelayedTask(DigEventListener2.ac,
 				newThread);
 
+		
 	}
 
 	@EventHandler
