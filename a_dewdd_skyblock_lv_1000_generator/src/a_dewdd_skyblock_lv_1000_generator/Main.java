@@ -7,7 +7,7 @@ import ga_optimization_api.Chromosome;
 public class Main {
 
 	public static Core co;
-	public static int populationSize = 100;
+	public static int populationSize = 10;
 	
 	public static void main(String[] args) {
 

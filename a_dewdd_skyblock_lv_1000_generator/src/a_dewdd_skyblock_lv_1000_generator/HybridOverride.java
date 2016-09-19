@@ -12,7 +12,7 @@ import ga_optimization_api.Chromosome;
 import ga_optimization_api.Hybrid;
 import ga_optimization_api.HybridMultithreading;
 
-public class HybridOverride extends Hybrid {
+public class HybridOverride extends HybridMultithreading {
 
 	public static int maxUnUnique = 0;
 
@@ -555,7 +555,7 @@ public class HybridOverride extends Hybrid {
 			double tmpFitness = 0;
 
 			double fitCurLV = (-Math.abs(tmpLV.size() - curLVLoop)) * 100;
-			double fitMoneyLeft = -Math.abs(ps.money);
+			double fitMoneyLeft = -Math.abs(1000-ps.money);
 			double fitMaxMoney = -Math.abs(psMaxMoney - Core.maxMoney);
 			fitMaxMoney = psMaxMoney;
 
