@@ -12,6 +12,7 @@ import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.HashMap;
 import java.util.Random;
 
 import org.bukkit.Bukkit;
@@ -20,13 +21,11 @@ import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.Chest;
 import org.bukkit.block.Sign;
-import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import dewddtran.tr;
-import net.minecraft.server.v1_7_R4.EntityCreature;
 
 public class api_skyblock {
 
@@ -44,7 +43,7 @@ public class api_skyblock {
 			int count = 0;
 			boolean thereBlock = false;
 
-			int search = 5;
+			int search = 10;
 			for (int x = -search; x <= search; x++) {
 				for (int y = 0; y <= 256; y++) {
 
@@ -61,11 +60,19 @@ public class api_skyblock {
 							break;
 						}
 					}
+
+					if (thereBlock == true) {
+						break;
+					}
+				}
+
+				if (thereBlock == true) {
+					break;
 				}
 
 			}
 
-			while (count < 10000) {
+			while (count < 100000 && thereBlock == false) {
 				count++;
 
 				int x = rnd.nextInt(300) - 150;
@@ -922,6 +929,7 @@ public class api_skyblock {
 
 				for (int i = 0; i < RSMaxPlayer; i++) {
 					rs[rsMax - 1].p[i] = m[i + 3];
+
 				}
 
 				if (m.length == 24) {
@@ -933,6 +941,50 @@ public class api_skyblock {
 				}
 
 				// rs[rsMax - 1].mission = 0;
+
+			}
+
+			// rename All Duplicate owner
+			for (int i = 0; i < rsMax; i++) {
+				boolean fou = false;
+
+				for (int j = 0; j < rsMax; j++) {
+					if (j == i) {
+						continue;
+					}
+
+					if (rs[i].p[0].equalsIgnoreCase(rs[j].p[0])) {
+						fou = true;
+						break;
+					}
+				}
+
+				if (fou == true) { // duplicate
+					// rename it
+					Random rnd = new Random();
+					String abc = "dupi" + rnd.nextInt(10000);
+
+					// search
+
+					boolean kfou = false;
+
+					do {
+						abc = "dupi" + rnd.nextInt(10000);
+						kfou = false;
+
+						for (int k = 0; k < rsMax; k++) {
+							if (rs[k].p[0].equalsIgnoreCase(abc)) {
+								kfou = true;
+								break;
+							}
+
+						}
+
+					} while (kfou == true);
+
+					dprint.r.printAll("duplicate rs owner name > " + rs[i].p[0] + " renamed to " + abc);
+					rs[i].p[0] = abc;
+				}
 
 			}
 
