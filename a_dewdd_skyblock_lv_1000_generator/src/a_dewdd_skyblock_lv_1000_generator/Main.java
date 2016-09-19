@@ -279,15 +279,17 @@ class HybridOverride extends Hybrid {
 		
 		d.pl("all money you have " + ps.money);
 		
+		double psMaxMoney = ps.money;
+		
 		int curLVLoop = 0;
 		
-		boolean isGameDone = false;
 		
 		Random rnd = new Random();
 		
 		boolean moneyNotFoundxD  = false;
 		
 		while (curLVLoop < tmpLV.size() && moneyNotFoundxD == false) {
+			d.pl("curLVLoop " + curLVLoop);
 			LV1000Type curLV = tmpLV.get(curLVLoop);
 			
 			// bought = item  to finish lv
@@ -312,6 +314,7 @@ class HybridOverride extends Hybrid {
 				
 				
 				if (notFill == true) {
+					
 					// random bought item
 					int ranbuy =  -1 ;
 					
@@ -326,8 +329,9 @@ class HybridOverride extends Hybrid {
 							ranbuy = -1;
 						}
 						
-					} while (ranbuy > -1);
+					} while (ranbuy < 0);
 					
+					d.pl("ranbuy done " + ranbuy);
 					
 					// after got random not fill index  
 					// trying to buy it
@@ -343,6 +347,9 @@ class HybridOverride extends Hybrid {
 						AllShop ex = tmpAllShop.get(c);
 						
 						for (int c2 = 0 ; c2 < ex.size ; c2 ++ ) {
+							if (ex.item[c2] == null) {
+								d.pl("ex item == null");
+							}
 							if (ex.item[c2].equalsIgnoreCase(itm.theName)) {
 								if (ex.data[c2] == itm.data) {
 									// buy this item
@@ -385,11 +392,47 @@ class HybridOverride extends Hybrid {
 				} // not fill true  trying to buy
 			}
 
+			
+			if (notFill == true) {
+				curLVLoop ++;
+			}
 			ps.curSecond++;
 			
 		
 		}
-		return 0;
+		
+		
+		// fitness
+		// level done / max level
+		// money left need to bo 0 
+		// after end game   atTheEndItem need to be exactly
+		// maxMoney should nearly at maxMoney
+		
+		double fitness = 0;
+		
+		double fitCurLV = curLVLoop * 100;
+		double fitMoneyLeft = -Math.abs(ps.money );
+		double fitMaxMoney =  Math.abs( psMaxMoney - Main.co.maxMoney);  
+		
+		double fitAtTheEndItem = 0;
+		
+		for (int i = 0 ; i < Main.co.allBlockInGameAsList.size() ; i ++ ) {
+			AllBlockInGameType eg = Main.co.allBlockInGameAsList.get(i);
+			AllBlockInGameType myeg = ps.allMyInventory.get(eg.getIDData());
+			
+			if (eg.atTheEndNeed > 0 ){ 
+				double theDiff = Math.abs(eg.atTheEndNeed - myeg.curAmount );
+				fitAtTheEndItem -= theDiff;
+				continue;
+				
+			}
+		}
+		
+		fitness = fitCurLV + fitMoneyLeft + fitMaxMoney + fitAtTheEndItem;
+		d.pl("fitness");
+		
+		
+		return fitness;
 
 	}
 	

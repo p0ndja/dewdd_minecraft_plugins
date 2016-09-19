@@ -68,6 +68,9 @@ public class Core {
 	public static double SellMaxCost = 1000;
 
 	public static double ShopMaxCost = 10000;
+	
+	public static double maxMoney = 100000;
+	
 	public static int maxLV = 100;
 	private int curChro = 0;
 
