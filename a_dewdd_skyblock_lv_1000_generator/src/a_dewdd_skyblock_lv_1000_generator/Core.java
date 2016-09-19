@@ -4,6 +4,8 @@ import java.io.BufferedReader;
 import java.io.DataInputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -51,6 +53,7 @@ public class Core {
 	public static boolean printpls = false;
 	
 	public static String sellablePath = File.separator + "ramdisk" + File.separator + "sellableblock.txt";
+	public static String tmpSellPath = File.separator + "ramdisk" + File.separator + "ptdew_dewdd_sell.txt";
 
 	public static String missionPath = File.separator + "ramdisk" + File.separator + "missionblock.txt";
 	public static int dnaSize = 3300;
@@ -873,5 +876,40 @@ public class Core {
 			tmp2.add(sortPls.get(indexSorted[i]));
 		}
 		return tmp2;
+	}
+	
+	public void save_tmpSell(LinkedList<SellableType> tmpSell) {
+
+
+		String filena = tmpSellPath;
+		File fff = new File(filena);
+
+		FileWriter fwriter;
+		try {
+			fff.createNewFile();
+
+		 d.pl("ptdew&dewdd: Start saving " + filena);
+			fwriter = new FileWriter(fff);
+
+			for (int y = 0; y < tmpSell.size(); y++) {
+				SellableType sty = tmpSell.get(y);
+				AllBlockInGameType abt = Core.allBlockInGameAsList[sty.index];
+				
+				
+				String wr = "" + abt.getIDData() + " " + sty.sellPerPrice;
+
+				fwriter.write(wr + System.getProperty("line.separator"));
+
+			}
+
+			fwriter.close();
+			d.pl("ptdew&dewdd:saved " + filena);
+			return;
+
+		} catch (IOException e) {
+			// Auto-generated catch block
+			e.printStackTrace();
+		}
+
 	}
 }

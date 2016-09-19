@@ -134,6 +134,9 @@ public class HybridOverride extends Hybrid{
 
 		return cho;
 	}
+	
+	
+	
 
 	@Override
 	public double fitness(double dna[]) {

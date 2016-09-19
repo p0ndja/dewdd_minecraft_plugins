@@ -7,27 +7,11 @@ import ga_optimization_api.Chromosome;
 public class Main {
 
 	public static Core co;
-	public static int populationSize = 100;
-	
+	public static int populationSize = 300;
+
 	public static void main(String[] args) {
 
 		co = new Core();
-
-		/*
-		 * LinkedList<SellableType> sorted = co.sortSell(co.sell);
-		 * 
-		 * d.pl(""); d.pl(""); d.pl("sellable max " + sorted.size());
-		 * 
-		 * for (int i = 0; i < sorted.size(); i++) {
-		 * 
-		 * d.pl(sorted.get(i).theName +
-		 * 
-		 * ":" + sorted.get(i).data + ":" + sorted.get(i).maxStack + ":" +
-		 * co.convertTimeToString(sorted.get(i).timeToGet));
-		 * 
-		 * 
-		 * }
-		 */
 
 		d.pl("");
 		d.pl("*******************");
@@ -58,18 +42,7 @@ public class Main {
 			}
 		}
 
-		
-
 		d.pl("*** mission size = " + Main.co.allBlockInGameAsListSize);
-
-		/*
-		 * for (int i = 0 ; i < mis.size() ; i++ ){ d.pl( mis.get(i).theName +
-		 * 
-		 * ":" + mis.get(i).data + ":" + mis.get(i).maxStack + ":" + (
-		 * mis.get(i).isBlock) ) ;
-		 * 
-		 * }
-		 */
 
 		HybridOverride hy = new HybridOverride();
 
@@ -80,16 +53,35 @@ public class Main {
 		// set chromosome here
 
 		LinkedList<Chromosome> seo = hy.loadAndSortTheBestFromRamdisk();
-		hy.setAllChromosomeGen1(seo);
-		hy.prepareToRunGA();
 
-		EventListenerOverride evn = new EventListenerOverride();
+		if (args.length == 1) {
+			if (args[0].equalsIgnoreCase("evu")) {
 
-		hy.registerEvent(evn);
+				hy.setAllChromosomeGen1(seo);
+				hy.prepareToRunGA();
 
-		// hy.fitness(hy.population.get(0).dna);
+				EventListenerOverride evn = new EventListenerOverride();
 
-		hy.run();
+				hy.registerEvent(evn);
+
+				// hy.fitness(hy.population.get(0).dna);
+
+				hy.run();
+
+			} else if (args[0].equalsIgnoreCase("extract")) {
+				// load the best 
+				
+				
+				LinkedList<AllShop> tmpAllShop = new LinkedList<AllShop>();
+				LinkedList<SellableType> tmpSell = new LinkedList<SellableType>();
+				LinkedList<LV1000Type> tmpLV = new LinkedList<LV1000Type>();
+
+				Core code = new Core();
+				code.dnaDecoder(seo.get(0).dna, tmpAllShop, tmpSell, tmpLV);
+				code.save_tmpSell(tmpSell);
+				
+			}
+		}
 		// hy.run();
 	}
 
