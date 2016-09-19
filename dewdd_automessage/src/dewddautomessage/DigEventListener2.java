@@ -62,11 +62,11 @@ class Dewminecraft {
 
 			if (autostrnow > -1) {
 				for (World wor : Bukkit.getWorlds()) {
-					wor.save();
+					//wor.save();
 					for (Player pla : wor.getPlayers()) {
 						randomInt = randomGenerator.nextInt(9);
 						pla.sendMessage("§" + randomInt + "ptdew&dewdd : " + autostr[autostrnow]);
-						pla.saveData();
+						//pla.saveData();
 					}
 				}
 			}
