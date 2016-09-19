@@ -26,6 +26,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import com.sk89q.worldedit.WorldEdit;
 import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
 import com.sk89q.worldguard.protection.ApplicableRegionSet;
 
@@ -3452,6 +3453,9 @@ public class dewset extends dewset_interface {
 			wgapi = dewset.getWorldGuard();
 		}
 
+	
+		
+		
 		if (wgapi != null) {
 			if (CONFIG_NEED_PROTECT == true) {
 

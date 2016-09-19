@@ -799,66 +799,85 @@ public class DigEventListener2 implements Listener {
 	public void eventja(InventoryOpenEvent e) {
 
 	}
-	
+
 	public void randomShop() {
-		
-		int minShopPrice = (int)tr.gettrint("CONFIG_SHOP_PLAY_MIN_PRICE");
-		int maxShopPrice = (int)tr.gettrint("CONFIG_SHOP_PLAY_MAX_PRICE");
-		
-		
+
+		int minShopPrice = (int) tr.gettrint("CONFIG_SHOP_PLAY_MIN_PRICE");
+		int maxShopPrice = (int) tr.gettrint("CONFIG_SHOP_PLAY_MAX_PRICE");
+
 		// let's random
 		allShop.clear();
 
 		int min = 3;
 		int max = 10;
-
-		for (int i = 0; i < 1000; i++) {
-			// random Item
-			AllShop newShop = new AllShop();
-
-			int maxSlot = rnd.nextInt(max) + min;
-			do {
-
-				int ranid = 0;
-
-				boolean found = false;
-
-				do {
-
-					found = true;
-					ranid = rnd.nextInt(allBlockInGame.size());
-					for (int j = 0; j < sellmax; j++) {
-						SellType allItemRand = allBlockInGame.get(ranid);
-
-						if (sell[j].name.equalsIgnoreCase(allItemRand.name)
-								&& sell[j].data == allItemRand.data) {
-							found = false;
-							break;
-
-						}
-					}
-				} while (found == false);
-
-				// random add to shop
-				SellType allItemRand = allBlockInGame.get(ranid);
-				newShop.item[newShop.size] = allItemRand.name;
-				newShop.data[newShop.size] = allItemRand.data;
-				newShop.amount[newShop.size] = rnd.nextInt(allItemRand.makStack);
-				if (newShop.amount[newShop.size] <= 0) {
-					newShop.amount[newShop.size] = 1;
-				}
-
-				newShop.size++;
-
-			} while (newShop.size <= maxSlot && newShop.size < 10);
-			
-			newShop.playPrice = minShopPrice + (rnd.nextInt(maxShopPrice));
-			
-			allShop.add(newShop);
-	
+		
+		boolean used[] = new boolean[allBlockInGame.size()];
+		for (int i = 0 ; i < allBlockInGame.size() ; i ++) {
+			used[i] = false;
 		}
 		
-		
+		int countUsed = 0;
+
+		int inf1 = 0;
+		int inf2 = 0;
+
+			while( countUsed < allBlockInGame.size() && inf1 <= 5000 ) {
+				inf1 ++;
+				// random Item
+				AllShop newShop = new AllShop();
+
+				int maxSlot = rnd.nextInt(max) + min;
+				do {
+			
+
+					int ranid = 0;
+
+					boolean found = false;
+
+					do {
+						inf2++;
+						
+						found = true;
+						ranid = rnd.nextInt(allBlockInGame.size());
+						if (used[ranid] == true) {
+							found = false;
+							continue;
+						}
+						
+						used[ranid] = true;
+						countUsed ++;
+						
+						for (int j = 0; j < sellmax; j++) {
+							SellType allItemRand = allBlockInGame.get(ranid);
+
+							if (sell[j].name.equalsIgnoreCase(allItemRand.name) && sell[j].data == allItemRand.data) {
+								found = false;
+								break;
+
+							}
+						}
+					} while (found == false && inf2 <= 5000);
+
+					// random add to shop
+					SellType allItemRand = allBlockInGame.get(ranid);
+					newShop.item[newShop.size] = allItemRand.name;
+					newShop.data[newShop.size] = allItemRand.data;
+					newShop.amount[newShop.size] = rnd.nextInt(allItemRand.makStack);
+					if (newShop.amount[newShop.size] <= 0) {
+						newShop.amount[newShop.size] = 1;
+					}
+
+					newShop.size++;
+
+				} while (newShop.size <= maxSlot && newShop.size < 10);
+
+				newShop.playPrice = minShopPrice + (rnd.nextInt(maxShopPrice));
+
+				allShop.add(newShop);
+
+			}
+
+
 	}
 
 	@EventHandler
@@ -1083,8 +1102,7 @@ public class DigEventListener2 implements Listener {
 							+ DigEventListener2.sell[i].price));
 				}
 
-			} 
-			 else if (m[1].equalsIgnoreCase("bleed")) {
+			} else if (m[1].equalsIgnoreCase("bleed")) {
 				if (!p.hasPermission(pbleed)) {
 					p.sendMessage("/dft bleed   (only op!");
 					return;
