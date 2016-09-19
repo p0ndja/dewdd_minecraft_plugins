@@ -73,7 +73,7 @@ public class DigEventListener2 implements Listener {
 					api_skyblock.rs[pid].z);
 
 			b.getWorld().dropItem(b2.getLocation(), sid);
-			dprint.r.printC("autoabsorb: " + sid.getTypeId() + ":"
+			dprint.r.printC("autoabsorb: " + sid.getType().name() + ":"
 					+ sid.getData() + " amount " + sid.getAmount() + " at "
 					+ api_skyblock.rs[pid].p[0]);
 
@@ -93,20 +93,20 @@ public class DigEventListener2 implements Listener {
 		public void run() {
 			if (b == null) return;
 
-			switch (b.getTypeId()) {
-			case 86:
-			case 103:
-			case 39:
-			case 40:
-			case 4:
+			switch (b.getType()) {
+			case PUMPKIN:
+			case MELON_BLOCK:
+			case BROWN_MUSHROOM:
+			case RED_MUSHROOM:
+			case COBBLESTONE:
 
 				break;
 
-			case 115:
+			case NETHER_WARTS:
 				if (b.getData() != 3) return;
 
 				b.breakNaturally();
-				b.setTypeId(115);
+				b.setType(Material.NETHER_WARTS);
 				b.setData((byte) 0);
 
 				for (Entity en : b.getWorld().getEntities()) {
@@ -125,28 +125,29 @@ public class DigEventListener2 implements Listener {
 
 				return;
 
-			case 59:
-			case 141:
-			case 142:
+			case WHEAT:
+			case CARROT:
+			case POTATO:
 				if (b.getData() != 7) return;
 
-				switch (b.getTypeId()) {
-				case 59:
+				switch (b.getType()) {
+				case WHEAT:
 					b.breakNaturally();
-					b.setTypeId(59);
+					b.setType(Material.WHEAT);
 					b.setData((byte) 0);
 					break;
-				case 141:
+				case CARROT:
 					b.breakNaturally();
-					b.setTypeId(141);
+					b.setType(Material.CARROT);
 					b.setData((byte) 0);
 					break;
 
-				case 142:
+				case POTATO:
 					b.breakNaturally();
-					b.setTypeId(142);
+					b.setType(Material.POTATO);
 					b.setData((byte) 0);
 					break;
+				
 				}
 
 				// teleport droped item near these block to that location
@@ -164,10 +165,10 @@ public class DigEventListener2 implements Listener {
 				}
 
 				return;
-			case 83:
-			case 81:
-				if (b.getRelative(0, -1, 0).getTypeId() == 83
-						|| b.getRelative(0, -1, 0).getTypeId() == 81) break;
+			case SUGAR_CANE_BLOCK:
+			case CACTUS:
+				if (b.getRelative(0, -1, 0).getType() == Material.SUGAR_CANE_BLOCK
+						|| b.getRelative(0, -1, 0).getType() == Material.CACTUS) break;
 				return;
 			default:
 				return;
@@ -201,12 +202,12 @@ public class DigEventListener2 implements Listener {
 				b2.getWorld().dropItem(b2.getLocation(), it);
 			}
 
-			dprint.r.printC("autocut: " + b.getTypeId() + ":" + b.getData()
+			dprint.r.printC("autocut: " + b.getType().name() + ":" + b.getData()
 					+ " at " + api_skyblock.rs[pid].p[0] + "(" + b.getX() + ","
 					+ b.getY() + "," + b.getZ() + ") "
 					+ api_skyblock.rs[pid].autoCutCount);
 
-			b.setTypeId(0);
+			b.setType(Material.AIR);
 		}
 	}
 
@@ -275,8 +276,7 @@ public class DigEventListener2 implements Listener {
 
 		if (se == -1) return;
 
-		// dprint.r.printC("block glow " + e.getBlock().getTypeId() + " to " +
-		// e.getNewState().getTypeId());
+		
 
 		for (int lop = 0; lop < api_skyblock.rsmaxp; lop++)
 			for (Player pl : Bukkit.getOnlinePlayers())
@@ -445,7 +445,7 @@ public class DigEventListener2 implements Listener {
 					e.setCancelled(true);
 					return;
 				}
-				if (plvi.getItemInHand().getTypeId() == 0
+				if (plvi.getItemInHand().getType() == Material.AIR
 						|| plvi.getItemInHand().getType() == Material.FISHING_ROD) {
 					e.setCancelled(true);
 					return;
@@ -1130,17 +1130,7 @@ public class DigEventListener2 implements Listener {
 				}
 		}
 
-		if (e.getMessage().equalsIgnoreCase("/skybox") == true) {
-
-			if (player.hasPermission(dew.pskybox) == false) {
-				player.sendMessage(dprint.r.color(tr
-						.gettr("you_don't_have_permission") + dew.pskybox));
-				return;
-			}
-
-			dew.addbox(player);
-
-		} // skyblock
+		
 
 	}
 
@@ -1160,7 +1150,7 @@ public class DigEventListener2 implements Listener {
 		Player player = e.getPlayer();
 		Block block = e.getClickedBlock();
 
-		if (block.getTypeId() == 63 || block.getTypeId() == 68) {
+		if (block.getType() == Material.SIGN_POST || block.getType() == Material.WALL_SIGN) {
 
 			Sign sign = (Sign) block.getState();
 
@@ -1203,7 +1193,8 @@ public class DigEventListener2 implements Listener {
 					for (int x = -5; x <= 5; x++)
 						for (int z = -5; z <= 5; z++) {
 							bb = block.getRelative(x, y, z);
-							if (bb.getTypeId() != 68 && bb.getTypeId() != 63)
+							if (bb.getType() != Material.SIGN_POST &&
+									bb.getType() != Material.WALL_SIGN)
 								continue;
 
 							Sign ss = (Sign) bb.getState();

@@ -5,16 +5,9 @@ author: dewtx29@gmail.com
 database: false
 
 commands:
-  setsky:
-    description: setsky is set position for warping to skyblock.. manual
-    usage: /<command>
-    permissions: dewdd.skyblock.setsky
   skyblock:
     description: skyblock for random teleport to skyblock
     usage: /<command>
     aliases: [sky]
     permissions: dewdd.skyblock.skyblock
-  skybox:
-    description: skybox for build chest
-    usage: /<command>
-    permissions: dewdd.skyblock.skybox
+

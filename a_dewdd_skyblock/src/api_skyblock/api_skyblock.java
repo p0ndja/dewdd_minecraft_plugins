@@ -27,87 +27,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import dewddtran.tr;
 
 public class api_skyblock {
-	class addbox implements Runnable {
-		private Player	player;
-
-		public addbox(Player player) {
-			this.player = player;
-		}
-
-		@Override
-		public void run() {
-
-			Block block = player.getLocation().getBlock();
-			Block block2;
-
-			// + x + "," + y + "," + z + ")");
-			block2 = block.getRelative(0, 0, 1);
-			block2.setTypeId(54);
-			block2 = block.getRelative(0, 0, 0);
-			block2.setTypeId(54);
-
-			// + x + "," + y + "," + z + ")");
-			block2 = block.getRelative(0, 0, 0);
-			Chest chest = (Chest) block2.getState();
-			chest.getInventory().clear();
-
-			ItemStack itm = new ItemStack(6, 3);
-			chest.getInventory().addItem(itm.getData().toItemStack(3));
-
-			itm = new ItemStack(6, 3);
-			itm.getData().setData((byte) 1);
-			chest.getInventory().addItem(itm.getData().toItemStack(3));
-
-			itm = new ItemStack(6, 3);
-			itm.getData().setData((byte) 2);
-			chest.getInventory().addItem(itm.getData().toItemStack(3));
-
-			itm = new ItemStack(6, 3);
-			itm.getData().setData((byte) 3);
-			chest.getInventory().addItem(itm.getData().toItemStack(3));
-
-			itm = new ItemStack(391, 3);
-			itm.getData().setData((byte) 3);
-			chest.getInventory().addItem(itm.getData().toItemStack(10));
-			itm = new ItemStack(392, 3);
-			itm.getData().setData((byte) 3);
-			chest.getInventory().addItem(itm.getData().toItemStack(10));
-			itm = new ItemStack(361, 3);
-			itm.getData().setData((byte) 3);
-			chest.getInventory().addItem(itm.getData().toItemStack(10));
-			itm = new ItemStack(362, 3);
-			itm.getData().setData((byte) 3);
-			chest.getInventory().addItem(itm.getData().toItemStack(10));
-			itm = new ItemStack(295, 3);
-			itm.getData().setData((byte) 3);
-			chest.getInventory().addItem(itm.getData().toItemStack(10));
-			itm = new ItemStack(338, 3);
-			itm.getData().setData((byte) 3);
-			chest.getInventory().addItem(itm.getData().toItemStack(10));
-			itm = new ItemStack(260, 30);
-			itm.getData().setData((byte) 30);
-			chest.getInventory().addItem(itm.getData().toItemStack(30));
-			itm = new ItemStack(50, 30);
-			chest.getInventory().addItem(itm.getData().toItemStack(30));
-
-			itm = new ItemStack(351, 64);
-			itm.getData().setData((byte) 15);
-			chest.getInventory().addItem(itm.getData().toItemStack(64));
-
-			itm = new ItemStack(8, 3);
-
-			itm.setData(itm.getData());
-			chest.getInventory().addItem(itm);
-
-			itm = new ItemStack(10, 3);
-
-			itm.setData(itm.getData());
-			chest.getInventory().addItem(itm);
-
-			chest.update();
-			player.sendMessage(dprint.r.color("addbox completed"));
-		}
-	}
+	
 											class cleanthischunktcrs0 implements Runnable {
 		private Chunk	chunk	= null;
 
@@ -147,7 +67,7 @@ public class api_skyblock {
 
 							block = world.getBlockAt(x, y, z);
 
-							block.setTypeId(0);
+							block.setType(Material.AIR);
 
 						} // if
 					}
@@ -271,7 +191,7 @@ public class api_skyblock {
 
 								player.getWorld()
 										.getBlockAt(x + nx, y + ny, z + nz)
-										.setTypeId(0);
+										.setType(Material.AIR);
 
 							}
 						}
@@ -288,7 +208,8 @@ public class api_skyblock {
 							for (int dz = -3; dz <= 0; dz++) {
 
 								block2 = block.getRelative(dx, dy, dz);
-								block2.setTypeId(2);
+								block2.setType(Material.GRASS);
+								
 
 							}
 						}
@@ -297,80 +218,83 @@ public class api_skyblock {
 
 					// add item
 					block2 = block.getRelative(0, 4, 0);
-					block2.setTypeId(54);
+				
+					block2.setType(Material.CHEST);
 					block2 = block.getRelative(0, 4, 0);
 					Chest chest = (Chest) block2.getState();
 					chest.getInventory().clear();
 
-					ItemStack itm = new ItemStack(6, 3);
+					ItemStack itm = new ItemStack(Material.SAPLING, 3);
 					chest.getInventory().addItem(itm.getData().toItemStack(3));
 
-					itm = new ItemStack(6, 3);
+					itm = new ItemStack(Material.SAPLING, 3);
 					itm.getData().setData((byte) 1);
 					chest.getInventory().addItem(itm.getData().toItemStack(3));
 
-					itm = new ItemStack(6, 3);
+					itm = new ItemStack(Material.SAPLING, 3);
 					itm.getData().setData((byte) 2);
 					chest.getInventory().addItem(itm.getData().toItemStack(3));
 
-					itm = new ItemStack(6, 3);
+					itm = new ItemStack(Material.SAPLING, 3);
 					itm.getData().setData((byte) 3);
 					chest.getInventory().addItem(itm.getData().toItemStack(3));
 
-					itm = new ItemStack(391, 3);
-					itm.getData().setData((byte) 3);
+					
+					itm = new ItemStack(Material.CARROT, 3);
+					
 					chest.getInventory().addItem(itm.getData().toItemStack(10));
-					itm = new ItemStack(392, 3);
-					itm.getData().setData((byte) 3);
+					itm = new ItemStack(Material.POTATO, 3);
+				
 					chest.getInventory().addItem(itm.getData().toItemStack(10));
-					itm = new ItemStack(361, 3);
-					itm.getData().setData((byte) 3);
+					itm = new ItemStack(Material.PUMPKIN_SEEDS, 3);
+				
 					chest.getInventory().addItem(itm.getData().toItemStack(10));
-					itm = new ItemStack(362, 3);
-					itm.getData().setData((byte) 3);
+					itm = new ItemStack(Material.MELON_SEEDS, 3);
+					
+					
 					chest.getInventory().addItem(itm.getData().toItemStack(10));
-					itm = new ItemStack(295, 3);
-					itm.getData().setData((byte) 3);
+					itm = new ItemStack(Material.SEEDS, 3);
+					
+					
 					chest.getInventory().addItem(itm.getData().toItemStack(10));
-					itm = new ItemStack(338, 3);
-					itm.getData().setData((byte) 3);
+					itm = new ItemStack(Material.SUGAR_CANE, 3);
 					chest.getInventory().addItem(itm.getData().toItemStack(10));
-					itm = new ItemStack(260, 30);
-					itm.getData().setData((byte) 30);
-					chest.getInventory().addItem(itm.getData().toItemStack(30));
-					itm = new ItemStack(50, 30);
-					chest.getInventory().addItem(itm.getData().toItemStack(30));
+					
 
-					itm = new ItemStack(351, 64);
+
+					itm = new ItemStack(Material.TORCH, 30);
+					chest.getInventory().addItem(itm.getData().toItemStack(3));
+
+					itm = new ItemStack(Material.INK_SACK, 64);
 					itm.getData().setData((byte) 15);
 					chest.getInventory().addItem(itm.getData().toItemStack(64));
 
-					itm = new ItemStack(79, 2);
+					itm = new ItemStack(Material.ICE, 2);
 
 					itm.setData(itm.getData());
 					chest.getInventory().addItem(itm);
 
-					itm = new ItemStack(327, 1);
+					itm = new ItemStack(Material.LAVA_BUCKET, 1);
 
 					itm.setData(itm.getData());
 					chest.getInventory().addItem(itm);
 
-					itm = new ItemStack(81, 1);
+					itm = new ItemStack(Material.CACTUS, 1);
 
 					itm.setData(itm.getData());
 					chest.getInventory().addItem(itm);
 
-					itm = new ItemStack(39, 1);
+					itm = new ItemStack(Material.BROWN_MUSHROOM, 2);
 
 					itm.setData(itm.getData());
 					chest.getInventory().addItem(itm);
 
-					itm = new ItemStack(40, 1);
+					itm = new ItemStack(Material.RED_MUSHROOM, 2);
 
 					itm.setData(itm.getData());
 					chest.getInventory().addItem(itm);
 
-					itm = new ItemStack(12, 7);
+					itm = new ItemStack(Material.SAND, 7);
 
 					itm.setData(itm.getData());
 					chest.getInventory().addItem(itm);
@@ -502,7 +426,6 @@ public class api_skyblock {
 	public String				flag_monster	= "<!monster>";
 	public String				flag_pvp		= "<pvp>";
 
-	public String				pskybox			= "dewdd.skyblock.skybox";
 	public String				flag_autocut	= "<autocut>";
 	public String				flag_autoabsorb	= "<autoabsorb>";
 	public String				flag_everyone	= "<everyone>";
@@ -571,10 +494,7 @@ public class api_skyblock {
 
 	}
 
-	public void addbox(Player player) {
-		addbox ar = new addbox(player);
-		Bukkit.getScheduler().scheduleSyncDelayedTask(ac, ar);
-	}
+	
 
 	public void createskyblockrs(Player player) {
 		createskyblockrs ab = new createskyblockrs(player);
@@ -636,24 +556,7 @@ public class api_skyblock {
 		}
 	}
 
-	public boolean isprotectblockid(int id) {
-
-		switch (id) {
-		case 1:
-		case 2:
-		case 3:
-		case 7:
-		case 8:
-		case 9:
-		case 10:
-		case 11:
-			// case 79:
-			return false;
-		}
-
-		return true;
-
-	}
+	
 
 	public void loadrsprotectfile() {
 		String worldf = "ptdew_dewdd_rs_protect.txt";
