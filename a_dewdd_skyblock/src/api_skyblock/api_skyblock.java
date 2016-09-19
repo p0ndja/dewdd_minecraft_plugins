@@ -20,6 +20,7 @@ import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.Chest;
+import org.bukkit.block.Sign;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -27,7 +28,6 @@ import org.bukkit.plugin.java.JavaPlugin;
 import dewddtran.tr;
 
 public class api_skyblock {
-
 
 	class CreateSkyblockRS implements Runnable {
 
@@ -247,8 +247,6 @@ public class api_skyblock {
 		}
 	}
 
-	
-
 	class MissionNotification implements Runnable {
 
 		@Override
@@ -259,18 +257,18 @@ public class api_skyblock {
 					continue;
 				}
 
-				//int id = getOWNIslandID(player, false);
-				
+				// int id = getOWNIslandID(player, false);
+
 				int id = getprotectid(player.getLocation().getBlock());
-				
+
 				// island not found
 				if (id == -1) {
 					continue;
 				}
-				
+
 				if (getplayerinslot(player.getName(), id) > -1) {
 
-				player.sendMessage(getFullMissionHeadAndCurLevel(rs[id].mission));
+					player.sendMessage(getFullMissionHeadAndCurLevel(rs[id].mission));
 				}
 
 				// check his
@@ -287,7 +285,7 @@ public class api_skyblock {
 	public static int rsMax = 0;
 
 	public static JavaPlugin ac = null;
-	
+
 	public static boolean cando(Block block, Player player, String mode) {
 		if ((player.hasPermission(Constant.poveride)) == true) {
 			return true;
@@ -374,25 +372,19 @@ public class api_skyblock {
 		return tr.isrunworld(ac.getName(), worldName);
 	}
 
-
 	// check if it is running
 	Random rnd = new Random();
 
-	
 	public int maxautocut = 5;
 
 	public String lastmessage = "";
-
-
 
 	long lastcreate = 0;
 
 	long lastclean = 0;
 
-
 	int amount = 0; // recusive
 					// count
-
 
 	public api_skyblock() {
 		loadRSProtectFile();
@@ -401,11 +393,8 @@ public class api_skyblock {
 
 	public void applyReward(int rsID) {
 
-
 		switch (rs[rsID].mission) {
 		case LV_0_COBBLESTONE_MACHINE: // get cobble stone
-
-
 
 			Block bo = getBlockMiddleRS(rsID);
 			Block bo2 = searchSpaceCube(bo, 5, 5);
@@ -428,17 +417,16 @@ public class api_skyblock {
 				}
 			}
 
-		
-			printToAllPlayerOnRS (rsID,tr.gettr("generated_small_island_at") 
-					+ " " + bo2.getX() + "," + bo2.getY() + "," + bo2.getZ());
-			
-			printToAllPlayerOnRS(rsID,tr.gettr("got_reward_lv_" + rs[rsID].mission));
+			printToAllPlayerOnRS(rsID,
+					tr.gettr("generated_small_island_at") + " " + bo2.getX() + "," + bo2.getY() + "," + bo2.getZ());
+
+			printToAllPlayerOnRS(rsID, tr.gettr("got_reward_lv_" + rs[rsID].mission));
 
 			break;
 		case LV_1_Break_STONE:
 
-			 bo = getBlockMiddleRS(rsID);
-			 bo2 = searchSpaceCube(bo, 5, 5);
+			bo = getBlockMiddleRS(rsID);
+			bo2 = searchSpaceCube(bo, 5, 5);
 
 			for (int i = 0; i < 5; i++) {
 				for (int i2 = 0; i2 < 5; i2++) {
@@ -458,28 +446,23 @@ public class api_skyblock {
 				}
 			}
 
-		
-			printToAllPlayerOnRS (rsID,tr.gettr("generated_small_island_at") 
-					+ " " + bo2.getX() + "," + bo2.getY() + "," + bo2.getZ());
-			
-			printToAllPlayerOnRS(rsID,tr.gettr("got_reward_lv_" + rs[rsID].mission));
+			printToAllPlayerOnRS(rsID,
+					tr.gettr("generated_small_island_at") + " " + bo2.getX() + "," + bo2.getY() + "," + bo2.getZ());
 
+			printToAllPlayerOnRS(rsID, tr.gettr("got_reward_lv_" + rs[rsID].mission));
 
-			
 			rs[rsID].tmpValue1 = 0;
-			
+
 			break;
 		case LV_2_USE_BONE_MEAL:
 
+			bo = getBlockMiddleRS(rsID);
+			bo2 = searchSpaceCube(bo, 5, 5);
 
-			 bo = getBlockMiddleRS(rsID);
-			 bo2 = searchSpaceCube(bo, 5, 5);
-
-			
 			bo2.setType(Material.CHEST);
-			
+
 			Chest chest = (Chest) bo2.getState();
-			
+
 			ItemStack itm = new ItemStack(Material.SAPLING, 3);
 			chest.getInventory().addItem(itm.getData().toItemStack(3));
 
@@ -512,8 +495,7 @@ public class api_skyblock {
 			chest.getInventory().addItem(itm.getData().toItemStack(10));
 			itm = new ItemStack(Material.SUGAR_CANE, 3);
 			chest.getInventory().addItem(itm.getData().toItemStack(10));
-			
-			
+
 			itm = new ItemStack(Material.CACTUS, 1);
 
 			itm.setData(itm.getData());
@@ -533,27 +515,21 @@ public class api_skyblock {
 
 			itm.setData(itm.getData());
 			chest.getInventory().addItem(itm);
-			
-			
+
 			bo2.getRelative(BlockFace.DOWN).setType(Material.BOOKSHELF);
-			bo2.getRelative(0,-1,1).setType(Material.TORCH);
-			
+			bo2.getRelative(0, -1, 1).setType(Material.TORCH);
 
-			
-		
-			printToAllPlayerOnRS (rsID,tr.gettr("generated_small_island_at") 
-					+ " " + bo2.getX() + "," + bo2.getY() + "," + bo2.getZ());
-			
-			printToAllPlayerOnRS(rsID,tr.gettr("got_reward_lv_" + rs[rsID].mission));
+			printToAllPlayerOnRS(rsID,
+					tr.gettr("generated_small_island_at") + " " + bo2.getX() + "," + bo2.getY() + "," + bo2.getZ());
 
+			printToAllPlayerOnRS(rsID, tr.gettr("got_reward_lv_" + rs[rsID].mission));
 
 			break;
-			
-			
-		case LV_3_DROP_TOUCH: 
 
-			 bo = getBlockMiddleRS(rsID);
-			 bo2 = searchSpaceCube(bo, 5, 5);
+		case LV_3_DROP_TOUCH:
+
+			bo = getBlockMiddleRS(rsID);
+			bo2 = searchSpaceCube(bo, 5, 5);
 
 			for (int i = 0; i < 5; i++) {
 				for (int i2 = 0; i2 < 5; i2++) {
@@ -573,18 +549,17 @@ public class api_skyblock {
 				}
 			}
 
-		
-			printToAllPlayerOnRS (rsID,tr.gettr("generated_small_island_at") 
-					+ " " + bo2.getX() + "," + bo2.getY() + "," + bo2.getZ());
-			
-			printToAllPlayerOnRS(rsID,tr.gettr("got_reward_lv_" + rs[rsID].mission));
+			printToAllPlayerOnRS(rsID,
+					tr.gettr("generated_small_island_at") + " " + bo2.getX() + "," + bo2.getY() + "," + bo2.getZ());
+
+			printToAllPlayerOnRS(rsID, tr.gettr("got_reward_lv_" + rs[rsID].mission));
 
 			break;
-			
-		case LV_4_Place_y1: 
 
-			 bo = getBlockMiddleRS(rsID);
-			 bo2 = searchSpaceCube(bo, 5, 5);
+		case LV_4_Place_y1:
+
+			bo = getBlockMiddleRS(rsID);
+			bo2 = searchSpaceCube(bo, 5, 5);
 
 			for (int i = 0; i < 5; i++) {
 				for (int i2 = 0; i2 < 5; i2++) {
@@ -604,7 +579,8 @@ public class api_skyblock {
 				}
 			}
 
-			
+			bo2 = searchSpaceCube(bo, 5, 5);
+
 			for (int i = 0; i < 5; i++) {
 				for (int i2 = 0; i2 < 5; i2++) {
 					for (int i3 = 0; i3 < 5; i3++) {
@@ -622,27 +598,61 @@ public class api_skyblock {
 					}
 				}
 			}
+
+			// add mon
+
+			bo2 = searchSpaceCube(bo, 5, 5);
+
+			for (int i = 0; i < 5; i++) {
+				for (int i2 = 0; i2 <= 0; i2++) {
+					for (int i3 = 0; i3 < 5; i3++) {
+
+						Block bo3 = bo2.getRelative(i, i2, i3);
+						if (bo3.getType() != Material.AIR) {
+							dprint.r.printAll(tr.gettr("error while applyReward lv 0 block is != air"));
+							break;
+						}
+
+						bo3.setType(Material.EMERALD_ORE);
+
+					}
+				}
+			}
 			
 			
+			Block bo3 = bo2.getRelative(2, 1, 2);
+			bo3.setType(Material.NETHERRACK);
+			bo3.getRelative(BlockFace.UP).setType(Material.FIRE);
 			
 			
+
+			// add sign
+
+			bo.getWorld().getBlockAt(bo.getX(), 0, bo.getZ()).setType(Material.BEDROCK);
+
+			Block signAdder = bo.getWorld().getBlockAt(bo.getX(), 1, bo.getY());
+			signAdder.setType(Material.WALL_SIGN);
+
+			Sign sign = (Sign) signAdder.getState();
+			sign.setLine(0, "" + rs[rsID].mission.toID());
+			sign.setLine( 1, "" + bo3.getX());
+			sign.setLine( 2, "" + bo3.getY());
+			sign.setLine( 3, "" + bo3.getZ());
+			sign.update();
 			
-		
-			printToAllPlayerOnRS (rsID,tr.gettr("generated_small_island_at") 
-					+ " " + bo2.getX() + "," + bo2.getY() + "," + bo2.getZ());
 			
-			
+
+			printToAllPlayerOnRS(rsID,
+					tr.gettr("generated_small_island_at") + " " + bo2.getX() + "," + bo2.getY() + "," + bo2.getZ());
+
 			// mon
 			bo2 = searchSpaceCube(bo, 5, 5);
 			
-			
-			
-			
-			
-			printToAllPlayerOnRS(rsID,tr.gettr("got_reward_lv_" + rs[rsID].mission));
+
+			printToAllPlayerOnRS(rsID, tr.gettr("got_reward_lv_" + rs[rsID].mission));
 
 			break;
-			
+
 		default:
 
 			printToAllPlayerOnRS(rsID, tr.gettr("got_reward_lv_" + rs[rsID].mission));
@@ -650,9 +660,6 @@ public class api_skyblock {
 			break;
 		}
 	}
-	
-	
-	
 
 	public void createSkyblockRS(Player player) {
 		CreateSkyblockRS ab = new CreateSkyblockRS(player);
@@ -675,11 +682,7 @@ public class api_skyblock {
 
 		return b;
 	}
-	
-	
 
-	
-	
 	public String getFullMissionHeadAndCurLevel(Missional mission) {
 		String header = getMissionHeader(mission);
 		String aa = tr.gettr("is_cur_level_mission_showing_") + " " + mission + " " + header;
@@ -706,6 +709,10 @@ public class api_skyblock {
 			aa = tr.gettr(header + mission);
 			break;
 			
+		case LV_4_Place_y1:
+			aa = tr.gettr(header + mission);
+			break;
+
 		default:
 			aa = tr.gettr(header + "default");
 			break;
@@ -817,7 +824,7 @@ public class api_skyblock {
 
 				if (m.length == 24) {
 					int bb = (int) Double.parseDouble(m[23]);
-					rs[rsMax - 1].mission = Missional.idToMission(bb) ;
+					rs[rsMax - 1].mission = Missional.idToMission(bb);
 
 				}
 
@@ -833,18 +840,19 @@ public class api_skyblock {
 		}
 	}
 
-	public void nextMission(int rsID) {
+	public synchronized void nextMission(int rsID) {
 		printToAllPlayerOnRS(rsID, (getMissionHeader(rs[rsID].mission) + " " + tr.gettr("mission_complete")));
 
 		// dprint.r.printAll("0 calling apply reward");
 		applyReward(rsID);
 
 		printToAllPlayerOnRS(rsID, tr.gettr("next_mission"));
-		
-		dprint.r.printAdmin(tr.gettr("owner_of_island_name") + rs[rsID].p[0] +  " " + tr.gettr("did_mission_complete") + " "   +    getMissionHeader(rs[rsID].mission) );
 
-		int tmpID =  Missional.getID(  rs[rsID].mission);
-		tmpID ++;
+		dprint.r.printAdmin(tr.gettr("owner_of_island_name") + rs[rsID].p[0] + " " + tr.gettr("did_mission_complete")
+				+ " " + getMissionHeader(rs[rsID].mission));
+
+		int tmpID = Missional.getID(rs[rsID].mission);
+		tmpID++;
 		rs[rsID].mission = Missional.idToMission(tmpID);
 
 		printToAllPlayerOnRS(rsID, (getMissionHeader(rs[rsID].mission) + " ..."));
@@ -860,7 +868,7 @@ public class api_skyblock {
 				continue;
 			}
 
-			player.sendMessage(dprint.r.color( message));
+			player.sendMessage(dprint.r.color(message));
 		}
 	}
 

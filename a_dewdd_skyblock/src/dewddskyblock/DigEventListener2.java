@@ -889,11 +889,15 @@ public class DigEventListener2 implements Listener {
 				player.sendMessage(dprint.r.color("/skyblock remove <player>"));
 				player.sendMessage(dprint.r.color("/skyblock list"));
 				player.sendMessage(dprint.r.color("/skyblock owner <player>"));
-				player.sendMessage(dprint.r.color("/skyblock resetlv"));
+				
 
 				player.sendMessage(dprint.r.color("/skyblock lv"));
 				player.sendMessage(dprint.r.color("/skyblock go <player>"));
-
+				
+				player.sendMessage("***************************");
+				player.sendMessage("Admin Section");
+				player.sendMessage(dprint.r.color("/skyblock resetlv <lv>"));
+				
 				player.sendMessage(dprint.r.color("/skyblock buyhere"));
 				player.sendMessage(dprint.r.color("/skyblock reload"));
 
@@ -959,6 +963,13 @@ public class DigEventListener2 implements Listener {
 					dew.saveRSProtectFile();
 					return;
 				} else if (m[1].equalsIgnoreCase("resetlv")) {
+					if (player.hasPermission(Constant.presetlv) == false) {
+						player.sendMessage(dprint.r.color(tr.gettr("you_don't_have_permission") + Constant.pskyblock));
+						return;
+					}
+					
+					
+					 
 					int getid = api_skyblock.getprotectid(player.getLocation().getBlock());
 
 					if (getid == -1) {
@@ -966,11 +977,27 @@ public class DigEventListener2 implements Listener {
 						return;
 
 					}
+					
+					
+					if (m.length == 2) {
 
 					api_skyblock.rs[getid].mission = Missional.LV_0_COBBLESTONE_MACHINE;
 					dprint.r.printAll(tr.gettr("reseted_lv_of_is_this_guys") + api_skyblock.rs[getid].p[0]);
 
 					dew.printToAllPlayerOnRS(getid, dew.getMissionHeader(dew.rs[getid].mission));
+					
+					}
+					else if (m.length == 3) {
+						api_skyblock.rs[getid].mission = Missional.idToMission(Integer.parseInt(m[2]));
+						dprint.r.printAll(tr.gettr("reseted_lv_of_is_this_guys") + api_skyblock.rs[getid].p[0]);
+
+						dew.printToAllPlayerOnRS(getid, dew.getMissionHeader(dew.rs[getid].mission));
+						
+					}
+					else {
+						player.sendMessage(tr.gettr("/sky resetlv <lv>"));
+						return;
+					}
 
 				} else if (m[1].equalsIgnoreCase("go")) {
 					// go

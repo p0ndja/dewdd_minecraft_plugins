@@ -48,6 +48,8 @@ public enum  Missional {
 	public static int getID(Missional m) {
 		int id = -1;
 		
+		int maxest = 4;
+		
 		switch (m) {
 		case LV_0_COBBLESTONE_MACHINE:
 			id = 0;
@@ -61,8 +63,11 @@ public enum  Missional {
 		case LV_3_DROP_TOUCH:
 			id = 3;
 			break;
+		case LV_4_Place_y1:
+			id =4;
+			break;
 		default:
-			id = -1;
+			id = maxest +1;
 			break;
 		}
 		
