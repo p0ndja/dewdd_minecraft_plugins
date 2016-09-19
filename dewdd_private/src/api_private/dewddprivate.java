@@ -5,11 +5,6 @@
  */
 package api_private;
 
-import org.bukkit.Bukkit;
-import org.bukkit.block.Block;
-import org.bukkit.block.Sign;
-import org.bukkit.entity.Player;
-
 public class dewddprivate {
 
 	public static int signprotectr = 2;

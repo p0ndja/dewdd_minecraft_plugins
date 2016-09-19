@@ -1,5 +1,7 @@
 package dewddflower;
 
+import li.LXRXLZRZType;
+
 public class RSData {
 	public int x1;
 	public int y1;
@@ -30,8 +32,8 @@ public class RSData {
 		tmp.y2 = y2;
 		tmp.z2 = z2;
 
-		tmp.p = new String[dewset.FWMaxPlayer];
-		for (int i = 0; i < dewset.FWMaxPlayer; i++) {
+		tmp.p = new String[dewset_interface.FWMaxPlayer];
+		for (int i = 0; i < dewset_interface.FWMaxPlayer; i++) {
 			tmp.p[i] = p[i];
 		}
 
@@ -40,6 +42,12 @@ public class RSData {
 
 		return tmp;
 
+	}
+	
+	public static LXRXLZRZType getAsLXType(RSData rs) {
+		LXRXLZRZType ee = new LXRXLZRZType(rs.x1, rs.y1, rs.z1, rs.x2,
+				rs.y2, rs.z2);
+		return ee;
 	}
 
 }

@@ -19,6 +19,7 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import dewddflower.dewset;
 import dewddtran.tr;
 
 public class DigEventListener2 implements Listener {
@@ -77,7 +78,7 @@ public class DigEventListener2 implements Listener {
 
 				for (int i = 0; i >= -3; i--) {
 					Block b = p.getLocation().getBlock().getRelative(0, i, 0);
-					if (dewddflower.Main.ds.cando(b, p, "build") == true) {
+					if (dewset.cando(b, p, "build") == true) {
 						p.sendMessage(dprint.r.color(tr.gettr("this zone is protected you can't build")));
 						return;
 					}

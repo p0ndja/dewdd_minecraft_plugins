@@ -5,29 +5,13 @@
  */
 package dewddflower;
 
-import java.io.BufferedReader;
-import java.io.DataInputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.InputStreamReader;
-
-import org.bukkit.Location;
-import org.bukkit.block.Block;
-import org.bukkit.entity.Player;
-
-import dewddtran.tr;
-import li.Constant_Protect;
-import li.LXRXLZRZType;
-
 public abstract class dewset_interface extends dewsetdatabase {
+
+	public  static int FWMaxPlayer = 20;
 
 	public  int selectmax = 29;
 
 	public  int dewsignlimit = 200;
-
-	public  static int FWMaxPlayer = 20;
 
 	public  String pmaindelete = "dewdd.main.delete";
 	public  String pmaindewbuychangehost = "dewdd.main.dewbuy.changehost";

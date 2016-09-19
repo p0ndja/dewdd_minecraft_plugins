@@ -32,9 +32,9 @@ public abstract class dewsetdatabase {
 		}
 	}
 
-	public dewsetlistblock dslb = new dewsetlistblock();
-
 	public static String folder_name = "plugins" + File.separator + "dewdd_main";
+
+	public dewsetlistblock dslb = new dewsetlistblock();
 
 	public boolean isdewinventoryblock(int blockid) {
 

@@ -58,7 +58,6 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.event.server.ServerCommandEvent;
 import org.bukkit.event.world.ChunkUnloadEvent;
-import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.potion.PotionEffectType;
@@ -67,6 +66,7 @@ import api_admin.dewddadmin;
 import dewddflower.RSData;
 import dewddflower.RSWorld;
 import dewddflower.dewset;
+import dewddflower.dewset_interface;
 import dewddtran.tr;
 import li.Constant_Protect;
 import li.LXRXLZRZType;
@@ -87,6 +87,335 @@ public class DigEventListener2 implements Listener {
 			Bukkit.getScheduler().scheduleSyncDelayedTask(ac, this);
 		}
 
+		private void callFWMethod(String[] m) {
+
+			RSWorld worldid = dewset.getWorld(player.getWorld().getName());
+			Block block = player.getLocation().getBlock();
+			int getid = dewset.getProtectid(block, worldid);
+			RSData tmprs;
+			if (getid == -1) {
+				tmprs = null;
+			}
+			else {
+			 tmprs = worldid.rs.get(getid);
+			}
+			int meInSlot = 0;
+			if (getid == -1) {
+				meInSlot = -1;
+			} else {
+				meInSlot = dewset.getplayerinslot(player.getName(), getid, worldid);
+			}
+
+			if (m[0].equalsIgnoreCase("fw") || m[0].equalsIgnoreCase("flower")) {
+
+				if (m.length == 1) {
+					
+					
+					player.sendMessage(dprint.r.color("/fw home [name]"));
+					
+					player.sendMessage(dprint.r.color("/fw add <player>"));
+					player.sendMessage(dprint.r.color("/fw remove <player>"));
+					
+					player.sendMessage(dprint.r.color("/fw list"));
+					
+					player.sendMessage(dprint.r.color("/fw buy"));
+					player.sendMessage(dprint.r.color("/fw buyzone"));
+					player.sendMessage(dprint.r.color("/fw buydelete"));
+					
+					
+					
+					player.sendMessage(dprint.r.color("/fw goid <id>"));
+					player.sendMessage(dprint.r.color("/fw gorandom"));
+					player.sendMessage(dprint.r.color("/fw flag"));
+					player.sendMessage(dprint.r.color("/fw max"));
+					
+					player.sendMessage(dprint.r.color("/fw owner <player>"));
+					player.sendMessage(dprint.r.color("/fw delete"));
+					player.sendMessage(dprint.r.color("/fw exitFromThisHome <owner name>"));
+
+
+					return;
+
+				} else if (m.length == 2 || m.length == 3)
+					if (m[1].equalsIgnoreCase("max")) {
+						player.sendMessage(dprint.r.color(tr.gettr("amount_of_protect") + worldid.rs.size()));
+						return;
+					} else if (m[1].equalsIgnoreCase("flag")) {
+						player.sendMessage(
+								dprint.r.color(tr.gettr("fw add these flag to your zone to activate something")));
+
+						player.sendMessage(dprint.r.color("/fw <add> <flag>"));
+						player.sendMessage(dprint.r.color("/fw <remove> <flag>"));
+
+						tr.showFlagToPlayer(player);
+						return;
+
+					}
+
+					else if (m[1].equalsIgnoreCase("goid")) {
+						// go
+
+						if (m.length != 3) {
+							player.sendMessage(dprint.r.color("/fw goid <id>"));
+							player.sendMessage(dprint.r.color("/fw goid <0 to " + (worldid.rs.size() - 1) + ">"));
+
+							return;
+						}
+
+						int idid = Integer.parseInt(m[2]);
+						if (idid < 0 || idid >= worldid.rs.size()) {
+							player.sendMessage(dprint.r.color("/fw goid <0 to " + (worldid.rs.size() - 1) + ">"));
+
+							return;
+						}
+
+						RSData tmprstogo = worldid.rs.get(idid);
+
+						LXRXLZRZType ee =RSData.getAsLXType(tmprstogo);
+								
+						int mid[] = ee.getmiddle();
+
+						Block blockToGo = player.getWorld().getBlockAt(mid[0], mid[1], mid[2]);
+
+						blockToGo.getChunk().load();
+						player.teleport(blockToGo.getLocation());
+						player.sendMessage(dprint.r.color("teleported you to (" + blockToGo.getX() + ","
+								+ blockToGo.getY() + "," + blockToGo.getZ() + ") of " + tmprstogo.p[0]));
+						return;
+					} else if (m[1].equalsIgnoreCase("gorandom")) {
+						// go
+
+						int idid = rnd.nextInt(worldid.rs.size());
+						RSData tmprstogo = worldid.rs.get(idid);
+
+						LXRXLZRZType ee =RSData.getAsLXType(tmprstogo);
+						int mid[] = ee.getmiddle();
+
+						Block blockToGo = player.getWorld().getBlockAt(mid[0], mid[1], mid[2]);
+						blockToGo.getChunk().load();
+						player.teleport(blockToGo.getLocation());
+						player.sendMessage(dprint.r.color("teleported you to (" + blockToGo.getX() + ","
+								+ blockToGo.getY() + "," + blockToGo.getZ() + ") of " + tmprstogo.p[0]));
+						return;
+					}
+
+					else if (m[1].equalsIgnoreCase("home")) {
+						if (m.length != 3) {
+							player.sendMessage(dprint.r.color("need 3 arguments   /fw home <player>"));
+
+							for (int lop2 = 0; lop2 < worldid.rs.size(); lop2++) {
+								if (dewset.getplayerinslot(player.getName(), lop2, worldid) == -1) {
+									continue;
+								}
+
+								player.sendMessage(dprint.r.color("/fw home " + lop2));
+
+							}
+
+							return;
+						}
+
+						int lop2 = Integer.parseInt(m[2]);
+
+						RSData tmprstowarp = worldid.rs.get(lop2);
+						LXRXLZRZType ee =RSData.getAsLXType(tmprstowarp);
+						int mid[] = ee.getmiddle();
+
+						Block blocktowarp = player.getWorld().getBlockAt(mid[0], mid[1], mid[2]);
+
+						blocktowarp.getChunk().load();
+						player.teleport(blocktowarp.getLocation());
+						player.sendMessage(dprint.r.color("teleported you to (" + blocktowarp.getX() + ","
+								+ blocktowarp.getY() + "," + blocktowarp.getZ() + ") of " + tmprstowarp.p[0]));
+
+						return;
+
+					}
+
+					else if (m[1].equalsIgnoreCase("owner")) {
+
+						if (getid == -1) {
+							player.sendMessage(dprint.r.color(tr.gettr("this_zone_don't_have_protect")));
+							return;
+						} else {
+							// check host
+							boolean ch = tmprs.p[0].equalsIgnoreCase(player.getName());
+
+							if (ch == false)
+								if (player.hasPermission(dew.pmainoveride) == false) {
+									player.sendMessage(
+											dprint.r.color(tr.gettr("host_is") + tmprs.p[0] + tr.gettr("not_you!")));
+
+									return;
+								} else
+									player.sendMessage(dprint.r.color(tr.gettr("overide_this_zone")));
+
+							if (m.length != 3) {
+								player.sendMessage(dprint.r.color("/skyblock owner <playername>"));
+								return;
+							}
+
+							// check that player online
+
+							// check if he already has own protect
+
+							player.sendMessage(dprint.r.color(tr.gettr("this_skyblock_owner_is") + tmprs.p[0]));
+							dew.savesignfile(-1, worldid);
+							return;
+
+						}
+					}
+
+					else if (m[1].equalsIgnoreCase("exitFromThisHome")) {
+
+						if (m.length != 3) {
+							player.sendMessage(dprint.r.color(
+									tr.gettr("not enought argument type this") + "/sky exitfromthishome <owner name>"));
+							return;
+						}
+
+						if (getid == -1) {
+							player.sendMessage(dprint.r.color(tr.gettr("this_zone_don't_have_any_protect")));
+							return;
+						} else {
+							// check host
+
+							if (meInSlot == -1) {
+								player.sendMessage(dprint.r.color(tr.gettr("don't have your name on this protect")));
+								return;
+							}
+
+							// ....
+
+							boolean ch = tmprs.p[0].equalsIgnoreCase(player.getName());
+
+							if (ch == true) {
+								player.sendMessage(dprint.r.color(tr.gettr(
+										"you_can't_exit_from_your_own_protect_if_you_want_try_another command such as delete or owner")));
+								return;
+
+							}
+
+							// ....
+							// remove my name
+							tmprs.p[meInSlot] = "null";
+							dew.savesignfile(-1, worldid);
+
+							player.sendMessage(dprint.r
+									.color(tr.gettr("you exited from sky protect of ") + tmprs.p[0] + " id " + getid));
+
+						}
+
+					} else if (m[1].equalsIgnoreCase("add")) {
+
+						if (getid == -1) {
+							player.sendMessage(dprint.r.color(tr.gettr("this_zone_don't_have_any_protect")));
+							return;
+						} else {
+							// check host
+							boolean ch = tmprs.p[0].equalsIgnoreCase(player.getName());
+
+							if (ch == false)
+								if (player.hasPermission(dew.pmainoveride) == false) {
+									player.sendMessage(
+											dprint.r.color(tr.gettr("host_is") + tmprs.p[0] + tr.gettr("not_you")));
+
+									return;
+								} else
+									player.sendMessage(dprint.r.color(tr.gettr("overide_this_zone")));
+
+						}
+
+						if (m.length != 3) {
+							player.sendMessage(dprint.r.color("/skyblock add <playername>"));
+							return;
+						}
+						// if found his skyblock teleport him
+
+						// check free slot
+
+						for (int i = 1; i < dewset_interface.FWMaxPlayer; i++)
+							if (tmprs.p[i].equalsIgnoreCase(m[2])) {
+								player.sendMessage(dprint.r.color(tr.gettr("already_added_this_name_so_not_work")));
+								return;
+							}
+
+						for (int i = 1; i < dewset_interface.FWMaxPlayer; i++)
+							if (tmprs.p[i].equalsIgnoreCase("null")) {
+								tmprs.p[i] = m[2];
+								player.sendMessage(
+										dprint.r.color(tr.gettr("added") + m[2] + tr.gettr("to_your_skyblock")));
+								dew.savesignfile(-1, worldid);
+								return;
+							}
+
+					} else if (m[1].equalsIgnoreCase("remove")) {
+
+						if (getid == -1) {
+							player.sendMessage(dprint.r.color(tr.gettr("this_zone_don't_have_protect")));
+							return;
+						} else {
+							// check host
+							boolean ch = tmprs.p[0].equalsIgnoreCase(player.getName());
+
+							if (ch == false)
+								if (player.hasPermission(dew.pmainoveride) == false) {
+									player.sendMessage(
+											dprint.r.color(tr.gettr("host_is") + tmprs.p[0] + tr.gettr("not_you")));
+									return;
+								} else
+									player.sendMessage(dprint.r.color(tr.gettr("overide_this_zone")));
+
+						}
+
+						if (m.length != 3) {
+							player.sendMessage(dprint.r.color("/skyblock remove <playername>"));
+							return;
+						}
+
+						if (m[2].equalsIgnoreCase(player.getName())) {
+							player.sendMessage(dprint.r.color(tr.gettr("you_can't_remove_your_name_from_your_zone")));
+							return;
+						}
+						// if found his skyblock teleport him
+
+						// check free slot
+
+						for (int i = 1; i < dewset_interface.FWMaxPlayer; i++)
+							if (tmprs.p[i].equalsIgnoreCase(m[2])) {
+								tmprs.p[i] = "null";
+								player.sendMessage(
+										dprint.r.color(tr.gettr("removed") + m[2] + tr.gettr("from_your_skyblock")));
+								dew.savesignfile(-1, worldid);
+								return;
+							}
+
+						player.sendMessage(dprint.r.color(tr.gettr("this_protected_don't_have_this_name") + m[2]));
+						return;
+					} else if (m[1].equalsIgnoreCase("list")) {
+
+						dew.fw_list(player);
+					} else if (m[1].equalsIgnoreCase("buy") == true) {
+						dew.dewbuy(player);
+						canc = true;
+						return;
+					}
+
+					// dewbuyzone
+					else if (m[1].equalsIgnoreCase("buyzone") == true) {
+						dew.dewbuyzone(player, player.getLocation().getBlock());
+						canc = true;
+						return;
+					}
+
+					else if (m[1].equalsIgnoreCase("buydelete") == true) {
+						dew.dewbuydelete(player);
+						return;
+					}
+			}
+
+		}
+
 		@Override
 		public void run() {
 			if (!tr.isrunworld(ac.getName(), player.getWorld().getName())) {
@@ -101,8 +430,8 @@ public class DigEventListener2 implements Listener {
 			}
 
 			if (m[0].equalsIgnoreCase("showworldlist")) {
-				for (int lop = 0; lop < dew.rsWorld.size(); lop++) {
-					RSWorld tmpworld = dew.rsWorld.get(lop);
+				for (int lop = 0; lop < dewset.rsWorld.size(); lop++) {
+					RSWorld tmpworld = dewset.rsWorld.get(lop);
 					player.sendMessage(lop + " = " + tmpworld.worldName);
 				}
 			}
@@ -116,7 +445,7 @@ public class DigEventListener2 implements Listener {
 			if (m[0].equalsIgnoreCase("showsignlist")) {
 				if (m.length == 1) {
 					// load protect id
-					RSWorld worldid = dew.getWorld(player.getWorld().getName());
+					RSWorld worldid = dewset.getWorld(player.getWorld().getName());
 					if (worldid == null) {
 						player.sendMessage(dprint.r.color(tr.gettr("this world don't have fw protect")));
 						return;
@@ -125,8 +454,8 @@ public class DigEventListener2 implements Listener {
 					for (int lop = 0; lop < worldid.rs.size(); lop++) {
 						RSData rs = worldid.rs.get(lop);
 
-						player.sendMessage(dew.getPositionSignAsString(worldid, rs));
-						for (int lop2 = 0; lop2 < dew.FWMaxPlayer; lop2++) {
+						player.sendMessage(dewset.getPositionSignAsString(worldid, rs));
+						for (int lop2 = 0; lop2 < dewset_interface.FWMaxPlayer; lop2++) {
 							player.sendMessage(lop2 + " = " + rs.p[lop2]);
 						}
 					}
@@ -352,20 +681,20 @@ public class DigEventListener2 implements Listener {
 			// dewdeleteblock
 
 			if (message.equalsIgnoreCase("dewreloadworldfile") == true) {
-				dew.loadworldfile();
+				dewset.loadworldfile();
 				return;
 			}
 
 			// dewreloadsignfile
 			if (message.equalsIgnoreCase("dewreloadsignfile") == true) {
-				dew.loadsignfile();
+				dewset.loadsignfile();
 				player.sendMessage("ptdew&dewdd : Reloaded Sign File");
 				return;
 			}
 
 			// savesignfile
 			if (message.equalsIgnoreCase("dewsavesignfile") == true) {
-				RSWorld tmpworld = dew.getWorld(player.getWorld().getName());
+				RSWorld tmpworld = dewset.getWorld(player.getWorld().getName());
 
 				dew.savesignfile(-1, tmpworld);
 				player.sendMessage("ptdew&dewdd : Saved Sign File");
@@ -721,343 +1050,6 @@ public class DigEventListener2 implements Listener {
 			// *****************************************
 
 		} // sync
-
-		private void callFWMethod(String[] m) {
-
-			RSWorld worldid = dew.getWorld(player.getWorld().getName());
-			Block block = player.getLocation().getBlock();
-			int getid = dew.getProtectid(block, worldid);
-			RSData tmprs;
-			if (getid == -1) {
-				tmprs = null;
-			}
-			else {
-			 tmprs = worldid.rs.get(getid);
-			}
-			int meInSlot = 0;
-			if (getid == -1) {
-				meInSlot = -1;
-			} else {
-				meInSlot = dew.getplayerinslot(player.getName(), getid, worldid);
-			}
-
-			if (m[0].equalsIgnoreCase("fw") || m[0].equalsIgnoreCase("flower")) {
-
-				if (m.length == 1) {
-					player.sendMessage(dprint.r.color("/fw new"));
-					player.sendMessage(dprint.r.color("/fw home [name]"));
-					player.sendMessage(dprint.r.color("/fw add <player>"));
-					player.sendMessage(dprint.r.color("/fw remove <player>"));
-					player.sendMessage(dprint.r.color("/fw list"));
-					player.sendMessage(dprint.r.color("/fw owner <player>"));
-					player.sendMessage(dprint.r.color("/fw exitFromThisHome <owner name>"));
-
-					player.sendMessage(dprint.r.color("/fw c"));
-					player.sendMessage(dprint.r.color("/fw go <player>"));
-					player.sendMessage(dprint.r.color("/fw goid <id>"));
-					player.sendMessage(dprint.r.color("/fw gorandom"));
-					player.sendMessage(dprint.r.color("/fw flag"));
-
-					player.sendMessage(dprint.r.color("/fw delete"));
-					player.sendMessage(dprint.r.color("/fw buyhere"));
-
-					player.sendMessage(dprint.r.color("/fw max"));
-
-					return;
-
-				} else if (m.length == 2 || m.length == 3)
-					if (m[1].equalsIgnoreCase("max")) {
-						player.sendMessage(dprint.r.color(tr.gettr("amount_of_protect") + worldid.rs.size()));
-						return;
-					} else if (m[1].equalsIgnoreCase("flag")) {
-						player.sendMessage(
-								dprint.r.color(tr.gettr("fw add these flag to your zone to activate something")));
-
-						player.sendMessage(dprint.r.color("/fw <add> <flag>"));
-						player.sendMessage(dprint.r.color("/fw <remove> <flag>"));
-
-						tr.showFlagToPlayer(player);
-						return;
-
-					}
-
-					else if (m[1].equalsIgnoreCase("goid")) {
-						// go
-
-						if (m.length != 3) {
-							player.sendMessage(dprint.r.color("/fw goid <id>"));
-							player.sendMessage(dprint.r.color("/fw goid <0 to " + (worldid.rs.size() - 1) + ">"));
-
-							return;
-						}
-
-						int idid = Integer.parseInt(m[2]);
-						if (idid < 0 || idid >= worldid.rs.size()) {
-							player.sendMessage(dprint.r.color("/fw goid <0 to " + (worldid.rs.size() - 1) + ">"));
-
-							return;
-						}
-
-						RSData tmprstogo = worldid.rs.get(idid);
-
-						LXRXLZRZType ee = new LXRXLZRZType(tmprstogo.x1, tmprstogo.y1, tmprstogo.z1, tmprstogo.x2,
-								tmprstogo.y2, tmprstogo.z2);
-						int mid[] = ee.getmiddle();
-
-						Block blockToGo = player.getWorld().getBlockAt(mid[0], mid[1], mid[2]);
-
-						blockToGo.getChunk().load();
-						player.teleport(blockToGo.getLocation());
-						player.sendMessage(dprint.r.color("teleported you to (" + blockToGo.getX() + ","
-								+ blockToGo.getY() + "," + blockToGo.getZ() + ") of " + tmprstogo.p[0]));
-						return;
-					} else if (m[1].equalsIgnoreCase("gorandom")) {
-						// go
-
-						int idid = rnd.nextInt(worldid.rs.size());
-						RSData tmprstogo = worldid.rs.get(idid);
-
-						LXRXLZRZType ee = new LXRXLZRZType(tmprstogo.x1, tmprstogo.y1, tmprstogo.z1, tmprstogo.x2,
-								tmprstogo.y2, tmprstogo.z2);
-						int mid[] = ee.getmiddle();
-
-						Block blockToGo = player.getWorld().getBlockAt(mid[0], mid[1], mid[2]);
-						blockToGo.getChunk().load();
-						player.teleport(blockToGo.getLocation());
-						player.sendMessage(dprint.r.color("teleported you to (" + blockToGo.getX() + ","
-								+ blockToGo.getY() + "," + blockToGo.getZ() + ") of " + tmprstogo.p[0]));
-						return;
-					}
-
-					else if (m[1].equalsIgnoreCase("home")) {
-						if (m.length != 3) {
-							player.sendMessage(dprint.r.color("need 3 arguments   /fw home <player>"));
-
-							for (int lop2 = 0; lop2 < worldid.rs.size(); lop2++) {
-								if (dew.getplayerinslot(player.getName(), lop2, worldid) == -1) {
-									continue;
-								}
-
-								player.sendMessage(dprint.r.color("/fw home " + lop2));
-
-							}
-
-							return;
-						}
-
-						int lop2 = Integer.parseInt(m[2]);
-
-						RSData tmprstowarp = worldid.rs.get(lop2);
-						LXRXLZRZType ee = new LXRXLZRZType(tmprstowarp.x1, tmprstowarp.y1, tmprstowarp.z1,
-								tmprstowarp.x2, tmprstowarp.y2, tmprstowarp.z2);
-						int mid[] = ee.getmiddle();
-
-						Block blocktowarp = player.getWorld().getBlockAt(mid[0], mid[1], mid[2]);
-
-						blocktowarp.getChunk().load();
-						player.teleport(blocktowarp.getLocation());
-						player.sendMessage(dprint.r.color("teleported you to (" + blocktowarp.getX() + ","
-								+ blocktowarp.getY() + "," + blocktowarp.getZ() + ") of " + tmprstowarp.p[0]));
-
-						return;
-
-					}
-
-					else if (m[1].equalsIgnoreCase("owner")) {
-
-						if (getid == -1) {
-							player.sendMessage(dprint.r.color(tr.gettr("this_zone_don't_have_protect")));
-							return;
-						} else {
-							// check host
-							boolean ch = tmprs.p[0].equalsIgnoreCase(player.getName());
-
-							if (ch == false)
-								if (player.hasPermission(dew.pmainoveride) == false) {
-									player.sendMessage(
-											dprint.r.color(tr.gettr("host_is") + tmprs.p[0] + tr.gettr("not_you!")));
-
-									return;
-								} else
-									player.sendMessage(dprint.r.color(tr.gettr("overide_this_zone")));
-
-							if (m.length != 3) {
-								player.sendMessage(dprint.r.color("/skyblock owner <playername>"));
-								return;
-							}
-
-							// check that player online
-
-							// check if he already has own protect
-
-							player.sendMessage(dprint.r.color(tr.gettr("this_skyblock_owner_is") + tmprs.p[0]));
-							dew.savesignfile(-1, worldid);
-							return;
-
-						}
-					}
-
-					else if (m[1].equalsIgnoreCase("exitFromThisHome")) {
-
-						if (m.length != 3) {
-							player.sendMessage(dprint.r.color(
-									tr.gettr("not enought argument type this") + "/sky exitfromthishome <owner name>"));
-							return;
-						}
-
-						if (getid == -1) {
-							player.sendMessage(dprint.r.color(tr.gettr("this_zone_don't_have_any_protect")));
-							return;
-						} else {
-							// check host
-
-							if (meInSlot == -1) {
-								player.sendMessage(dprint.r.color(tr.gettr("don't have your name on this protect")));
-								return;
-							}
-
-							// ....
-
-							boolean ch = tmprs.p[0].equalsIgnoreCase(player.getName());
-
-							if (ch == true) {
-								player.sendMessage(dprint.r.color(tr.gettr(
-										"you_can't_exit_from_your_own_protect_if_you_want_try_another command such as delete or owner")));
-								return;
-
-							}
-
-							// ....
-							// remove my name
-							tmprs.p[meInSlot] = "null";
-							dew.savesignfile(-1, worldid);
-
-							player.sendMessage(dprint.r
-									.color(tr.gettr("you exited from sky protect of ") + tmprs.p[0] + " id " + getid));
-
-						}
-
-					} else if (m[1].equalsIgnoreCase("add")) {
-
-						if (getid == -1) {
-							player.sendMessage(dprint.r.color(tr.gettr("this_zone_don't_have_any_protect")));
-							return;
-						} else {
-							// check host
-							boolean ch = tmprs.p[0].equalsIgnoreCase(player.getName());
-
-							if (ch == false)
-								if (player.hasPermission(dew.pmainoveride) == false) {
-									player.sendMessage(
-											dprint.r.color(tr.gettr("host_is") + tmprs.p[0] + tr.gettr("not_you")));
-
-									return;
-								} else
-									player.sendMessage(dprint.r.color(tr.gettr("overide_this_zone")));
-
-						}
-
-						if (m.length != 3) {
-							player.sendMessage(dprint.r.color("/skyblock add <playername>"));
-							return;
-						}
-						// if found his skyblock teleport him
-
-						// check free slot
-
-						for (int i = 1; i < dew.FWMaxPlayer; i++)
-							if (tmprs.p[i].equalsIgnoreCase(m[2])) {
-								player.sendMessage(dprint.r.color(tr.gettr("already_added_this_name_so_not_work")));
-								return;
-							}
-
-						for (int i = 1; i < dew.FWMaxPlayer; i++)
-							if (tmprs.p[i].equalsIgnoreCase("null")) {
-								tmprs.p[i] = m[2];
-								player.sendMessage(
-										dprint.r.color(tr.gettr("added") + m[2] + tr.gettr("to_your_skyblock")));
-								dew.savesignfile(-1, worldid);
-								return;
-							}
-
-					} else if (m[1].equalsIgnoreCase("remove")) {
-
-						if (getid == -1) {
-							player.sendMessage(dprint.r.color(tr.gettr("this_zone_don't_have_protect")));
-							return;
-						} else {
-							// check host
-							boolean ch = tmprs.p[0].equalsIgnoreCase(player.getName());
-
-							if (ch == false)
-								if (player.hasPermission(dew.pmainoveride) == false) {
-									player.sendMessage(
-											dprint.r.color(tr.gettr("host_is") + tmprs.p[0] + tr.gettr("not_you")));
-									return;
-								} else
-									player.sendMessage(dprint.r.color(tr.gettr("overide_this_zone")));
-
-						}
-
-						if (m.length != 3) {
-							player.sendMessage(dprint.r.color("/skyblock remove <playername>"));
-							return;
-						}
-
-						if (m[2].equalsIgnoreCase(player.getName())) {
-							player.sendMessage(dprint.r.color(tr.gettr("you_can't_remove_your_name_from_your_zone")));
-							return;
-						}
-						// if found his skyblock teleport him
-
-						// check free slot
-
-						for (int i = 1; i < dew.FWMaxPlayer; i++)
-							if (tmprs.p[i].equalsIgnoreCase(m[2])) {
-								tmprs.p[i] = "null";
-								player.sendMessage(
-										dprint.r.color(tr.gettr("removed") + m[2] + tr.gettr("from_your_skyblock")));
-								dew.savesignfile(-1, worldid);
-								return;
-							}
-
-						player.sendMessage(dprint.r.color(tr.gettr("this_protected_don't_have_this_name") + m[2]));
-						return;
-					} else if (m[1].equalsIgnoreCase("list")) {
-
-						if (getid == -1) {
-							player.sendMessage(dprint.r.color(tr.gettr("this_zone_don't_have_any_protect")));
-							return;
-						}
-
-						player.sendMessage(dprint.r.color("protect id ") + getid + " , position "
-								+ dew.getPositionSignAsString(worldid, tmprs));
-
-						for (int i = 0; i < dew.FWMaxPlayer; i++)
-							if (tmprs.p[i].equalsIgnoreCase("null") == false) {
-								player.sendMessage(dprint.r.color("Member " + i + " = " + tmprs.p[i]));
-
-							}
-					} else if (m[1].equalsIgnoreCase("buy") == true) {
-						dew.dewbuy(player);
-						canc = true;
-						return;
-					}
-
-					// dewbuyzone
-					else if (m[1].equalsIgnoreCase("buyzone") == true) {
-						dew.dewbuyzone(player, player.getLocation().getBlock());
-						canc = true;
-						return;
-					}
-
-					else if (m[1].equalsIgnoreCase("buydelete") == true) {
-						dew.dewbuydelete(player);
-						return;
-					}
-			}
-
-		}
 	}
 
 	class chatz extends Thread {
@@ -1431,13 +1423,13 @@ public class DigEventListener2 implements Listener {
 			String m[] = message.split("\\s+");
 
 			if (m[0].equalsIgnoreCase("dewreloadworldfile") == true) {
-				dew.loadworldfile();
+				dewset.loadworldfile();
 				return;
 			}
 
 			// dewreloadsignfile
 			if (m[0].equalsIgnoreCase("dewreloadsignfile") == true) {
-				dew.loadsignfile();
+				dewset.loadsignfile();
 				dprint.r.printAll("ptdew&dewdd : Reloaded Sign File");
 				return;
 			}
@@ -1622,7 +1614,7 @@ public class DigEventListener2 implements Listener {
 		}
 
 		boolean goodc1 = false;
-		goodc1 = dew.cando(block, player, "delete");
+		goodc1 = dewset.cando(block, player, "delete");
 
 		// call check
 		if (goodc1 == true) {
@@ -1689,8 +1681,8 @@ public class DigEventListener2 implements Listener {
 			return;
 
 		Block ac = event.getBlock();
-		RSWorld worldid = dew.getWorld(ac.getLocation().getWorld().getName());
-		int getid = dew.getProtectid(event.getBlock(), worldid);
+		RSWorld worldid = dewset.getWorld(ac.getLocation().getWorld().getName());
+		int getid = dewset.getProtectid(event.getBlock(), worldid);
 		if (getid > -1 || event.getBlock().getTypeId() == 35) {
 
 			int d4 = 4;
@@ -1727,7 +1719,7 @@ public class DigEventListener2 implements Listener {
 			// check host block
 
 			boolean goodc1 = false;
-			goodc1 = dew.cando(block, player, "damage");
+			goodc1 = dewset.cando(block, player, "damage");
 			if (goodc1 == true) { // don't have permission
 
 				event.setCancelled(true);
@@ -1735,6 +1727,7 @@ public class DigEventListener2 implements Listener {
 			} else { // have permission
 
 				if (player.getItemInHand().getType() == Material.FEATHER) {
+					if (block.getType() != Material.MOB_SPAWNER) 
 					block.breakNaturally();
 				}
 
@@ -1831,7 +1824,7 @@ public class DigEventListener2 implements Listener {
 
 		boolean goodc1 = false;
 
-		goodc1 = dew.cando(block, player, "build");
+		goodc1 = dewset.cando(block, player, "build");
 
 		if (goodc1 == true) {
 			event.setCancelled(true);
@@ -1911,10 +1904,10 @@ public class DigEventListener2 implements Listener {
 		if (event.getCreatureType() == CreatureType.RABBIT)
 			return;
 
-		RSWorld worldid = dew.getWorld(event.getLocation().getWorld().getName());
-		int getid = dew.getProtectid(event.getEntity().getLocation().getBlock(), worldid);
+		RSWorld worldid = dewset.getWorld(event.getLocation().getWorld().getName());
+		int getid = dewset.getProtectid(event.getEntity().getLocation().getBlock(), worldid);
 		if (getid > -1) {
-			int flagMonFound = dew.getplayerinslot(Constant_Protect.flag_monster, getid, worldid);
+			int flagMonFound = dewset.getplayerinslot(Constant_Protect.flag_monster, getid, worldid);
 
 			if (flagMonFound > -1) {
 				event.setCancelled(true);
@@ -2047,7 +2040,7 @@ public class DigEventListener2 implements Listener {
 			return;
 
 		if (event.getEntity().getType() == EntityType.ENDERMAN
-				&& dew.getProtectid(event.getBlock(), dew.getWorld(event.getBlock().getWorld().getName())) > -1) {
+				&& dewset.getProtectid(event.getBlock(), dewset.getWorld(event.getBlock().getWorld().getName())) > -1) {
 
 			event.setCancelled(true);
 			return;
@@ -2056,7 +2049,7 @@ public class DigEventListener2 implements Listener {
 		if (event.getEntity().getType() == EntityType.PLAYER) {
 			Player pal = (Player) event.getEntity();
 
-			if (dew.cando(event.getBlock(), pal, "changeBlock") == true) {
+			if (dewset.cando(event.getBlock(), pal, "changeBlock") == true) {
 				event.setCancelled(true);
 			}
 		}
@@ -2070,7 +2063,7 @@ public class DigEventListener2 implements Listener {
 
 		if (e.getEntity() instanceof EntityPlayer) {
 			Player br = (Player) e.getEntity();
-			if (dew.cando(br.getLocation().getBlock(), br, "EntityDamageEvent") == true) {
+			if (dewset.cando(br.getLocation().getBlock(), br, "EntityDamageEvent") == true) {
 				// br.sendMessage("ptdew&dewdd : " +
 				// tr.gettr("don't_place_hanging_picture_not_yours"));
 
@@ -2090,14 +2083,14 @@ public class DigEventListener2 implements Listener {
 		Block block = event.getLocation().getBlock();
 		// event.setCancelled(true);
 
-		RSWorld worldid = dew.getWorld(block.getWorld().getName());
-		int getid = dew.getProtectid(block, worldid);
+		RSWorld worldid = dewset.getWorld(block.getWorld().getName());
+		int getid = dewset.getProtectid(block, worldid);
 
 		if (getid == -1) {
 			return;
 		}
 
-		int hasFlagExplode = dew.getplayerinslot(Constant_Protect.flag_explode, getid, worldid);
+		int hasFlagExplode = dewset.getplayerinslot(Constant_Protect.flag_explode, getid, worldid);
 
 		if (hasFlagExplode > -1) {
 			event.setCancelled(true);
@@ -2115,7 +2108,7 @@ public class DigEventListener2 implements Listener {
 
 		if (event.getEntity().getType() == EntityType.PLAYER) {
 			Player prp = (Player) event.getEntity();
-			if (dew.cando(event.getBlock(), prp, "EntityInteract") == true) {
+			if (dewset.cando(event.getBlock(), prp, "EntityInteract") == true) {
 				event.setCancelled(true);
 			}
 
@@ -2136,7 +2129,7 @@ public class DigEventListener2 implements Listener {
 		if (event.getRemover().getType() == EntityType.PLAYER) {
 			Player br = (Player) event.getRemover();
 
-			if (dew.cando(event.getEntity().getLocation().getBlock(), br, "HangingBreakByEntity") == true) {
+			if (dewset.cando(event.getEntity().getLocation().getBlock(), br, "HangingBreakByEntity") == true) {
 				// br.sendMessage("ptdew&dewdd : " +
 				// tr.gettr("don't_break_hanging_picture_not_yours"));
 
@@ -2156,8 +2149,8 @@ public class DigEventListener2 implements Listener {
 
 		Block b = event.getEntity().getLocation().getBlock();
 
-		RSWorld worldid = dew.getWorld(b.getWorld().getName());
-		int getid = dew.getProtectid(b, worldid);
+		RSWorld worldid = dewset.getWorld(b.getWorld().getName());
+		int getid = dewset.getProtectid(b, worldid);
 
 		if (event.getCause() == RemoveCause.EXPLOSION == true) {
 			if (getid > -1) {
@@ -2182,7 +2175,7 @@ public class DigEventListener2 implements Listener {
 				}
 
 				if (dist < 10000)
-					if (dew.cando(event.getEntity().getLocation().getBlock(), pl, "break") == true) {
+					if (dewset.cando(event.getEntity().getLocation().getBlock(), pl, "break") == true) {
 						event.setCancelled(true);
 						return;
 					}
@@ -2199,7 +2192,7 @@ public class DigEventListener2 implements Listener {
 			return;
 
 		Player br = event.getPlayer();
-		if (dew.cando(event.getPlayer().getLocation().getBlock(), br, "HangingPlaceEvent") == true) {
+		if (dewset.cando(event.getPlayer().getLocation().getBlock(), br, "HangingPlaceEvent") == true) {
 			// br.sendMessage("ptdew&dewdd : " +
 			// tr.gettr("don't_place_hanging_picture_not_yours"));
 
@@ -2348,7 +2341,7 @@ public class DigEventListener2 implements Listener {
 		if (!tr.isrunworld(ac.getName(), event.getPlayer().getWorld().getName()))
 			return;
 
-		if (dew.cando(event.getBlockClicked(), event.getPlayer(), "build") == true) {
+		if (dewset.cando(event.getBlockClicked(), event.getPlayer(), "build") == true) {
 			event.setCancelled(true);
 		}
 	}
@@ -2358,7 +2351,7 @@ public class DigEventListener2 implements Listener {
 		if (!tr.isrunworld(ac.getName(), event.getPlayer().getWorld().getName()))
 			return;
 
-		if (dew.cando(event.getBlockClicked(), event.getPlayer(), "build") == true) {
+		if (dewset.cando(event.getBlockClicked(), event.getPlayer(), "build") == true) {
 			event.setCancelled(true);
 		}
 	}
@@ -2511,7 +2504,7 @@ public class DigEventListener2 implements Listener {
 			return;
 
 		Player br = e.getPlayer();
-		if (dew.cando(e.getPlayer().getLocation().getBlock(), br, "HangingPlaceEvent") == true) {
+		if (dewset.cando(e.getPlayer().getLocation().getBlock(), br, "HangingPlaceEvent") == true) {
 			// br.sendMessage("ptdew&dewdd : " +
 			// tr.gettr("don't_interact_not_your"));
 
@@ -2544,9 +2537,11 @@ public class DigEventListener2 implements Listener {
 
 		Block block = event.getClickedBlock();
 		if (player.getItemInHand().getType() == Material.SAPLING && act == Action.LEFT_CLICK_BLOCK) {
-			// dew.fw_list(player);
+			
+			
+			dew.fw_list(player);
+			
 			event.setCancelled(true);
-
 			return;
 		}
 
@@ -2566,7 +2561,7 @@ public class DigEventListener2 implements Listener {
 		}
 
 		boolean goodc1 = false;
-		goodc1 = dew.cando(block, player, "right");
+		goodc1 = dewset.cando(block, player, "right");
 
 		if (goodc1 == true) {
 			event.setCancelled(true);
@@ -2695,7 +2690,10 @@ public class DigEventListener2 implements Listener {
 		if (rnd.nextInt(100) > 75) {
 
 			Player p = e.getPlayer();
-			RSWorld curworldid = dew.getWorld(p.getWorld().getName());
+			RSWorld curworldid = dewset.getWorld(p.getWorld().getName());
+			if (curworldid == null) {
+				return;
+			}
 
 			ShowCurStandProtect i = showCurStandProtect.get(p.getName());
 			if (i == null) {
@@ -2710,7 +2708,7 @@ public class DigEventListener2 implements Listener {
 
 			} else {
 
-				int curStandID = dew.getProtectid(p.getLocation().getBlock(), curworldid);
+				int curStandID = dewset.getProtectid(p.getLocation().getBlock(), curworldid);
 
 				if (curStandID == -1) { // no protect
 					if (i.lastStandProtectID != -1) { // has protect
