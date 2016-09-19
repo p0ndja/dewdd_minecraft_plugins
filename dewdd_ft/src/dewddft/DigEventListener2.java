@@ -649,6 +649,8 @@ public class DigEventListener2 implements Listener {
 		abc2.start();
 
 	}
+	
+	
 
 	@EventHandler
 	public void eventja(BlockRedstoneEvent e) {

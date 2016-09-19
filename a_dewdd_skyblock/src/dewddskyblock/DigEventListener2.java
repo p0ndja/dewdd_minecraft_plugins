@@ -1554,14 +1554,7 @@ public class DigEventListener2 implements Listener {
 
 					if (m.length != 3) {
 						player.sendMessage(dprint.r.color("need 3 arguments   /skyblock go <player>"));
-						/*for (int lop2 = 0; lop2 < api_skyblock.rsMax; lop2++) { // lop2
-							Block block = player.getWorld().getBlockAt(api_skyblock.rs[lop2].x,
-									api_skyblock.rs[lop2].y + 10, api_skyblock.rs[lop2].z);
-							player.sendMessage(dprint.r.color("Island at (" + block.getX() + "," + block.getY() + ","
-									+ block.getZ() + ") of " + api_skyblock.rs[lop2].p[0]));
 
-						} // lop2
-*/
 						return;
 					}
 
@@ -1593,28 +1586,25 @@ public class DigEventListener2 implements Listener {
 
 								player.sendMessage(dprint.r.color("" + api_skyblock.rs[lop2].p[0]));
 
-							
 							}
 
 						}
-						
+
 					}
 
-					
 					for (int lop2 = 0; lop2 < api_skyblock.rsMax; lop2++) {
 
 						if (api_skyblock.rs[lop2].p[0].equalsIgnoreCase(m[2])) {
-								Block block = player.getWorld().getBlockAt(api_skyblock.rs[lop2].x,
-								api_skyblock.rs[lop2].y + 10, api_skyblock.rs[lop2].z);
-						block.getChunk().load();
-						player.teleport(block.getLocation());
-						player.sendMessage(dprint.r.color("teleported you to (" + block.getX() + "," + block.getY()
-								+ "," + block.getZ() + ") of " + api_skyblock.rs[lop2].p[0]));
-						
-						return;
+							Block block = player.getWorld().getBlockAt(api_skyblock.rs[lop2].x,
+									api_skyblock.rs[lop2].y + 10, api_skyblock.rs[lop2].z);
+							block.getChunk().load();
+							player.teleport(block.getLocation());
+							player.sendMessage(dprint.r.color("teleported you to (" + block.getX() + "," + block.getY()
+									+ "," + block.getZ() + ") of " + api_skyblock.rs[lop2].p[0]));
+
+							return;
 						}
-						
-					
+
 					}
 
 				} else if (m[1].equalsIgnoreCase("goid")) {
@@ -1656,71 +1646,121 @@ public class DigEventListener2 implements Listener {
 				}
 
 				else if (m[1].equalsIgnoreCase("home")) {
+					if (m.length != 3) {
+						player.sendMessage(dprint.r.color("need 3 arguments   /skyblock home <player>"));
+						
+						
 
-					int manyhome[] = new int[100];
-					int manyhomemax = 0;
-
-					for (int lop = 0; lop < api_skyblock.rsMax; lop++)
-						for (int lop2 = 0; lop2 < api_skyblock.RSMaxPlayer; lop2++)
-							if (api_skyblock.rs[lop].p[lop2].equalsIgnoreCase(player.getName())) {
-								// player.sendMessage("found " +
-								// api_skyblock.rs[lop].p[lop2] + " >< " +
-								// player.getName());
-								manyhomemax++;
-								manyhome[manyhomemax - 1] = lop;
+						for (int lop2 = 0; lop2 < api_skyblock.rsMax; lop2++) {
+							if (api_skyblock.getplayerinslot(player.getName(), lop2) == -1) {
+								continue;
 							}
 
-					if (manyhomemax == 0) {
-						player.sendMessage(
-								dprint.r.color(tr.gettr("you_don't_have_any_skyblock_create_it_or_join_friend")));
+							
+						player.sendMessage(dprint.r.color("/skyblock home " +  api_skyblock.rs[lop2].p[0]));
+
+							
+
+						}
+						
 						return;
 					}
 
-					if (manyhomemax == 1) {
-						// found one auto teleport
+					int counttruename = 0;
+					int nearname = 0;
 
-						// if found his skyblock teleport him
-						Block block = player.getWorld().getBlockAt(api_skyblock.rs[manyhome[0]].x,
-								api_skyblock.rs[manyhome[0]].y + 10, api_skyblock.rs[manyhome[0]].z);
+					int homehashim = 0;
 
-						block.getChunk().load();
-						player.teleport(block.getLocation());
-						player.sendMessage(dprint.r.color(tr.gettr("teleported_to_skyblock") + " (" + block.getX() + ","
-								+ block.getY() + "," + block.getZ()));
-						return;
-
-					} else if (manyhomemax > 1)
-						if (m.length == 2) {
-							// show list
-							player.sendMessage(dprint.r.color(
-									tr.gettr("you_have_more_than_1_home_so_choose_it") + " /skyblock home <name>"));
-							for (int lop = 0; lop < manyhomemax; lop++)
-								player.sendMessage(
-										dprint.r.color("/skyblock home " + api_skyblock.rs[manyhome[lop]].p[0]));
-							return;
-						} else if (m.length == 3) {
-							for (int lop = 0; lop < manyhomemax; lop++)
-								if (api_skyblock.rs[manyhome[lop]].p[0].toLowerCase()
-										.indexOf(m[2].toLowerCase()) > -1) {
-									Block block = player.getWorld().getBlockAt(api_skyblock.rs[manyhome[lop]].x,
-											api_skyblock.rs[manyhome[lop]].y + 10, api_skyblock.rs[manyhome[lop]].z);
-									block.getChunk().load();
-									player.teleport(block.getLocation());
-									player.sendMessage(dprint.r.color(tr.gettr("teleported_to_skyblock") + " ("
-											+ block.getX() + "," + block.getY() + "," + block.getZ()));
-									return;
-								}
-
-							player.sendMessage(dprint.r.color(tr.gettr("not_found_skyblock_of") + m[2]));
-							return;
+					for (int lop2 = 0; lop2 < api_skyblock.rsMax; lop2++) {
+						if (api_skyblock.getplayerinslot(player.getName(), lop2) == -1) {
+							continue;
 						}
 
-					/*
-					 * int getid = dew.getnewrsid(player, false); if (getid ==
-					 * -1) { player.sendMessage(dprint.r.color(
-					 * "you don't have real skyblock  type /skyblock new");
-					 * return; }
-					 */
+						homehashim++;
+
+						if (api_skyblock.rs[lop2].p[0].equalsIgnoreCase(m[2])) {
+							counttruename++;
+						}
+
+						if (api_skyblock.rs[lop2].p[0].toLowerCase().indexOf(m[2].toLowerCase()) > -1) {
+
+							// player.sendMessage(dprint.r.color("" +
+							// api_skyblock.rs[lop2].p[0]));
+							nearname++;
+
+						}
+
+					}
+
+					if (homehashim == 0) {
+						player.sendMessage(
+								dprint.r.color(tr.gettr("you_don't_have_any_skyblock_create_it_or_join_friend")));
+						return;
+
+					}
+
+					if (nearname > 1) {
+						player.sendMessage(dprint.r.color(tr.gettr("list of sky protect name like your search name")));
+
+						for (int lop2 = 0; lop2 < api_skyblock.rsMax; lop2++) {
+							if (api_skyblock.getplayerinslot(player.getName(), lop2) == -1) {
+								continue;
+							}
+
+							if (api_skyblock.rs[lop2].p[0].toLowerCase().indexOf(m[2].toLowerCase()) > -1) {
+
+								player.sendMessage(dprint.r.color("/skyblock home " +  api_skyblock.rs[lop2].p[0]));
+
+							}
+
+						}
+
+						return;
+					}
+					else if (nearname == 1) {
+						for (int lop2 = 0; lop2 < api_skyblock.rsMax; lop2++) {
+							if (api_skyblock.getplayerinslot(player.getName(), lop2) == -1) {
+								continue;
+							}
+
+							if (api_skyblock.rs[lop2].p[0].toLowerCase().indexOf(m[2].toLowerCase()) > -1) {
+								Block block = player.getWorld().getBlockAt(api_skyblock.rs[lop2].x,
+										api_skyblock.rs[lop2].y + 10, api_skyblock.rs[lop2].z);
+								block.getChunk().load();
+								player.teleport(block.getLocation());
+								player.sendMessage(dprint.r.color("teleported you to (" + block.getX() + ","
+										+ block.getY() + "," + block.getZ() + ") of " + api_skyblock.rs[lop2].p[0]));
+
+								return;
+							}
+
+						}
+
+					}
+					else if (nearname == 0 ){
+						player.sendMessage(dprint.r
+								.color(tr.gettr("you_have_more_than_1_home_so_choose_it") + " /skyblock home <name>"));
+
+						for (int lop2 = 0; lop2 < api_skyblock.rsMax; lop2++) {
+							if (api_skyblock.getplayerinslot(player.getName(), lop2) == -1) {
+								continue;
+							}
+
+							
+								player.sendMessage(dprint.r.color("/skyblock home " +  api_skyblock.rs[lop2].p[0]));
+
+							
+
+						}
+						
+						return;
+						
+					}
+
+					
+					
+
+					player.sendMessage(dprint.r.color(tr.gettr("not_found_skyblock_of") + m[2]));
 
 				}
 

@@ -4811,9 +4811,9 @@ public class dewset extends dewset_interface {
 		private Block block = null;
 		private boolean first = false;
 		private Player player = null;
-		private int seedid = 0;
+		private Material seedid;
 
-		public soiladdseedc(Block block, Player player, int seedid, boolean first) {
+		public soiladdseedc(Block block, Player player, Material seedid, boolean first) {
 			this.block = block;
 			this.player = player;
 			this.seedid = seedid;
@@ -4829,16 +4829,16 @@ public class dewset extends dewset_interface {
 			int digY = block.getY();
 			int digZ = block.getZ();
 
-			int itemaddid = 0;
+			Material itemaddid ;
 			switch (seedid) {
-			case 392: // potato
-				itemaddid = 142;
+			case POTATO: // potato
+				itemaddid = Material.POTATO;
 				break;
-			case 391: // carot
-				itemaddid = 141;
+			case CARROT: // carot
+				itemaddid = Material.CARROT;
 				break;
-			case 295:
-				itemaddid = 59;
+			case CROPS:
+				itemaddid = Material.CROPS;
 				break;
 			/*
 			 * case 361: itemaddid = 104; break; case 362: itemaddid = 105;
@@ -4854,41 +4854,23 @@ public class dewset extends dewset_interface {
 
 			Block blockCut = world.getBlockAt(digX, digY, digZ);
 
-			if (blockCut.getRelative(0, -1, 0).getTypeId() != 60)
+			if (blockCut.getRelative(0, -1, 0).getType() != Material.SOIL)
 				return;
 
 			if (blockCut.getTypeId() != 0)
 				return;
 
-			boolean haswater = false;
+			
 
-			for (int xx3 = 4; xx3 >= -4; xx3--) {
-				for (int zz3 = 4; zz3 >= -4; zz3--)
-					if (blockCut.getRelative(xx3, -1, zz3).getTypeId() == 9
-							|| blockCut.getRelative(xx3, -1, zz3).getTypeId() == 8
-							|| blockCut.getRelative(xx3, 0, zz3).getTypeId() == 9
-							|| blockCut.getRelative(xx3, 0, zz3).getTypeId() == 8) {
-						haswater = true;
-						break;
-					}
+			
 
-				if (haswater == true) {
-					break;
-				}
-			}
-
-			if (haswater == false)
-				return;
-
-			if (blockCut.getLightLevel() < 9)
-				return;
-
-			if (decreseitem1(player, seedid, 0, false) == false) {
+			if (decreseitem1(player, seedid.getId(), 0, false) == false) {
 				player.saveData();
 				return;
 			}
 
-			blockCut.setTypeId(itemaddid);
+			blockCut.setType(itemaddid);
+			
 			blockCut.setData(itemadddata);
 			// dprint.r.printA(digX + "," + digY + "," + digZ);
 
@@ -7073,10 +7055,10 @@ public class dewset extends dewset_interface {
 		Bukkit.getScheduler().scheduleSyncDelayedTask(ac, arr);
 	}
 
-	public void soiladdseedrecusive(Block block, Player player, int seedid, boolean first) {
+	public void soiladdseedrecusive(Block block, Player player, Material seedid, boolean first) {
 
 		soiladdseedc ab = new soiladdseedc(block, player, seedid, first);
-		Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(ac, ab);
+		Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(ac, ab, rnd.nextInt(20));
 	}
 
 	public void superdestroy(Block block, Player player, int dleft, int typeid, byte typedata) {

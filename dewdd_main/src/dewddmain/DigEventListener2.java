@@ -1914,6 +1914,13 @@ public class DigEventListener2 implements Listener {
 
 							// player.sendMessage("itName " + itName[0] + " " +
 							// itName[1]);
+							
+							if (!player.hasPermission(dew.puseitem55)) {
+								player.sendMessage(dprint.r.color(tr.gettr("you don't have permission ")  +dew.puseitem55));
+								
+								return;
+							}
+
 
 							if (itName.length == 3) {
 								if (itName[0].equalsIgnoreCase("55")) {
@@ -1983,164 +1990,7 @@ public class DigEventListener2 implements Listener {
 
 	// EntityInteractEvent
 
-	@EventHandler
-	public void eventja(BlockDispenseEvent e) {
-		if (!tr.isrunworld(ac.getName(), e.getBlock().getWorld().getName()))
-			return;
-
-		if (e.getBlock().getType() == Material.DROPPER) {
-			Dropper dropper = (Dropper) e.getBlock().getState();
-			Material toSet;
-
-			switch (e.getItem().getType()) {
-			case SEEDS:
-				toSet = Material.CROPS;
-				break;
-			case PUMPKIN_SEEDS:
-				toSet = Material.PUMPKIN_STEM;
-				break;
-
-			case MELON_SEEDS:
-				toSet = Material.MELON_STEM;
-				break;
-
-			case POTATO_ITEM:
-			case POTATO:
-				toSet = Material.POTATO;
-				break;
-
-			case CARROT_ITEM:
-			case CARROT:
-				toSet = Material.CARROT;
-				break;
-
-			case NETHER_WARTS:
-
-				toSet = Material.NETHER_WARTS;
-				break;
-
-			default:
-				return;
-
-			}
-
-			Inventory inv = dropper.getInventory();
-
-			// dprint.r.printAll("yap");
-
-			int search = 12;
-			Block block = e.getBlock().getRelative(0, -1, 0);
-
-			for (int x = -search; x <= search; x++) {
-				Block rera = block.getRelative(x, 0, 0);
-				if (rera.getType() == Material.SOIL || rera.getType() == Material.SOUL_SAND) {
-					Block upper = rera.getRelative(0, 1, 0);
-
-					e.setCancelled(true);
-					if (upper.getType() == Material.AIR) {
-
-						int slot = inv.first(e.getItem().getType());
-
-						if (slot == -1)
-							continue;
-
-						ItemStack eo = inv.getItem(slot);
-
-						eo.setAmount(eo.getAmount() - 1);
-						inv.setItem(slot, eo);
-						dropper.update(true);
-						upper.setType(toSet);
-						return;
-
-					}
-
-				}
-			}
-
-			for (int x = -search; x <= search; x++) {
-				Block rera = block.getRelative(0, x, 0);
-				if (rera.getType() == Material.SOIL || rera.getType() == Material.SOUL_SAND) {
-					Block upper = rera.getRelative(0, 1, 0);
-
-					e.setCancelled(true);
-					if (upper.getType() == Material.AIR) {
-
-						int slot = inv.first(e.getItem().getType());
-
-						if (slot == -1)
-							continue;
-
-						ItemStack eo = inv.getItem(slot);
-
-						eo.setAmount(eo.getAmount() - 1);
-						inv.setItem(slot, eo);
-						dropper.update(true);
-						upper.setType(toSet);
-						return;
-
-					}
-
-				}
-			}
-
-			for (int x = -search; x <= search; x++) {
-				Block rera = block.getRelative(0, 0, x);
-				if (rera.getType() == Material.SOIL || rera.getType() == Material.SOUL_SAND) {
-					Block upper = rera.getRelative(0, 1, 0);
-
-					e.setCancelled(true);
-					if (upper.getType() == Material.AIR) {
-
-						int slot = inv.first(e.getItem().getType());
-
-						if (slot == -1)
-							continue;
-
-						ItemStack eo = inv.getItem(slot);
-
-						eo.setAmount(eo.getAmount() - 1);
-						inv.setItem(slot, eo);
-						dropper.update(true);
-						upper.setType(toSet);
-						return;
-
-					}
-
-				}
-			}
-
-		}
-
-	}
-
-	@EventHandler
-	public void eventja(BlockPistonExtendEvent e) {
-		if (!tr.isrunworld(ac.getName(), e.getBlock().getWorld().getName()))
-			return;
-
-		Block block = e.getBlock();
-		// search sign
-		int search = 1;
-		for (int x = -search; x <= search; x++)
-			for (int y = -search; y <= search; y++)
-				for (int z = -search; z <= search; z++) {
-					Block bo = e.getBlock().getRelative(x, y, z);
-					if (bo.getType() == Material.SIGN_POST || bo.getType() == Material.WALL_SIGN) {
-						Sign sign = (Sign) bo.getState();
-						if (sign.getLine(0).equalsIgnoreCase("dewbreak")) {
-							sign.setLine(0, "[dewbreak]");
-							sign.update(true);
-						}
-
-						if (sign.getLine(0).equalsIgnoreCase("[dewbreak]")) {
-							block.getRelative(e.getDirection()).breakNaturally();
-
-						}
-					}
-
-				}
-
-	}
+	
 
 	// BlockPlaceEvent
 
