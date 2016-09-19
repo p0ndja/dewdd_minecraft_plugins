@@ -52,7 +52,7 @@ public class Core {
 	public static String sellablePath = File.separator + "ramdisk" + File.separator + "sellableblock.txt";
 
 	public static String missionPath = File.separator + "ramdisk" + File.separator + "missionblock.txt";
-	public static int dnaSize = 11000;
+	public static int dnaSize = 4000;
 
 	public static int maxItemForCompleteMission = 10;
 	public static int minItemForCompleteMission = 3;
@@ -205,21 +205,23 @@ public class Core {
 		// add need item
 
 		// loop all level
+		
 		int cur = 0;
-		for (int i = 0; i < amountUniqueItemPerLV.amount.length; i++) {
+		int curLV = 0;
+		while (cur < allBlockInGameAsList.size()) {
 			LV1000Type l = new LV1000Type();
 
-			l.needAmount = new int[amountUniqueItemPerLV.amount[i]];
-			l.needItem = new String[amountUniqueItemPerLV.amount[i]];
-			l.needData = new byte[amountUniqueItemPerLV.amount[i]];
+			l.needAmount = new int[amountUniqueItemPerLV.amount[curLV]];
+			l.needItem = new String[amountUniqueItemPerLV.amount[curLV]];
+			l.needData = new byte[amountUniqueItemPerLV.amount[curLV]];
 			l.needSize = 0;
 
-			d.pl("decode lv need " + i +" = " +
-			amountUniqueItemPerLV.amount[i] + " cur chro " + curChro + " , cur " + cur);
+			d.pl("decode lv need " + curLV +" = " +
+			amountUniqueItemPerLV.amount[curLV] + " cur chro " + curChro + " , cur " + cur);
 			
 			
 			// add all item need it current level
-			for (int j = 0; j < amountUniqueItemPerLV.amount[i] && cur < allBlockInGameAsList.size(); j++) {
+			for (int j = 0; j < amountUniqueItemPerLV.amount[curLV] && cur < allBlockInGameAsList.size(); j++) {
 				AllBlockInGameType eof = allBlockInGameAsList.get(rUnique.index[cur]);
 
 				l.needItem[j] = eof.theName;
@@ -235,6 +237,7 @@ public class Core {
 			}
 			
 			paraLV.outputLV.add(l);
+			curLV ++;
 		}
 	}
 	
