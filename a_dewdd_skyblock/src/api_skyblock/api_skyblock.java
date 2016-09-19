@@ -38,6 +38,7 @@ public class api_skyblock {
 			this.player = player;
 		}
 
+		@Override
 		public void run() {
 
 			RSData tmprs[] = new RSData[Constant.rsBuffer];
@@ -89,6 +90,7 @@ public class api_skyblock {
 			this.player = player;
 		}
 
+		@Override
 		public void run() {
 
 			// search top left
@@ -96,7 +98,6 @@ public class api_skyblock {
 			// search top left
 
 			LXRXLZRZType ee = getPositionLXRXLZRZ();
-			
 
 			Block bb = null;
 
@@ -503,11 +504,19 @@ public class api_skyblock {
 		return -1;
 	}
 
-	
-	
+	public static int getplayerinslot(String player, int rsID) {
+		for (int lop = 0; lop < RSMaxPlayer; lop++) {
+			if (rs[rsID].p[lop].equalsIgnoreCase(player)) {
+				return lop;
+			}
+		}
+
+		return -1;
+	}
+
 	public static LXRXLZRZType getPositionLXRXLZRZ() {
 		LXRXLZRZType ee = new LXRXLZRZType();
-		
+
 		ee.lx = rs[0].x;
 		ee.rx = rs[0].x;
 		ee.lz = rs[0].z;
@@ -531,18 +540,8 @@ public class api_skyblock {
 			}
 
 		}
-		
-		return ee;
-	}
-	
-	public static int getplayerinslot(String player, int rsID) {
-		for (int lop = 0; lop < RSMaxPlayer; lop++) {
-			if (rs[rsID].p[lop].equalsIgnoreCase(player)) {
-				return lop;
-			}
-		}
 
-		return -1;
+		return ee;
 	}
 
 	public static int getprotectid(Block block) {

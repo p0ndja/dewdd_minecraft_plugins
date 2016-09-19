@@ -22,11 +22,11 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 class Dewminecraft {
 
-	int		countShow		= 0;
+	int countShow = 0;
 
-	int		countLoop		= 0;
+	int countLoop = 0;
 
-	Random	randomGenerator	= new Random();
+	Random randomGenerator = new Random();
 
 	void automessage(Player player) {
 
@@ -44,7 +44,8 @@ class Dewminecraft {
 				switch (countShow) {
 				case 1:
 					for (Player ics : world.getPlayers()) {
-						ics.sendMessage("ptdew&dewdd language Plugin : My Facebook : https://www.facebook.com/dewddminecraft");
+						ics.sendMessage(
+								"ptdew&dewdd language Plugin : My Facebook : https://www.facebook.com/dewddminecraft");
 					}
 					break;
 				case 2:
@@ -54,8 +55,10 @@ class Dewminecraft {
 					break;
 				case 3:
 					for (Player ics : world.getPlayers()) {
-						ics.sendMessage("ptdew&dewdd : พิมพ์ ; นำหน้า แล้วตาม ด้วยข้อความไทย แบบลืมเปลี่ยนภาษา สำหรับคนที่ใช้คีย์บอร์ดแบบ qwerty และ kedmanee");
-						ics.sendMessage("ptdew&dewdd : พิมพ์ ' นำหน้า แล้วตาม ด้วยข้อความไทย แบบลืมเปลี่ยนภาษา สำหรับคนที่ใช้คีย์บอร์ดแบบ dvorak และ pattachote");
+						ics.sendMessage(
+								"ptdew&dewdd : พิมพ์ ; นำหน้า แล้วตาม ด้วยข้อความไทย แบบลืมเปลี่ยนภาษา สำหรับคนที่ใช้คีย์บอร์ดแบบ qwerty และ kedmanee");
+						ics.sendMessage(
+								"ptdew&dewdd : พิมพ์ ' นำหน้า แล้วตาม ด้วยข้อความไทย แบบลืมเปลี่ยนภาษา สำหรับคนที่ใช้คีย์บอร์ดแบบ dvorak และ pattachote");
 					}
 					countShow = 0;
 					break;
@@ -853,8 +856,8 @@ class Dewminecraft {
 }
 
 public class DigEventListener2 implements Listener {
-	JavaPlugin		ac	= null;
-	Dewminecraft	dew	= new Dewminecraft();
+	JavaPlugin ac = null;
+	Dewminecraft dew = new Dewminecraft();
 
 	// BlockDamageEvent
 
@@ -881,14 +884,10 @@ public class DigEventListener2 implements Listener {
 		if (sign.getLine(0).length() > 1) {
 			if (sign.getLine(0).substring(0, 1).equalsIgnoreCase("§") == false) {
 				sign.setLine(0, dew.engtothai(sign.getLine(0)));
-			}
-			else {
+			} else {
 				if (sign.getLine(0).length() > 2) {
-					sign.setLine(
-							0,
-							dew.engtothai(sign.getLine(0).substring(0, 2)
-									+ dew.engtothai(sign.getLine(0).substring(
-											2, sign.getLine(0).length()))));
+					sign.setLine(0, dew.engtothai(sign.getLine(0).substring(0, 2)
+							+ dew.engtothai(sign.getLine(0).substring(2, sign.getLine(0).length()))));
 				}
 			}
 		}
@@ -898,14 +897,10 @@ public class DigEventListener2 implements Listener {
 		if (sign.getLine(1).length() > 1) {
 			if (sign.getLine(1).substring(0, 1).equalsIgnoreCase("§") == false) {
 				sign.setLine(1, dew.engtothai(sign.getLine(1)));
-			}
-			else {
+			} else {
 				if (sign.getLine(0).length() > 2) {
-					sign.setLine(
-							1,
-							dew.engtothai(sign.getLine(1).substring(0, 2)
-									+ dew.engtothai(sign.getLine(1).substring(
-											2, sign.getLine(1).length()))));
+					sign.setLine(1, dew.engtothai(sign.getLine(1).substring(0, 2)
+							+ dew.engtothai(sign.getLine(1).substring(2, sign.getLine(1).length()))));
 				}
 			}
 		}
@@ -915,14 +910,10 @@ public class DigEventListener2 implements Listener {
 		if (sign.getLine(2).length() > 1) {
 			if (sign.getLine(2).substring(0, 1).equalsIgnoreCase("§") == false) {
 				sign.setLine(2, dew.engtothai(sign.getLine(2)));
-			}
-			else {
+			} else {
 				if (sign.getLine(2).length() > 2) {
-					sign.setLine(
-							2,
-							dew.engtothai(sign.getLine(2).substring(0, 2)
-									+ dew.engtothai(sign.getLine(2).substring(
-											2, sign.getLine(2).length()))));
+					sign.setLine(2, dew.engtothai(sign.getLine(2).substring(0, 2)
+							+ dew.engtothai(sign.getLine(2).substring(2, sign.getLine(2).length()))));
 				}
 			}
 		}
@@ -932,14 +923,10 @@ public class DigEventListener2 implements Listener {
 		if (sign.getLine(3).length() > 1) {
 			if (sign.getLine(3).substring(0, 1).equalsIgnoreCase("§") == false) {
 				sign.setLine(3, dew.engtothai(sign.getLine(3)));
-			}
-			else {
+			} else {
 				if (sign.getLine(0).length() > 2) {
-					sign.setLine(
-							3,
-							dew.engtothai(sign.getLine(3).substring(0, 2)
-									+ dew.engtothai(sign.getLine(3).substring(
-											2, sign.getLine(3).length()))));
+					sign.setLine(3, dew.engtothai(sign.getLine(3).substring(0, 2)
+							+ dew.engtothai(sign.getLine(3).substring(2, sign.getLine(3).length()))));
 				}
 			}
 		}
@@ -981,10 +968,13 @@ public class DigEventListener2 implements Listener {
 		}
 		if (event.getMessage().equalsIgnoreCase("dewdd language") == true) {
 			player.sendMessage("ปลั๊กอิน language สร้างมาเพื่อให้คนพิมพ์ไทยได้โดยไม่ต้องเปลี่ยนภาษา");
-			player.sendMessage("จะอธิบายสั้นๆ   พิมพ์  ; โคลอน ตามด้วยภาษาไทยแบบคนลืมเปลี่ยนภาษาเช่น ;fb; คือ ดิว  (qwerty and kedmanee");
-			player.sendMessage("คีย์บอร์ดอีกแบบ พิมพ์  ' นำหน้าตามด้วย ภาษาไทยแบบลืมเปลี่ยนภาษา (dvorak and pattachote)");
+			player.sendMessage(
+					"จะอธิบายสั้นๆ   พิมพ์  ; โคลอน ตามด้วยภาษาไทยแบบคนลืมเปลี่ยนภาษาเช่น ;fb; คือ ดิว  (qwerty and kedmanee");
+			player.sendMessage(
+					"คีย์บอร์ดอีกแบบ พิมพ์  ' นำหน้าตามด้วย ภาษาไทยแบบลืมเปลี่ยนภาษา (dvorak and pattachote)");
 
-			player.sendMessage("ระบบ ตีป้าย ด้วยมือป่าว  จะแปลภาษาในป้าย   ยังอยู่ในช่วงเขียนโปรแกรม  ตอนนี้มันไปตีกับ dewdd main");
+			player.sendMessage(
+					"ระบบ ตีป้าย ด้วยมือป่าว  จะแปลภาษาในป้าย   ยังอยู่ในช่วงเขียนโปรแกรม  ตอนนี้มันไปตีกับ dewdd main");
 			event.setCancelled(true);
 		}
 
@@ -1030,10 +1020,8 @@ public class DigEventListener2 implements Listener {
 	@EventHandler
 	public void eventja(ServerCommandEvent event) {
 		if (event.getCommand().startsWith("say ") == true) {
-			event.setCommand("say "
-					+ dew.engtothai(event.getCommand().substring(4)));
+			event.setCommand("say " + dew.engtothai(event.getCommand().substring(4)));
 		}
 	}
 
 } // class
-

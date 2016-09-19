@@ -41,6 +41,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockRedstoneEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityTargetEvent;
+import org.bukkit.event.entity.EntityTargetEvent.TargetReason;
 import org.bukkit.event.entity.EntityTargetLivingEntityEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
@@ -92,8 +93,7 @@ public class DigEventListener2 implements Listener {
 										sign.setLine(0, "[autosell]");
 										sign.update(true);
 									}
-									
-									
+
 									if (sign.getLine(0).equalsIgnoreCase("[autosell]")) {
 										double lowest = 100000;
 										double temp = 0;
@@ -290,13 +290,13 @@ public class DigEventListener2 implements Listener {
 
 				}
 
-				while (dew.ac == null) {
+				while (dewset.ac == null) {
 
 					i++;
 					Thread.sleep(1000);
 					System.out.println("dew main waiting for create dewset sleeping dew ac +" + i);
 
-					dew.ac = ac;
+					dewset.ac = ac;
 
 				}
 				dew.loadmainfile();
@@ -407,9 +407,10 @@ public class DigEventListener2 implements Listener {
 			Bukkit.getScheduler().scheduleSyncDelayedTask(ac, this, rnd.nextInt(1200));
 		}
 
+		@Override
 		public void run() {
 			if (pr.isOnline() == false) {
-			return;
+				return;
 			}
 
 			int ranid = 0;
@@ -601,6 +602,14 @@ public class DigEventListener2 implements Listener {
 		}
 	}
 
+	public static sell_type sell[];
+
+	public static int sellmax;
+	public static ArrayList<AllShop> allShop = new ArrayList<AllShop>();
+	public static String folder_name = "plugins" + File.separator + "dewdd_ft";
+
+	public static AllShopCore allShopCore = new AllShopCore();
+
 	public static double getprice(String name, Byte data) {
 		double price = -1;
 		for (int gr = 0; gr < DigEventListener2.sellmax; gr++)
@@ -616,19 +625,16 @@ public class DigEventListener2 implements Listener {
 	}
 
 	public dewset dew = dewddflower.Main.ds;
+
 	public JavaPlugin ac = null;
+
 	int maxl = 0;
 
 	public String[] allBlockInGame = new String[500];
+
 	public int allBlockInGameMax = 0;
 
 	lastinv[] inv = new lastinv[30];
-
-	public static sell_type sell[];
-
-	public static int sellmax;
-
-	public static ArrayList<AllShop> allShop = new ArrayList<AllShop>();
 
 	public Random rnd = new Random();
 
@@ -637,11 +643,11 @@ public class DigEventListener2 implements Listener {
 	String pautoshoot = "dewdd.ft.autoshoot";
 
 	String pbleed = "dewdd.ft.bleed";
-
 	String pmonkill = "dewdd.ft.monkill";
 
-	public static String folder_name = "plugins" + File.separator + "dewdd_ft";
-	public static AllShopCore allShopCore = new AllShopCore();
+	public HashMap<Player, Inventory> inventory = new HashMap<Player, Inventory>();
+
+	public HashMap<Player, Integer> inventoryID = new HashMap<Player, Integer>();
 
 	public DigEventListener2() {
 		delay abc = new delay();
@@ -724,13 +730,16 @@ public class DigEventListener2 implements Listener {
 				LivingEntity b = (LivingEntity) e.getTarget();
 				if (b.hasPotionEffect(PotionEffectType.INVISIBILITY)) {
 
-					if (e.getReason() == e.getReason().FORGOT_TARGET)
+					e.getReason();
+					if (e.getReason() == TargetReason.FORGOT_TARGET)
 						return;
 
-					if (e.getReason() == e.getReason().TARGET_ATTACKED_ENTITY)
+					e.getReason();
+					if (e.getReason() == TargetReason.TARGET_ATTACKED_ENTITY)
 						return;
 
-					if (e.getReason() == e.getReason().TARGET_ATTACKED_OWNER)
+					e.getReason();
+					if (e.getReason() == TargetReason.TARGET_ATTACKED_OWNER)
 						return;
 
 					e.setTarget(null);
@@ -748,10 +757,11 @@ public class DigEventListener2 implements Listener {
 			LivingEntity a = (LivingEntity) e.getEntity();
 
 			if (e.getTarget() instanceof LivingEntity) {
-				LivingEntity b = (LivingEntity) e.getTarget();
+				LivingEntity b = e.getTarget();
 				if (b.hasPotionEffect(PotionEffectType.INVISIBILITY)) {
 
-					if (e.getReason() == e.getReason().FORGOT_TARGET)
+					e.getReason();
+					if (e.getReason() == TargetReason.FORGOT_TARGET)
 						return;
 
 					e.setTarget(null);
@@ -763,166 +773,102 @@ public class DigEventListener2 implements Listener {
 		}
 	}
 
-	public HashMap<Player, Inventory> inventory = new HashMap<Player, Inventory>();
-	public HashMap<Player, Integer> inventoryID = new HashMap<Player, Integer>();
-
-	public void updateInventory(Inventory inv, Player player) {
-		int id = inventoryID.get(player);
-
-		inv.clear();
-
-		ItemStack itm = new ItemStack(Material.STICK, 1);
-		itm.addUnsafeEnchantment(Enchantment.DIG_SPEED, 10);
-		ItemMeta ex = itm.getItemMeta();
-
-		ex.setDisplayName("next");
-		itm.setItemMeta(ex);
-		inv.setItem(53, itm);
-
-		itm = new ItemStack(Material.STICK, 1);
-		itm.addUnsafeEnchantment(Enchantment.DIG_SPEED, 10);
-		ex = itm.getItemMeta();
-
-		ex.setDisplayName("back");
-		itm.setItemMeta(ex);
-		inv.setItem(52, itm);
-
-		for (int i = 0; i < 3 && id + i < allShop.size(); i++) {
-			AllShop ash = allShop.get(i + id);
-
-			for (int j = 0; j < ash.size; j++) {
-
-				int curPosition = 9 * i * 2;
-				if (j > 4) {
-					curPosition += 4;
-				}
-
-				if (i == 1) {
-					curPosition += 4;
-				}
-
-				itm = new ItemStack(Material.getMaterial(ash.item[j]), ash.amount[j], ash.data[j]);
-				ex = itm.getItemMeta();
-				ex.setDisplayName( Material.getMaterial(ash.item[j]) + ":" + ash.data[j] + " Shop " + (i + id) + " > " + ash.playPrice);
-				itm.setItemMeta(ex);
-
-				inv.setItem(curPosition + j, itm);
-
-			}
-
-		}
-	}
-
-	@EventHandler
-	public void eventja(InventoryOpenEvent e) {
-
-	}
-
 	@EventHandler
 	public void eventja(InventoryClickEvent e) {
-		
+
 		Inventory inv = e.getClickedInventory();
 		if (inv == null) {
 			return;
 		}
 		if (inv.getName().equalsIgnoreCase("dew shop")) {
-			
+
 			e.setCancelled(true);
 			Player p = (Player) e.getWhoClicked();
-			
-			
 
-			//p.sendMessage("slot " + e.getSlot());
-			
-			
+			// p.sendMessage("slot " + e.getSlot());
+
 			if (e.getSlot() == 53) {
-				
+
 				int curId = inventoryID.get(p);
 
-				curId+=3;
-				
-				
+				curId += 3;
 
 				if (curId > allShop.size() - 1) {
 					curId = allShop.size() - 1;
 				}
-				
+
 				inventoryID.put(p, curId);
 				updateInventory(inv, p);
-			}
-			else if (e.getSlot() == 52) {
+			} else if (e.getSlot() == 52) {
 
 				int curId = inventoryID.get(p);
 
-				curId-=3;
+				curId -= 3;
 
-				
-				
 				if (curId < 0) {
 					curId = 0;
 				}
 
-
 				inventoryID.put(p, curId);
 				updateInventory(inv, p);
 			}
-			
+
 			else {
 				int curId = inventoryID.get(p);
 				int delta = e.getSlot() / 9 / 2;
-				
-				
+
 				int truely = curId + delta;
 				if (truely > allShop.size()) {
 					return;
 				}
-				//p.sendMessage("delta " + truely);
-				
-				// 
+				// p.sendMessage("delta " + truely);
+
+				//
 				int space = p.getInventory().firstEmpty();
 				if (space == -1) {
 					p.sendMessage(dprint.r.color(tr.gettr("dew_shop_you_don't_have_space_inventory_can't_buy")));
 					return;
-				}
-				else {
+				} else {
 					// check his money
-					
+
 					try {
 						if (Economy.getMoney(p.getName()) < allShop.get(truely).playPrice) {
-							
+
 							p.sendMessage(dprint.r.color(tr.gettr("dew_shop_not_enoght_money_to_bet")));
 							e.setCancelled(true);
 							return;
-						}
-						else {
+						} else {
 							// random item
 							AllShop sh = allShop.get(truely);
-							
+
 							int rander = rnd.nextInt(allShop.get(truely).size);
-							ItemStack theItem = new ItemStack( Material.getMaterial(  sh.item[rander]) , sh.amount[rander], sh.data[rander]  
-									);
-							//e.setCurrentItem(theItem);
-							
-							
+							ItemStack theItem = new ItemStack(Material.getMaterial(sh.item[rander]), sh.amount[rander],
+									sh.data[rander]);
+							// e.setCurrentItem(theItem);
+
 							Economy.subtract(p.getName(), sh.playPrice);
 							p.getInventory().addItem(theItem);
-							p.sendMessage(dprint.r.color(tr.gettr("dew_shop_you_bought_item_name") +  theItem.getType().name() + ":" + theItem.getData().getData() + tr.gettr("amount") 
-							+ theItem.getAmount() + " ... " + tr.gettr("money_left") + Economy.getMoney(p.getName())));
-							
-							
-							
-							//e.setCancelled(true);
+							p.sendMessage(dprint.r
+									.color(tr.gettr("dew_shop_you_bought_item_name") + theItem.getType().name() + ":"
+											+ theItem.getData().getData() + tr.gettr("amount") + theItem.getAmount()
+											+ " ... " + tr.gettr("money_left") + Economy.getMoney(p.getName())));
+
+							// e.setCancelled(true);
 						}
-						
+
 					} catch (UserDoesNotExistException | NoLoanPermittedException e1) {
 						// TODO Auto-generated catch block
 						e1.printStackTrace();
 					}
-					
-					
+
 				}
 			}
 		}
+
+	}
+
+	@EventHandler
+	public void eventja(InventoryOpenEvent e) {
 
 	}
 
@@ -936,7 +882,7 @@ public class DigEventListener2 implements Listener {
 		Player p = e.getPlayer();
 
 		if (e.getMessage().equalsIgnoreCase("/dft shop")) {
-			//p.sendMessage("here");
+			// p.sendMessage("here");
 			Inventory myInventory = Bukkit.createInventory(null, 54, "dew shop");
 			inventory.put(p, myInventory);
 			inventoryID.put(p, 0);
@@ -1259,51 +1205,6 @@ public class DigEventListener2 implements Listener {
 
 	}
 
-	public void loadMissionBlockFile() {
-
-		String filena = folder_name + File.separator + "missionblock.txt";
-		File fff = new File(filena);
-
-		try {
-
-			allBlockInGame = new String[500];
-			allBlockInGameMax = 0;
-
-			fff.createNewFile();
-
-			dprint.r.printAll("loading mission file : " + filena);
-			// Open the file that is the first
-			// command line parameter
-			FileInputStream fstream = new FileInputStream(filena);
-			// Get the object of DataInputStream
-			DataInputStream in = new DataInputStream(fstream);
-			BufferedReader br = new BufferedReader(new InputStreamReader(in));
-			String strLine;
-			// Read File Line By Line
-
-			String m[];
-
-			while ((strLine = br.readLine()) != null) {
-
-				m = strLine.split("\\s+");
-				m = strLine.split(":");
-				// Print the content on the console
-
-				allBlockInGame[allBlockInGameMax] = m[0] + ":" + m[1];
-				// d.pl("...");
-				// rs[rsMax - 1].mission = 0;
-
-				allBlockInGameMax++;
-			}
-
-			dprint.r.printAll(" Loaded " + filena);
-
-			in.close();
-		} catch (Exception e) {// Catch exception if any
-			dprint.r.printAll("Error load " + filena + e.getMessage());
-		}
-	}
-
 	public void loadInventoryFile() {
 		String filena2 = "ptdew_dewdd_ft_list.txt";
 
@@ -1356,6 +1257,51 @@ public class DigEventListener2 implements Listener {
 
 		dprint.r.printAll("reloaded free item file" + filena);
 
+	}
+
+	public void loadMissionBlockFile() {
+
+		String filena = folder_name + File.separator + "missionblock.txt";
+		File fff = new File(filena);
+
+		try {
+
+			allBlockInGame = new String[500];
+			allBlockInGameMax = 0;
+
+			fff.createNewFile();
+
+			dprint.r.printAll("loading mission file : " + filena);
+			// Open the file that is the first
+			// command line parameter
+			FileInputStream fstream = new FileInputStream(filena);
+			// Get the object of DataInputStream
+			DataInputStream in = new DataInputStream(fstream);
+			BufferedReader br = new BufferedReader(new InputStreamReader(in));
+			String strLine;
+			// Read File Line By Line
+
+			String m[];
+
+			while ((strLine = br.readLine()) != null) {
+
+				m = strLine.split("\\s+");
+				m = strLine.split(":");
+				// Print the content on the console
+
+				allBlockInGame[allBlockInGameMax] = m[0] + ":" + m[1];
+				// d.pl("...");
+				// rs[rsMax - 1].mission = 0;
+
+				allBlockInGameMax++;
+			}
+
+			dprint.r.printAll(" Loaded " + filena);
+
+			in.close();
+		} catch (Exception e) {// Catch exception if any
+			dprint.r.printAll("Error load " + filena + e.getMessage());
+		}
 	}
 
 	public void loadSellList() {
@@ -1429,6 +1375,54 @@ public class DigEventListener2 implements Listener {
 			Bukkit.getScheduler().scheduleSyncRepeatingTask(ac, a, inv[l].s1, inv[l].s1);
 		}
 
+	}
+
+	public void updateInventory(Inventory inv, Player player) {
+		int id = inventoryID.get(player);
+
+		inv.clear();
+
+		ItemStack itm = new ItemStack(Material.STICK, 1);
+		itm.addUnsafeEnchantment(Enchantment.DIG_SPEED, 10);
+		ItemMeta ex = itm.getItemMeta();
+
+		ex.setDisplayName("next");
+		itm.setItemMeta(ex);
+		inv.setItem(53, itm);
+
+		itm = new ItemStack(Material.STICK, 1);
+		itm.addUnsafeEnchantment(Enchantment.DIG_SPEED, 10);
+		ex = itm.getItemMeta();
+
+		ex.setDisplayName("back");
+		itm.setItemMeta(ex);
+		inv.setItem(52, itm);
+
+		for (int i = 0; i < 3 && id + i < allShop.size(); i++) {
+			AllShop ash = allShop.get(i + id);
+
+			for (int j = 0; j < ash.size; j++) {
+
+				int curPosition = 9 * i * 2;
+				if (j > 4) {
+					curPosition += 4;
+				}
+
+				if (i == 1) {
+					curPosition += 4;
+				}
+
+				itm = new ItemStack(Material.getMaterial(ash.item[j]), ash.amount[j], ash.data[j]);
+				ex = itm.getItemMeta();
+				ex.setDisplayName(Material.getMaterial(ash.item[j]) + ":" + ash.data[j] + " Shop " + (i + id) + " > "
+						+ ash.playPrice);
+				itm.setItemMeta(ex);
+
+				inv.setItem(curPosition + j, itm);
+
+			}
+
+		}
 	}
 
 }

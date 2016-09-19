@@ -18,8 +18,8 @@ import dprint.dprint;
 
 public class tranrun implements Listener {
 
-	public JavaPlugin	ac	= null;
-	Random				rnd	= new Random();
+	public JavaPlugin ac = null;
+	Random rnd = new Random();
 
 	@EventHandler
 	public void eventja(PlayerCommandPreprocessEvent e) {
@@ -44,29 +44,24 @@ public class tranrun implements Listener {
 					p.sendMessage(dprint.color(tr.runworld.get(i).pluginname));
 
 					for (int j = 0; j < tr.runworld.get(i).runworld.size(); j++) {
-						p.sendMessage(dprint.color(" > "
-								+ tr.runworld.get(i).runworld.get(j)));
+						p.sendMessage(dprint.color(" > " + tr.runworld.get(i).runworld.get(j)));
 
 					}
 
 				}
 
-			}
-			else if (m[1].equalsIgnoreCase("reload")) {
+			} else if (m[1].equalsIgnoreCase("reload")) {
 				dprint.printAll("tran reloading file...");
 				tr.loadTrFile();
 
 				tr.loadRunWorldFile();
 				dprint.printAll("tran reloaded...");
 
-			}
-			else if (m[1].equalsIgnoreCase("list")) {
+			} else if (m[1].equalsIgnoreCase("list")) {
 				for (int i = 0; i < tr.dtmax; i++) {
-					dprint.printAll("tr " + i + " = " + tr.dt[i].s + " = "
-							+ tr.dt[i].an);
+					dprint.printAll("tr " + i + " = " + tr.dt[i].s + " = " + tr.dt[i].an);
 				}
-			}
-			else if (m[1].equalsIgnoreCase("offline")) {
+			} else if (m[1].equalsIgnoreCase("offline")) {
 				if (m.length != 3) {
 					p.sendMessage("/dtran offline <day>");
 					return;
@@ -74,8 +69,7 @@ public class tranrun implements Listener {
 
 				int day = Integer.parseInt(m[2]);
 
-				File ff = new File(System.getProperty("user.dir")
-						+ File.separator + "plugins" + File.separator
+				File ff = new File(System.getProperty("user.dir") + File.separator + "plugins" + File.separator
 						+ "essentials" + File.separator + "userdata");
 
 				String me[] = tr.getLastOnline(day, ff.getAbsolutePath());
@@ -86,8 +80,7 @@ public class tranrun implements Listener {
 					return;
 				}
 
-				dprint.printAll(tr
-						.gettr("list_of_offline_players_too_long_time"));
+				dprint.printAll(tr.gettr("list_of_offline_players_too_long_time"));
 
 				for (int i = 0; i < me.length; i++) {
 					dprint.printAll(me[i]);

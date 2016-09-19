@@ -6,8 +6,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStreamReader;
 
-import dewddft.DigEventListener2.sell_type;
-
 public class AllShopCore {
 	public void loadAllShop() {
 		String worldf = "ptdew_dewdd_allshop.txt";
@@ -39,39 +37,35 @@ public class AllShopCore {
 			// * save
 
 			String m[];
-			
-			
 
 			while ((strLine = br.readLine()) != null) {
 				m = strLine.split("\\s+");
 				AllShop aso = new AllShop();
 				aso.size = 0;
-				
+
 				aso.playPrice = Double.parseDouble(m[0]);
 				int amount = Integer.parseInt(m[1]);
-				
-				for (int i = 0 ; i< amount ; i ++ ){
+
+				for (int i = 0; i < amount; i++) {
 					strLine = br.readLine();
 					m = strLine.split("\\s+");
-					String m2[] =  m[0].split(":");
-					
+					String m2[] = m[0].split(":");
+
 					aso.item[aso.size] = m2[0];
-					aso.data[aso.size ] = Byte.parseByte(m2[1]);	
+					aso.data[aso.size] = Byte.parseByte(m2[1]);
 					aso.amount[aso.size] = Integer.parseInt(m[1]);
-					
-					aso.size ++;
+
+					aso.size++;
 				}
-				
+
 				DigEventListener2.allShop.add(aso);
-				
 
 			}
 
 			System.out.println("ptdew&DewDD ft : all Shop loaded " + filena);
 
 			in.close();
-		}
-		catch (Exception e) {// Catch exception if any
+		} catch (Exception e) {// Catch exception if any
 			System.err.println("Error load " + filena + e.getMessage());
 		}
 	}

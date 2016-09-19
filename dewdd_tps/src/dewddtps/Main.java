@@ -11,8 +11,8 @@ import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class Main extends JavaPlugin {
-	Logger	log;
-	gettps	ax	= new gettps();
+	Logger log;
+	gettps ax = new gettps();
 
 	@Override
 	public void onDisable() {
@@ -28,8 +28,7 @@ public class Main extends JavaPlugin {
 		ax.ac = this;
 		getServer().getPluginManager().registerEvents(ax, this);
 
-		Bukkit.getServer().getScheduler()
-				.scheduleSyncRepeatingTask(this, new tps(), 100L, 1L);
+		Bukkit.getServer().getScheduler().scheduleSyncRepeatingTask(this, new tps(), 100L, 1L);
 		dprint.r.printAll("ptdew&dewdd : loaded dewdd tps");
 
 	}

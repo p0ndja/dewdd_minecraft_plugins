@@ -10,8 +10,8 @@ import java.util.logging.Logger;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class Main extends JavaPlugin {
-	Logger				log;
-	DigEventListener2	ax	= new DigEventListener2();
+	Logger log;
+	DigEventListener2 ax = new DigEventListener2();
 
 	@Override
 	public void onDisable() {

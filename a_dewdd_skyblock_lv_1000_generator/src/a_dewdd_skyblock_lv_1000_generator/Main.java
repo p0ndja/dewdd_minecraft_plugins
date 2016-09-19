@@ -5,8 +5,6 @@ import java.util.LinkedList;
 
 import core_optimization_api.Chromosome;
 
-
-
 public class Main {
 
 	public static Core co;
@@ -45,7 +43,7 @@ public class Main {
 			}
 		}
 
-		d.pl("*** mission size = " + Main.co.allBlockInGameAsListSize);
+		d.pl("*** mission size = " + Core.allBlockInGameAsListSize);
 
 		HybridOverride hy = new HybridOverride();
 
@@ -57,52 +55,48 @@ public class Main {
 		// set chromosome here
 
 		ArrayList<Chromosome> seo = hy.loadAndSortTheBestFromRamdisk();
-		
+
 		if (args.length == 0) {
 			args = new String[2];
 			args[0] = "evu";
 			args[1] = "10";
 		}
-		
-			if (args[0].equalsIgnoreCase("evu")) {
-				
-				
-				if (args.length == 1) {
-					hy.setPopulationSize(populationSize);
-				}
-				else {
-					hy.setPopulationSize(Integer.parseInt(args[1]));
-					
-				}
-				
-				hy.setAllChromosomeGen1(seo);
-				hy.prepareToRunGA();
-				
 
-				EventListenerOverride evn = new EventListenerOverride();
+		if (args[0].equalsIgnoreCase("evu")) {
 
-				hy.registerEvent(evn);
+			if (args.length == 1) {
+				hy.setPopulationSize(populationSize);
+			} else {
+				hy.setPopulationSize(Integer.parseInt(args[1]));
 
-				// hy.fitness(hy.population.get(0).dna);
-
-				hy.run();
-
-			} else if (args[0].equalsIgnoreCase("extract")) {
-				// load the best 
-				
-				
-				LinkedList<AllShop> tmpAllShop = new LinkedList<AllShop>();
-				LinkedList<SellableType> tmpSell = new LinkedList<SellableType>();
-				LinkedList<LV1000Type> tmpLV = new LinkedList<LV1000Type>();
-
-				Core code = new Core();
-				code.dnaDecoder(seo.get(0).dna, tmpAllShop, tmpSell, tmpLV);
-				code.save_tmpSell(tmpSell);
-				code.save_tmpAllShop(tmpAllShop);
-				code.save_tmpLV(tmpLV);
-				
 			}
-		
+
+			hy.setAllChromosomeGen1(seo);
+			hy.prepareToRunGA();
+
+			EventListenerOverride evn = new EventListenerOverride();
+
+			hy.registerEvent(evn);
+
+			// hy.fitness(hy.population.get(0).dna);
+
+			hy.run();
+
+		} else if (args[0].equalsIgnoreCase("extract")) {
+			// load the best
+
+			LinkedList<AllShop> tmpAllShop = new LinkedList<AllShop>();
+			LinkedList<SellableType> tmpSell = new LinkedList<SellableType>();
+			LinkedList<LV1000Type> tmpLV = new LinkedList<LV1000Type>();
+
+			Core code = new Core();
+			code.dnaDecoder(seo.get(0).dna, tmpAllShop, tmpSell, tmpLV);
+			code.save_tmpSell(tmpSell);
+			code.save_tmpAllShop(tmpAllShop);
+			code.save_tmpLV(tmpLV);
+
+		}
+
 		// hy.run();
 	}
 

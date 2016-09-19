@@ -32,20 +32,20 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 public class DigEventListener2 implements Listener {
 	class dsl implements Runnable {
-		private Block	block;
+		private Block block;
 
 		public dsl(Block block) {
 			this.block = block;
 		}
 
+		@Override
 		public void run() {
 
 			long st = System.currentTimeMillis();
 			if (st - lastrun <= 50) {
 				lastrun = System.currentTimeMillis();
 				dsl ab = new dsl(block);
-				Bukkit.getScheduler().scheduleSyncDelayedTask(ac, ab,
-						rnd.nextInt(100) + 50);
+				Bukkit.getScheduler().scheduleSyncDelayedTask(ac, ab, rnd.nextInt(100) + 50);
 				return;
 			}
 
@@ -58,8 +58,7 @@ public class DigEventListener2 implements Listener {
 					for (int z = -c; z < c; z++) {
 
 						blb = block.getRelative(x, y, z);
-						if (blb.getTypeId() != 0 && blb.getTypeId() != 78
-								&& blb.getTypeId() != 79) {
+						if (blb.getTypeId() != 0 && blb.getTypeId() != 78 && blb.getTypeId() != 79) {
 							continue;
 						}
 
@@ -90,37 +89,35 @@ public class DigEventListener2 implements Listener {
 		}
 	}
 
-	String		pnolag		= "dewdd.nolag";
-	JavaPlugin	ac			= null;
-	boolean		bhop		= false;
-	boolean		bred		= false;
-	boolean		bitem		= false;
-	boolean		bminecart	= false;
-	boolean		bwater		= false;
-	boolean		bhopmove	= false;
-	boolean		bbreak		= false;
-	boolean		bmon		= false;
-	boolean		bmonlight	= false;
+	String pnolag = "dewdd.nolag";
+	JavaPlugin ac = null;
+	boolean bhop = false;
+	boolean bred = false;
+	boolean bitem = false;
+	boolean bminecart = false;
+	boolean bwater = false;
+	boolean bhopmove = false;
+	boolean bbreak = false;
+	boolean bmon = false;
+	boolean bmonlight = false;
 
-	boolean		bchunk		= false;
-	Random		rnd			= new Random();
+	boolean bchunk = false;
+	Random rnd = new Random();
 
-	long		lastrun		= 0;
+	long lastrun = 0;
 
 	@EventHandler
 	public void eventja(BlockRedstoneEvent event) {
 		if (bred == true) {
 			Block block2 = event.getBlock();
 
-			dprint.r.printAll("bred  block at = " + block2.getX() + ","
-					+ block2.getY() + "," + block2.getZ() + " at "
+			dprint.r.printAll("bred  block at = " + block2.getX() + "," + block2.getY() + "," + block2.getZ() + " at "
 					+ block2.getWorld().getName());
 
 			if (bbreak == true) {
 
-				dprint.r.printAll("bbreak  block at = " + block2.getX() + ","
-						+ block2.getY() + "," + block2.getZ() + " at "
-						+ block2.getWorld().getName());
+				dprint.r.printAll("bbreak  block at = " + block2.getX() + "," + block2.getY() + "," + block2.getZ()
+						+ " at " + block2.getWorld().getName());
 				block2.breakNaturally();
 			}
 
@@ -189,21 +186,15 @@ public class DigEventListener2 implements Listener {
 			return;
 		}
 
-		dprint.r.printC("Creature Spawn Event at "
-				+ (int) e.getLocation().getX() + ","
-				+ (int) e.getLocation().getY() + ","
-				+ (int) e.getLocation().getZ() + "  "
-				+ e.getLocation().getWorld().getName() + " type = "
+		dprint.r.printC("Creature Spawn Event at " + (int) e.getLocation().getX() + "," + (int) e.getLocation().getY()
+				+ "," + (int) e.getLocation().getZ() + "  " + e.getLocation().getWorld().getName() + " type = "
 				+ e.getCreatureType().getName());
 		e.setCancelled(true);
 
 		if (bmonlight == true) {
 
-			dsl abc = new dsl(Bukkit.getWorld(
-					e.getLocation().getWorld().getName()).getBlockAt(
-					e.getLocation()));
-			Bukkit.getScheduler().scheduleSyncDelayedTask(ac, abc,
-					rnd.nextInt(100) + 50);
+			dsl abc = new dsl(Bukkit.getWorld(e.getLocation().getWorld().getName()).getBlockAt(e.getLocation()));
+			Bukkit.getScheduler().scheduleSyncDelayedTask(ac, abc, rnd.nextInt(100) + 50);
 			e.setCancelled(true);
 		} // light
 
@@ -218,9 +209,8 @@ public class DigEventListener2 implements Listener {
 				if (holder != null && holder instanceof Hopper) {
 					Hopper chest = (Hopper) holder;
 					Block block2 = chest.getBlock();
-					dprint.r.printAll("bhop move hopper at = " + block2.getX()
-							+ "," + block2.getY() + "," + block2.getZ()
-							+ " at " + block2.getWorld().getName());
+					dprint.r.printAll("bhop move hopper at = " + block2.getX() + "," + block2.getY() + ","
+							+ block2.getZ() + " at " + block2.getWorld().getName());
 				}
 			}
 		}
@@ -231,9 +221,8 @@ public class DigEventListener2 implements Listener {
 		if (bhop == true) {
 			Block block2 = event.getItem().getLocation().getBlock();
 
-			dprint.r.printAll("bhop break hopper at = " + block2.getX() + ","
-					+ block2.getY() + "," + block2.getZ() + " at "
-					+ block2.getWorld().getName());
+			dprint.r.printAll("bhop break hopper at = " + block2.getX() + "," + block2.getY() + "," + block2.getZ()
+					+ " at " + block2.getWorld().getName());
 
 		}
 	}
@@ -241,10 +230,8 @@ public class DigEventListener2 implements Listener {
 	@EventHandler
 	public void eventja(ItemSpawnEvent event) {
 		if (bitem == true) {
-			dprint.r.printAll("bitem at " + event.getLocation().getX() + ","
-					+ event.getLocation().getY() + ","
-					+ event.getLocation().getZ() + " at "
-					+ event.getLocation().getWorld().getName());
+			dprint.r.printAll("bitem at " + event.getLocation().getX() + "," + event.getLocation().getY() + ","
+					+ event.getLocation().getZ() + " at " + event.getLocation().getWorld().getName());
 			event.setCancelled(true);
 		}
 
@@ -347,10 +334,8 @@ public class DigEventListener2 implements Listener {
 	public void eventja(VehicleMoveEvent event) {
 		if (bminecart == true) {
 			Vehicle block2 = event.getVehicle();
-			dprint.r.printAll("b minecart at = " + block2.getLocation().getX()
-					+ "," + block2.getLocation().getY() + ","
-					+ block2.getLocation().getZ() + " at "
-					+ block2.getLocation().getWorld().getName());
+			dprint.r.printAll("b minecart at = " + block2.getLocation().getX() + "," + block2.getLocation().getY() + ","
+					+ block2.getLocation().getZ() + " at " + block2.getLocation().getWorld().getName());
 			block2.remove();
 		}
 
@@ -474,8 +459,8 @@ public class DigEventListener2 implements Listener {
 			Block block = event.getBlock();
 			Block block2 = event.getToBlock();
 
-			if ((block.getTypeId() == 8 || block.getTypeId() == 9
-					|| block.getTypeId() == 10 || block.getTypeId() == 11)) {
+			if ((block.getTypeId() == 8 || block.getTypeId() == 9 || block.getTypeId() == 10
+					|| block.getTypeId() == 11)) {
 
 				event.setCancelled(true);
 			}

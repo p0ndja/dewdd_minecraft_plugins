@@ -13,8 +13,7 @@ import org.bukkit.generator.ChunkGenerator;
 public class dewdd_empty_run extends ChunkGenerator {
 
 	@Override
-	public byte[][] generateBlockSections(World world, Random random,
-			int chunkX, int chunkZ, BiomeGrid biomeGrid) {
+	public byte[][] generateBlockSections(World world, Random random, int chunkX, int chunkZ, BiomeGrid biomeGrid) {
 		byte[][] result = new byte[world.getMaxHeight() / 16][]; // world height
 																	// / chunk
 																	// part
@@ -22,7 +21,8 @@ public class dewdd_empty_run extends ChunkGenerator {
 																	// (=16,
 																	// look
 																	// above)
-		// System.out.println(" !@#!@#@#@!#@! #@! #!@ #@! #!@ @# !@#@!# @# !@#! dewddempty @!#!@#@!# @! #@#");
+		// System.out.println(" !@#!@#@#@!#@! #@! #!@ #@! #!@ @# !@#@!# @# !@#!
+		// dewddempty @!#!@#@!# @! #@#");
 		return result;
 	}
 

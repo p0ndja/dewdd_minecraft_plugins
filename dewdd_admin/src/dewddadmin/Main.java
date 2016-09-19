@@ -12,8 +12,8 @@ import org.bukkit.plugin.java.JavaPlugin;
 import dprint.dprint;
 
 public class Main extends JavaPlugin {
-	Logger				log;
-	DigEventListener2	ax	= new DigEventListener2();
+	Logger log;
+	DigEventListener2 ax = new DigEventListener2();
 
 	@Override
 	public void onDisable() {
@@ -31,7 +31,5 @@ public class Main extends JavaPlugin {
 		dprint.printAll("ptdew&dewdd : loaded dewdd admin");
 
 	}
-	
-	
 
 }

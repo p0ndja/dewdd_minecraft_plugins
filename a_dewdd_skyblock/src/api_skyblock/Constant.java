@@ -2,8 +2,6 @@ package api_skyblock;
 
 import java.io.File;
 
-import dewddtran.tr;
-
 public class Constant {
 
 	public static String pskyblock = "dewdd.skyblock.skyblock";

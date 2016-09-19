@@ -32,14 +32,13 @@ import dewddtran.tr;
 public class buff_run implements Listener {
 
 	class ab implements Runnable {
-		private Location	loc;
-		private Double		amo;
-		private int			ra;
-		private boolean		isitemmode;
-		private ItemStack	itm;
+		private Location loc;
+		private Double amo;
+		private int ra;
+		private boolean isitemmode;
+		private ItemStack itm;
 
-		public ab(Location loc, Double amo2, int ra, boolean isitemmode,
-				ItemStack itm) {
+		public ab(Location loc, Double amo2, int ra, boolean isitemmode, ItemStack itm) {
 			this.loc = loc;
 			this.amo = amo2;
 			this.ra = ra;
@@ -53,38 +52,30 @@ public class buff_run implements Listener {
 				ExperienceOrb orb = null;
 
 				Location loc2 = loc;
-				loc2.setX(loc2.getX()
-						+ (rnd.nextInt(ra) * (rnd.nextInt(2) == 0 ? -1 : 1)));
-				loc2.setY(loc2.getY()
-						+ (rnd.nextInt(ra) * (rnd.nextInt(2) == 0 ? -1 : 1)));
-				loc2.setZ(loc2.getZ()
-						+ (rnd.nextInt(ra) * (rnd.nextInt(2) == 0 ? -1 : 1)));
+				loc2.setX(loc2.getX() + (rnd.nextInt(ra) * (rnd.nextInt(2) == 0 ? -1 : 1)));
+				loc2.setY(loc2.getY() + (rnd.nextInt(ra) * (rnd.nextInt(2) == 0 ? -1 : 1)));
+				loc2.setZ(loc2.getZ() + (rnd.nextInt(ra) * (rnd.nextInt(2) == 0 ? -1 : 1)));
 
-				loc2.getWorld().spawn(loc2, ExperienceOrb.class)
-						.setExperience(amo.intValue());
-			}
-			else {
+				loc2.getWorld().spawn(loc2, ExperienceOrb.class).setExperience(amo.intValue());
+			} else {
 				Location loc2 = loc;
-				loc2.setX(loc2.getX()
-						+ (rnd.nextInt(ra) * (rnd.nextInt(2) == 0 ? -1 : 1)));
-				loc2.setY(loc2.getY()
-						+ (rnd.nextInt(ra) * (rnd.nextInt(2) == 0 ? -1 : 1)));
-				loc2.setZ(loc2.getZ()
-						+ (rnd.nextInt(ra) * (rnd.nextInt(2) == 0 ? -1 : 1)));
+				loc2.setX(loc2.getX() + (rnd.nextInt(ra) * (rnd.nextInt(2) == 0 ? -1 : 1)));
+				loc2.setY(loc2.getY() + (rnd.nextInt(ra) * (rnd.nextInt(2) == 0 ? -1 : 1)));
+				loc2.setZ(loc2.getZ() + (rnd.nextInt(ra) * (rnd.nextInt(2) == 0 ? -1 : 1)));
 				loc2.getWorld().dropItem(loc2, itm);
 			}
 		}
 	}
-	class exprandom extends Thread {
-		private Location	loc;
-		private int			ra;
-		private int			dura;
-		private Double		amo;
-		private boolean		isitemmode;
-		private ItemStack	itm;
 
-		public exprandom(Location loc, int ra, int dura, Double amo2,
-				boolean isitemmode, ItemStack itm) {
+	class exprandom extends Thread {
+		private Location loc;
+		private int ra;
+		private int dura;
+		private Double amo;
+		private boolean isitemmode;
+		private ItemStack itm;
+
+		public exprandom(Location loc, int ra, int dura, Double amo2, boolean isitemmode, ItemStack itm) {
 			this.loc = loc;
 			this.ra = ra;
 			this.dura = dura;
@@ -104,16 +95,14 @@ public class buff_run implements Listener {
 
 				try {
 					Thread.sleep(1000);
-				}
-				catch (InterruptedException e) {
+				} catch (InterruptedException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 
 				for (int i = 0; i < 20; i++) {
 					ab aaa = new ab(loc, amo, ra, isitemmode, itm);
-					Bukkit.getScheduler().scheduleSyncDelayedTask(ac, aaa,
-							rnd.nextInt(100));
+					Bukkit.getScheduler().scheduleSyncDelayedTask(ac, aaa, rnd.nextInt(100));
 
 				}
 			}
@@ -122,9 +111,9 @@ public class buff_run implements Listener {
 
 	}
 
-	JavaPlugin	ac	= null;
+	JavaPlugin ac = null;
 
-	Random		rnd	= new Random();
+	Random rnd = new Random();
 
 	@EventHandler
 	public void eventja(AsyncPlayerChatEvent e) {
@@ -140,8 +129,7 @@ public class buff_run implements Listener {
 			if (m.length == 1) {
 				player.sendMessage("giveexp <ra> <dura> <amo>");
 				return;
-			}
-			else if (m.length == 4) {
+			} else if (m.length == 4) {
 
 				if (player.isOp() == false) {
 					player.sendMessage("only op");
@@ -151,8 +139,7 @@ public class buff_run implements Listener {
 				int ra = Integer.parseInt(m[1]);
 				int dura = Integer.parseInt(m[2]);
 				Double amo = Double.parseDouble(m[3]);
-				exprandom abr = new exprandom(player.getLocation(), ra, dura,
-						amo, false, null);
+				exprandom abr = new exprandom(player.getLocation(), ra, dura, amo, false, null);
 				abr.start();
 			}
 
@@ -163,8 +150,7 @@ public class buff_run implements Listener {
 			if (m.length == 1) {
 				player.sendMessage("giveitem <ra> <dura> <amo>");
 				return;
-			}
-			else if (m.length == 4) {
+			} else if (m.length == 4) {
 
 				if (player.isOp() == false) {
 					player.sendMessage("only op");
@@ -174,8 +160,7 @@ public class buff_run implements Listener {
 				int ra = Integer.parseInt(m[1]);
 				int dura = Integer.parseInt(m[2]);
 				Double amo = Double.parseDouble(m[3]);
-				exprandom abr = new exprandom(player.getLocation(), ra, dura,
-						amo, true, player.getItemInHand());
+				exprandom abr = new exprandom(player.getLocation(), ra, dura, amo, true, player.getItemInHand());
 				abr.start();
 			}
 
@@ -220,8 +205,8 @@ public class buff_run implements Listener {
 		case 54:
 		case 153:
 		case 88:
-			player.addPotionEffect(PotionEffectType.FAST_DIGGING.createEffect(
-					rnd.nextInt(500), rnd.nextInt(100)), false);
+			player.addPotionEffect(PotionEffectType.FAST_DIGGING.createEffect(rnd.nextInt(500), rnd.nextInt(100)),
+					false);
 			break;
 		}
 
@@ -235,33 +220,24 @@ public class buff_run implements Listener {
 			return;
 		}
 
-		e.getPlayer().addPotionEffect(
-				PotionEffectType.SPEED.createEffect(rnd.nextInt(150),
-						rnd.nextInt(5)), false);
-		e.getPlayer().addPotionEffect(
-				PotionEffectType.FIRE_RESISTANCE.createEffect(rnd.nextInt(150),
-						rnd.nextInt(5)), false);
+		e.getPlayer().addPotionEffect(PotionEffectType.SPEED.createEffect(rnd.nextInt(150), rnd.nextInt(5)), false);
+		e.getPlayer().addPotionEffect(PotionEffectType.FIRE_RESISTANCE.createEffect(rnd.nextInt(150), rnd.nextInt(5)),
+				false);
 
-		e.getPlayer().addPotionEffect(
-				PotionEffectType.INCREASE_DAMAGE.createEffect(rnd.nextInt(150),
-						rnd.nextInt(5)), false);
-		e.getPlayer().addPotionEffect(
-				PotionEffectType.DAMAGE_RESISTANCE.createEffect(
-						rnd.nextInt(150), rnd.nextInt(5)), false);
+		e.getPlayer().addPotionEffect(PotionEffectType.INCREASE_DAMAGE.createEffect(rnd.nextInt(150), rnd.nextInt(5)),
+				false);
+		e.getPlayer().addPotionEffect(PotionEffectType.DAMAGE_RESISTANCE.createEffect(rnd.nextInt(150), rnd.nextInt(5)),
+				false);
 
-		e.getPlayer().addPotionEffect(
-				PotionEffectType.FAST_DIGGING.createEffect(rnd.nextInt(150),
-						rnd.nextInt(5)), false);
-		e.getPlayer().addPotionEffect(
-				PotionEffectType.JUMP.createEffect(rnd.nextInt(100),
-						rnd.nextInt(5)), false);
+		e.getPlayer().addPotionEffect(PotionEffectType.FAST_DIGGING.createEffect(rnd.nextInt(150), rnd.nextInt(5)),
+				false);
+		e.getPlayer().addPotionEffect(PotionEffectType.JUMP.createEffect(rnd.nextInt(100), rnd.nextInt(5)), false);
 
 		double money = tr.gettrint("CONFIG_GET_EXP_GET_MONEY") * e.getAmount();
 
 		try {
 			Economy.add(e.getPlayer().getName(), money);
-		}
-		catch (UserDoesNotExistException | NoLoanPermittedException e1) {
+		} catch (UserDoesNotExistException | NoLoanPermittedException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
@@ -278,28 +254,19 @@ public class buff_run implements Listener {
 
 		boolean forc = !(e.getPlayer().getInventory().first(38) == -1);
 
-		e.getPlayer().addPotionEffect(
-				PotionEffectType.SPEED.createEffect(rnd.nextInt(500),
-						rnd.nextInt(5)), forc);
-		e.getPlayer().addPotionEffect(
-				PotionEffectType.FIRE_RESISTANCE.createEffect(
-						rnd.nextInt(1000), rnd.nextInt(5)), forc);
-		e.getPlayer().addPotionEffect(
-				PotionEffectType.REGENERATION.createEffect(rnd.nextInt(500),
-						rnd.nextInt(5)), forc);
+		e.getPlayer().addPotionEffect(PotionEffectType.SPEED.createEffect(rnd.nextInt(500), rnd.nextInt(5)), forc);
+		e.getPlayer().addPotionEffect(PotionEffectType.FIRE_RESISTANCE.createEffect(rnd.nextInt(1000), rnd.nextInt(5)),
+				forc);
+		e.getPlayer().addPotionEffect(PotionEffectType.REGENERATION.createEffect(rnd.nextInt(500), rnd.nextInt(5)),
+				forc);
 
-		e.getPlayer().addPotionEffect(
-				PotionEffectType.INCREASE_DAMAGE.createEffect(rnd.nextInt(500),
-						rnd.nextInt(5)), forc);
-		e.getPlayer().addPotionEffect(
-				PotionEffectType.DAMAGE_RESISTANCE.createEffect(
-						rnd.nextInt(500), rnd.nextInt(5)), forc);
-		e.getPlayer().addPotionEffect(
-				PotionEffectType.HEAL.createEffect(rnd.nextInt(500),
-						rnd.nextInt(5)), forc);
-		e.getPlayer().addPotionEffect(
-				PotionEffectType.FAST_DIGGING.createEffect(rnd.nextInt(500),
-						rnd.nextInt(5)), forc);
+		e.getPlayer().addPotionEffect(PotionEffectType.INCREASE_DAMAGE.createEffect(rnd.nextInt(500), rnd.nextInt(5)),
+				forc);
+		e.getPlayer().addPotionEffect(PotionEffectType.DAMAGE_RESISTANCE.createEffect(rnd.nextInt(500), rnd.nextInt(5)),
+				forc);
+		e.getPlayer().addPotionEffect(PotionEffectType.HEAL.createEffect(rnd.nextInt(500), rnd.nextInt(5)), forc);
+		e.getPlayer().addPotionEffect(PotionEffectType.FAST_DIGGING.createEffect(rnd.nextInt(500), rnd.nextInt(5)),
+				forc);
 
 	}
 
@@ -309,8 +276,7 @@ public class buff_run implements Listener {
 		}
 
 		for (Player pla : player.getWorld().getPlayers()) {
-			pla.playSound(player, Sound.NOTE_PIANO, rnd.nextInt(50),
-					rnd.nextFloat() + 1);
+			pla.playSound(player, Sound.NOTE_PIANO, rnd.nextInt(50), rnd.nextFloat() + 1);
 		}
 	}
 

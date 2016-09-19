@@ -21,14 +21,15 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 public class DigEventListener2 implements Listener {
 	class runp implements Runnable {
-		private Player	p;
-		private String	m[];
+		private Player p;
+		private String m[];
 
 		public runp(String a[], Player p) {
 			m = a;
 			this.p = p;
 		}
 
+		@Override
 		public void run() {
 			if (m[0].equalsIgnoreCase("/dtp")) {
 				if (m.length == 1) {
@@ -74,7 +75,7 @@ public class DigEventListener2 implements Listener {
 				b.setTypeId(68, false);
 
 				Sign se = (Sign) b.getState();
-				
+
 				se.setLine(0, "[dewteleport]");
 				se.setLine(1, "" + sx);
 				se.setLine(2, "" + sy);
@@ -93,14 +94,15 @@ public class DigEventListener2 implements Listener {
 			}
 		}
 	}
-	JavaPlugin	ac			= null;
 
-	String		pbuildsign	= "dewdd.teleport.buildsign";
-	int			sx			= 0;
-	int			sy			= 0;
-	int			sz			= 0;
+	JavaPlugin ac = null;
 
-	World		sworld		= null;
+	String pbuildsign = "dewdd.teleport.buildsign";
+	int sx = 0;
+	int sy = 0;
+	int sz = 0;
+
+	World sworld = null;
 
 	public void dewteleport(Player player) {
 		Block block = player.getLocation().getBlock().getRelative(0, -2, 0);
@@ -110,7 +112,7 @@ public class DigEventListener2 implements Listener {
 				sign.setLine(0, "[dewteleport]");
 				sign.update(true);
 			}
-			
+
 			if (sign.getLine(0).equalsIgnoreCase("[dewteleport]") == true) {
 
 				int xh = Integer.parseInt(sign.getLine(1));
@@ -123,16 +125,14 @@ public class DigEventListener2 implements Listener {
 				loca.setZ(zh);
 				World wname = loca.getWorld();
 
-				Block block2 = player.getLocation().getBlock()
-						.getRelative(0, -3, 0);
+				Block block2 = player.getLocation().getBlock().getRelative(0, -3, 0);
 				if (block2.getTypeId() == 68 || block2.getTypeId() == 68) {
 					Sign sign2 = (Sign) block2.getState();
 					if (sign2.getLine(0).equalsIgnoreCase("dewteleport2")) {
 						sign2.setLine(0, "[dewteleport2]");
 						sign2.update(true);
 					}
-					
-					
+
 					if (sign2.getLine(0).equalsIgnoreCase("[dewteleport2]") == true) {
 						wname = Bukkit.getWorld(sign2.getLine(1));
 					}
@@ -141,17 +141,12 @@ public class DigEventListener2 implements Listener {
 
 				boolean abc = player.teleport(loca);
 				if (abc == true) {
-					dprint.r.printAll("ptdew&dewdd: teleported '"
-							+ player.getName() + "' to " + wname.getName()
-							+ " = (" + loca.getBlockX() + ","
-							+ loca.getBlockY() + "," + loca.getBlockZ() + ")");
+					dprint.r.printAll("ptdew&dewdd: teleported '" + player.getName() + "' to " + wname.getName()
+							+ " = (" + loca.getBlockX() + "," + loca.getBlockY() + "," + loca.getBlockZ() + ")");
 
-				}
-				else {
-					dprint.r.printAll("ptdew&dewdd: error to '"
-							+ player.getName() + "' to " + wname.getName()
-							+ " = (" + loca.getBlockX() + ","
-							+ loca.getBlockY() + "," + loca.getBlockZ() + ")");
+				} else {
+					dprint.r.printAll("ptdew&dewdd: error to '" + player.getName() + "' to " + wname.getName() + " = ("
+							+ loca.getBlockX() + "," + loca.getBlockY() + "," + loca.getBlockZ() + ")");
 
 				}
 
@@ -189,4 +184,3 @@ public class DigEventListener2 implements Listener {
 	}
 
 } // class
-

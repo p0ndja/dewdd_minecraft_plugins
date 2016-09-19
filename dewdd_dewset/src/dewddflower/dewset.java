@@ -194,6 +194,403 @@ public class dewset extends dewset_interface {
 		}
 	}
 
+	class chestabsorb_c implements Runnable {
+
+		public chestabsorb_c() {
+			Bukkit.getScheduler().scheduleSyncDelayedTask(ac, this, sleeptime);
+		}
+
+		@Override
+		public void run() {
+			int d4 = 20;
+			Block block = null;
+			Block block2 = null;
+			int d5 = 1;
+			Chest chest = null;
+			int slotp = -1;
+
+			for (Player player : Bukkit.getOnlinePlayers()) {
+				if (api_admin.dewddadmin.is2moderator(player) == true) {
+					continue;
+				}
+				// search nearby box and sign ... ummm yes
+				block = player.getLocation().getBlock();
+
+				/*
+				 * if (checkpermissionarea(block)== false) { not protect area
+				 * continue; }
+				 */
+				if (checkpermissionarea(block, player, "build") == true) {
+					// build
+					continue;
+				}
+
+				for (int gx = 0 - d4; gx <= 0 + d4; gx++) {
+					for (int gy = 0 - d4; gy <= 0 + d4; gy++) {
+						for (int gz = 0 - d4; gz <= 0 + d4; gz++) {
+							// first search sign
+							block = player.getLocation().getBlock().getRelative(gx, gy, gz);
+							if (block == null) {
+								continue;
+							}
+
+							if (block.getTypeId() != 63 && block.getTypeId() != 68) {
+								continue;
+							}
+
+							Sign sign = (Sign) block.getState();
+							if (sign.getLine(0).equalsIgnoreCase("dewtobox")) {
+								sign.setLine(0, "[dewtobox]");
+								sign.update(true);
+							}
+
+							if (sign.getLine(0).equalsIgnoreCase("[dewtobox]") == true) {
+								// player.sendMessage(dprint.r.color("found
+								// dewtobox sign : "
+								// +
+								// block.getLocation().getBlockX() + ","
+								// + block.getLocation().getBlockY() + "," +
+								// block.getLocation().getBlockZ());
+
+								int intb = Integer.parseInt(sign.getLine(1));
+								if (intb == 0) {
+									continue;
+								}
+
+								// after found sign so find box
+
+								// box
+								for (int ax = 0 - d5; ax <= 0 + d5; ax++) {
+									for (int ay = 0 - d5; ay <= 0 + d5; ay++) {
+										for (int az = 0 - d5; az <= 0 + d5; az++) {
+											block2 = block.getRelative(ax, ay, az);
+											if (block2 == null) {
+												continue;
+											}
+
+											if (block2.getTypeId() != 54) {
+												continue;
+											}
+
+											// player.sendMessage(dprint.r.color("found
+											// dewtobox chest : "
+											// +
+											// block2.getLocation().getBlockX()
+											// +
+											// ","
+											// +
+											// block2.getLocation().getBlockY()
+											// +
+											// "," +
+											// block2.getLocation().getBlockZ());
+
+											slotp = player.getInventory().first(intb);
+											if (slotp == -1) {
+												continue;
+											}
+
+											chest = (Chest) block2.getState();
+
+											int chestslot = -1;
+											chestslot = chest.getInventory().firstEmpty();
+											if (chestslot == -1) {
+												continue;
+											}
+
+											// ready to move
+											chest.getInventory().addItem(player.getInventory().getItem(slotp));
+
+											player.getInventory().clear(slotp);
+
+											player.sendMessage(
+													dprint.r.color("[dewtobox] " + tr.gettr("moved") + intb));
+
+											// added
+
+											// if true
+											// check is empty
+											// check item of player
+
+										}
+									}
+								}
+
+							} // dew to box
+
+						} // loop
+					}
+				}
+
+			} // player
+		}
+	}
+
+	class chestabsorb_c2 implements Runnable {
+
+		public chestabsorb_c2() {
+			Bukkit.getScheduler().scheduleSyncDelayedTask(ac, this, sleeptime);
+		}
+
+		@Override
+		public void run() {
+
+			long nn = System.currentTimeMillis();
+
+			if (nn - lastsort2 < 100) {
+				Bukkit.getScheduler().scheduleSyncDelayedTask(ac, this, 10);
+				return;
+			}
+
+			lastsort2 = nn;
+
+			int d4 = 30;
+			Block block = null;
+
+			for (Player player : Bukkit.getOnlinePlayers()) {
+				if (api_admin.dewddadmin.is2moderator(player) == true) {
+					continue;
+				}
+				// search nearby box and sign ... ummm yes
+				block = player.getLocation().getBlock();
+
+				/*
+				 * if (checkpermissionarea(block)== false) { not protect area
+				 * continue; }
+				 */
+				if (checkpermissionarea(block, player, "build") == true) {
+					// build
+					continue;
+				}
+
+				// player.sendMessage(dprint.r.color("searching... dewsortbox
+				// sign");
+
+				// search any sign near player
+				for (int gx = 0 - d4; gx <= 0 + d4; gx++) {
+					for (int gy = 0 - d4; gy <= 0 + d4; gy++) {
+						for (int gz = 0 - d4; gz <= 0 + d4; gz++) {
+							lastsort2 = nn;
+
+							// first search sign
+							block = player.getLocation().getBlock().getRelative(gx, gy, gz);
+
+							if (block.getTypeId() != 63 && block.getTypeId() != 68) {
+								continue;
+							}
+
+							// dewsortbox
+							// dewsorttype
+
+							Sign sign = (Sign) block.getState();
+							if (sign.getLine(0).equalsIgnoreCase("dewsortbox")) {
+								sign.setLine(0, "[dewsortbox]");
+								sign.update(true);
+							}
+
+							if (sign.getLine(0).equalsIgnoreCase("[dewsortbox]") == true) {
+
+								/*
+								 * player.sendMessage(dprint.r.color(
+								 * "cur found dewsortbox sign at " +
+								 * block.getX() + "," + block.getY() + "," +
+								 * block.getZ());
+								 */
+
+								String sorttype = sign.getLine(1);
+								if (sorttype.equalsIgnoreCase("")) {
+									player.sendMessage(dprint.r.color(tr.gettr("sorttype_name_must_not_null")));
+									continue;
+								}
+
+								// got sign type
+								// search current chest
+								Block curchest = chestnearsign(block);
+
+								if (curchest == null) {
+									player.sendMessage(dprint.r.color("curchest == null"));
+
+									continue;
+
+								}
+
+								Block curprochest = protochest(block, d4, sorttype);
+								if (curprochest == null) {
+									player.sendMessage(
+											dprint.r.color("curprochest == null > " + d4 + " , " + sorttype));
+
+									continue;
+
+								}
+
+								// player.sendMessage(dprint.r.color("opening
+								// curchest..."+
+								// curchest.getTypeId());
+								Chest curchest1 = (Chest) curchest.getState();
+								// player.sendMessage(dprint.r.color("opening
+								// curchest done");
+
+								// player.sendMessage(dprint.r.color("opening
+								// curprochest..."+
+								// curprochest.getTypeId());
+
+								Chest curchestin = (Chest) curprochest.getState();
+								// player.sendMessage(dprint.r.color("opening
+								// curprochest done");
+
+								// player.sendMessage(dprint.r.color("opened
+								// both chest");
+								// after got cur chest
+								// search another dewsortbox for swap
+								// *********************
+								Block temp = null;
+								for (int jx = 0 - d4; jx <= 0 + d4; jx++) {
+									for (int jy = 0 - d4; jy <= 0 + d4; jy++) {
+										for (int jz = 0 - d4; jz <= 0 + d4; jz++) {
+											if (jx == 0 && jy == 0 && jz == 0) {
+												continue;
+											}
+											// first search sign
+											temp = block.getLocation().getBlock().getRelative(jx, jy, jz);
+
+											if (temp.getTypeId() != 63 && temp.getTypeId() != 68) {
+												continue;
+											}
+
+											// dewsortbox
+											// dewsorttype
+
+											Sign js = (Sign) temp.getState();
+
+											if (js.getLine(0).equalsIgnoreCase("[dewsortbox]") == true) {
+
+												/*
+												 * player.sendMessage(dprint.r.
+												 * color (
+												 * "swap found dewsortbox at " +
+												 * temp.getX() + "," +
+												 * temp.getY() + "," +
+												 * temp.getZ());
+												 */
+
+												String jsorttype = js.getLine(1);
+												if (jsorttype.equalsIgnoreCase("")) {
+													// player.sendMessage(dprint.r.color("swap_sorttype_name_must_not_null");
+													continue;
+												}
+
+												// got sign type
+												// search current chest
+												Block swapchest = chestnearsign(temp);
+												if (swapchest == null) {
+													// player.sendMessage(dprint.r.color("swapchest
+													// == null");
+													continue;
+												}
+
+												if (swapchest.getLocation().distance(curchest.getLocation()) <= 1) {
+													continue;
+												}
+
+												Block swapprochest = protochest(temp, d4, jsorttype);
+												if (swapprochest == null) {
+													// player.sendMessage(dprint.r.color("swapprochest
+													// == null");
+													continue;
+												}
+
+												// player.sendMessage(dprint.r.color("opening
+												// swapprochest...");
+
+												Chest swapchestin = (Chest) swapprochest.getState();
+												// player.sendMessage(dprint.r.color("opening
+												// swapchest...");
+
+												Chest swapchest1 = (Chest) swapchest.getState();
+
+												// player.sendMessage(dprint.r.color("opened
+												// both chest swap");
+
+												for (int ikn = 0; ikn < curchest1.getInventory().getSize(); ikn++) {
+													ItemStack i1 = curchest1.getInventory().getItem(ikn);
+
+													if (i1 == null) {
+														continue;
+													}
+
+													// search 1 is not in
+													// 1prototype
+													int i1proslot = curchestin.getInventory().first(i1.getType());
+													if (i1proslot > -1) {
+														// player.sendMessage(dprint.r.color("i1proslot
+														// > -1");
+														continue;
+													}
+
+													// if not found it's mean
+													// wrong item in cur chest
+
+													// check it that item in
+													// second prototype
+
+													if (swapchestin.getInventory().first(i1.getType()) == -1) {
+														// player.sendMessage(dprint.r.color("swapchestin
+														// can't found i1
+														// item");
+														continue;
+													}
+
+													// time to swap item
+													// search free item on
+													// second
+
+													int freeslot = swapchest1.getInventory().firstEmpty();
+													if (freeslot == -1) {
+														// player.sendMessage(dprint.r.color("free
+														// slot of swapchest 1
+														// is -1");
+														continue;
+													}
+
+													// time to move
+													// player.sendMessage(dprint.r.color("moviing
+													// item");
+													swapchest1.getInventory().setItem(freeslot, i1);
+													curchest1.getInventory().setItem(ikn, new ItemStack(0));
+
+													player.sendMessage(dprint.r.color(
+															"swaped item " + i1.getType().name() + " " + i1.getAmount())
+															+ " from " + curchest.getX() + "," + curchest.getY() + ","
+															+ curchest.getZ() + "[" + sorttype + "]" + " to "
+															+ swapchest.getX() + "," + swapchest.getY() + ","
+															+ swapchest.getZ() + "[" + jsorttype + "]");
+
+													lastsort2 = nn;
+
+													new chestabsorb_c2();
+													return;
+
+												}
+												// how to swap
+												// loop all of item of source
+
+											}
+										} // search another chest
+									}
+								}
+
+								// **********************
+								// search another chest block for swap item
+
+							} // dew to box
+
+						} // searh any sign near player
+					}
+				}
+
+			} // player
+		}
+	}
+
 	class createmonster_c implements Runnable {
 		private EntityType EntityTypeGot;
 		private Player player;
@@ -485,6 +882,21 @@ public class dewset extends dewset_interface {
 			}
 
 			return;
+
+		}
+	}
+
+	class delaylay55 implements Runnable {
+		private item55deletec ab;
+
+		public delaylay55(item55deletec ab) {
+			this.ab = ab;
+		}
+
+		@Override
+		public void run() {
+
+			Bukkit.getScheduler().scheduleSyncDelayedTask(ac, ab, rnd.nextInt(100));
 
 		}
 	}
@@ -1207,101 +1619,6 @@ public class dewset extends dewset_interface {
 		}
 	}
 
-	class dewfill_thread implements Runnable {
-
-		private byte handdata;
-		private int handid;
-		private int lx = 0;
-		private int ly = 0;
-		private int lz = 0;
-		private int mx = 0;
-
-		private int my = 0;
-		private int mz = 0;
-		private Player player = null;
-
-		private int xlx = 0;
-		private int ylx = 0;
-		private int zlx = 0;
-
-		public dewfill_thread(Player player, int handid, byte handdata, int mx, int my, int mz, int lx, int ly, int lz,
-				int xlx, int ylx, int zlx) {
-			this.player = player;
-			this.handid = handid;
-			this.handdata = handdata;
-			this.mx = mx;
-			this.my = my;
-			this.mz = mz;
-			this.lx = lx;
-			this.ly = ly;
-			this.lz = lz;
-			this.xlx = xlx;
-			this.ylx = ylx;
-			this.zlx = zlx;
-
-		}
-
-		@Override
-		public void run() {
-			long starttime = System.currentTimeMillis();
-			long endtime = 0;
-
-			Block blb = null;
-			boolean arxx = !player.hasPermission(pmaininfinite);
-
-			while (xlx <= mx) {
-				while (ylx <= my) {
-					while (zlx <= mz) {
-
-						endtime = System.currentTimeMillis();
-						if (endtime - starttime > runtime) {
-
-							dewfill_thread xgn2 = new dewfill_thread(player, handid, handdata, mx, my, mz, lx, ly, lz,
-									xlx, ylx, zlx);
-
-							dprint.r.printC("dewfill  " + tr.gettr("recall") + " " + xlx + " , " + ylx + " , " + zlx);
-							dprint.r.printC(
-									"low " + lx + " , " + ly + " , " + lz + " high " + mx + "," + my + "," + mz);
-
-							Bukkit.getScheduler().scheduleSyncDelayedTask(ac, xgn2, sleeptime);
-
-							return;
-						}
-
-						blb = player.getWorld().getBlockAt(xlx, ylx, zlx);
-
-						if (blb.getTypeId() != 0) {
-							zlx++;
-							continue;
-						}
-						if (checkpermissionarea(blb, player, "dewset") == true)
-							return;
-
-						if (arxx)
-							if (decreseitem1(player, handid, handdata, true) == false) {
-								player.sendMessage(
-										dprint.r.color("ptdew&dewdd : " + tr.gettr("don't_have_enough_item")));
-								return;
-							}
-						blb.setTypeIdAndData(handid, handdata, false);
-						//
-
-						zlx++;
-					}
-					zlx = lz;
-
-					ylx++;
-				}
-				ylx = ly;
-
-				xlx++;
-			}
-			xlx = lx;
-
-			dprint.r.printAll("ptdew&dewdd : dewfill " + tr.gettr("done") + " : " + player.getName());
-		}
-	}
-
 	class dewcopy_c_mom implements Runnable {
 		private Player player;
 
@@ -1405,13 +1722,160 @@ public class dewset extends dewset_interface {
 
 			dewcopy_thread aer = new dewcopy_thread(player, mx, my, mz, lx, ly, lz, lx, ly, lz, 1, selectx1[getid],
 					selecty1[getid], selectz1[getid], selectworldname[getid], player.getLocation().clone());
-			
-			
 
 			Bukkit.getScheduler().scheduleSyncDelayedTask(ac, aer, sleeptime);
 
 			// grab mxlx
 
+		}
+	}
+
+	class dewcopy_thread implements Runnable {
+
+		private int lx = 0;
+		private int ly = 0;
+		private int lz = 0;
+		private int mx = 0;
+
+		private int my = 0;
+		private int mz = 0;
+		private Player player = null;
+
+		private int xlx = 0;
+		private int ylx = 0;
+		private int zlx = 0;
+		private int amountloop = 1;
+		private int selectx1 = 0;
+		private int selecty1 = 0;
+		private int selectz1 = 0;
+		private String selectworldname = "";
+		private Location playerLocation;
+
+		public dewcopy_thread(Player player, int mx, int my, int mz, int lx, int ly, int lz, int xlx, int ylx, int zlx,
+				int amountloop, int selectx1, int selecty1, int selectz1, String selectworldname,
+				Location playerLocation) {
+			this.player = player;
+			this.mx = mx;
+			this.my = my;
+			this.mz = mz;
+			this.lx = lx;
+			this.ly = ly;
+			this.lz = lz;
+			this.xlx = xlx;
+			this.ylx = ylx;
+			this.zlx = zlx;
+			this.amountloop = amountloop;
+			this.selectx1 = selectx1;
+			this.selecty1 = selecty1;
+
+			this.selectz1 = selectz1;
+
+			this.selectworldname = selectworldname;
+			this.playerLocation = playerLocation;
+
+			/*
+			 * player.sendMessage("l " + lx + "," + ly + "," + lz + " ... m " +
+			 * mx + "," + my + "," + mz + " = " + playerLocation.getX() + "," +
+			 * playerLocation.getY() + "," + playerLocation.getZ() + " world " +
+			 * selectworldname);
+			 */
+		}
+
+		@Override
+		public void run() {
+			long starttime = System.currentTimeMillis();
+			long endtime = 0;
+
+			Block hostBlock = null;
+			boolean arxx = !player.hasPermission(pmaininfinite);
+
+			while (xlx <= mx) {
+				while (ylx <= my) {
+					while (zlx <= mz) {
+
+						endtime = System.currentTimeMillis();
+						if (endtime - starttime > runtime) {
+
+							dewcopy_thread xgn2 = new dewcopy_thread(player, mx, my, mz, lx, ly, lz, xlx, ylx, zlx,
+									amountloop, selectx1, selecty1, selectz1, selectworldname, playerLocation);
+
+							dprint.r.printC("dewcopy  " + tr.gettr("recall") + " " + xlx + " , " + ylx + " , " + zlx);
+							dprint.r.printC(
+									"low " + lx + " , " + ly + " , " + lz + " high " + mx + "," + my + "," + mz);
+
+							Bukkit.getScheduler().scheduleSyncDelayedTask(ac, xgn2, sleeptime);
+
+							return;
+						}
+
+						hostBlock = Bukkit.getWorld(selectworldname).getBlockAt(xlx, ylx, zlx);
+
+						if (amountloop == 1 || amountloop == 3) { // if first
+																	// round ...
+																	// only
+																	// block
+							if (hostBlock.getType().isBlock() == false) {
+								continue;
+							}
+						} else if (amountloop == 2 || amountloop == 4)
+							if (hostBlock.getType().isBlock() == true) {
+								continue;
+							}
+
+						Block setBlock = playerLocation.getBlock().getRelative(hostBlock.getX() - selectx1,
+								hostBlock.getY() - selecty1, hostBlock.getZ() - selectz1);
+
+						if (checkpermissionarea(setBlock, player, "dewset") == true)
+							return;
+
+						if (arxx)
+							if (decreseitem1(player, hostBlock.getTypeId(), hostBlock.getData(), true) == false) {
+								player.sendMessage(
+										dprint.r.color("ptdew&dewdd : dewcopy " + tr.gettr("don't_have_enough_item")
+												+ hostBlock.getTypeId() + ":" + hostBlock.getData()));
+								return;
+							}
+
+						if (setBlock.getType() != hostBlock.getType() && setBlock.getData() != hostBlock.getData()) {
+							setBlock.setTypeIdAndData(hostBlock.getTypeId(), hostBlock.getData(), false);
+						}
+
+						if (hostBlock.getType() == Material.SIGN_POST || hostBlock.getType() == Material.WALL_SIGN) {
+
+							Sign hostSign = (Sign) hostBlock.getState();
+							Sign setSign = (Sign) setBlock.getState();
+
+							for (int i = 0; i < 4; i++)
+								setSign.setLine(i, hostSign.getLine(i));
+
+							setSign.update(true);
+						}
+
+						zlx++;
+					}
+					zlx = lz;
+
+					ylx++;
+				}
+				ylx = ly;
+
+				xlx++;
+			}
+			xlx = lx;
+
+			amountloop++;
+			if (amountloop <= 4) {
+				dewcopy_thread xgn2 = new dewcopy_thread(player, mx, my, mz, lx, ly, lz, xlx, ylx, zlx, amountloop,
+						selectx1, selecty1, selectz1, selectworldname, playerLocation);
+
+				dprint.r.printC("dewcopy  " + tr.gettr("recall") + " " + xlx + " , " + ylx + " , " + zlx);
+				dprint.r.printC("low " + lx + " , " + ly + " , " + lz + " high " + mx + "," + my + "," + mz);
+
+				Bukkit.getScheduler().scheduleSyncDelayedTask(ac, xgn2, sleeptime);
+				return;
+			}
+
+			dprint.r.printAll("ptdew&dewdd : dewcopy " + tr.gettr("done") + " : " + player.getName());
 		}
 	}
 
@@ -1684,8 +2148,12 @@ public class dewset extends dewset_interface {
 		}
 	}
 
-	class dewcopy_thread implements Runnable {
+	// Bigdigthread
 
+	class dewfill_thread implements Runnable {
+
+		private byte handdata;
+		private int handid;
 		private int lx = 0;
 		private int ly = 0;
 		private int lz = 0;
@@ -1698,16 +2166,12 @@ public class dewset extends dewset_interface {
 		private int xlx = 0;
 		private int ylx = 0;
 		private int zlx = 0;
-		private int amountloop = 1;
-		private int selectx1 = 0;
-		private int selecty1 = 0;
-		private int selectz1 = 0;
-		private String selectworldname = "";
-		private Location playerLocation;
 
-		public dewcopy_thread(Player player, int mx, int my, int mz, int lx, int ly, int lz, int xlx, int ylx, int zlx,
-				int amountloop, int selectx1, int selecty1, int selectz1, String selectworldname, Location playerLocation) {
+		public dewfill_thread(Player player, int handid, byte handdata, int mx, int my, int mz, int lx, int ly, int lz,
+				int xlx, int ylx, int zlx) {
 			this.player = player;
+			this.handid = handid;
+			this.handdata = handdata;
 			this.mx = mx;
 			this.my = my;
 			this.mz = mz;
@@ -1717,18 +2181,7 @@ public class dewset extends dewset_interface {
 			this.xlx = xlx;
 			this.ylx = ylx;
 			this.zlx = zlx;
-			this.amountloop = amountloop;
-			this.selectx1 = selectx1;
-			this.selecty1 = selecty1;
 
-			this.selectz1 = selectz1;
-
-			this.selectworldname = selectworldname;
-			this.playerLocation = playerLocation;
-			
-			/*player.sendMessage("l " + lx + "," + ly + "," + lz + " ... m " + mx  + "," 
-			+ my + "," + mz + " = " + playerLocation.getX() + "," + playerLocation.getY() + "," + playerLocation.getZ() + " world "
-			+ selectworldname);*/
 		}
 
 		@Override
@@ -1736,7 +2189,7 @@ public class dewset extends dewset_interface {
 			long starttime = System.currentTimeMillis();
 			long endtime = 0;
 
-			Block hostBlock = null;
+			Block blb = null;
 			boolean arxx = !player.hasPermission(pmaininfinite);
 
 			while (xlx <= mx) {
@@ -1746,10 +2199,10 @@ public class dewset extends dewset_interface {
 						endtime = System.currentTimeMillis();
 						if (endtime - starttime > runtime) {
 
-							dewcopy_thread xgn2 = new dewcopy_thread(player, mx, my, mz, lx, ly, lz, xlx, ylx, zlx,
-									amountloop, selectx1, selecty1, selectz1, selectworldname,playerLocation);
+							dewfill_thread xgn2 = new dewfill_thread(player, handid, handdata, mx, my, mz, lx, ly, lz,
+									xlx, ylx, zlx);
 
-							dprint.r.printC("dewcopy  " + tr.gettr("recall") + " " + xlx + " , " + ylx + " , " + zlx);
+							dprint.r.printC("dewfill  " + tr.gettr("recall") + " " + xlx + " , " + ylx + " , " + zlx);
 							dprint.r.printC(
 									"low " + lx + " , " + ly + " , " + lz + " high " + mx + "," + my + "," + mz);
 
@@ -1758,49 +2211,23 @@ public class dewset extends dewset_interface {
 							return;
 						}
 
-						hostBlock = Bukkit.getWorld(selectworldname).getBlockAt(xlx, ylx, zlx);
+						blb = player.getWorld().getBlockAt(xlx, ylx, zlx);
 
-						if (amountloop == 1) { // if first round ... only block
-							if (hostBlock.getType().isBlock() == false) {
-								continue;
-							}
-						} else if (amountloop == 2)
-							if (hostBlock.getType().isBlock() == true) {
-								continue;
-							}
-
-						Block setBlock = playerLocation.getBlock().getRelative(hostBlock.getX() - selectx1,
-								hostBlock.getY() - selecty1, hostBlock.getZ() - selectz1);
-						
-						
-						if (checkpermissionarea(setBlock, player, "dewset") == true)
+						if (blb.getTypeId() != 0) {
+							zlx++;
+							continue;
+						}
+						if (checkpermissionarea(blb, player, "dewset") == true)
 							return;
 
 						if (arxx)
-							if (decreseitem1(player, hostBlock.getTypeId(), hostBlock.getData(), true) == false) {
-								player.sendMessage(dprint.r.color("ptdew&dewdd : dewcopy "
-										+ tr.gettr("don't_have_enough_item") + hostBlock.getTypeId() + ":" + hostBlock.getData()));
+							if (decreseitem1(player, handid, handdata, true) == false) {
+								player.sendMessage(
+										dprint.r.color("ptdew&dewdd : " + tr.gettr("don't_have_enough_item")));
 								return;
 							}
-
-						setBlock.setTypeIdAndData(
-								hostBlock
-										.getTypeId(),
-								hostBlock
-										.getData(),
-								false);
-						
-						if (hostBlock.getType() == Material.SIGN_POST ||
-								hostBlock.getType() == Material.WALL_SIGN) {
-							
-							Sign hostSign = (Sign)hostBlock.getState();
-							Sign setSign = (Sign)setBlock.getState();
-							
-							for (int i = 0 ; i < 4 ; i++ )
-							setSign.setLine(i, hostSign.getLine(i));
-							
-							setSign.update(true);
-						}
+						blb.setTypeIdAndData(handid, handdata, false);
+						//
 
 						zlx++;
 					}
@@ -1814,7 +2241,7 @@ public class dewset extends dewset_interface {
 			}
 			xlx = lx;
 
-			dprint.r.printAll("ptdew&dewdd : dewcopy " + tr.gettr("done") + " : " + player.getName());
+			dprint.r.printAll("ptdew&dewdd : dewfill " + tr.gettr("done") + " : " + player.getName());
 		}
 	}
 
@@ -1910,6 +2337,14 @@ public class dewset extends dewset_interface {
 		}
 	}
 
+	// skyblock
+	// nether
+	// invert
+	// old_1
+	// flat
+	// old_2
+	// float
+
 	class dewselectcube_c implements Runnable {
 		private Player player;
 		private int rad;
@@ -1948,8 +2383,6 @@ public class dewset extends dewset_interface {
 			player.sendMessage(dprint.r.color("ptdew&dewdd : dew select cube " + tr.gettr("complete") + "d"));
 		}
 	}
-
-	// Bigdigthread
 
 	class dewselectprotect_c implements Runnable {
 		private Player player;
@@ -2089,14 +2522,6 @@ public class dewset extends dewset_interface {
 
 		}
 	}
-
-	// skyblock
-	// nether
-	// invert
-	// old_1
-	// flat
-	// old_2
-	// float
 
 	class dewset_thread implements Runnable {
 		private int e1;
@@ -3839,6 +4264,8 @@ public class dewset extends dewset_interface {
 		}
 	}
 
+	// redim" + tr.gettr("for") + "each world each protect = 100
+
 	class runter_mom implements Runnable {
 
 		private int a1;
@@ -4059,7 +4486,7 @@ public class dewset extends dewset_interface {
 		}
 	}
 
-	// redim" + tr.gettr("for") + "each world each protect = 100
+	public static JavaPlugin ac = null;
 
 	public String phideshowrun = "dewdd.main.joinhide";
 
@@ -4067,20 +4494,17 @@ public class dewset extends dewset_interface {
 
 	Random rnd = new Random();
 
-	public static JavaPlugin ac = null;
-
 	public boolean allowfly = true;
 
 	public boolean allownight = true;
-
 	public int amountRecursiveCount = 0; // recursive
 	// 55
 	// 55
-
 	public boolean chatever[] = new boolean[selectmax + 1];
-
 	public int d4[] = new int[selectmax + 1];
+
 	public boolean dewaxe[] = new boolean[selectmax + 1];
+
 	public Block giftblock = null;
 	public int dewsignloop[][];
 
@@ -4093,37 +4517,40 @@ public class dewset extends dewset_interface {
 
 	public int dewsigny1[][];
 	public int dewsigny2[][];
-
 	public int dewsignz1[][];
 
-	public int dewsignz2[][];
-	public String dewworldlist[];
-	public int dewworldlistmax = 0;
-
 	// public double buy1blockmoney = 0.0890932504689118445732202345959;
+
+	public int dewsignz2[][];
+
+	public String dewworldlist[];
+
+	// autosearchsub
+
+	public int dewworldlistmax = 0;
 
 	public boolean hidemode[] = new boolean[selectmax + 1];
 
 	public boolean monfast = false;
 
-	// autosearchsub
-
-	public boolean moninvi = false;
-
-	public boolean monjump = true;
-
-	public Random randomG = new Random();
-
 	// *********
 
 	// cutwoodsub
 
+	public boolean moninvi = false;
+	public boolean monjump = true;
+
+	public Random randomG = new Random();
+
+	// decrese item 1
+
 	public int runtime = 1000;
+
 	public long sleeptime = 10L;
 
 	public Block selectblock[] = new Block[selectmax + 1];
 
-	// decrese item 1
+	// Check Permission Area block player mode
 
 	public String selectname[] = new String[selectmax + 1];
 
@@ -4131,19 +4558,17 @@ public class dewset extends dewset_interface {
 
 	public int selectx1[] = new int[selectmax + 1];
 
-	// Check Permission Area block player mode
-
 	public int selectx2[] = new int[selectmax + 1];
 
 	public int selecty1[] = new int[selectmax + 1];
+
+	// cut seem block
 
 	public int selecty2[] = new int[selectmax + 1];
 
 	public int selectz1[] = new int[selectmax + 1];
 
 	public int selectz2[] = new int[selectmax + 1];
-
-	// cut seem block
 
 	public dewset() {
 		// if (firstrun19 == false){
@@ -4640,6 +5065,16 @@ public class dewset extends dewset_interface {
 
 	}
 
+	public void chestabsorb() {
+
+		new chestabsorb_c();
+	}
+
+	public void chestabsorb2() {
+
+		new chestabsorb_c2();
+	}
+
 	public Block chestnearsign(Block temp) {
 		int d5 = 1;
 		Block typebox = null;
@@ -5053,6 +5488,8 @@ public class dewset extends dewset_interface {
 		new dewsetprivate_c(player);
 	}
 
+	// fixtool
+
 	public void dewsetroom(Player player, int handid, byte handdata, boolean isfillmode) {
 
 		dewsetroom_mom aer = new dewsetroom_mom(player, handid, handdata, isfillmode);
@@ -5074,6 +5511,8 @@ public class dewset extends dewset_interface {
 		new dewspreadcircle_c(player, handid, handdata);
 	}
 
+	// getfreeselect
+
 	public void dewspreadq(Player player, int handid, byte handdata) {
 		Queue<Block> bd = new LinkedList<Block>();
 		new dewspreadq_c(player, handid, handdata, true, bd);
@@ -5086,8 +5525,6 @@ public class dewset extends dewset_interface {
 		Bukkit.getScheduler().scheduleSyncDelayedTask(ac, aer, sleeptime);
 
 	}
-
-	// fixtool
 
 	public int distance2d(int x1, int z1, int x2, int z2) {
 		double t1 = Math.pow(x1 - x2, 2);
@@ -5176,7 +5613,7 @@ public class dewset extends dewset_interface {
 		return gname;
 	}
 
-	// getfreeselect
+	// riceblockiron
 
 	// getselectblock //" + tr.gettr("for") + "dewset or dewfill or dewdelete
 	public Block[] getselectblock(int getid, Player player) {
@@ -5331,6 +5768,10 @@ public class dewset extends dewset_interface {
 		return g;
 	}
 
+	// sandmelon
+
+	// ironorefreeze
+
 	public int getworldid(String wowo) {
 		for (int d = 0; d < dewworldlistmax; d++)
 			if (wowo.equalsIgnoreCase(dewworldlist[d]) == true)
@@ -5343,75 +5784,6 @@ public class dewset extends dewset_interface {
 	public String getworldname(int idworld) {
 		String aa = "ptdew_dewdd_" + dewworldlist[idworld] + ".txt";
 		return aa;
-	}
-
-	// riceblockiron
-
-	public void searchRecursiveBlock(ArrayList<Block> blockList, Block curBlock, Material searchMaterial,
-			Byte searchData) {
-		int search = 3;
-
-		/*
-		 * dprint.r.printAll(curBlock.getX() + "," + curBlock.getY() + "," +
-		 * curBlock.getZ() + " = " + curBlock.getType().name() + ":" +
-		 * curBlock.getData());
-		 */
-
-		if (curBlock.getType() == searchMaterial)
-			if (curBlock.getData() == searchData || searchData == -29) {
-
-				boolean found = false;
-				for (int i = 0; i < blockList.size(); i++) {
-					Block bo = blockList.get(i);
-					if (bo.getX() == curBlock.getX() && bo.getY() == curBlock.getY() && bo.getZ() == curBlock.getZ())
-
-						found = true;
-					break;
-
-				}
-
-				if (found == false) {
-
-					blockList.add(curBlock);
-					// dprint.r.printAll("gift " + curBlock.getX() + "," +
-					// curBlock.getY() + "," + curBlock.getZ());
-				}
-			}
-
-		Block tm;
-		for (int x = -search; x <= search; x++)
-			for (int y = -search; y <= search; y++)
-				for (int z = -search; z <= search; z++) {
-
-					tm = curBlock.getRelative(x, y, z);
-					if (tm == null) {
-						continue;
-					}
-
-					if (tm.getType() == searchMaterial)
-						if (tm.getData() == searchData || searchData == -29) {
-
-							// check Block
-							boolean sea = false;
-							for (int i = 0; i < blockList.size(); i++) {
-								Block te = blockList.get(i);
-								if (te.getX() == tm.getX() && te.getY() == tm.getY() && te.getZ() == tm.getZ()) {
-									sea = true;
-									break;
-								}
-							}
-
-							if (sea == false) {
-
-								searchRecursiveBlock(blockList, tm, searchMaterial, searchData);
-
-								continue;
-							}
-
-						}
-
-				}
-
 	}
 
 	public void gift(Player player, int a1, byte a2) {
@@ -5501,9 +5873,9 @@ public class dewset extends dewset_interface {
 		Bukkit.getScheduler().scheduleSyncDelayedTask(ac, ae, sleeptime);
 	}
 
-	// sandmelon
+	// obsidianabsorb
 
-	// ironorefreeze
+	// boolean firstrun19 = false;
 
 	// Check Permission Area block
 	// checkidhome
@@ -5552,10 +5924,6 @@ public class dewset extends dewset_interface {
 		}
 	}
 
-	// obsidianabsorb
-
-	// boolean firstrun19 = false;
-
 	public boolean isunsortid(ItemStack impo) {
 
 		if (impo.getType().getMaxDurability() > 0)
@@ -5582,21 +5950,6 @@ public class dewset extends dewset_interface {
 		}
 	}
 
-	class delaylay55 implements Runnable {
-		private item55deletec ab;
-
-		public delaylay55(item55deletec ab) {
-			this.ab = ab;
-		}
-
-		@Override
-		public void run() {
-
-			Bukkit.getScheduler().scheduleSyncDelayedTask(ac, ab, rnd.nextInt(100));
-
-		}
-	}
-
 	public void item55delete(Block block, Player player, int id, byte dat, int maxRecursive, int searchSpace,
 			long reTime) {
 		item55deletec ab = new item55deletec(block, player, id, dat, maxRecursive, searchSpace, reTime);
@@ -5613,413 +5966,6 @@ public class dewset extends dewset_interface {
 		 */
 		// Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(ac, ab,
 		// rnd.nextInt(100) );
-	}
-
-	class chestabsorb_c implements Runnable {
-
-		public chestabsorb_c() {
-			Bukkit.getScheduler().scheduleSyncDelayedTask(ac, this, sleeptime);
-		}
-
-		@Override
-		public void run() {
-			int d4 = 20;
-			Block block = null;
-			Block block2 = null;
-			int d5 = 1;
-			Chest chest = null;
-			int slotp = -1;
-
-			for (Player player : Bukkit.getOnlinePlayers()) {
-				if (api_admin.dewddadmin.is2moderator(player) == true) {
-					continue;
-				}
-				// search nearby box and sign ... ummm yes
-				block = player.getLocation().getBlock();
-
-				/*
-				 * if (checkpermissionarea(block)== false) { not protect area
-				 * continue; }
-				 */
-				if (checkpermissionarea(block, player, "build") == true) {
-					// build
-					continue;
-				}
-
-				for (int gx = 0 - d4; gx <= 0 + d4; gx++) {
-					for (int gy = 0 - d4; gy <= 0 + d4; gy++) {
-						for (int gz = 0 - d4; gz <= 0 + d4; gz++) {
-							// first search sign
-							block = player.getLocation().getBlock().getRelative(gx, gy, gz);
-							if (block == null) {
-								continue;
-							}
-
-							if (block.getTypeId() != 63 && block.getTypeId() != 68) {
-								continue;
-							}
-
-							Sign sign = (Sign) block.getState();
-							if (sign.getLine(0).equalsIgnoreCase("dewtobox")) {
-								sign.setLine(0, "[dewtobox]");
-								sign.update(true);
-							}
-
-							if (sign.getLine(0).equalsIgnoreCase("[dewtobox]") == true) {
-								// player.sendMessage(dprint.r.color("found
-								// dewtobox sign : "
-								// +
-								// block.getLocation().getBlockX() + ","
-								// + block.getLocation().getBlockY() + "," +
-								// block.getLocation().getBlockZ());
-
-								int intb = Integer.parseInt(sign.getLine(1));
-								if (intb == 0) {
-									continue;
-								}
-
-								// after found sign so find box
-
-								// box
-								for (int ax = 0 - d5; ax <= 0 + d5; ax++) {
-									for (int ay = 0 - d5; ay <= 0 + d5; ay++) {
-										for (int az = 0 - d5; az <= 0 + d5; az++) {
-											block2 = block.getRelative(ax, ay, az);
-											if (block2 == null) {
-												continue;
-											}
-
-											if (block2.getTypeId() != 54) {
-												continue;
-											}
-
-											// player.sendMessage(dprint.r.color("found
-											// dewtobox chest : "
-											// +
-											// block2.getLocation().getBlockX()
-											// +
-											// ","
-											// +
-											// block2.getLocation().getBlockY()
-											// +
-											// "," +
-											// block2.getLocation().getBlockZ());
-
-											slotp = player.getInventory().first(intb);
-											if (slotp == -1) {
-												continue;
-											}
-
-											chest = (Chest) block2.getState();
-
-											int chestslot = -1;
-											chestslot = chest.getInventory().firstEmpty();
-											if (chestslot == -1) {
-												continue;
-											}
-
-											// ready to move
-											chest.getInventory().addItem(player.getInventory().getItem(slotp));
-
-											player.getInventory().clear(slotp);
-
-											player.sendMessage(
-													dprint.r.color("[dewtobox] " + tr.gettr("moved") + intb));
-
-											// added
-
-											// if true
-											// check is empty
-											// check item of player
-
-										}
-									}
-								}
-
-							} // dew to box
-
-						} // loop
-					}
-				}
-
-			} // player
-		}
-	}
-
-	class chestabsorb_c2 implements Runnable {
-
-		public chestabsorb_c2() {
-			Bukkit.getScheduler().scheduleSyncDelayedTask(ac, this, sleeptime);
-		}
-
-		@Override
-		public void run() {
-
-			long nn = System.currentTimeMillis();
-
-			if (nn - lastsort2 < 100) {
-				Bukkit.getScheduler().scheduleSyncDelayedTask(ac, this, 10);
-				return;
-			}
-
-			lastsort2 = nn;
-
-			int d4 = 30;
-			Block block = null;
-
-			for (Player player : Bukkit.getOnlinePlayers()) {
-				if (api_admin.dewddadmin.is2moderator(player) == true) {
-					continue;
-				}
-				// search nearby box and sign ... ummm yes
-				block = player.getLocation().getBlock();
-
-				/*
-				 * if (checkpermissionarea(block)== false) { not protect area
-				 * continue; }
-				 */
-				if (checkpermissionarea(block, player, "build") == true) {
-					// build
-					continue;
-				}
-
-				// player.sendMessage(dprint.r.color("searching... dewsortbox
-				// sign");
-
-				// search any sign near player
-				for (int gx = 0 - d4; gx <= 0 + d4; gx++) {
-					for (int gy = 0 - d4; gy <= 0 + d4; gy++) {
-						for (int gz = 0 - d4; gz <= 0 + d4; gz++) {
-							lastsort2 = nn;
-
-							// first search sign
-							block = player.getLocation().getBlock().getRelative(gx, gy, gz);
-
-							if (block.getTypeId() != 63 && block.getTypeId() != 68) {
-								continue;
-							}
-
-							// dewsortbox
-							// dewsorttype
-
-							Sign sign = (Sign) block.getState();
-							if (sign.getLine(0).equalsIgnoreCase("dewsortbox")) {
-								sign.setLine(0, "[dewsortbox]");
-								sign.update(true);
-							}
-
-							if (sign.getLine(0).equalsIgnoreCase("[dewsortbox]") == true) {
-
-								/*
-								 * player.sendMessage(dprint.r.color(
-								 * "cur found dewsortbox sign at " +
-								 * block.getX() + "," + block.getY() + "," +
-								 * block.getZ());
-								 */
-
-								String sorttype = sign.getLine(1);
-								if (sorttype.equalsIgnoreCase("")) {
-									player.sendMessage(dprint.r.color(tr.gettr("sorttype_name_must_not_null")));
-									continue;
-								}
-
-								// got sign type
-								// search current chest
-								Block curchest = chestnearsign(block);
-
-								if (curchest == null) {
-									player.sendMessage(dprint.r.color("curchest == null"));
-
-									continue;
-
-								}
-
-								Block curprochest = protochest(block, d4, sorttype);
-								if (curprochest == null) {
-									player.sendMessage(
-											dprint.r.color("curprochest == null > " + d4 + " , " + sorttype));
-
-									continue;
-
-								}
-
-								// player.sendMessage(dprint.r.color("opening
-								// curchest..."+
-								// curchest.getTypeId());
-								Chest curchest1 = (Chest) curchest.getState();
-								// player.sendMessage(dprint.r.color("opening
-								// curchest done");
-
-								// player.sendMessage(dprint.r.color("opening
-								// curprochest..."+
-								// curprochest.getTypeId());
-
-								Chest curchestin = (Chest) curprochest.getState();
-								// player.sendMessage(dprint.r.color("opening
-								// curprochest done");
-
-								// player.sendMessage(dprint.r.color("opened
-								// both chest");
-								// after got cur chest
-								// search another dewsortbox for swap
-								// *********************
-								Block temp = null;
-								for (int jx = 0 - d4; jx <= 0 + d4; jx++) {
-									for (int jy = 0 - d4; jy <= 0 + d4; jy++) {
-										for (int jz = 0 - d4; jz <= 0 + d4; jz++) {
-											if (jx == 0 && jy == 0 && jz == 0) {
-												continue;
-											}
-											// first search sign
-											temp = block.getLocation().getBlock().getRelative(jx, jy, jz);
-
-											if (temp.getTypeId() != 63 && temp.getTypeId() != 68) {
-												continue;
-											}
-
-											// dewsortbox
-											// dewsorttype
-
-											Sign js = (Sign) temp.getState();
-
-											if (js.getLine(0).equalsIgnoreCase("[dewsortbox]") == true) {
-
-												/*
-												 * player.sendMessage(dprint.r.
-												 * color (
-												 * "swap found dewsortbox at " +
-												 * temp.getX() + "," +
-												 * temp.getY() + "," +
-												 * temp.getZ());
-												 */
-
-												String jsorttype = js.getLine(1);
-												if (jsorttype.equalsIgnoreCase("")) {
-													// player.sendMessage(dprint.r.color("swap_sorttype_name_must_not_null");
-													continue;
-												}
-
-												// got sign type
-												// search current chest
-												Block swapchest = chestnearsign(temp);
-												if (swapchest == null) {
-													// player.sendMessage(dprint.r.color("swapchest
-													// == null");
-													continue;
-												}
-
-												if (swapchest.getLocation().distance(curchest.getLocation()) <= 1) {
-													continue;
-												}
-
-												Block swapprochest = protochest(temp, d4, jsorttype);
-												if (swapprochest == null) {
-													// player.sendMessage(dprint.r.color("swapprochest
-													// == null");
-													continue;
-												}
-
-												// player.sendMessage(dprint.r.color("opening
-												// swapprochest...");
-
-												Chest swapchestin = (Chest) swapprochest.getState();
-												// player.sendMessage(dprint.r.color("opening
-												// swapchest...");
-
-												Chest swapchest1 = (Chest) swapchest.getState();
-
-												// player.sendMessage(dprint.r.color("opened
-												// both chest swap");
-
-												for (int ikn = 0; ikn < curchest1.getInventory().getSize(); ikn++) {
-													ItemStack i1 = curchest1.getInventory().getItem(ikn);
-
-													if (i1 == null) {
-														continue;
-													}
-
-													// search 1 is not in
-													// 1prototype
-													int i1proslot = curchestin.getInventory().first(i1.getType());
-													if (i1proslot > -1) {
-														// player.sendMessage(dprint.r.color("i1proslot
-														// > -1");
-														continue;
-													}
-
-													// if not found it's mean
-													// wrong item in cur chest
-
-													// check it that item in
-													// second prototype
-
-													if (swapchestin.getInventory().first(i1.getType()) == -1) {
-														// player.sendMessage(dprint.r.color("swapchestin
-														// can't found i1
-														// item");
-														continue;
-													}
-
-													// time to swap item
-													// search free item on
-													// second
-
-													int freeslot = swapchest1.getInventory().firstEmpty();
-													if (freeslot == -1) {
-														// player.sendMessage(dprint.r.color("free
-														// slot of swapchest 1
-														// is -1");
-														continue;
-													}
-
-													// time to move
-													// player.sendMessage(dprint.r.color("moviing
-													// item");
-													swapchest1.getInventory().setItem(freeslot, i1);
-													curchest1.getInventory().setItem(ikn, new ItemStack(0));
-
-													player.sendMessage(dprint.r.color(
-															"swaped item " + i1.getType().name() + " " + i1.getAmount())
-															+ " from " + curchest.getX() + "," + curchest.getY() + ","
-															+ curchest.getZ() + "[" + sorttype + "]" + " to "
-															+ swapchest.getX() + "," + swapchest.getY() + ","
-															+ swapchest.getZ() + "[" + jsorttype + "]");
-
-													lastsort2 = nn;
-
-													new chestabsorb_c2();
-													return;
-
-												}
-												// how to swap
-												// loop all of item of source
-
-											}
-										} // search another chest
-									}
-								}
-
-								// **********************
-								// search another chest block for swap item
-
-							} // dew to box
-
-						} // searh any sign near player
-					}
-				}
-
-			} // player
-		}
-	}
-
-	public void chestabsorb() {
-
-		new chestabsorb_c();
-	}
-
-	public void chestabsorb2() {
-
-		new chestabsorb_c2();
 	}
 
 	public void linkurl(Player player, String url) {
@@ -6095,8 +6041,6 @@ public class dewset extends dewset_interface {
 		loadgiftfile();
 		loaddewsetlistblockfile();
 	}
-
-	// savesignfiledefrag
 
 	// loadsignfile
 	public void loadsignfile() {
@@ -6255,6 +6199,8 @@ public class dewset extends dewset_interface {
 		}
 	}
 
+	// savesignfiledefrag
+
 	public void loadworldfile() {
 		String worldf = "ptdew_dewdd_worlds_sign.txt";
 
@@ -6334,8 +6280,6 @@ public class dewset extends dewset_interface {
 		}
 	}
 
-	// randomplaynote
-
 	public boolean protectrailrun(Block block, Player player) {
 
 		boolean ok = false;
@@ -6411,6 +6355,8 @@ public class dewset extends dewset_interface {
 
 		return false;
 	}
+
+	// randomplaynote
 
 	public Block protochest(Block block, int d4, String sorttype) {
 		Block temp = null;
@@ -6617,6 +6563,73 @@ public class dewset extends dewset_interface {
 				pla.saveData();
 			}
 		}
+	}
+
+	public void searchRecursiveBlock(ArrayList<Block> blockList, Block curBlock, Material searchMaterial,
+			Byte searchData) {
+		int search = 3;
+
+		/*
+		 * dprint.r.printAll(curBlock.getX() + "," + curBlock.getY() + "," +
+		 * curBlock.getZ() + " = " + curBlock.getType().name() + ":" +
+		 * curBlock.getData());
+		 */
+
+		if (curBlock.getType() == searchMaterial)
+			if (curBlock.getData() == searchData || searchData == -29) {
+
+				boolean found = false;
+				for (int i = 0; i < blockList.size(); i++) {
+					Block bo = blockList.get(i);
+					if (bo.getX() == curBlock.getX() && bo.getY() == curBlock.getY() && bo.getZ() == curBlock.getZ())
+
+						found = true;
+					break;
+
+				}
+
+				if (found == false) {
+
+					blockList.add(curBlock);
+					// dprint.r.printAll("gift " + curBlock.getX() + "," +
+					// curBlock.getY() + "," + curBlock.getZ());
+				}
+			}
+
+		Block tm;
+		for (int x = -search; x <= search; x++)
+			for (int y = -search; y <= search; y++)
+				for (int z = -search; z <= search; z++) {
+
+					tm = curBlock.getRelative(x, y, z);
+					if (tm == null) {
+						continue;
+					}
+
+					if (tm.getType() == searchMaterial)
+						if (tm.getData() == searchData || searchData == -29) {
+
+							// check Block
+							boolean sea = false;
+							for (int i = 0; i < blockList.size(); i++) {
+								Block te = blockList.get(i);
+								if (te.getX() == tm.getX() && te.getY() == tm.getY() && te.getZ() == tm.getZ()) {
+									sea = true;
+									break;
+								}
+							}
+
+							if (sea == false) {
+
+								searchRecursiveBlock(blockList, tm, searchMaterial, searchData);
+
+								continue;
+							}
+
+						}
+
+				}
+
 	}
 
 	public void seedglow(Block block, Player player) {

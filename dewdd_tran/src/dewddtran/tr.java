@@ -21,27 +21,20 @@ import org.bukkit.plugin.Plugin;
 import dprint.dprint;
 
 class runworldtype {
-	public String				pluginname;
-	public ArrayList<String>	runworld;
+	public String pluginname;
+	public ArrayList<String> runworld;
 }
 
 public class tr {
 
 	public static int tr_maxest = 500;
-	public static datat						dt[];
-	public static int						dtmax		= 0;
+	public static datat dt[];
+	public static int dtmax = 0;
 
-	public static String					folder_name	= "plugins"
-																+ File.separator
-																+ "dewdd_tran";
+	public static String folder_name = "plugins" + File.separator + "dewdd_tran";
 
-	public static ArrayList<runworldtype>	runworld	= new ArrayList<runworldtype>();
+	public static ArrayList<runworldtype> runworld = new ArrayList<runworldtype>();
 
-	public static String locationToString(Location location) {
-		String a = location.getX() + "," + location.getY() + "," + location.getZ();
-		return a;
-	}
-	
 	public static void generateRunWorldFile() {
 
 		System.out.println("generating_runworld_file");
@@ -89,8 +82,7 @@ public class tr {
 				FileInputStream fstream = new FileInputStream(element.getPath());
 				// Get the object of DataInputStream
 				DataInputStream in = new DataInputStream(fstream);
-				BufferedReader br = new BufferedReader(
-						new InputStreamReader(in));
+				BufferedReader br = new BufferedReader(new InputStreamReader(in));
 				String strLine;
 				// Read File Line By Line
 				String m[];
@@ -106,9 +98,7 @@ public class tr {
 						diff = diff / 1000 / 60 / 60 / 24;
 						if (diff > day) {
 							remax++;
-							re[remax - 1] = element.getName().replace(".yml",
-									"")
-									+ " " + diff;
+							re[remax - 1] = element.getName().replace(".yml", "") + " " + diff;
 
 						}
 					}
@@ -154,8 +144,7 @@ public class tr {
 
 			return re2;
 
-		}
-		catch (Exception e) {// Catch exception if any
+		} catch (Exception e) {// Catch exception if any
 			System.err.println("LoadSignFile Error: " + e.getMessage());
 			e.printStackTrace();
 		} // catch
@@ -175,7 +164,8 @@ public class tr {
 
 		if (tr.dtmax > 0) {
 			for (int i = 0; i < tr.dtmax; i++) {
-				if (tr.dt[i].s.equalsIgnoreCase(so)) return tr.dt[i].an + " ";
+				if (tr.dt[i].s.equalsIgnoreCase(so))
+					return tr.dt[i].an + " ";
 			}
 
 		}
@@ -226,8 +216,8 @@ public class tr {
 			if (tr.runworld.get(j).pluginname.equalsIgnoreCase(pluginname)) {
 
 				for (int k = 0; k < tr.runworld.get(j).runworld.size(); k++) {
-					if (tr.runworld.get(j).runworld.get(k).equalsIgnoreCase(
-							worldname)) return false;
+					if (tr.runworld.get(j).runworld.get(k).equalsIgnoreCase(worldname))
+						return false;
 				}
 			}
 		}
@@ -249,8 +239,7 @@ public class tr {
 
 			fff.createNewFile();
 
-			System.out.println("ptdeW&DewDD : " + "starting_loading_file"
-					+ filena);
+			System.out.println("ptdeW&DewDD : " + "starting_loading_file" + filena);
 			// Open the file that is the first
 			// command line parameter
 			FileInputStream fstream = new FileInputStream(filena);
@@ -284,10 +273,8 @@ public class tr {
 			in.close();
 			return re2;
 
-		}
-		catch (Exception e) {// Catch exception if any
-			System.err.println("error_while_loading_file" + filena + " "
-					+ e.getMessage());
+		} catch (Exception e) {// Catch exception if any
+			System.err.println("error_while_loading_file" + filena + " " + e.getMessage());
 
 		}
 
@@ -321,8 +308,7 @@ public class tr {
 				tr.runworld.get(tr.runworld.size() - 1).runworld.clear();
 				tr.runworld.get(tr.runworld.size() - 1).runworld.add(m[1]);
 
-			}
-			else {
+			} else {
 				// search that plugin name
 
 				boolean added = false;
@@ -400,8 +386,7 @@ public class tr {
 				tr.dt[tr.dtmax - 1].s = m[0];
 				tr.dt[tr.dtmax - 1].an = "";
 				for (int j = 1; j < m.length; j++) {
-					tr.dt[tr.dtmax - 1].an = tr.dt[tr.dtmax - 1].an + " "
-							+ m[j];
+					tr.dt[tr.dtmax - 1].an = tr.dt[tr.dtmax - 1].an + " " + m[j];
 
 				}
 
@@ -410,11 +395,14 @@ public class tr {
 			System.out.println("ptdew&DewDD tran : Loaded " + filena);
 
 			in.close();
+		} catch (Exception e) {// Catch exception if any
+			System.err.println("Error load tran " + filena + " " + e.getMessage());
 		}
-		catch (Exception e) {// Catch exception if any
-			System.err.println("Error load tran " + filena + " "
-					+ e.getMessage());
-		}
+	}
+
+	public static String locationToString(Location location) {
+		String a = location.getX() + "," + location.getY() + "," + location.getZ();
+		return a;
 	}
 
 	public static void saveTrFile() {
@@ -447,8 +435,7 @@ public class tr {
 					continue;
 				}
 
-				fwriter.write(tr.dt[y].s + " " + tr.dt[y].an
-						+ System.getProperty("line.separator"));
+				fwriter.write(tr.dt[y].s + " " + tr.dt[y].an + System.getProperty("line.separator"));
 
 			}
 
@@ -456,8 +443,7 @@ public class tr {
 			dprint.printC("ptdew&dewdd : saved " + filena);
 			return;
 
-		}
-		catch (IOException e) {
+		} catch (IOException e) {
 			// Auto-generated catch block
 			e.printStackTrace();
 		}
@@ -469,8 +455,7 @@ public class tr {
 		// ******************************
 	}
 
-	public static boolean writeFile(String folderpath, String filename,
-			String data[]) {
+	public static boolean writeFile(String folderpath, String filename, String data[]) {
 
 		File dir = new File("plugins" + File.separator + folderpath);
 		dir.mkdir();
@@ -482,8 +467,7 @@ public class tr {
 		try {
 			fff.createNewFile();
 
-			System.out
-					.println("ptdew&dewdd : " + "starting_save_file" + filena);
+			System.out.println("ptdew&dewdd : " + "starting_save_file" + filena);
 			fwriter = new FileWriter(fff);
 
 			for (String element : data) {
@@ -496,8 +480,7 @@ public class tr {
 			System.out.println("ptdew&dewdd : " + "saved_file" + filena);
 			return true;
 
-		}
-		catch (IOException e) {
+		} catch (IOException e) {
 			// Auto-generated catch block
 			e.printStackTrace();
 		}

@@ -14,8 +14,8 @@ import org.bukkit.plugin.java.JavaPlugin;
 import dewddtran.tr;
 
 public class Main extends JavaPlugin {
-	Logger	log;
 	public static dewset ds = null;
+	Logger log;
 
 	@Override
 	public void onDisable() {
@@ -32,9 +32,9 @@ public class Main extends JavaPlugin {
 		dewddflower.dewset.ac = this;
 		ds = new dewset();
 		ds.loadmainfile();
-		
+
 		printAll("dewset ds = " + (ds == null ? "null" : "not null"));
-		
+
 	}
 
 	public void printA(String abc) {

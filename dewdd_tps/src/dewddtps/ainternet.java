@@ -22,16 +22,12 @@ class filedown {
 		if (lastSlashIndex >= 0 && lastSlashIndex < address.length() - 1) {
 			if (isplugin == false) {
 				download(address, address.substring(lastSlashIndex + 1));
-			}
-			else {
-				download(address,
-						"plugins\\" + address.substring(lastSlashIndex + 1));
+			} else {
+				download(address, "plugins\\" + address.substring(lastSlashIndex + 1));
 
 			}
-		}
-		else {
-			System.err.println("Could not figure out local file name for "
-					+ address);
+		} else {
+			System.err.println("Could not figure out local file name for " + address);
 		}
 	}
 
@@ -54,19 +50,15 @@ class filedown {
 				out.write(buffer, 0, numRead);
 				numWritten += numRead;
 				for (Player ppp : Bukkit.getOnlinePlayers()) {
-					ppp.sendMessage("downloading > "
-							+ Long.toString(numWritten) + " byte");
-					System.out.println("downloading > "
-							+ Long.toString(numWritten) + " byte");
+					ppp.sendMessage("downloading > " + Long.toString(numWritten) + " byte");
+					System.out.println("downloading > " + Long.toString(numWritten) + " byte");
 				}
 			}
 
 			System.out.println(localFileName + "\t" + numWritten);
-		}
-		catch (Exception exception) {
+		} catch (Exception exception) {
 			exception.printStackTrace();
-		}
-		finally {
+		} finally {
 			try {
 				if (in != null) {
 					in.close();
@@ -74,8 +66,7 @@ class filedown {
 				if (out != null) {
 					out.close();
 				}
-			}
-			catch (IOException ioe) {
+			} catch (IOException ioe) {
 			}
 		}
 	}

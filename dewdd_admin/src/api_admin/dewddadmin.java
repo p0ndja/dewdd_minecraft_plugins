@@ -15,22 +15,23 @@ import org.bukkit.entity.Player;
 
 public class dewddadmin {
 
-	static String	pdefault	= "dewdd.admin.default";
-	static String	pvip		= "dewdd.admin.vip";
-	static String	pmoderator	= "dewdd.admin.moderator";
-	static String	padmin		= "dewdd.admin.admin";
-	static String   pgamemode = "dewdd.admin.gamemode";
+	static String pdefault = "dewdd.admin.default";
+	static String pvip = "dewdd.admin.vip";
+	static String pmoderator = "dewdd.admin.moderator";
+	static String padmin = "dewdd.admin.admin";
+	static String pgamemode = "dewdd.admin.gamemode";
 
-	public static String	adminlist[]	= new String[100];
+	public static String adminlist[] = new String[100];
 
-	public static int		adminlistn	= -1;
+	public static int adminlistn = -1;
 
-	public static String	stafflist[]	= new String[100];
+	public static String stafflist[] = new String[100];
 
-	public static int		stafflistn	= -1;
+	public static int stafflistn = -1;
 
-	public static String	viplist[]	= new String[100];
-	public static int		viplistn	= -1;
+	public static String viplist[] = new String[100];
+	public static int viplistn = -1;
+
 	public static String[] getadminlist() {
 
 		int cn = -1;
@@ -40,9 +41,7 @@ public class dewddadmin {
 		String deadf = "plugins\\GroupManager\\worlds\\world\\users.yml";
 		try {
 
-			System.out
-					.println("ptdeW&DewDD Main : Starting users.yml  load adminlist "
-							+ deadf);
+			System.out.println("ptdeW&DewDD Main : Starting users.yml  load adminlist " + deadf);
 			// Open the file that is the first
 			// command line parameter
 			FileInputStream fstream = new FileInputStream(deadf);
@@ -86,8 +85,7 @@ public class dewddadmin {
 					clist[cn] = tname;
 					tname = "";
 
-				}
-				else {
+				} else {
 					tname = strLine;
 					tname = tname.replace("'", "");
 					tname = tname.replace(":", "");
@@ -98,10 +96,8 @@ public class dewddadmin {
 			System.out.println("ptdew&DewDD Main : Loaded " + deadf);
 
 			in.close();
-		}
-		catch (Exception e) {// Catch exception if any
-			System.err.println("Error : while loading " + deadf + " | "
-					+ e.getMessage());
+		} catch (Exception e) {// Catch exception if any
+			System.err.println("Error : while loading " + deadf + " | " + e.getMessage());
 		}
 
 		String abc[] = new String[cn + 1];
@@ -110,6 +106,7 @@ public class dewddadmin {
 		}
 		return abc;
 	}
+
 	public static String[] getstafflist() {
 
 		int cn = -1;
@@ -119,9 +116,7 @@ public class dewddadmin {
 		String deadf = "plugins\\GroupManager\\worlds\\world\\users.yml";
 		try {
 
-			System.out
-					.println("ptdeW&DewDD Main : Starting users.yml  load stafflist "
-							+ deadf);
+			System.out.println("ptdeW&DewDD Main : Starting users.yml  load stafflist " + deadf);
 			// Open the file that is the first
 			// command line parameter
 			FileInputStream fstream = new FileInputStream(deadf);
@@ -166,8 +161,7 @@ public class dewddadmin {
 					clist[cn] = tname;
 					tname = "";
 
-				}
-				else {
+				} else {
 					tname = strLine;
 					tname = tname.replace("'", "");
 					tname = tname.replace(":", "");
@@ -178,10 +172,8 @@ public class dewddadmin {
 			System.out.println("ptdew&DewDD Main : Loaded " + deadf);
 
 			in.close();
-		}
-		catch (Exception e) {// Catch exception if any
-			System.err.println("Error : while loading " + deadf
-					+ e.getMessage());
+		} catch (Exception e) {// Catch exception if any
+			System.err.println("Error : while loading " + deadf + e.getMessage());
 		}
 
 		String abc[] = new String[cn + 1];
@@ -190,6 +182,7 @@ public class dewddadmin {
 		}
 		return abc;
 	}
+
 	public static String[] getviplist() {
 
 		int cn = -1;
@@ -199,9 +192,7 @@ public class dewddadmin {
 		String deadf = "plugins\\GroupManager\\worlds\\world\\users.yml";
 		try {
 
-			System.out
-					.println("ptdeW&DewDD Main : Starting users.yml  load viplist "
-							+ deadf);
+			System.out.println("ptdeW&DewDD Main : Starting users.yml  load viplist " + deadf);
 			// Open the file that is the first
 			// command line parameter
 			FileInputStream fstream = new FileInputStream(deadf);
@@ -246,8 +237,7 @@ public class dewddadmin {
 					clist[cn] = tname;
 					tname = "";
 
-				}
-				else {
+				} else {
 					tname = strLine;
 					tname = tname.replace("'", "");
 					tname = tname.replace(":", "");
@@ -258,10 +248,8 @@ public class dewddadmin {
 			System.out.println("ptdew&DewDD Main : Loaded " + deadf);
 
 			in.close();
-		}
-		catch (Exception e) {// Catch exception if any
-			System.err.println("Error : while loading " + deadf
-					+ e.getMessage());
+		} catch (Exception e) {// Catch exception if any
+			System.err.println("Error : while loading " + deadf + e.getMessage());
 		}
 
 		String abc[] = new String[cn + 1];
@@ -270,6 +258,7 @@ public class dewddadmin {
 		}
 		return abc;
 	}
+
 	public static boolean is2admin(Player nn) {
 		return (nn.hasPermission(padmin) == true);
 	}
@@ -278,16 +267,16 @@ public class dewddadmin {
 		return (nn.hasPermission(pdefault) == true && nn.hasPermission(pvip) == false);
 	}
 
+	public static boolean is2gamemode(Player nn) {
+		return (nn.hasPermission(pgamemode) == true && nn.hasPermission(pmoderator) == false);
+	}
+
 	public static boolean is2moderator(Player nn) {
-		return (nn.hasPermission(pmoderator) == true && nn
-				.hasPermission(padmin) == false);
+		return (nn.hasPermission(pmoderator) == true && nn.hasPermission(padmin) == false);
 	}
 
 	public static boolean is2vip(Player nn) {
 		return (nn.hasPermission(pvip) == true && nn.hasPermission(pmoderator) == false);
-	}
-	public static boolean is2gamemode(Player nn) {
-		return (nn.hasPermission(pgamemode) == true && nn.hasPermission(pmoderator) == false);
 	}
 
 	public static boolean isadminname(String playername) {
@@ -351,7 +340,7 @@ public class dewddadmin {
 		}
 	}
 
-	Random					randomG		= new Random();
+	Random randomG = new Random();
 
 	public dewddadmin() {
 		// if (firstrun19 == false){

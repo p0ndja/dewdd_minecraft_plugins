@@ -11,20 +11,19 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 public class tps implements Runnable {
 
-	JavaPlugin				ac			= null;
-	public static Random	rnd			= new Random();
+	public static Random rnd = new Random();
+	public static int maxtick = 600;
 
-	public static int		maxtick		= 600;
+	public static int TICK_COUNT = 0;
 
-	public static int		TICK_COUNT	= 0;
+	public static long[] TICKS = new long[maxtick];
 
-	public static long[]	TICKS		= new long[maxtick];
+	static long lastshowtps = 0;
 
-	static long				lastshowtps	= 0;
-	static long				lasttps		= 0;
+	static long lasttps = 0;
+	static long now = 0;
 
-	static long				now			= 0;
-	static long				temptps		= 0;
+	static long temptps = 0;
 
 	public static double getTPS() {
 		return getTPS(100);
@@ -63,17 +62,19 @@ public class tps implements Runnable {
 
 			plusall += (TICKS[cu2] - TICKS[cu]);
 
-		}
-		while (cu != target2);
+		} while (cu != target2);
 
 		// 1000
 
 		double re = (((maxtick) / (plusall / 1000)));
 
-		//return re <= 5 ? rnd.nextInt(20) + 1 : re;
+		// return re <= 5 ? rnd.nextInt(20) + 1 : re;
 		return re <= 5 ? 20 : re;
 	}
 
+	JavaPlugin ac = null;
+
+	@Override
 	public void run() {
 		now = System.currentTimeMillis();
 		TICKS[TICK_COUNT] = now;
@@ -83,7 +84,7 @@ public class tps implements Runnable {
 			TICK_COUNT = 0;
 		}
 
-		temptps = (long) Math.round(getTPS());
+		temptps = Math.round(getTPS());
 
 		if (now - lastshowtps > 5000) { // 3 second
 			if (temptps != lasttps) {
@@ -92,14 +93,11 @@ public class tps implements Runnable {
 
 				/*
 				 * for (Player p : Bukkit.getOnlinePlayers()) {
-				 * p.sendMessage(dprint.r.color("tps = "
-				 * + ((int) (Math.round(((100 * lasttps) / 20.1))))
-				 * + "%"));
-				 * }
+				 * p.sendMessage(dprint.r.color("tps = " + ((int)
+				 * (Math.round(((100 * lasttps) / 20.1)))) + "%")); }
 				 */
 
-				System.out.println("tps = "
-						+ ((int) (Math.round(((100 * lasttps) / 20.1)))) + "%");
+				System.out.println("tps = " + ((int) (Math.round(((100 * lasttps) / 20.1)))) + "%");
 			}
 
 		}

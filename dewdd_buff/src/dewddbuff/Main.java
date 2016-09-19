@@ -12,14 +12,13 @@ import org.bukkit.plugin.java.JavaPlugin;
 import dewddtran.tr;
 
 public class Main extends JavaPlugin {
-	Logger		log;
-	buff_run	ax	= new buff_run();
+	Logger log;
+	buff_run ax = new buff_run();
 
 	@Override
 	public void onDisable() {
 		getServer().getPluginManager().disablePlugin(this);
-		dprint.r.printAll("ptdew&dewdd : " + tr.gettr("unloaded_plugin")
-				+ " buff");
+		dprint.r.printAll("ptdew&dewdd : " + tr.gettr("unloaded_plugin") + " buff");
 	}
 
 	@Override
@@ -29,8 +28,7 @@ public class Main extends JavaPlugin {
 
 		ax.ac = this;
 		getServer().getPluginManager().registerEvents(ax, this);
-		dprint.r.printAll("ptdew&dewdd : " + tr.gettr("loaded_plugin")
-				+ " buff");
+		dprint.r.printAll("ptdew&dewdd : " + tr.gettr("loaded_plugin") + " buff");
 
 	}
 

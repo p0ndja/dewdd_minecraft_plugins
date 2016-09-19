@@ -25,10 +25,10 @@ import org.bukkit.plugin.java.JavaPlugin;
 public class DigEventListener2 implements Listener {
 
 	class autofix implements Runnable {
-		private int		amount;
-		private int		oldamount;
+		private int amount;
+		private int oldamount;
 
-		private Player	p;
+		private Player p;
 
 		public autofix(int amount, Player player) {
 			this.amount = amount;
@@ -36,8 +36,7 @@ public class DigEventListener2 implements Listener {
 
 			this.p = player;
 
-			Bukkit.getScheduler().scheduleSyncDelayedTask(ac, this,
-					rnd.nextInt(20) + 1);
+			Bukkit.getScheduler().scheduleSyncDelayedTask(ac, this, rnd.nextInt(20) + 1);
 
 		}
 
@@ -45,8 +44,7 @@ public class DigEventListener2 implements Listener {
 		public void run() {
 
 			// all armor
-			for (ItemStack itm : p.getPlayer().getInventory()
-					.getArmorContents()) {
+			for (ItemStack itm : p.getPlayer().getInventory().getArmorContents()) {
 
 				if (itm == null) {
 					continue;
@@ -62,8 +60,7 @@ public class DigEventListener2 implements Listener {
 
 				if (itm.getDurability() <= 0) {
 					continue;
-				}
-				else {
+				} else {
 					itm.setDurability((short) (itm.getDurability() - 1));
 					amount--;
 
@@ -86,8 +83,7 @@ public class DigEventListener2 implements Listener {
 
 				if (itm.getDurability() <= 0) {
 					continue;
-				}
-				else {
+				} else {
 					itm.setDurability((short) (itm.getDurability() - 1));
 					amount--;
 					continue;
@@ -107,8 +103,7 @@ public class DigEventListener2 implements Listener {
 			while (ac == null) {
 				try {
 					Thread.sleep(1000);
-				}
-				catch (InterruptedException e) {
+				} catch (InterruptedException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
@@ -122,6 +117,7 @@ public class DigEventListener2 implements Listener {
 	}
 
 	class eachMinutes implements Runnable {
+		@Override
 		public void run() {
 
 			for (Player p : Bukkit.getOnlinePlayers()) {
@@ -136,20 +132,20 @@ public class DigEventListener2 implements Listener {
 			}
 		}
 	}
-	public JavaPlugin		ac					= null;
 
-	public int				fixvalueIn1Minute	= 30;
+	public static String version = "1.0";
 
-	public String			folder_name			= "plugins" + File.separator
-														+ "dewdd_fixthings";
-	public static String	version				= "1.0";
-	String					pfix				= "dewdd.fixthings.fix";
+	public JavaPlugin ac = null;
 
-	String					psetandreload		= "dewdd.fixthings.setandreload";
+	public int fixvalueIn1Minute = 30;
+	public String folder_name = "plugins" + File.separator + "dewdd_fixthings";
+	String pfix = "dewdd.fixthings.fix";
 
-	public Random			rnd					= new Random();
+	String psetandreload = "dewdd.fixthings.setandreload";
 
-	String					fileName			= "config_fixThings.txt";
+	public Random rnd = new Random();
+
+	String fileName = "config_fixThings.txt";
 
 	public DigEventListener2() {
 		delay abc = new delay();
@@ -253,18 +249,13 @@ public class DigEventListener2 implements Listener {
 
 				fixvalueIn1Minute = Integer.parseInt(m[1]);
 
-				System.out
-						.println("ptdeWDewDD ft : loaded 'fixValuePerMinutes'  '"
-								+ fixvalueIn1Minute + "'");
+				System.out.println("ptdeWDewDD ft : loaded 'fixValuePerMinutes'  '" + fixvalueIn1Minute + "'");
 				break;
 			}
 
 			in.close();
-		}
-		catch (Exception e) {// Catch exception if any
-			System.err
-					.println("ptdeWDewDD ft : error load fixThings.txt files! "
-							+ filena + " " + e.getMessage());
+		} catch (Exception e) {// Catch exception if any
+			System.err.println("ptdeWDewDD ft : error load fixThings.txt files! " + filena + " " + e.getMessage());
 		}
 	}
 
@@ -274,8 +265,7 @@ public class DigEventListener2 implements Listener {
 
 		Bukkit.getScheduler().cancelTasks(ac);
 
-		Bukkit.getScheduler().scheduleSyncRepeatingTask(ac, new eachMinutes(),
-				1, 1200);
+		Bukkit.getScheduler().scheduleSyncRepeatingTask(ac, new eachMinutes(), 1, 1200);
 	}
 
 	public void writeFixRateFile(int value) {
@@ -286,19 +276,15 @@ public class DigEventListener2 implements Listener {
 		fff2.mkdir();
 		// create staff list
 		try {
-			System.out.println("ptdewdewdd ft :loading " + fileName
-					+ " : empty!@#!@# ");
+			System.out.println("ptdewdewdd ft :loading " + fileName + " : empty!@#!@# ");
 
 			FileWriter fwriter = new FileWriter(fff);
-			fwriter.write("fixValuePerMinute=" + fixvalueIn1Minute
-					+ System.getProperty("line.separator"));
+			fwriter.write("fixValuePerMinute=" + fixvalueIn1Minute + System.getProperty("line.separator"));
 			fwriter.close();
 			System.out.println("ptdeWDewDD ft : generated " + fileName);
 
-		}
-		catch (IOException e) {
-			System.out.println("ptdeWDewDD ft : generate file error ! "
-					+ e.getMessage());
+		} catch (IOException e) {
+			System.out.println("ptdeWDewDD ft : generate file error ! " + e.getMessage());
 			e.printStackTrace();
 		}
 

@@ -32,8 +32,8 @@ import dewddtran.tr;
 
 public class DigEventListener2 implements Listener {
 	class chatx implements Runnable {
-		Player	p		= null;
-		String	message	= "";
+		Player p = null;
+		String message = "";
 
 		@Override
 		public void run() {
@@ -58,8 +58,7 @@ public class DigEventListener2 implements Listener {
 
 					ln = Integer.parseInt(m[1]);
 
-				}
-				catch (NumberFormatException e) {
+				} catch (NumberFormatException e) {
 					p.sendMessage("line must be number  1 - 4");
 					return;
 				}
@@ -81,8 +80,8 @@ public class DigEventListener2 implements Listener {
 
 				boolean adminper = p.hasPermission(psetlineeveryone);
 
-				p.sendMessage("block " + c.getX() + "," + c.getY() + ","
-						+ c.getZ() + " = " + c.getTypeId() + ":" + c.getData());
+				p.sendMessage("block " + c.getX() + "," + c.getY() + "," + c.getZ() + " = " + c.getTypeId() + ":"
+						+ c.getData());
 
 				switch (c.getTypeId()) {
 				case 63:
@@ -101,8 +100,7 @@ public class DigEventListener2 implements Listener {
 						s.update();
 						p.sendMessage("setline completed " + ln + " = " + m[2]);
 
-					}
-					else {
+					} else {
 
 						if (adminper == false) {
 							p.sendMessage("only admin can reset everysign");
@@ -124,15 +122,13 @@ public class DigEventListener2 implements Listener {
 
 						s.setLine(ln - 1, m[2]);
 						s.update();
-						p.sendMessage("admin overide setline completed " + ln
-								+ " = " + m[2]);
+						p.sendMessage("admin overide setline completed " + ln + " = " + m[2]);
 
 					}
 
 					break;
 				default:
-					p.sendMessage("the block you are looking is not a sign is a "
-							+ c.getTypeId() + ":" + c.getData());
+					p.sendMessage("the block you are looking is not a sign is a " + c.getTypeId() + ":" + c.getData());
 				}
 
 			}
@@ -149,8 +145,7 @@ public class DigEventListener2 implements Listener {
 						String fname = m[1];
 
 						// load
-						String folder_name = "plugins" + File.separator
-								+ "dewddlogdata";
+						String folder_name = "plugins" + File.separator + "dewddlogdata";
 
 						File dir = new File(folder_name);
 						dir.mkdir();
@@ -164,12 +159,10 @@ public class DigEventListener2 implements Listener {
 
 							System.out.println("ptdeW&DewDD Main : " + filena);
 
-							FileInputStream fstream = new FileInputStream(
-									filena);
+							FileInputStream fstream = new FileInputStream(filena);
 
 							DataInputStream in = new DataInputStream(fstream);
-							BufferedReader br = new BufferedReader(
-									new InputStreamReader(in));
+							BufferedReader br = new BufferedReader(new InputStreamReader(in));
 							String strLine;
 
 							int search = 0;
@@ -183,8 +176,7 @@ public class DigEventListener2 implements Listener {
 
 								int moden = 0; // 1 place , 2 break
 
-								search = ab.toLowerCase().indexOf(
-										m[2] + "}_blockplaceevent");
+								search = ab.toLowerCase().indexOf(m[2] + "}_blockplaceevent");
 								if (search == -1) {
 									moden = 1;
 									// p("not found place");
@@ -192,8 +184,7 @@ public class DigEventListener2 implements Listener {
 
 								if (search != 1) {
 
-									search = ab.toLowerCase().indexOf(
-											m[2] + "}_blockbreakevent");
+									search = ab.toLowerCase().indexOf(m[2] + "}_blockbreakevent");
 									if (search == -1) {
 										moden = 2;
 										// p("not found break");
@@ -217,48 +208,34 @@ public class DigEventListener2 implements Listener {
 								search = ab.toLowerCase().indexOf("(");
 								colon = ab.toLowerCase().indexOf(",", search);
 								dprint.r.printC(ab.substring(search + 1, colon));
-								x = Integer.parseInt(ab.substring(search + 1,
-										colon));
+								x = Integer.parseInt(ab.substring(search + 1, colon));
 
 								search = ab.toLowerCase().indexOf(",");
-								colon = ab.toLowerCase().indexOf(",",
-										search + 1);
+								colon = ab.toLowerCase().indexOf(",", search + 1);
 								dprint.r.printC(ab.substring(search + 1, colon));
-								y = Integer.parseInt(ab.substring(search + 1,
-										colon));
+								y = Integer.parseInt(ab.substring(search + 1, colon));
 
-								search = ab.toLowerCase().indexOf(",",
-										search + 1);
-								colon = ab.toLowerCase().indexOf(")",
-										search + 1);
+								search = ab.toLowerCase().indexOf(",", search + 1);
+								colon = ab.toLowerCase().indexOf(")", search + 1);
 								dprint.r.printC(ab.substring(search + 1, colon));
-								z = Integer.parseInt(ab.substring(search + 1,
-										colon));
+								z = Integer.parseInt(ab.substring(search + 1, colon));
 
 								int iteminhand = 0;
 								byte dataid = 0;
 
-								search = ab.toLowerCase().indexOf("=",
-										search + 1);
-								colon = ab.toLowerCase().indexOf(":",
-										search + 1);
+								search = ab.toLowerCase().indexOf("=", search + 1);
+								colon = ab.toLowerCase().indexOf(":", search + 1);
 								dprint.r.printC(ab.substring(search + 1, colon));
-								iteminhand = Integer.parseInt(ab.substring(
-										search + 1, colon));
+								iteminhand = Integer.parseInt(ab.substring(search + 1, colon));
 
-								search = ab.toLowerCase().indexOf(":",
-										search + 1);
-								colon = ab.toLowerCase().indexOf("|",
-										search + 1);
+								search = ab.toLowerCase().indexOf(":", search + 1);
+								colon = ab.toLowerCase().indexOf("|", search + 1);
 								dprint.r.printC(ab.substring(search + 1, colon));
-								dataid = Byte.parseByte(ab.substring(
-										search + 1, colon));
+								dataid = Byte.parseByte(ab.substring(search + 1, colon));
 
-								block = Bukkit.getWorld("world").getBlockAt(x,
-										y, z);
+								block = Bukkit.getWorld("world").getBlockAt(x, y, z);
 
-								int id = Material.getMaterial(iteminhand)
-										.getId();
+								int id = Material.getMaterial(iteminhand).getId();
 								if (id == -1) {
 									continue;
 								}
@@ -278,14 +255,11 @@ public class DigEventListener2 implements Listener {
 
 							}
 
-							System.out.println("ptdew&DewDD Main: Loaded "
-									+ filena);
+							System.out.println("ptdew&DewDD Main: Loaded " + filena);
 
 							in.close();
-						}
-						catch (Exception e) {
-							System.err.println("Error load " + filena
-									+ e.getMessage());
+						} catch (Exception e) {
+							System.err.println("Error load " + filena + e.getMessage());
 						}
 
 						// load file
@@ -300,8 +274,8 @@ public class DigEventListener2 implements Listener {
 
 	class ddata {
 
-		public String	playername[];
-		public Block	lastblock[];
+		public String playername[];
+		public Block lastblock[];
 
 	}
 
@@ -314,15 +288,15 @@ public class DigEventListener2 implements Listener {
 	 * admin reset line every sign default: op
 	 */
 
-	Random		randomG				= new Random();
+	Random randomG = new Random();
 
-	JavaPlugin	ac					= null;
+	JavaPlugin ac = null;
 
-	String		psetlineeveryone	= "dewdd.private.setline.everysign";
+	String psetlineeveryone = "dewdd.private.setline.everysign";
 
-	int		ddatamax	= 29;
+	int ddatamax = 29;
 
-	ddata	nn			= new ddata();
+	ddata nn = new ddata();
 
 	public DigEventListener2() {
 		nn.playername = new String[ddatamax];
@@ -367,14 +341,14 @@ public class DigEventListener2 implements Listener {
 		Player player = event.getPlayer();
 		// check host block
 		boolean goodc1 = false;
-		goodc1 = api_private.dewddprivate
-				.checkpermissionareasign(block, player);
+		goodc1 = api_private.dewddprivate.checkpermissionareasign(block, player);
 
 		// call check
 		if (goodc1 == true) {
 			event.setCancelled(true);
 		}
 	}
+
 	@EventHandler
 	public void eventja(BlockPlaceEvent event) {
 		if (!tr.isrunworld(ac.getName(), event.getPlayer().getWorld().getName())) {
@@ -387,8 +361,7 @@ public class DigEventListener2 implements Listener {
 		Player player = event.getPlayer();
 		// check host block
 		boolean goodc1 = false;
-		goodc1 = api_private.dewddprivate
-				.checkpermissionareasign(block, player);
+		goodc1 = api_private.dewddprivate.checkpermissionareasign(block, player);
 
 		// call check
 		if (goodc1 == true) {
@@ -430,8 +403,7 @@ public class DigEventListener2 implements Listener {
 			return;
 		}
 		boolean goodc1 = false;
-		goodc1 = api_private.dewddprivate
-				.checkpermissionareasign(block, player);
+		goodc1 = api_private.dewddprivate.checkpermissionareasign(block, player);
 
 		// call check
 		if (goodc1 == true) {
@@ -442,32 +414,29 @@ public class DigEventListener2 implements Listener {
 		int getid = getfreeselect(player.getName());
 		nn.lastblock[getid] = event.getClickedBlock();
 
-		if (!(nn.lastblock[getid].getTypeId() == 63 || nn.lastblock[getid]
-				.getTypeId() == 68)) {
+		if (!(nn.lastblock[getid].getTypeId() == 63 || nn.lastblock[getid].getTypeId() == 68)) {
 			return;
 		}
 
 		Sign s = (Sign) nn.lastblock[getid].getState();
-		if (s.getLine(0).endsWith("[dewdd]") == true  || s.getLine(0).endsWith("[private]") == true ){ 
-				s.setLine(0, dprint.r.color("[dewdd]"));
+		if (s.getLine(0).endsWith("[dewdd]") == true || s.getLine(0).endsWith("[private]") == true) {
+			s.setLine(0, dprint.r.color("[dewdd]"));
 			s.update();
-			
-				if (s.getLine(1).equalsIgnoreCase(player.getName()) == true) {
 
-			player.sendMessage("ptdew&dewdd:  you can change line 3 and line 4 (your friend name");
-			player.sendMessage("/dewsetline 3 ptdew");
-			player.sendMessage("/dewsetline 4 pondja_kung");
-			
-		
+			if (s.getLine(1).equalsIgnoreCase(player.getName()) == true) {
+
+				player.sendMessage("ptdew&dewdd:  you can change line 3 and line 4 (your friend name");
+				player.sendMessage("/dewsetline 3 ptdew");
+				player.sendMessage("/dewsetline 4 pondja_kung");
+
+			}
+
 		}
 
-		}
-
-		
 	}
 
 	@EventHandler
-	public void eventja(SignChangeEvent event)  {
+	public void eventja(SignChangeEvent event) {
 
 		if (!tr.isrunworld(ac.getName(), event.getPlayer().getWorld().getName())) {
 			return;
@@ -475,11 +444,9 @@ public class DigEventListener2 implements Listener {
 
 		Player player = event.getPlayer();
 
-		if (event.getLine(0).equalsIgnoreCase("") == true
-				&& event.getLine(1).equalsIgnoreCase("") == true
-				&& event.getLine(2).equalsIgnoreCase("") == true
-				&& event.getLine(3).equalsIgnoreCase("") == true) {
-			event.setLine(0, dprint.r.color( "[dewdd]"));
+		if (event.getLine(0).equalsIgnoreCase("") == true && event.getLine(1).equalsIgnoreCase("") == true
+				&& event.getLine(2).equalsIgnoreCase("") == true && event.getLine(3).equalsIgnoreCase("") == true) {
+			event.setLine(0, dprint.r.color("[dewdd]"));
 			event.setLine(1, player.getName());
 		}
 
@@ -487,8 +454,8 @@ public class DigEventListener2 implements Listener {
 				|| event.getLine(0).toLowerCase().endsWith("[private]") == true
 
 		) {
-			event.setLine(0, dprint.r.color( "[dewdd]"));
-			
+			event.setLine(0, dprint.r.color("[dewdd]"));
+
 			if (event.getLine(1).equalsIgnoreCase(player.getName()) == false
 					&& event.getLine(2).equalsIgnoreCase(player.getName()) == false
 					&& event.getLine(3).equalsIgnoreCase(player.getName()) == false) {

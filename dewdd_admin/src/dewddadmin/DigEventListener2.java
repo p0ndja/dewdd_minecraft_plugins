@@ -23,7 +23,7 @@ import dprint.dprint;
 
 public class DigEventListener2 implements Listener {
 
-	JavaPlugin	ac	= null;
+	JavaPlugin ac = null;
 
 	@EventHandler
 	public void eventja(AsyncPlayerChatEvent event) {
@@ -37,7 +37,8 @@ public class DigEventListener2 implements Listener {
 		}
 
 		if (event.getMessage().equalsIgnoreCase("dewdd admin") == true) {
-			player.sendMessage("ปลั๊กอิน admin เป็นที่รวบรวมรายชื่อ แอดมิน  นักสร้าง และ วีไอพี  โดยปลั๊กอินอื่นๆ  จะมาดึงข้อมูลจากปลั๊กอินนี้");
+			player.sendMessage(
+					"ปลั๊กอิน admin เป็นที่รวบรวมรายชื่อ แอดมิน  นักสร้าง และ วีไอพี  โดยปลั๊กอินอื่นๆ  จะมาดึงข้อมูลจากปลั๊กอินนี้");
 			player.sendMessage(".dewreloadadminfile   เพื่อโหลดไฟล์แอดมิน ใหม่");
 			player.sendMessage(".dreloadaf   เพื่อโหลดไฟล์แอดมิน ใหม่");
 			event.setCancelled(true);

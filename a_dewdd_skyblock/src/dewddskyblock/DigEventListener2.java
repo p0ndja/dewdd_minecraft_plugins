@@ -9,7 +9,6 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.Random;
 
 import org.bukkit.Bukkit;
@@ -71,8 +70,6 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.util.Vector;
 
-import com.google.common.primitives.Doubles;
-
 import api_skyblock.Constant;
 import api_skyblock.LV1000Type;
 import api_skyblock.LXRXLZRZType;
@@ -81,155 +78,6 @@ import dewddtran.tr;
 import net.minecraft.server.v1_8_R3.EntityPlayer;
 
 public class DigEventListener2 implements Listener {
-
-	public static int randomInteger(int min, int max) {
-		Random rand = new Random();
-		int randomNum = min + (int) (Math.random() * ((max - min) + 1));
-		return randomNum;
-	}
-
-	class DeleteYBelow5 implements Runnable {
-		private HashMap<String, Location> bd;
-		private World world;
-
-		public DeleteYBelow5(HashMap<String, Location> bd, World world, int firstAdded) {
-			this.bd = bd;
-			this.world = Bukkit.getWorld("world");
-
-			// random add
-
-		}
-
-		@Override
-		public void run() {
-
-			if (Bukkit.getOnlinePlayers().size() != 1) {
-				return;
-			}
-
-			int search = 10;
-
-			long startTime = System.currentTimeMillis();
-
-			// dprint.r.printAll("start " + bd.size());
-
-			if (bd.size() == 0) {
-				bd.clear();
-				// dprint.r.printAll("run () bd.size = " + bd.size());
-
-				LXRXLZRZType ee = api_skyblock.getPositionLXRXLZRZ();
-
-				while (System.currentTimeMillis() - startTime < 1000) {
-
-					int x = randomInteger(ee.lx, ee.rx);
-					int z = randomInteger(ee.lz, ee.rz);
-
-					int y = randomInteger(0, 40);
-
-					Block block = world.getBlockAt(x, y, z);
-					if (block.getType() != Material.AIR) {
-						bd.put(tr.locationToString(block.getLocation()), block.getLocation());
-						dprint.r.printAll("deleteybelow5 > first add > " + block.getX() + "," + block.getY() + ","
-								+ block.getZ() + " size " + bd.size());
-
-					}
-
-				}
-
-				if (bd.size() == 0) {
-
-					dprint.r.printAll("recall ... " + bd.size());
-					DeleteYBelow5 newRun = new DeleteYBelow5(bd, world, 0);
-					Bukkit.getScheduler().scheduleSyncDelayedTask(ac, newRun, 20L);
-					return;
-				}
-
-			}
-
-			startTime = System.currentTimeMillis();
-
-			int first = 0;
-			while (bd.size() > 0 && System.currentTimeMillis() - startTime < 1000) {
-
-				for (int i = 0; i < 1000000 && System.currentTimeMillis() - startTime < 1000; i++) {
-					String forDeleteLoc = "";
-					for (String locStr : bd.keySet()) {
-
-						Location loc = bd.get(locStr);
-						// bd.remove(locStr);
-						forDeleteLoc = locStr;
-
-						Block getStack = world.getBlockAt(loc);
-						if (getStack == null) {
-							continue;
-						}
-
-						if (getStack.getType() == Material.AIR) {
-							continue;
-						}
-
-						if (first == 0) {
-							dprint.r.printAll("deleteybelow5 > break > " + getStack.getX() + "," + getStack.getY() + ","
-									+ getStack.getZ() + getStack.getType().name() + ":" + getStack.getData() + " size "
-									+ bd.size());
-							first = 1;
-						}
-
-						getStack.breakNaturally();
-						getStack.setType(Material.AIR);
-
-						for (int x = -search; x <= search; x++)
-							for (int y = 0; y <= 40; y++)
-								for (int z = -search; z <= search; z++) {
-									if (x == 0 && y == 0 && z == 0) {
-										continue;
-									}
-
-									Block bo = getStack.getWorld().getBlockAt(getStack.getX() + x, y,
-											getStack.getZ() + z);
-									if (bo.getType() != Material.AIR) {
-										bd.put(tr.locationToString(bo.getLocation()), bo.getLocation());
-
-									}
-
-								}
-
-						for (int x = -50; x <= 50; x++) {
-
-							Block bo = getStack.getRelative(x, 0, 0);
-							if (bo.getType() != Material.AIR) {
-								bd.put(tr.locationToString(bo.getLocation()), bo.getLocation());
-
-							}
-						}
-
-						for (int x = -50; x <= 50; x++) {
-
-							Block bo = getStack.getRelative(0, 0, x);
-							if (bo.getType() != Material.AIR) {
-								bd.put(tr.locationToString(bo.getLocation()), bo.getLocation());
-
-							}
-						}
-
-						break;
-					}
-
-					bd.remove(forDeleteLoc);
-
-				}
-
-			}
-
-			if (bd.size() >= 0) {
-				DeleteYBelow5 newRun = new DeleteYBelow5(bd, world, 0);
-				Bukkit.getScheduler().scheduleSyncDelayedTask(ac, newRun, 20L);
-				return;
-			}
-
-		}
-
-	}
 
 	class AutoAbsorb implements Runnable {
 		private Block b;
@@ -437,6 +285,149 @@ public class DigEventListener2 implements Listener {
 		}
 	}
 
+	class DeleteYBelow5 implements Runnable {
+		private HashMap<String, Location> bd;
+		private World world;
+
+		public DeleteYBelow5(HashMap<String, Location> bd, World world, int firstAdded) {
+			this.bd = bd;
+			this.world = Bukkit.getWorld("world");
+
+			// random add
+
+		}
+
+		@Override
+		public void run() {
+
+			if (Bukkit.getOnlinePlayers().size() != 1) {
+				return;
+			}
+
+			int search = 10;
+
+			long startTime = System.currentTimeMillis();
+
+			// dprint.r.printAll("start " + bd.size());
+
+			if (bd.size() == 0) {
+				bd.clear();
+				// dprint.r.printAll("run () bd.size = " + bd.size());
+
+				LXRXLZRZType ee = api_skyblock.getPositionLXRXLZRZ();
+
+				while (System.currentTimeMillis() - startTime < 1000) {
+
+					int x = randomInteger(ee.lx, ee.rx);
+					int z = randomInteger(ee.lz, ee.rz);
+
+					int y = randomInteger(0, 40);
+
+					Block block = world.getBlockAt(x, y, z);
+					if (block.getType() != Material.AIR) {
+						bd.put(tr.locationToString(block.getLocation()), block.getLocation());
+						dprint.r.printAll("deleteybelow5 > first add > " + block.getX() + "," + block.getY() + ","
+								+ block.getZ() + " size " + bd.size());
+
+					}
+
+				}
+
+				if (bd.size() == 0) {
+
+					dprint.r.printAll("recall ... " + bd.size());
+					DeleteYBelow5 newRun = new DeleteYBelow5(bd, world, 0);
+					Bukkit.getScheduler().scheduleSyncDelayedTask(ac, newRun, 20L);
+					return;
+				}
+
+			}
+
+			startTime = System.currentTimeMillis();
+
+			int first = 0;
+			while (bd.size() > 0 && System.currentTimeMillis() - startTime < 1000) {
+
+				for (int i = 0; i < 1000000 && System.currentTimeMillis() - startTime < 1000; i++) {
+					String forDeleteLoc = "";
+					for (String locStr : bd.keySet()) {
+
+						Location loc = bd.get(locStr);
+						// bd.remove(locStr);
+						forDeleteLoc = locStr;
+
+						Block getStack = world.getBlockAt(loc);
+						if (getStack == null) {
+							continue;
+						}
+
+						if (getStack.getType() == Material.AIR) {
+							continue;
+						}
+
+						if (first == 0) {
+							dprint.r.printAll("deleteybelow5 > break > " + getStack.getX() + "," + getStack.getY() + ","
+									+ getStack.getZ() + getStack.getType().name() + ":" + getStack.getData() + " size "
+									+ bd.size());
+							first = 1;
+						}
+
+						getStack.breakNaturally();
+						getStack.setType(Material.AIR);
+
+						for (int x = -search; x <= search; x++)
+							for (int y = 0; y <= 40; y++)
+								for (int z = -search; z <= search; z++) {
+									if (x == 0 && y == 0 && z == 0) {
+										continue;
+									}
+
+									Block bo = getStack.getWorld().getBlockAt(getStack.getX() + x, y,
+											getStack.getZ() + z);
+									if (bo.getType() != Material.AIR) {
+										bd.put(tr.locationToString(bo.getLocation()), bo.getLocation());
+
+									}
+
+								}
+
+						for (int x = -50; x <= 50; x++) {
+
+							Block bo = getStack.getRelative(x, 0, 0);
+							if (bo.getType() != Material.AIR) {
+								bd.put(tr.locationToString(bo.getLocation()), bo.getLocation());
+
+							}
+						}
+
+						for (int x = -50; x <= 50; x++) {
+
+							Block bo = getStack.getRelative(0, 0, x);
+							if (bo.getType() != Material.AIR) {
+								bd.put(tr.locationToString(bo.getLocation()), bo.getLocation());
+
+							}
+						}
+
+						break;
+					}
+
+					bd.remove(forDeleteLoc);
+
+				}
+
+			}
+
+			if (bd.size() >= 0) {
+				DeleteYBelow5 newRun = new DeleteYBelow5(bd, world, 0);
+				Bukkit.getScheduler().scheduleSyncDelayedTask(ac, newRun, 20L);
+				return;
+			}
+
+		}
+
+	}
+
 	class drawProtectLine implements Runnable {
 
 		private Block block;
@@ -452,7 +443,7 @@ public class DigEventListener2 implements Listener {
 		@Override
 		public void run() {
 
-			int getid = dew.getprotectid(block);
+			int getid = api_skyblock.getprotectid(block);
 			if (getid == -1) {
 				player.sendMessage(dprint.r.color(tr.gettr("this_zone_don't_have_any_protect")));
 				return;
@@ -460,11 +451,11 @@ public class DigEventListener2 implements Listener {
 
 			// start draw Line
 
-			int lx = dew.rs[getid].x - 150;
-			int rx = dew.rs[getid].x + 149;
+			int lx = api_skyblock.rs[getid].x - 150;
+			int rx = api_skyblock.rs[getid].x + 149;
 
-			int lz = dew.rs[getid].z - 150;
-			int rz = dew.rs[getid].z + 149;
+			int lz = api_skyblock.rs[getid].z - 150;
+			int rz = api_skyblock.rs[getid].z + 149;
 
 			for (int x = lx; x <= rx; x++) {
 
@@ -534,7 +525,7 @@ public class DigEventListener2 implements Listener {
 
 		@Override
 		public void run() {
-			for (int i = 0; i < dew.rsMax; i++) {
+			for (int i = 0; i < api_skyblock.rsMax; i++) {
 
 				for (Player player : Bukkit.getOnlinePlayers()) {
 					if (player == null) {
@@ -543,18 +534,18 @@ public class DigEventListener2 implements Listener {
 
 					// dprint.r.printAll("misionrepeat i = " + i);
 
-					int search = dew.getplayerinslot(player.getName(), i);
+					int search = api_skyblock.getplayerinslot(player.getName(), i);
 					if (search == -1) {
 						continue;
 					}
 
-					if (dew.getplayerinslot(player.getName(), player.getLocation().getBlock()) == -1) {
+					if (api_skyblock.getplayerinslot(player.getName(), player.getLocation().getBlock()) == -1) {
 						continue;
 					}
 					// check his mission
 
 					int fixhere = -1;
-					if (dew.rs[i].mission == fixhere) {
+					if (api_skyblock.rs[i].mission == fixhere) {
 
 						/*
 						 * dprint.r.printAll("misionrepeat lv 5 = " + i + " } "
@@ -562,7 +553,7 @@ public class DigEventListener2 implements Listener {
 						 */
 						// read sign
 
-						Block bo = player.getWorld().getBlockAt(dew.rs[i].x, 1, dew.rs[i].z);
+						Block bo = player.getWorld().getBlockAt(api_skyblock.rs[i].x, 1, api_skyblock.rs[i].z);
 
 						if (bo.getType() == Material.SIGN_POST) {
 							// dprint.r.printAll("misionrepeat lv signpost");
@@ -603,6 +594,17 @@ public class DigEventListener2 implements Listener {
 
 	}
 
+	class ShowCurStandProtect {
+		public Player player;
+		public int lastStandProtectID = -1;
+	}
+
+	public static int randomInteger(int min, int max) {
+		Random rand = new Random();
+		int randomNum = min + (int) (Math.random() * ((max - min) + 1));
+		return randomNum;
+	}
+
 	public JavaPlugin ac = null;
 
 	public api_skyblock dew = null;
@@ -610,11 +612,6 @@ public class DigEventListener2 implements Listener {
 	Random rnd = new Random();
 
 	public HashMap<String, ShowCurStandProtect> showCurStandProtect = new HashMap<String, ShowCurStandProtect>();
-
-	class ShowCurStandProtect {
-		public Player player;
-		public int lastStandProtectID = -1;
-	}
 
 	public DigEventListener2() {
 		delay dl = new delay();
@@ -693,7 +690,7 @@ public class DigEventListener2 implements Listener {
 
 			// check you are in that home
 
-			int gx = dew.getplayerinslot(player.getName(), getid);
+			int gx = api_skyblock.getplayerinslot(player.getName(), getid);
 
 			// dprint.r.printAll("blockbreak lv 1 gx = " + gx);
 
@@ -785,7 +782,7 @@ public class DigEventListener2 implements Listener {
 
 			// check you are in that home
 
-			int gx = dew.getplayerinslot(player.getName(), getid);
+			int gx = api_skyblock.getplayerinslot(player.getName(), getid);
 
 			// dprint.r.printAll("blockbreak lv 1 gx = " + gx);
 
@@ -985,7 +982,7 @@ public class DigEventListener2 implements Listener {
 					if (api_skyblock.getplayerinslot(Constant.flag_pvp, pvparea) == -1
 							&& !plp.hasPermission(Constant.poveride)
 							&& api_skyblock.getplayerinslot(plp.getName(), pvparea) == -1) {
-						e.setDamage((double) 0);
+						e.setDamage(0);
 						e.setCancelled(true);
 					}
 				}
@@ -1004,7 +1001,7 @@ public class DigEventListener2 implements Listener {
 					if (api_skyblock.getplayerinslot(plp.getName(), pvparea) == -1
 							&& !plp.hasPermission(Constant.poveride)) {
 
-						e.setDamage((double) 0);
+						e.setDamage(0);
 						e.setCancelled(true);
 					}
 			} // target = cow
@@ -1160,9 +1157,9 @@ public class DigEventListener2 implements Listener {
 
 			Player p = (Player) e.getPlayer();
 
-			int idx = dew.getprotectid(p.getLocation().getBlock());
+			int idx = api_skyblock.getprotectid(p.getLocation().getBlock());
 
-			LV1000Type lv = dew.lv1000.get(dew.rs[idx].mission);
+			LV1000Type lv = api_skyblock.lv1000.get(api_skyblock.rs[idx].mission);
 
 			boolean allDone = true;
 
@@ -1219,9 +1216,9 @@ public class DigEventListener2 implements Listener {
 
 			} else {
 				p.sendMessage(
-						dprint.r.color(tr.gettr("sky_lv_got_all_item_to_completed_cur_lv_") + dew.rs[idx].mission));
+						dprint.r.color(tr.gettr("sky_lv_got_all_item_to_completed_cur_lv_") + api_skyblock.rs[idx].mission));
 
-				dew.rs[idx].mission++;
+				api_skyblock.rs[idx].mission++;
 				dew.saveRSProtectFile();
 
 				// give reward
@@ -1336,7 +1333,6 @@ public class DigEventListener2 implements Listener {
 
 				player.sendMessage(dprint.r.color("/skyblock max"));
 
-
 				return;
 
 			} else if (m.length == 2 || m.length == 3)
@@ -1412,7 +1408,7 @@ public class DigEventListener2 implements Listener {
 					dew.adjustProtect2(player.getLocation().getBlock(), player);
 
 				} else if (m[1].equalsIgnoreCase("position")) {
-					LXRXLZRZType ee = dew.getPositionLXRXLZRZ();
+					LXRXLZRZType ee = api_skyblock.getPositionLXRXLZRZ();
 
 					player.sendMessage("xy " + ee.lx + "," + ee.lz + " to " + ee.rx + "," + ee.rz);
 
@@ -1458,8 +1454,8 @@ public class DigEventListener2 implements Listener {
 						if (block.getX() >= (tmpX - 150) && block.getX() <= (tmpX + 149) && block.getZ() >= (tmpZ - 150)
 								&& block.getZ() <= (tmpZ + 149)) {
 
-							dew.rs[dew.rsMax - 1].x = tmpX;
-							dew.rs[dew.rsMax - 1].z = tmpZ;
+							api_skyblock.rs[api_skyblock.rsMax - 1].x = tmpX;
+							api_skyblock.rs[api_skyblock.rsMax - 1].z = tmpZ;
 
 							found = true;
 							break;
@@ -1523,13 +1519,13 @@ public class DigEventListener2 implements Listener {
 						api_skyblock.rs[getid].mission = 0;
 						dprint.r.printAll(tr.gettr("reseted_lv_of_is_this_guys") + api_skyblock.rs[getid].p[0]);
 
-						dew.printToAllPlayerOnRS(getid, tr.gettr("cur_lv_is") + (dew.rs[getid].mission));
+						dew.printToAllPlayerOnRS(getid, tr.gettr("cur_lv_is") + (api_skyblock.rs[getid].mission));
 
 					} else if (m.length == 3) {
 						api_skyblock.rs[getid].mission = (Integer.parseInt(m[2]));
 						dprint.r.printAll(tr.gettr("reseted_lv_of_is_this_guys") + api_skyblock.rs[getid].p[0]);
 
-						dew.printToAllPlayerOnRS(getid, tr.gettr("cur_lv_is") + (dew.rs[getid].mission));
+						dew.printToAllPlayerOnRS(getid, tr.gettr("cur_lv_is") + (api_skyblock.rs[getid].mission));
 
 					} else {
 						player.sendMessage(tr.gettr("/sky resetlv <lv>"));
@@ -1568,14 +1564,14 @@ public class DigEventListener2 implements Listener {
 
 					if (m.length != 3) {
 						player.sendMessage(dprint.r.color("/sky goid <id>"));
-						player.sendMessage(dprint.r.color("/sky goid <0 to " + dew.rsMax + ">"));
+						player.sendMessage(dprint.r.color("/sky goid <0 to " + api_skyblock.rsMax + ">"));
 
 						return;
 					}
 
 					int idid = Integer.parseInt(m[2]);
-					if (idid < 0 || idid >= dew.rsMax) {
-						player.sendMessage(dprint.r.color("/sky goid <0 to " + dew.rsMax + ">"));
+					if (idid < 0 || idid >= api_skyblock.rsMax) {
+						player.sendMessage(dprint.r.color("/sky goid <0 to " + api_skyblock.rsMax + ">"));
 
 						return;
 					}
@@ -1590,7 +1586,7 @@ public class DigEventListener2 implements Listener {
 				} else if (m[1].equalsIgnoreCase("gorandom")) {
 					// go
 
-					int idid = rnd.nextInt(dew.rsMax);
+					int idid = rnd.nextInt(api_skyblock.rsMax);
 
 					Block block = player.getWorld().getBlockAt(api_skyblock.rs[idid].x, api_skyblock.rs[idid].y + 10,
 							api_skyblock.rs[idid].z);
@@ -1680,19 +1676,19 @@ public class DigEventListener2 implements Listener {
 
 					}
 
-					if (dew.getplayerinslot(player.getName(), getid) == -1) {
+					if (api_skyblock.getplayerinslot(player.getName(), getid) == -1) {
 						player.sendMessage(
-								dprint.r.color(tr.gettr("owner_of_this_island_name") + " = " + dew.rs[getid].p[0]));
+								dprint.r.color(tr.gettr("owner_of_this_island_name") + " = " + api_skyblock.rs[getid].p[0]));
 					}
 
-					if (dew.rs[getid].mission >= dew.lv1000.size()) {
+					if (api_skyblock.rs[getid].mission >= api_skyblock.lv1000.size()) {
 						player.sendMessage(dprint.r.color(tr.gettr("sky_lv_all_lv_done_thanks_to_play")));
 						return;
 
 					}
 
-					player.sendMessage(dprint.r.color(tr.gettr("cur_lv_is") + (dew.rs[getid].mission)));
-					dew.printToAllPlayerOnRS(getid, (tr.gettr("cur_lv_is") + dew.rs[getid].mission));
+					player.sendMessage(dprint.r.color(tr.gettr("cur_lv_is") + (api_skyblock.rs[getid].mission)));
+					dew.printToAllPlayerOnRS(getid, (tr.gettr("cur_lv_is") + api_skyblock.rs[getid].mission));
 
 					Inventory inv = Bukkit.createInventory(null, 54, "sky lv");
 					updateLVInventory(inv, player);
@@ -1746,11 +1742,12 @@ public class DigEventListener2 implements Listener {
 
 					}
 				}
-			
+
 				else if (m[1].equalsIgnoreCase("exitFromThisHome")) {
-					
+
 					if (m.length != 3) {
-						player.sendMessage(dprint.r.color(tr.gettr("not enought argument type this") + "/sky exitfromthishome <owner name>"));
+						player.sendMessage(dprint.r.color(
+								tr.gettr("not enought argument type this") + "/sky exitfromthishome <owner name>"));
 						return;
 					}
 
@@ -1762,39 +1759,34 @@ public class DigEventListener2 implements Listener {
 					} else {
 						// check host
 						int doesIInThisHome = api_skyblock.getplayerinslot(player.getName(), getid);
-						
+
 						if (doesIInThisHome == -1) {
 							player.sendMessage(dprint.r.color(tr.gettr("don't have your name on this protect")));
 							return;
 						}
-						
-						
+
 						// ....
-						
+
 						boolean ch = api_skyblock.rs[getid].p[0].equalsIgnoreCase(player.getName());
-						
-						
+
 						if (ch == true) {
-								player.sendMessage(dprint.r.color(tr.gettr
-										("you_can't_exit_from_your_own_protect_if_you_want_try_another command such as delete or owner")));
-								return;
-									
+							player.sendMessage(dprint.r.color(tr.gettr(
+									"you_can't_exit_from_your_own_protect_if_you_want_try_another command such as delete or owner")));
+							return;
+
 						}
-						
-						//....
+
+						// ....
 						// remove my name
-						dew.rs[getid].p[doesIInThisHome] = "null";
+						api_skyblock.rs[getid].p[doesIInThisHome] = "null";
 						dew.saveRSProtectFile();
-						
-						player.sendMessage(dprint.r.color(tr.gettr
-								("you exited from sky protect of ") +  api_skyblock.rs[getid].p[0] + " id " + getid));
-						
-						
-						
+
+						player.sendMessage(dprint.r.color(tr.gettr("you exited from sky protect of ")
+								+ api_skyblock.rs[getid].p[0] + " id " + getid));
+
 					}
 
-				}
-				else if (m[1].equalsIgnoreCase("add")) {
+				} else if (m[1].equalsIgnoreCase("add")) {
 
 					int getid = api_skyblock.getprotectid(player.getLocation().getBlock());
 
@@ -1892,8 +1884,8 @@ public class DigEventListener2 implements Listener {
 						return;
 					}
 
-					player.sendMessage(dprint.r.color("protect id ") + getid + " , position (" + dew.rs[getid].x + ","
-							+ dew.rs[getid].y + "," + dew.rs[getid].z + ")");
+					player.sendMessage(dprint.r.color("protect id ") + getid + " , position (" + api_skyblock.rs[getid].x + ","
+							+ api_skyblock.rs[getid].y + "," + api_skyblock.rs[getid].z + ")");
 
 					for (int i = 0; i < api_skyblock.RSMaxPlayer; i++)
 						if (api_skyblock.rs[getid].p[i].equalsIgnoreCase("null") == false)
@@ -1937,24 +1929,24 @@ public class DigEventListener2 implements Listener {
 
 					// check item on player
 
-					int getido = dew.getprotectid(player.getLocation().getBlock());
+					int getido = api_skyblock.getprotectid(player.getLocation().getBlock());
 					if (getido == -1) {
 						player.sendMessage(
 								dprint.r.color(tr.gettr("this_zone_don't_have_any_protect_so_can't_delete")));
 						return;
 					}
 
-					if (dew.rs[getido].p[0].equalsIgnoreCase(player.getName()) == false) {
+					if (api_skyblock.rs[getido].p[0].equalsIgnoreCase(player.getName()) == false) {
 
 						if (player.hasPermission(Constant.poveride) == false) {
 							player.sendMessage(dprint.r.color(
-									tr.gettr("you_can't_deleteisland_cuz_owner_here_is") + " " + dew.rs[getido].p[0]));
+									tr.gettr("you_can't_deleteisland_cuz_owner_here_is") + " " + api_skyblock.rs[getido].p[0]));
 							return;
 
 						} else {
 							player.sendMessage(
 									dprint.r.color(tr.gettr("override_to_delete_this_island_protect_owner_is") + " "
-											+ dew.rs[getido].p[0]));
+											+ api_skyblock.rs[getido].p[0]));
 						}
 
 					}
@@ -1973,7 +1965,7 @@ public class DigEventListener2 implements Listener {
 						return;
 					}
 
-					dew.rs[getido].p[0] = dew.getNewOwnerName();
+					api_skyblock.rs[getido].p[0] = api_skyblock.getNewOwnerName();
 					dew.saveRSProtectFile();
 
 					return;
@@ -2001,7 +1993,7 @@ public class DigEventListener2 implements Listener {
 
 			// check you are in that home
 
-			int gx = dew.getplayerinslot(player.getName(), getid);
+			int gx = api_skyblock.getplayerinslot(player.getName(), getid);
 
 			// dprint.r.printAll("blockbreak lv 1 gx = " + gx);
 
@@ -2048,7 +2040,7 @@ public class DigEventListener2 implements Listener {
 
 			// check you are in that home
 
-			int gx = dew.getplayerinslot(player.getName(), getid);
+			int gx = api_skyblock.getplayerinslot(player.getName(), getid);
 
 			// dprint.r.printAll("blockbreak lv 1 gx = " + gx);
 
@@ -2089,7 +2081,7 @@ public class DigEventListener2 implements Listener {
 			if (player.getItemInHand().getType() == Material.COMPASS) {
 				if (player.getItemInHand().getItemMeta().getDisplayName().equalsIgnoreCase("/sky gorandom")) {
 
-					int idid = rnd.nextInt(dew.rsMax);
+					int idid = rnd.nextInt(api_skyblock.rsMax);
 
 					Block cdd = player.getWorld().getBlockAt(api_skyblock.rs[idid].x, api_skyblock.rs[idid].y + 10,
 							api_skyblock.rs[idid].z);
@@ -2214,6 +2206,7 @@ public class DigEventListener2 implements Listener {
 
 		Bukkit.getScheduler().scheduleSyncDelayedTask(ac, new Runnable() {
 
+			@Override
 			public void run() {
 				player.sendMessage(tr.gettr("on_skyblock_playerjoin_tell_him_this_word"));
 			}
@@ -2251,35 +2244,30 @@ public class DigEventListener2 implements Listener {
 
 				return;
 
-			}
-			else {
-				
-				int curStand = dew.getprotectid(p.getLocation().getBlock());
+			} else {
+
+				int curStand = api_skyblock.getprotectid(p.getLocation().getBlock());
 				if (curStand == -1) { // no protect
-					if ( i.lastStandProtectID != -1) { // has protect
-						
-						p.sendMessage(dprint.r.color(tr.gettr("exit from sky protect of ") + 
-								dew.rs[i.lastStandProtectID].p[0] + " id " + i.lastStandProtectID));
+					if (i.lastStandProtectID != -1) { // has protect
+
+						p.sendMessage(dprint.r.color(tr.gettr("exit from sky protect of ")
+								+ api_skyblock.rs[i.lastStandProtectID].p[0] + " id " + i.lastStandProtectID));
 						i.lastStandProtectID = curStand; // be -1
 						return;
 					}
-					
-				}
-				else { // cur has protect
-					// cur there are protect
+
+				} else { // cur has protect
+							// cur there are protect
 					if (curStand == i.lastStandProtectID) {
-						
-					}
-					else  {
-						p.sendMessage(dprint.r.color(tr.gettr("enter to sky protect of ") + 
-								dew.rs[curStand].p[0] + " id " + curStand));
+
+					} else {
+						p.sendMessage(dprint.r.color(
+								tr.gettr("enter to sky protect of ") + api_skyblock.rs[curStand].p[0] + " id " + curStand));
 						i.lastStandProtectID = curStand;
 						return;
-					
+
 					}
-					
-				
-				
+
 				}
 			}
 
@@ -2483,8 +2471,8 @@ public class DigEventListener2 implements Listener {
 	}
 
 	public void updateLVInventory(Inventory inv, Player player) {
-		int idx = dew.getprotectid(player.getLocation().getBlock());
-		int id = dew.getplayerinslot(player.getName(), idx);
+		int idx = api_skyblock.getprotectid(player.getLocation().getBlock());
+		int id = api_skyblock.getplayerinslot(player.getName(), idx);
 
 		if (id == -1) {
 			return;
@@ -2493,7 +2481,7 @@ public class DigEventListener2 implements Listener {
 		// add item
 
 		inv.clear();
-		LV1000Type lv = dew.lv1000.get(dew.rs[idx].mission);
+		LV1000Type lv = api_skyblock.lv1000.get(api_skyblock.rs[idx].mission);
 
 		int curSlot = 0;
 		for (int i = 0; i < lv.needSize; i++) {

@@ -63,19 +63,18 @@ class Dewddminecraft extends dewset implements skywar_in {
 
 			for (int r1 = 0; r1 < rsmax; r1++)
 				if (rs[r1].getonnow(r1) == rs[r1].maxp - 1 || r1 == runnowid) {
-					if (runnowid == r1) runnowid = -1;
+					if (runnowid == r1)
+						runnowid = -1;
 
-					dprint.r.printAll("skywar id " + r1
-							+ tr.gettr("skywar_have_full_player")
-							+ rs[r1].getonnow(r1) + "/" + (rs[r1].maxp - 1));
+					dprint.r.printAll("skywar id " + r1 + tr.gettr("skywar_have_full_player") + rs[r1].getonnow(r1)
+							+ "/" + (rs[r1].maxp - 1));
 					dprint.r.printAll(tr.gettr("loading_skywar"));
 
 					spawn = new Block[rs[r1].maxp];
 					spawnmax = -1;
 					// random position
 					int x5 = getfreerun_x();
-					dprint.r.printAll(tr.gettr("random_position") + x5
-							+ ",128," + 10000);
+					dprint.r.printAll(tr.gettr("random_position") + x5 + ",128," + 10000);
 					world.getBlockAt(x5, 128, 10000);
 
 					// copy map
@@ -97,42 +96,38 @@ class Dewddminecraft extends dewset implements skywar_in {
 							for (int g3 = lz - 1; g3 <= mz + 1; g3++)
 								for (int g2 = 0; g2 <= 255; g2++) {
 									if (g2 < ly || g2 > my) {
-										block3 = world.getBlockAt(x5 + g1 - lx,
-												g2, 10000 + g3 - lz);
+										block3 = world.getBlockAt(x5 + g1 - lx, g2, 10000 + g3 - lz);
 										block3.setTypeId(0);
 										continue;
 									}
 									if (g1 < lx || g1 > mx) {
-										block3 = world.getBlockAt(x5 + g1 - lx,
-												g2, 10000 + g3 - lz);
+										block3 = world.getBlockAt(x5 + g1 - lx, g2, 10000 + g3 - lz);
 										block3.setTypeId(0);
 										continue;
 									}
 									if (g3 < lz || g3 > mz) {
-										block3 = world.getBlockAt(x5 + g1 - lx,
-												g2, 10000 + g3 - lz);
+										block3 = world.getBlockAt(x5 + g1 - lx, g2, 10000 + g3 - lz);
 										block3.setTypeId(0);
 										continue;
 									}
 
 									block2 = world.getBlockAt(g1, g2, g3); // source
 																			// block
-									block3 = world.getBlockAt(x5 + g1 - lx, g2,
-											10000 + g3 - lz);
+									block3 = world.getBlockAt(x5 + g1 - lx, g2, 10000 + g3 - lz);
 
 									block3.setTypeId(block2.getTypeId());
 									block3.setData(block2.getData());
 
-									if (block3.getTypeId() == 54
-											|| block3.getTypeId() == 146) {
+									if (block3.getTypeId() == 54 || block3.getTypeId() == 146) {
 										// chest copy item
 										Chest c1 = (Chest) block2.getState();
 										Chest c2 = (Chest) block3.getState();
 										c2.getInventory().clear();
 										for (ItemStack it : c1.getInventory()
 
-										.getContents()) {
-											if (it == null) continue;
+												.getContents()) {
+											if (it == null)
+												continue;
 											c2.getInventory().addItem(it);
 										}
 
@@ -140,25 +135,19 @@ class Dewddminecraft extends dewset implements skywar_in {
 
 									}
 
-									if (block3.getTypeId() == 138
-											&& amount == 2) {
+									if (block3.getTypeId() == 138 && amount == 2) {
 										spawnmax++;
 										if (spawnmax < rs[r1].maxp) {
 											spawn[spawnmax] = block3;
-											dprint.r.printAll("skywar id " + r1
-													+ tr.gettr("found_spawner")
-													+ spawnmax + " = "
-													+ block3.getX() + ","
-													+ block3.getY() + ","
+											dprint.r.printAll("skywar id " + r1 + tr.gettr("found_spawner") + spawnmax
+													+ " = " + block3.getX() + "," + block3.getY() + ","
 													+ block3.getZ());
 										}
 									}
 								} // y
 
 					if (spawnmax < rs[r1].maxp - 1) {
-						dprint.r.printAll("skywar id "
-								+ r1
-								+ tr.gettr("not_enough_spawner_place_call_admin"));
+						dprint.r.printAll("skywar id " + r1 + tr.gettr("not_enough_spawner_place_call_admin"));
 						return;
 					}
 
@@ -187,11 +176,9 @@ class Dewddminecraft extends dewset implements skywar_in {
 
 						do {
 							ra = rnd.nextInt(spawnmax + 1);
-							dprint.r.printAll("randoming...  " + ra + "/ "
-									+ spawnmax);
+							dprint.r.printAll("randoming...  " + ra + "/ " + spawnmax);
 
-						}
-						while (spawn[ra] == null);
+						} while (spawn[ra] == null);
 						dprint.r.printAll("random spawning ra = " + ra);
 
 						// teleport that player
@@ -213,21 +200,19 @@ class Dewddminecraft extends dewset implements skywar_in {
 						Location loc = spawn[ra].getLocation();
 						loc.setY(loc.getY() + 1);
 
-						pla.addPotionEffect(PotionEffectType.BLINDNESS
-								.createEffect(200, 1));
+						pla.addPotionEffect(PotionEffectType.BLINDNESS.createEffect(200, 1));
 
 						telep ttt = new telep(pla, loc);
 
 						nowteleyet++;
 
-						dprint.r.printAll(pla.getName()
-								+ tr.gettr("has_been_teleported_to_skywar_id")
-								+ r1);
+						dprint.r.printAll(pla.getName() + tr.gettr("has_been_teleported_to_skywar_id") + r1);
 						pla.setGameMode(GameMode.SURVIVAL);
 						pla.setAllowFlight(false);
 
 						for (Entity en : world.getEntities()) {
-							if (en == null) continue;
+							if (en == null)
+								continue;
 							if (en.getType() != EntityType.DROPPED_ITEM)
 								continue;
 							en.remove();
@@ -242,52 +227,35 @@ class Dewddminecraft extends dewset implements skywar_in {
 					for (int r2 = 0; r2 < rs[r1].maxp; r2++)
 						rs[r1].on[r2] = "";
 
-					dprint.r.printAll("skywar id " + r1
-							+ tr.gettr("skywar_has_been_started"));
+					dprint.r.printAll("skywar id " + r1 + tr.gettr("skywar_has_been_started"));
 
 					// teleport monster
 					for (Entity en : world.getEntities()) {
-						if (en == null) continue;
+						if (en == null)
+							continue;
 
-						if (en.getType() == EntityType.BAT
-								|| en.getType() == EntityType.BLAZE
-								|| en.getType() == EntityType.CAVE_SPIDER
-								|| en.getType() == EntityType.CHICKEN
-								|| en.getType() == EntityType.COW
-								|| en.getType() == EntityType.CREEPER
-								|| en.getType() == EntityType.ENDER_DRAGON
-								|| en.getType() == EntityType.ENDERMAN
-								|| en.getType() == EntityType.GHAST
-								|| en.getType() == EntityType.GIANT
-								|| en.getType() == EntityType.HORSE
-								|| en.getType() == EntityType.IRON_GOLEM
-								|| en.getType() == EntityType.MAGMA_CUBE
-								|| en.getType() == EntityType.MUSHROOM_COW
-								|| en.getType() == EntityType.OCELOT
-								|| en.getType() == EntityType.PIG
-								|| en.getType() == EntityType.PIG_ZOMBIE
-								|| en.getType() == EntityType.SHEEP
-								|| en.getType() == EntityType.SILVERFISH
-								|| en.getType() == EntityType.SKELETON
-								|| en.getType() == EntityType.SLIME
-								|| en.getType() == EntityType.SNOWMAN
-								|| en.getType() == EntityType.SPIDER
-								|| en.getType() == EntityType.SQUID
-								|| en.getType() == EntityType.VILLAGER
-								|| en.getType() == EntityType.WITCH
-								|| en.getType() == EntityType.WOLF
-								|| en.getType() == EntityType.ZOMBIE
+						if (en.getType() == EntityType.BAT || en.getType() == EntityType.BLAZE
+								|| en.getType() == EntityType.CAVE_SPIDER || en.getType() == EntityType.CHICKEN
+								|| en.getType() == EntityType.COW || en.getType() == EntityType.CREEPER
+								|| en.getType() == EntityType.ENDER_DRAGON || en.getType() == EntityType.ENDERMAN
+								|| en.getType() == EntityType.GHAST || en.getType() == EntityType.GIANT
+								|| en.getType() == EntityType.HORSE || en.getType() == EntityType.IRON_GOLEM
+								|| en.getType() == EntityType.MAGMA_CUBE || en.getType() == EntityType.MUSHROOM_COW
+								|| en.getType() == EntityType.OCELOT || en.getType() == EntityType.PIG
+								|| en.getType() == EntityType.PIG_ZOMBIE || en.getType() == EntityType.SHEEP
+								|| en.getType() == EntityType.SILVERFISH || en.getType() == EntityType.SKELETON
+								|| en.getType() == EntityType.SLIME || en.getType() == EntityType.SNOWMAN
+								|| en.getType() == EntityType.SPIDER || en.getType() == EntityType.SQUID
+								|| en.getType() == EntityType.VILLAGER || en.getType() == EntityType.WITCH
+								|| en.getType() == EntityType.WOLF || en.getType() == EntityType.ZOMBIE
 
 						) {
 
-							Block bs = world.getBlockAt(rs[r1].x1, rs[r1].y1,
-									rs[r1].z1);
-							Block bd = world.getBlockAt(x5 + bs.getX() - lx,
-									bs.getY(), 10000 + bs.getZ() - lz);
+							Block bs = world.getBlockAt(rs[r1].x1, rs[r1].y1, rs[r1].z1);
+							Block bd = world.getBlockAt(x5 + bs.getX() - lx, bs.getY(), 10000 + bs.getZ() - lz);
 
 							if (en.getLocation().distance(bs.getLocation()) < 100)
-								world.spawnCreature(bd.getLocation(),
-										en.getType());
+								world.spawnCreature(bd.getLocation(), en.getType());
 
 						}
 					}
@@ -298,25 +266,26 @@ class Dewddminecraft extends dewset implements skywar_in {
 	}
 
 	class skywardata {
-		public String[]	builder;
-		public int		maxp;
-		public String[]	on;
+		public String[] builder;
+		public int maxp;
+		public String[] on;
 
-		public int		x1;
-		public int		x2;
-		public int		y1;
+		public int x1;
+		public int x2;
+		public int y1;
 
-		public int		y2;
+		public int y2;
 
-		public int		z1;
+		public int z1;
 
-		public int		z2;
+		public int z2;
 
 		public int getonnow(int id) {
 
 			int count = -1;
 			for (int g1 = 0; g1 < rs[id].maxp; g1++)
-				if (rs[id].on[g1].equalsIgnoreCase("") == false) count++;
+				if (rs[id].on[g1].equalsIgnoreCase("") == false)
+					count++;
 
 			return count;
 
@@ -325,21 +294,21 @@ class Dewddminecraft extends dewset implements skywar_in {
 	}
 
 	class telep implements Runnable {
-		private Player		pla;
-		private Location	loc;
+		private Player pla;
+		private Location loc;
 
 		public telep(Player pla, Location loc) {
 			this.loc = loc;
 			this.pla = pla;
-			Bukkit.getScheduler().scheduleSyncDelayedTask(ac, this,
-					rnd.nextInt(40));
+			Bukkit.getScheduler().scheduleSyncDelayedTask(ac, this, rnd.nextInt(40));
 
 		}
 
 		@Override
 		public void run() {
 
-			if (lasttp == 0) lasttp = System.currentTimeMillis();
+			if (lasttp == 0)
+				lasttp = System.currentTimeMillis();
 
 			long gx = System.currentTimeMillis();
 			if (gx - lasttp <= 2000) {
@@ -352,8 +321,7 @@ class Dewddminecraft extends dewset implements skywar_in {
 
 			pla.teleport(loc);
 			lasttp = System.currentTimeMillis();
-			dprint.r.printAll("teleported " + pla.getName() + " to "
-					+ loc.getBlockX() + "," + loc.getBlockY() + ","
+			dprint.r.printAll("teleported " + pla.getName() + " to " + loc.getBlockX() + "," + loc.getBlockY() + ","
 					+ loc.getBlockZ());
 
 			for (PotionEffectType aee : PotionEffectType.values())
@@ -362,25 +330,25 @@ class Dewddminecraft extends dewset implements skywar_in {
 		}
 	}
 
-	int					runnowid	= -1;			// force run
+	int runnowid = -1; // force run
 
-	long				lasttp		= 0;
+	long lasttp = 0;
 
-	public Random		rnd			= new Random();
+	public Random rnd = new Random();
 
-	public skywardata[]	rs;
+	public skywardata[] rs;
 
-	public int			rsmax		= 0;
+	public int rsmax = 0;
 
-	public int			x1			= 0;
-	public int			x2			= 0;
-	public int			y1			= 0;
+	public int x1 = 0;
+	public int x2 = 0;
+	public int y1 = 0;
 
-	public int			y2			= 0;
+	public int y2 = 0;
 
-	public int			z1			= 0;
+	public int z1 = 0;
 
-	public int			z2			= 0;
+	public int z2 = 0;
 
 	public Dewddminecraft() {
 		loaddewsetlistblockfile();
@@ -394,8 +362,7 @@ class Dewddminecraft extends dewset implements skywar_in {
 				p.sendMessage(tr.gettr("skywar_can't_add_not_yours"));
 				return false;
 			}
-		}
-		else if (!rs[rsid].builder[0].equalsIgnoreCase(p.getName()))
+		} else if (!rs[rsid].builder[0].equalsIgnoreCase(p.getName()))
 			p.sendMessage(tr.gettr("overide_adding_skywar"));
 
 		for (int g1 = 0; g1 < rs[rsid].maxp; g1++)
@@ -410,8 +377,7 @@ class Dewddminecraft extends dewset implements skywar_in {
 				rs[rsid].builder[g1] = name;
 				saveskywar();
 				reload();
-				dprint.r.printAll(p.getName() + " added " + name
-						+ " to skywar id " + rsid + " at slot " + g1);
+				dprint.r.printAll(p.getName() + " added " + name + " to skywar id " + rsid + " at slot " + g1);
 				return true;
 			}
 
@@ -432,7 +398,8 @@ class Dewddminecraft extends dewset implements skywar_in {
 				m = rs[i].builder[j].split(":");
 
 				if (m[0].equalsIgnoreCase("name")) {
-					if (m.length != 2) continue;
+					if (m.length != 2)
+						continue;
 
 					found = true;
 
@@ -454,8 +421,7 @@ class Dewddminecraft extends dewset implements skywar_in {
 	@Override
 	public void bp(int id, Player p) {
 		// id ok teleport player to bp zone
-		Block block = p.getLocation().getWorld()
-				.getBlockAt(rs[id].x2, rs[id].y2, rs[id].z2);
+		Block block = p.getLocation().getWorld().getBlockAt(rs[id].x2, rs[id].y2, rs[id].z2);
 		block.getChunk().load();
 		p.teleport(block.getLocation());
 		p.sendMessage(tr.gettr("teleported_to_skywar_id_blueprint") + id);
@@ -465,10 +431,12 @@ class Dewddminecraft extends dewset implements skywar_in {
 	@Override
 	public boolean canbuild(Block block, Player p) {
 		int getid = getrsid(block);
-		if (getid == -1) return true;
+		if (getid == -1)
+			return true;
 
 		int slotid = isplayerinrs(getid, p.getName());
-		if (slotid == -1) return false;
+		if (slotid == -1)
+			return false;
 
 		return true;
 	}
@@ -476,26 +444,30 @@ class Dewddminecraft extends dewset implements skywar_in {
 	@Override
 	public boolean canbuild(Block block, String p) {
 		int getid = getrsid(block);
-		if (getid == -1) return true;
+		if (getid == -1)
+			return true;
 
 		int slotid = isplayerinrs(getid, p);
-		if (slotid == -1) return false;
+		if (slotid == -1)
+			return false;
 
 		return true;
 	}
 
 	@Override
-	public boolean checkpermissionarea(Block block, Player player,
-			String modeevent) {
+	public boolean checkpermissionarea(Block block, Player player, String modeevent) {
 		if (modeevent.equalsIgnoreCase("dewset")) {
 			// check rs protect
-			if (player.hasPermission(skywar_in.poveride)) return false;
+			if (player.hasPermission(skywar_in.poveride))
+				return false;
 
 			int getid = getrsid(block);
-			if (getid == -1) return true;
+			if (getid == -1)
+				return true;
 
 			int getslot = isplayerinrs(getid, player.getName());
-			if (getslot == -1) return true;
+			if (getslot == -1)
+				return true;
 
 			return false;
 		}
@@ -514,11 +486,11 @@ class Dewddminecraft extends dewset implements skywar_in {
 	public void clean_offline() {
 		for (int r1 = 0; r1 < rsmax; r1++)
 			for (int g1 = 0; g1 < rs[r1].maxp; g1++) {
-				if (rs[r1].on[g1].equalsIgnoreCase("")) continue;
+				if (rs[r1].on[g1].equalsIgnoreCase(""))
+					continue;
 
 				if (Bukkit.getPlayer(rs[r1].on[g1]) == null) {
-					dprint.r.printAll(rs[r1].on[g1] + " is offline " + r1
-							+ " = " + rs[r1].getonnow(r1) + "/"
+					dprint.r.printAll(rs[r1].on[g1] + " is offline " + r1 + " = " + rs[r1].getonnow(r1) + "/"
 							+ (rs[r1].maxp - 1));
 					rs[r1].on[g1] = "";
 				}
@@ -568,8 +540,7 @@ class Dewddminecraft extends dewset implements skywar_in {
 		rs[rsmax - 1].z2 = mz;
 
 		p.sendMessage("saving this skywar to id " + (rsmax - 1));
-		p.sendMessage("position = " + x1 + "," + y1 + "," + z1 + " to " + x2
-				+ "," + y2 + "," + z2);
+		p.sendMessage("position = " + x1 + "," + y1 + "," + z1 + " to " + x2 + "," + y2 + "," + z2);
 		p.sendMessage("max player = " + maxplayer);
 
 		saveskywar();
@@ -622,7 +593,8 @@ class Dewddminecraft extends dewset implements skywar_in {
 					break;
 				}
 
-			if (nearp == false) return xx;
+			if (nearp == false)
+				return xx;
 
 		}
 
@@ -638,9 +610,11 @@ class Dewddminecraft extends dewset implements skywar_in {
 				m = rs[i].builder[j].split(":");
 
 				if (m[0].equalsIgnoreCase("name")) {
-					if (m.length != 2) continue;
+					if (m.length != 2)
+						continue;
 
-					if (m[1].indexOf(sgr) > -1) return i;
+					if (m[1].indexOf(sgr) > -1)
+						return i;
 
 				}
 
@@ -657,7 +631,8 @@ class Dewddminecraft extends dewset implements skywar_in {
 			m = rs[i].builder[j].split(":");
 
 			if (m[0].equalsIgnoreCase("name")) {
-				if (m.length != 2) continue;
+				if (m.length != 2)
+					continue;
 
 				return m[1];
 
@@ -675,12 +650,10 @@ class Dewddminecraft extends dewset implements skywar_in {
 			return -1;
 
 		for (int l = 0; l < rsmax; l++)
-			if (block.getLocation().getX() >= rs[l].x1
-					&& block.getLocation().getX() <= rs[l].x2
-					&& block.getLocation().getY() >= rs[l].y1
-					&& block.getLocation().getY() <= rs[l].y2
-					&& block.getLocation().getZ() >= rs[l].z1
-					&& block.getLocation().getZ() <= rs[l].z2) return l;
+			if (block.getLocation().getX() >= rs[l].x1 && block.getLocation().getX() <= rs[l].x2
+					&& block.getLocation().getY() >= rs[l].y1 && block.getLocation().getY() <= rs[l].y2
+					&& block.getLocation().getZ() >= rs[l].z1 && block.getLocation().getZ() <= rs[l].z2)
+				return l;
 
 		return -1;
 	}
@@ -689,7 +662,8 @@ class Dewddminecraft extends dewset implements skywar_in {
 	public int isplayerinrs(int rsid, String name) {
 
 		for (int i = 0; i < skywar_in.maxbuilder; i++)
-			if (rs[rsid].builder[i].equalsIgnoreCase(name)) return i;
+			if (rs[rsid].builder[i].equalsIgnoreCase(name))
+				return i;
 
 		return -1;
 	}
@@ -707,8 +681,7 @@ class Dewddminecraft extends dewset implements skywar_in {
 		// check online max
 
 		if (rs[id].getonnow(id) == rs[id].maxp - 1) {
-			p.sendMessage("this skywar id " + id + " is full "
-					+ rs[id].getonnow(id) + "/" + (rs[id].maxp - 1));
+			p.sendMessage("this skywar id " + id + " is full " + rs[id].getonnow(id) + "/" + (rs[id].maxp - 1));
 			return -1;
 		}
 
@@ -717,21 +690,21 @@ class Dewddminecraft extends dewset implements skywar_in {
 			for (int g1 = 0; g1 < rs[r1].maxp; g1++)
 				if (rs[r1].on[g1].equalsIgnoreCase(p.getName())) {
 					rs[r1].on[g1] = "";
-					dprint.r.printAll(p.getName()
-							+ " has been removed from skywar " + r1 + " = "
-							+ rs[r1].getonnow(r1) + "/" + (rs[r1].maxp - 1));
+					dprint.r.printAll(p.getName() + " has been removed from skywar " + r1 + " = " + rs[r1].getonnow(r1)
+							+ "/" + (rs[r1].maxp - 1));
 				}
 
 		// add player
 		for (int g1 = 0; g1 < rs[id].maxp; g1++)
 			if (rs[id].on[g1].equalsIgnoreCase("")) {
 				rs[id].on[g1] = p.getName();
-				dprint.r.printAll(p.getName() + " joined to skywar " + id
-						+ " = " + rs[id].getonnow(id) + "/" + (rs[id].maxp - 1));
+				dprint.r.printAll(p.getName() + " joined to skywar " + id + " = " + rs[id].getonnow(id) + "/"
+						+ (rs[id].maxp - 1));
 
 				// auto join
 				for (Player plr : p.getWorld().getPlayers())
-					if (plr.getInventory().first(83) > -1) join(id, plr);
+					if (plr.getInventory().first(83) > -1)
+						join(id, plr);
 
 				skywar_go();
 				return id;
@@ -750,8 +723,10 @@ class Dewddminecraft extends dewset implements skywar_in {
 
 		p.sendMessage("this id = " + getid + " maxp " + rs[getid].maxp);
 		for (int i = 0; i < skywar_in.maxbuilder; i++) {
-			if (rs[getid].builder[i].equalsIgnoreCase("")) continue;
-			if (rs[getid].builder[i].equalsIgnoreCase("")) continue;
+			if (rs[getid].builder[i].equalsIgnoreCase(""))
+				continue;
+			if (rs[getid].builder[i].equalsIgnoreCase(""))
+				continue;
 
 			p.sendMessage(rs[getid].builder[i]);
 		}
@@ -827,13 +802,11 @@ class Dewddminecraft extends dewset implements skywar_in {
 
 			}
 
-			dprint.r.printAll("ptdew&DewDD : " + tr.gettr("loaded_skywar_file")
-					+ filena);
+			dprint.r.printAll("ptdew&DewDD : " + tr.gettr("loaded_skywar_file") + filena);
 			autoaddname();
 
 			in.close();
-		}
-		catch (Exception e) {// Catch exception if any
+		} catch (Exception e) {// Catch exception if any
 			dprint.r.printAll("Error load " + filena + "  " + e.getMessage());
 		}
 	}
@@ -863,13 +836,11 @@ class Dewddminecraft extends dewset implements skywar_in {
 				p.sendMessage("you are not owner of this skywar zone so can't removing member");
 				return false;
 			}
-		}
-		else if (!rs[rsid].builder[0].equalsIgnoreCase(p.getName()))
+		} else if (!rs[rsid].builder[0].equalsIgnoreCase(p.getName()))
 			p.sendMessage("overide this zone removing");
 
 		if (name.equalsIgnoreCase(p.getName())) {
-			dprint.r.printAll(p.getName()
-					+ " try to remove himself from his skywar zone : O");
+			dprint.r.printAll(p.getName() + " try to remove himself from his skywar zone : O");
 			return false;
 		}
 
@@ -878,8 +849,7 @@ class Dewddminecraft extends dewset implements skywar_in {
 				rs[rsid].builder[g1] = "";
 				saveskywar();
 				reload();
-				dprint.r.printAll(p.getName() + " removed " + name
-						+ " from skywar id " + rsid + " at slot " + g1);
+				dprint.r.printAll(p.getName() + " removed " + name + " from skywar id " + rsid + " at slot " + g1);
 
 				return true;
 			}
@@ -897,8 +867,7 @@ class Dewddminecraft extends dewset implements skywar_in {
 			for (int f = 0; f < rs[e].maxp; f++)
 				if (rs[e].on[f].equalsIgnoreCase(pname)) {
 
-					dprint.r.printAll(tr.gettr("force_runnow_find_player")
-							+ pname + " found at " + e);
+					dprint.r.printAll(tr.gettr("force_runnow_find_player") + pname + " found at " + e);
 					runnowid = e;
 
 					skywar_go();
@@ -913,8 +882,7 @@ class Dewddminecraft extends dewset implements skywar_in {
 		File dir = new File(skywar_in.folder_name_skywar);
 		dir.mkdir();
 
-		String filena = skywar_in.folder_name_skywar + File.separator
-				+ skywar_in.file_name;
+		String filena = skywar_in.folder_name_skywar + File.separator + skywar_in.file_name;
 		File fff = new File(filena);
 
 		FileWriter fwriter;
@@ -925,11 +893,11 @@ class Dewddminecraft extends dewset implements skywar_in {
 			fwriter = new FileWriter(fff);
 
 			for (int y = 0; y < rsmax; y++) {
-				if (rs[y].maxp == 0) continue;
+				if (rs[y].maxp == 0)
+					continue;
 
 				String wr = "";
-				wr = rs[y].x1 + " " + rs[y].y1 + " " + rs[y].z1 + " "
-						+ rs[y].x2 + " " + rs[y].y2 + " " + rs[y].z2 + " "
+				wr = rs[y].x1 + " " + rs[y].y1 + " " + rs[y].z1 + " " + rs[y].x2 + " " + rs[y].y2 + " " + rs[y].z2 + " "
 						+ rs[y].maxp;
 
 				for (int r = 0; r < skywar_in.maxbuilder; r++)
@@ -943,8 +911,7 @@ class Dewddminecraft extends dewset implements skywar_in {
 			dprint.r.printC("ptdew&dewdd:saved " + filena);
 			return;
 
-		}
-		catch (IOException e) {
+		} catch (IOException e) {
 			// Auto-generated catch block
 			e.printStackTrace();
 		}
@@ -962,15 +929,15 @@ class Dewddminecraft extends dewset implements skywar_in {
 			m = rs[id].builder[j].split(":");
 
 			if (m[0].equalsIgnoreCase("name")) {
-				if (m.length != 2) continue;
+				if (m.length != 2)
+					continue;
 
 				found = true;
 				// if found name
 				// set it
 
 				rs[id].builder[j] = "name:" + name;
-				p.sendMessage("edited skywar name "
-						+ rs[id].builder[skywar_in.maxbuilder - 1]);
+				p.sendMessage("edited skywar name " + rs[id].builder[skywar_in.maxbuilder - 1]);
 				saveskywar();
 				return;
 			}
@@ -981,8 +948,7 @@ class Dewddminecraft extends dewset implements skywar_in {
 			// not found
 
 			rs[id].builder[skywar_in.maxbuilder - 1] = "name:" + name;
-			p.sendMessage("set done skywar name "
-					+ rs[id].builder[skywar_in.maxbuilder - 1]);
+			p.sendMessage("set done skywar name " + rs[id].builder[skywar_in.maxbuilder - 1]);
 			saveskywar();
 			return;
 		}
@@ -1001,8 +967,8 @@ class Dewddminecraft extends dewset implements skywar_in {
 public class skywar implements Listener {
 
 	class chatx implements Runnable {
-		private String	message	= "";
-		private Player	player	= null;
+		private String message = "";
+		private Player player = null;
 
 		public chatx(String message, Player player) {
 			this.message = message;
@@ -1013,8 +979,7 @@ public class skywar implements Listener {
 		public void run() {
 			String[] m = message.split("\\s+");
 
-			if (m[0].equalsIgnoreCase("dewextend") == true
-					|| message.equalsIgnoreCase("de") == true) {
+			if (m[0].equalsIgnoreCase("dewextend") == true || message.equalsIgnoreCase("de") == true) {
 				dew.dewextend(player);
 
 				return;
@@ -1023,14 +988,11 @@ public class skywar implements Listener {
 			if (m[0].equalsIgnoreCase("dewselectcube") == true)
 				if (m.length == 1) {
 
-					player.sendMessage("item on your hand = radius  = "
-							+ player.getItemInHand().getAmount());
-					dew.dewselectcube(player, player.getItemInHand()
-							.getAmount());
+					player.sendMessage("item on your hand = radius  = " + player.getItemInHand().getAmount());
+					dew.dewselectcube(player, player.getItemInHand().getAmount());
 					return;
 
-				}
-				else if (m.length == 2) {
+				} else if (m.length == 2) {
 					if (dew.isNumeric(m[1]) == false) {
 						player.sendMessage("only number please");
 						return;
@@ -1046,8 +1008,8 @@ public class skywar implements Listener {
 	}
 
 	class chatz extends Thread {
-		private String	message	= "";
-		private Player	player	= null;
+		private String message = "";
+		private Player player = null;
 
 		public chatz(String message, Player player) {
 			this.message = message;
@@ -1104,38 +1066,30 @@ public class skywar implements Listener {
 			for (String element : h)
 				if (m[0].equalsIgnoreCase(element) == true) {
 					if (m.length == 1)
-						dew.runter(element, player, player.getItemInHand()
-								.getTypeId(), player.getItemInHand().getData()
-								.getData());
+						dew.runter(element, player, player.getItemInHand().getTypeId(),
+								player.getItemInHand().getData().getData());
 					else if (m.length == 2) {
 						String[] m2 = m[1].split(":");
 
 						int itemid = 0;
 						byte dataid = 0;
 
-						player.sendMessage("m2[0] = " + m2[0] + " search.. = "
-								+ dew.getmaterialrealname(m2[0]));
+						player.sendMessage("m2[0] = " + m2[0] + " search.. = " + dew.getmaterialrealname(m2[0]));
 
 						if (dew.isNumeric(m2[0]) == true) {
 							if (Material.getMaterial(Integer.parseInt(m2[0])) == null)
-								player.sendMessage(tr
-										.gettr("argument_1_what_the_hell_item"));
+								player.sendMessage(tr.gettr("argument_1_what_the_hell_item"));
 							else
-								itemid = Material.getMaterial(
-										Integer.parseInt(m2[0])).getId();
-						}
-						else if (Material.getMaterial(dew
-								.getmaterialrealname(m2[0])) == null)
-							player.sendMessage(tr
-									.gettr("argument_1_what_the_hell_item"));
+								itemid = Material.getMaterial(Integer.parseInt(m2[0])).getId();
+						} else if (Material.getMaterial(dew.getmaterialrealname(m2[0])) == null)
+							player.sendMessage(tr.gettr("argument_1_what_the_hell_item"));
 						else
-							itemid = Material.getMaterial(
-									dew.getmaterialrealname(m2[0])).getId();
+							itemid = Material.getMaterial(dew.getmaterialrealname(m2[0])).getId();
 
-						if (m2.length == 2) dataid = Byte.parseByte(m2[1]);
+						if (m2.length == 2)
+							dataid = Byte.parseByte(m2[1]);
 
-						player.sendMessage("itemid = " + itemid + ", dataid = "
-								+ dataid);
+						player.sendMessage("itemid = " + itemid + ", dataid = " + dataid);
 						dew.runter(element, player, itemid, dataid);
 					}
 
@@ -1143,90 +1097,70 @@ public class skywar implements Listener {
 				}
 
 			// dewset
-			if (m[0].equalsIgnoreCase("dewset") == true
-					|| m[0].equalsIgnoreCase("ds") == true) {
+			if (m[0].equalsIgnoreCase("dewset") == true || m[0].equalsIgnoreCase("ds") == true) {
 				int a1 = -29;
 				byte a2 = -29;
 				int a3 = -29;
 				byte a4 = 0;
 
 				if (m.length == 1)
-					dew.dewset(player, -29, (byte) -29, player.getItemInHand()
-							.getTypeId(), player.getItemInHand().getData()
-							.getData(), false);
+					dew.dewset(player, -29, (byte) -29, player.getItemInHand().getTypeId(),
+							player.getItemInHand().getData().getData(), false);
 				else if (m.length == 2) { // dewset 005:?
 					String[] m2 = m[1].split(":");
 
 					if (dew.isNumeric(m2[0]) == true) {
 						if (Material.getMaterial(Integer.parseInt(m2[0])) == null)
-							player.sendMessage(tr
-									.gettr("argument_1_what_the_hell_item"));
+							player.sendMessage(tr.gettr("argument_1_what_the_hell_item"));
 						else
-							a3 = Material.getMaterial(Integer.parseInt(m2[0]))
-									.getId();
-					}
-					else if (Material.getMaterial(dew
-							.getmaterialrealname(m2[0])) == null)
-						player.sendMessage(tr
-								.gettr("argument_1_what_the_hell_item"));
+							a3 = Material.getMaterial(Integer.parseInt(m2[0])).getId();
+					} else if (Material.getMaterial(dew.getmaterialrealname(m2[0])) == null)
+						player.sendMessage(tr.gettr("argument_1_what_the_hell_item"));
 					else
-						a3 = Material.getMaterial(
-								dew.getmaterialrealname(m2[0])).getId();
+						a3 = Material.getMaterial(dew.getmaterialrealname(m2[0])).getId();
 
 					// data if 2
-					if (m2.length == 2) a4 = Byte.parseByte(m2[1]);
+					if (m2.length == 2)
+						a4 = Byte.parseByte(m2[1]);
 
-					player.sendMessage("itemid = " + a3 + ":" + a4 + " and "
-							+ a1 + ":" + a2);
+					player.sendMessage("itemid = " + a3 + ":" + a4 + " and " + a1 + ":" + a2);
 					dew.dewset(player, a1, a2, a3, a4, false);
-				}
-				else if (m.length == 3) { // dewset 005:? 003:?
+				} else if (m.length == 3) { // dewset 005:? 003:?
 					String[] m2 = m[1].split(":");
 
 					// a1
 
 					if (dew.isNumeric(m2[0]) == true) {
 						if (Material.getMaterial(Integer.parseInt(m2[0])) == null)
-							player.sendMessage(tr
-									.gettr("argument_1_what_the_hell_item"));
+							player.sendMessage(tr.gettr("argument_1_what_the_hell_item"));
 						else
-							a3 = Material.getMaterial(Integer.parseInt(m2[0]))
-									.getId();
-					}
-					else if (Material.getMaterial(dew
-							.getmaterialrealname(m2[0])) == null)
-						player.sendMessage(tr
-								.gettr("argument_1_what_the_hell_item"));
+							a3 = Material.getMaterial(Integer.parseInt(m2[0])).getId();
+					} else if (Material.getMaterial(dew.getmaterialrealname(m2[0])) == null)
+						player.sendMessage(tr.gettr("argument_1_what_the_hell_item"));
 					else
-						a3 = Material.getMaterial(
-								dew.getmaterialrealname(m2[0])).getId();
+						a3 = Material.getMaterial(dew.getmaterialrealname(m2[0])).getId();
 
 					// a2
-					if (m2.length == 2) a4 = Byte.parseByte(m2[1]);
+					if (m2.length == 2)
+						a4 = Byte.parseByte(m2[1]);
 
 					// a3
 					m2 = m[2].split(":");
 					if (dew.isNumeric(m2[0]) == true) {
 						if (Material.getMaterial(Integer.parseInt(m2[0])) == null)
-							player.sendMessage(tr
-									.gettr("argument_1_what_the_hell_item"));
+							player.sendMessage(tr.gettr("argument_1_what_the_hell_item"));
 						else
-							a1 = Material.getMaterial(Integer.parseInt(m2[0]))
-									.getId();
-					}
-					else if (Material.getMaterial(dew
-							.getmaterialrealname(m2[0])) == null)
-						player.sendMessage(tr
-								.gettr("argument_1_what_the_hell_item"));
+							a1 = Material.getMaterial(Integer.parseInt(m2[0])).getId();
+					} else if (Material.getMaterial(dew.getmaterialrealname(m2[0])) == null)
+						player.sendMessage(tr.gettr("argument_1_what_the_hell_item"));
 					else
-						a1 = Material.getMaterial(
-								dew.getmaterialrealname(m2[0])).getId();
+						a1 = Material.getMaterial(dew.getmaterialrealname(m2[0])).getId();
 
 					// a2
-					if (m2.length == 2) a2 = Byte.parseByte(m2[1]);
+					if (m2.length == 2)
+						a2 = Byte.parseByte(m2[1]);
 
-					player.sendMessage("itemid = " + a1 + ":" + a2 + " and "
-							+ a3 + ":" + a4);
+					player.sendMessage("itemid = " + a1 + ":" + a2 + " and " + a3 + ":" + a4);
 					dew.dewset(player, a1, a2, a3, a4, false);
 				}
 
@@ -1234,90 +1168,70 @@ public class skywar implements Listener {
 			} // dewset
 
 			// dewset 444 00 555 00
-			if (m[0].equalsIgnoreCase("dewxet") == true
-					|| m[0].equalsIgnoreCase("dx") == true) {
+			if (m[0].equalsIgnoreCase("dewxet") == true || m[0].equalsIgnoreCase("dx") == true) {
 				int a1 = -29;
 				byte a2 = -29;
 				int a3 = -29;
 				byte a4 = 0;
 
 				if (m.length == 1)
-					dew.dewset(player, -29, (byte) -29, player.getItemInHand()
-							.getTypeId(), player.getItemInHand().getData()
-							.getData(), true);
+					dew.dewset(player, -29, (byte) -29, player.getItemInHand().getTypeId(),
+							player.getItemInHand().getData().getData(), true);
 				else if (m.length == 2) { // dewset 005:?
 					String[] m2 = m[1].split(":");
 
 					if (dew.isNumeric(m2[0]) == true) {
 						if (Material.getMaterial(Integer.parseInt(m2[0])) == null)
-							player.sendMessage(tr
-									.gettr("argument_1_what_the_hell_item"));
+							player.sendMessage(tr.gettr("argument_1_what_the_hell_item"));
 						else
-							a3 = Material.getMaterial(Integer.parseInt(m2[0]))
-									.getId();
-					}
-					else if (Material.getMaterial(dew
-							.getmaterialrealname(m2[0])) == null)
-						player.sendMessage(tr
-								.gettr("argument_1_what_the_hell_item"));
+							a3 = Material.getMaterial(Integer.parseInt(m2[0])).getId();
+					} else if (Material.getMaterial(dew.getmaterialrealname(m2[0])) == null)
+						player.sendMessage(tr.gettr("argument_1_what_the_hell_item"));
 					else
-						a3 = Material.getMaterial(
-								dew.getmaterialrealname(m2[0])).getId();
+						a3 = Material.getMaterial(dew.getmaterialrealname(m2[0])).getId();
 
 					// data if 2
-					if (m2.length == 2) a4 = Byte.parseByte(m2[1]);
+					if (m2.length == 2)
+						a4 = Byte.parseByte(m2[1]);
 
-					player.sendMessage("itemid = " + a3 + ":" + a4 + " and "
-							+ a1 + ":" + a2);
+					player.sendMessage("itemid = " + a3 + ":" + a4 + " and " + a1 + ":" + a2);
 					dew.dewset(player, a1, a2, a3, a4, true);
-				}
-				else if (m.length == 3) { // dewset 005:? 003:?
+				} else if (m.length == 3) { // dewset 005:? 003:?
 					String[] m2 = m[1].split(":");
 
 					// a1
 					if (dew.isNumeric(m2[0]) == true) {
 						if (Material.getMaterial(Integer.parseInt(m2[0])) == null)
-							player.sendMessage(tr
-									.gettr("argument_1_what_the_hell_item"));
+							player.sendMessage(tr.gettr("argument_1_what_the_hell_item"));
 						else
-							a3 = Material.getMaterial(Integer.parseInt(m2[0]))
-									.getId();
-					}
-					else if (Material.getMaterial(dew
-							.getmaterialrealname(m2[0])) == null)
-						player.sendMessage(tr
-								.gettr("argument_1_what_the_hell_item"));
+							a3 = Material.getMaterial(Integer.parseInt(m2[0])).getId();
+					} else if (Material.getMaterial(dew.getmaterialrealname(m2[0])) == null)
+						player.sendMessage(tr.gettr("argument_1_what_the_hell_item"));
 					else
-						a3 = Material.getMaterial(
-								dew.getmaterialrealname(m2[0])).getId();
+						a3 = Material.getMaterial(dew.getmaterialrealname(m2[0])).getId();
 
 					// a2
-					if (m2.length == 2) a4 = Byte.parseByte(m2[1]);
+					if (m2.length == 2)
+						a4 = Byte.parseByte(m2[1]);
 
 					// a3
 					m2 = m[2].split(":");
 
 					if (dew.isNumeric(m2[0]) == true) {
 						if (Material.getMaterial(Integer.parseInt(m2[0])) == null)
-							player.sendMessage(tr
-									.gettr("argument_1_what_the_hell_item"));
+							player.sendMessage(tr.gettr("argument_1_what_the_hell_item"));
 						else
-							a1 = Material.getMaterial(Integer.parseInt(m2[0]))
-									.getId();
-					}
-					else if (Material.getMaterial(dew
-							.getmaterialrealname(m2[0])) == null)
-						player.sendMessage(tr
-								.gettr("argument_1_what_the_hell_item"));
+							a1 = Material.getMaterial(Integer.parseInt(m2[0])).getId();
+					} else if (Material.getMaterial(dew.getmaterialrealname(m2[0])) == null)
+						player.sendMessage(tr.gettr("argument_1_what_the_hell_item"));
 					else
-						a1 = Material.getMaterial(
-								dew.getmaterialrealname(m2[0])).getId();
+						a1 = Material.getMaterial(dew.getmaterialrealname(m2[0])).getId();
 
 					// a2
-					if (m2.length == 2) a2 = Byte.parseByte(m2[1]);
+					if (m2.length == 2)
+						a2 = Byte.parseByte(m2[1]);
 
-					player.sendMessage("itemid = " + a1 + ":" + a2 + " and "
-							+ a3 + ":" + a4);
+					player.sendMessage("itemid = " + a1 + ":" + a2 + " and " + a3 + ":" + a4);
 					dew.dewset(player, a1, a2, a3, a4, true);
 				}
 
@@ -1325,8 +1239,7 @@ public class skywar implements Listener {
 			} // dewset
 
 			// dewdig
-			if (message.equalsIgnoreCase("dewdddig") == true
-					|| message.equalsIgnoreCase("ddd") == true) {
+			if (message.equalsIgnoreCase("dewdddig") == true || message.equalsIgnoreCase("ddd") == true) {
 
 				dew.dewdig(player);
 
@@ -1334,16 +1247,14 @@ public class skywar implements Listener {
 			}
 
 			// dewcopy
-			if (message.equalsIgnoreCase("dewcopy") == true
-					|| message.equalsIgnoreCase("dc") == true) {
+			if (message.equalsIgnoreCase("dewcopy") == true || message.equalsIgnoreCase("dc") == true) {
 				dew.dewcopy(player);
 
 				return;
 			}
 
 			// dewa
-			if (m[0].equalsIgnoreCase("dewa") == true
-					|| m[0].equalsIgnoreCase("da") == true) {
+			if (m[0].equalsIgnoreCase("dewa") == true || m[0].equalsIgnoreCase("da") == true) {
 
 				int amo = 0;
 				if (m.length == 1)
@@ -1361,8 +1272,7 @@ public class skywar implements Listener {
 				return;
 			}
 
-			if (message.equalsIgnoreCase("dewsetprivate") == true
-					|| message.equalsIgnoreCase("dsp") == true) {
+			if (message.equalsIgnoreCase("dewsetprivate") == true || message.equalsIgnoreCase("dsp") == true) {
 				dew.dewsetprivate(player);
 
 				return;
@@ -1372,8 +1282,8 @@ public class skywar implements Listener {
 	}
 
 	class commandrun implements Runnable {
-		private String	message	= "";
-		private Player	p;
+		private String message = "";
+		private Player p;
 
 		public commandrun(String message, Player p) {
 			this.message = message;
@@ -1392,7 +1302,8 @@ public class skywar implements Listener {
 						&& message.toLowerCase().startsWith("/changepassword ") == false
 						&& message.toLowerCase().startsWith("/register ") == false
 
-				) dprint.r.printAll(p.getName() + " : " + message);
+				)
+					dprint.r.printAll(p.getName() + " : " + message);
 
 				for (World w : Bukkit.getWorlds())
 					w.save();
@@ -1443,15 +1354,13 @@ public class skywar implements Listener {
 				} // 1
 				else if (m[1].equalsIgnoreCase("myzone")) {
 					if (!p.hasPermission(skywar_in.peditmember)) {
-						p.sendMessage("need permission "
-								+ skywar_in.peditmember);
+						p.sendMessage("need permission " + skywar_in.peditmember);
 						return;
 					}
 					String tname = "";
 					if (m.length == 2) {
 						tname = p.getName();
-					}
-					else if (m.length == 3) {
+					} else if (m.length == 3) {
 						tname = m[2];
 					}
 
@@ -1464,8 +1373,7 @@ public class skywar implements Listener {
 
 							}
 
-				}
-				else if (m[1].equalsIgnoreCase("forceplay")) {
+				} else if (m[1].equalsIgnoreCase("forceplay")) {
 					if (!p.hasPermission(skywar_in.pforceplay)) {
 						p.sendMessage("need permission " + skywar_in.pforceplay);
 						return;
@@ -1485,8 +1393,7 @@ public class skywar implements Listener {
 					}
 					dew.forceplay(p, m[2], id);
 
-				}
-				else if (m[1].equalsIgnoreCase("runnow")) {
+				} else if (m[1].equalsIgnoreCase("runnow")) {
 					if (!p.hasPermission(skywar_in.prunnow)) {
 						p.sendMessage("need permission " + skywar_in.prunnow);
 						return;
@@ -1503,8 +1410,7 @@ public class skywar implements Listener {
 
 					dew.runnow(m[2]);
 
-				}
-				else if (m[1].equalsIgnoreCase("cube")) {
+				} else if (m[1].equalsIgnoreCase("cube")) {
 					if (!p.hasPermission(skywar_in.pcreate)) {
 						p.sendMessage("need permission " + skywar_in.pcreate);
 						return;
@@ -1526,9 +1432,8 @@ public class skywar implements Listener {
 					dew.z1 = (int) (p.getLocation().getZ() - ra);
 					dew.z2 = (int) (p.getLocation().getZ() + ra);
 
-					p.sendMessage("cube selected = " + dew.x1 + "," + dew.y1
-							+ "," + dew.z1 + " to " + dew.x2 + "," + dew.y2
-							+ "," + dew.z2);
+					p.sendMessage("cube selected = " + dew.x1 + "," + dew.y1 + "," + dew.z1 + " to " + dew.x2 + ","
+							+ dew.y2 + "," + dew.z2);
 
 					return;
 
@@ -1541,8 +1446,7 @@ public class skywar implements Listener {
 					}
 
 					p.setItemInHand(new ItemStack(83, 1));
-				}
-				else if (m[1].equalsIgnoreCase("force")) {
+				} else if (m[1].equalsIgnoreCase("force")) {
 					if (!p.hasPermission(skywar_in.pjoin)) {
 						p.sendMessage("need permission " + skywar_in.pjoin);
 						return;
@@ -1552,8 +1456,7 @@ public class skywar implements Listener {
 						p.sendMessage("/skywar force <skywar name> <radius>");
 						p.sendMessage("id =  0 to " + (dew.rsmax - 1));
 						return;
-					}
-					else { // 4 arrguments
+					} else { // 4 arrguments
 
 						dew.clean_offline();
 
@@ -1567,8 +1470,7 @@ public class skywar implements Listener {
 								if (plr.getLocation().distance(p.getLocation()) < rad) {
 
 									if (plr.getGameMode() != GameMode.SURVIVAL) {
-										plr.sendMessage("you can't join skywar id "
-												+ id + " cuz Creative Mode");
+										plr.sendMessage("you can't join skywar id " + id + " cuz Creative Mode");
 										continue;
 									}
 									dew.join(id, plr);
@@ -1582,8 +1484,7 @@ public class skywar implements Listener {
 							if (plr.getLocation().distance(p.getLocation()) < rad) {
 
 								if (plr.getGameMode() != GameMode.SURVIVAL) {
-									plr.sendMessage("you can't join skywar id "
-											+ id + " cuz Creative Mode");
+									plr.sendMessage("you can't join skywar id " + id + " cuz Creative Mode");
 									continue;
 								}
 								dew.join(id, plr);
@@ -1592,25 +1493,20 @@ public class skywar implements Listener {
 						return;
 
 					}
-				}
-				else if (m[1].equalsIgnoreCase("max")) {
+				} else if (m[1].equalsIgnoreCase("max")) {
 					// show all list
 					dprint.r.printAll("skywar max = " + dew.rsmax);
 					for (int i = 0; i < dew.rsmax; i++) {
-						dprint.r.printAll("position = " + dew.rs[i].x1 + ","
-								+ dew.rs[i].y1 + "," + dew.rs[i].z1 + " to "
-								+ dew.rs[i].x2 + "," + dew.rs[i].y2 + ","
-								+ dew.rs[i].z2 + " max player is "
-								+ dew.rs[i].maxp + "  name: "
-								+ dew.getnamefromid(i));
+						dprint.r.printAll("position = " + dew.rs[i].x1 + "," + dew.rs[i].y1 + "," + dew.rs[i].z1
+								+ " to " + dew.rs[i].x2 + "," + dew.rs[i].y2 + "," + dew.rs[i].z2 + " max player is "
+								+ dew.rs[i].maxp + "  name: " + dew.getnamefromid(i));
 
 						for (int j = 0; j < skywar_in.maxbuilder; j++)
 							if (dew.rs[i].builder[j].equalsIgnoreCase(""))
 								continue;
 					}
 
-				}
-				else if (m[1].equalsIgnoreCase("list"))
+				} else if (m[1].equalsIgnoreCase("list"))
 					// show all list
 					dew.list(p.getLocation().getBlock(), p);
 				else if (m[1].equalsIgnoreCase("reload")) {
@@ -1622,11 +1518,9 @@ public class skywar implements Listener {
 					dew.reload();
 
 					return;
-				}
-				else if (m[1].equalsIgnoreCase("setname")) {
+				} else if (m[1].equalsIgnoreCase("setname")) {
 					if (!p.hasPermission(skywar_in.peditmember)) {
-						p.sendMessage("need permission "
-								+ skywar_in.peditmember);
+						p.sendMessage("need permission " + skywar_in.peditmember);
 						return;
 					}
 
@@ -1651,11 +1545,9 @@ public class skywar implements Listener {
 					}
 
 					dew.setnametoid(id, m[2], p);
-				}
-				else if (m[1].equalsIgnoreCase("add")) {
+				} else if (m[1].equalsIgnoreCase("add")) {
 					if (!p.hasPermission(skywar_in.peditmember)) {
-						p.sendMessage("need permission "
-								+ skywar_in.peditmember);
+						p.sendMessage("need permission " + skywar_in.peditmember);
 						return;
 					}
 
@@ -1671,11 +1563,9 @@ public class skywar implements Listener {
 					}
 
 					dew.add(p, id, m[2]);
-				}
-				else if (m[1].equalsIgnoreCase("remove")) {
+				} else if (m[1].equalsIgnoreCase("remove")) {
 					if (!p.hasPermission(skywar_in.peditmember)) {
-						p.sendMessage("need permission "
-								+ skywar_in.peditmember);
+						p.sendMessage("need permission " + skywar_in.peditmember);
 						return;
 					}
 
@@ -1691,8 +1581,7 @@ public class skywar implements Listener {
 					}
 
 					dew.remove(p, id, m[2]);
-				}
-				else if (m[1].equalsIgnoreCase("owner")) {
+				} else if (m[1].equalsIgnoreCase("owner")) {
 					if (!p.hasPermission(skywar_in.powner)) {
 						p.sendMessage("need permission " + skywar_in.powner);
 						return;
@@ -1710,8 +1599,7 @@ public class skywar implements Listener {
 					}
 
 					dew.owner(id, m[2]);
-				}
-				else if (m[1].equalsIgnoreCase("create")) {
+				} else if (m[1].equalsIgnoreCase("create")) {
 					if (!p.hasPermission(skywar_in.pcreate)) {
 						p.sendMessage("need permission " + skywar_in.pcreate);
 						return;
@@ -1729,8 +1617,7 @@ public class skywar implements Listener {
 							p.sendMessage("out of range player must be 1 - 10");
 							return;
 						}
-					}
-					catch (NumberFormatException err) {
+					} catch (NumberFormatException err) {
 						p.sendMessage("Please enter only int number");
 						return;
 					}
@@ -1738,8 +1625,7 @@ public class skywar implements Listener {
 					p.sendMessage("call create mothod " + id);
 					dew.create(id, p);
 
-				}
-				else if (m[1].equalsIgnoreCase("delete")) {
+				} else if (m[1].equalsIgnoreCase("delete")) {
 					if (!p.hasPermission(skywar_in.pdelete)) {
 						p.sendMessage("need permission " + skywar_in.pdelete);
 						return;
@@ -1753,8 +1639,7 @@ public class skywar implements Listener {
 
 					dew.delete(getj);
 
-				}
-				else if (m[1].equalsIgnoreCase("join")) {
+				} else if (m[1].equalsIgnoreCase("join")) {
 					if (!p.hasPermission(skywar_in.pjoin)) {
 						p.sendMessage("need permission " + skywar_in.pjoin);
 						return;
@@ -1764,8 +1649,7 @@ public class skywar implements Listener {
 						p.sendMessage("/skywar join <skywar name>");
 						p.sendMessage("id =  0 to " + (dew.rsmax - 1));
 						return;
-					}
-					else { // 3 arrguments
+					} else { // 3 arrguments
 
 						dew.clean_offline();
 						int id = dew.getidfromname(m[2]);
@@ -1777,8 +1661,7 @@ public class skywar implements Listener {
 						dew.join(id, p);
 
 					}
-				}
-				else if (m[1].equalsIgnoreCase("bp")) {
+				} else if (m[1].equalsIgnoreCase("bp")) {
 					if (!p.hasPermission(skywar_in.pbp)) {
 						p.sendMessage("need permission " + skywar_in.pbp);
 						return;
@@ -1788,8 +1671,7 @@ public class skywar implements Listener {
 						p.sendMessage("/skywar bp <skywar name>");
 						p.sendMessage("id =  0 to " + (dew.rsmax - 1));
 						return;
-					}
-					else { // if 3 arguments
+					} else { // if 3 arguments
 						int id = dew.getidfromname(m[2]);
 						if (id == -1) {
 							p.sendMessage("not found skywar name");
@@ -1821,9 +1703,7 @@ public class skywar implements Listener {
 
 					i++;
 					Thread.sleep(1000);
-					System.out
-							.println("dew main waiting for create dewset sleeping ac +"
-									+ i);
+					System.out.println("dew main waiting for create dewset sleeping ac +" + i);
 
 				}
 
@@ -1831,30 +1711,25 @@ public class skywar implements Listener {
 
 					i++;
 					Thread.sleep(1000);
-					System.out
-							.println("dew main waiting for create dewset sleeping dew +"
-									+ i);
+					System.out.println("dew main waiting for create dewset sleeping dew +" + i);
 
 					dew = new Dewddminecraft();
 
 				}
 
-				while (dew.ac == null) {
+				while (dewset.ac == null) {
 
 					i++;
 					Thread.sleep(1000);
-					System.out
-							.println("dew main waiting for create dewset sleeping dew ac +"
-									+ i);
+					System.out.println("dew main waiting for create dewset sleeping dew ac +" + i);
 
-					dew.ac = ac;
+					dewset.ac = ac;
 
 				}
 				// dew.loadmainfile();
 				dew.loadskywar();
 
-			}
-			catch (InterruptedException e) {
+			} catch (InterruptedException e) {
 
 				delay eee = new delay();
 				eee.start();
@@ -1867,13 +1742,14 @@ public class skywar implements Listener {
 
 	class resp implements Runnable {
 
-		private Player	p;
+		private Player p;
 
 		public resp(Player p) {
 			this.p = p;
 			Bukkit.getScheduler().scheduleSyncDelayedTask(ac, this, 100);
 		}
 
+		@Override
 		public void run() {
 			for (int cl = 0; cl < p.getInventory().getSize(); cl++)
 				p.getInventory().clear(cl);
@@ -1890,13 +1766,14 @@ public class skywar implements Listener {
 
 	class resplastplayer implements Runnable {
 
-		private Player	p;
+		private Player p;
 
 		public resplastplayer(Player p) {
 			this.p = p;
 			Bukkit.getScheduler().scheduleSyncDelayedTask(ac, this, 100);
 		}
 
+		@Override
 		public void run() {
 			for (int cl = 0; cl < p.getInventory().getSize(); cl++)
 				p.getInventory().clear(cl);
@@ -1905,16 +1782,15 @@ public class skywar implements Listener {
 			p.getInventory().setHelmet(new ItemStack(0));
 			p.getInventory().setLeggings(new ItemStack(0));
 
-			dprint.r.printAll(tr.gettr("lastplayer_teleperted_back_to_skywar")
-					+ p.getName());
+			dprint.r.printAll(tr.gettr("lastplayer_teleperted_back_to_skywar") + p.getName());
 
 			Bukkit.dispatchCommand(p, "warp skywar");
 		}
 	}
 
-	public JavaPlugin	ac	= null;
+	public JavaPlugin ac = null;
 
-	Dewddminecraft		dew	= null;
+	Dewddminecraft dew = null;
 
 	public skywar() {
 
@@ -1943,9 +1819,11 @@ public class skywar implements Listener {
 			return;
 		}
 
-		if (e.getPlayer().hasPermission(skywar_in.poveride)) return;
+		if (e.getPlayer().hasPermission(skywar_in.poveride))
+			return;
 		// check protect
-		if (!dew.canbuild(e.getBlock(), e.getPlayer())) e.setCancelled(true);
+		if (!dew.canbuild(e.getBlock(), e.getPlayer()))
+			e.setCancelled(true);
 	}
 
 	@EventHandler
@@ -1954,10 +1832,12 @@ public class skywar implements Listener {
 			return;
 		}
 
-		if (e.getPlayer().hasPermission(skywar_in.poveride)) return;
+		if (e.getPlayer().hasPermission(skywar_in.poveride))
+			return;
 
 		// check protect
-		if (!dew.canbuild(e.getBlock(), e.getPlayer())) e.setCancelled(true);
+		if (!dew.canbuild(e.getBlock(), e.getPlayer()))
+			e.setCancelled(true);
 	}
 
 	@EventHandler
@@ -2003,7 +1883,8 @@ public class skywar implements Listener {
 	@EventHandler
 	public void eventja(PlayerInteractEvent e) {
 
-		if (e.hasBlock() == false) return;
+		if (e.hasBlock() == false)
+			return;
 
 		if (!tr.isrunworld(ac.getName(), e.getPlayer().getWorld().getName())) {
 			return;
@@ -2015,25 +1896,20 @@ public class skywar implements Listener {
 		Block b = e.getClickedBlock();
 
 		if (e.getAction().equals(Action.PHYSICAL))
-			if (e.getClickedBlock().getTypeId() == 72
-					|| e.getClickedBlock().getTypeId() == 70) {
+			if (e.getClickedBlock().getTypeId() == 72 || e.getClickedBlock().getTypeId() == 70) {
 				Sign sign = null;
 
 				for (int rx = -1; rx <= 1; rx++)
 					for (int ry = -1; ry <= 1; ry++)
 						for (int rz = -1; rz <= 1; rz++) {
-							b = p.getLocation().getBlock()
-									.getRelative(rx, ry, rz);
+							b = p.getLocation().getBlock().getRelative(rx, ry, rz);
 
 							if (b.getTypeId() == 63 || b.getTypeId() == 68) {
 								sign = (Sign) b.getState();
 
-								if (sign.getLine(0)
-										.equalsIgnoreCase("[skywar]"))
-									if (sign.getLine(1)
-											.equalsIgnoreCase("join"))
-										dew.join(dew.getidfromname(sign
-												.getLine(2)), p);
+								if (sign.getLine(0).equalsIgnoreCase("[skywar]"))
+									if (sign.getLine(1).equalsIgnoreCase("join"))
+										dew.join(dew.getidfromname(sign.getLine(2)), p);
 							}
 						}
 
@@ -2050,25 +1926,21 @@ public class skywar implements Listener {
 				dew.x1 = b.getX();
 				dew.y1 = b.getY();
 				dew.z1 = b.getZ();
-				p.sendMessage("ptdew&dewdd : skywar set block 1 = " + dew.x1
-						+ "," + dew.y1 + "," + dew.z1 + " to " + dew.x2 + ","
-						+ dew.y2 + "," + dew.z2);
+				p.sendMessage("ptdew&dewdd : skywar set block 1 = " + dew.x1 + "," + dew.y1 + "," + dew.z1 + " to "
+						+ dew.x2 + "," + dew.y2 + "," + dew.z2);
 				return;
-			}
-			else if (e.getAction() == Action.RIGHT_CLICK_BLOCK) {
+			} else if (e.getAction() == Action.RIGHT_CLICK_BLOCK) {
 				dew.x2 = b.getX();
 				dew.y2 = b.getY();
 				dew.z2 = b.getZ();
-				p.sendMessage("ptdew&dewdd : skywar set block 2 = " + dew.x1
-						+ "," + dew.y1 + "," + dew.z1 + " to " + dew.x2 + ","
-						+ dew.y2 + "," + dew.z2);
+				p.sendMessage("ptdew&dewdd : skywar set block 2 = " + dew.x1 + "," + dew.y1 + "," + dew.z1 + " to "
+						+ dew.x2 + "," + dew.y2 + "," + dew.z2);
 				e.setCancelled(true);
 				return;
 			}
 		}
 
-		if (p.getItemInHand().getTypeId() == 290
-				&& e.getAction() == Action.LEFT_CLICK_BLOCK) {
+		if (p.getItemInHand().getTypeId() == 290 && e.getAction() == Action.LEFT_CLICK_BLOCK) {
 			// set x1y1z1
 			int getid = dew.getfreeselect(p);
 			dew.selectx1[getid] = b.getX();
@@ -2076,22 +1948,18 @@ public class skywar implements Listener {
 			dew.selectz1[getid] = b.getZ();
 			dew.selectworldname[getid] = b.getWorld().getName();
 
-			int countblock = Math.abs(1 + dew.selectx1[getid]
-					- dew.selectx2[getid])
+			int countblock = Math.abs(1 + dew.selectx1[getid] - dew.selectx2[getid])
 					* Math.abs(1 + dew.selecty1[getid] - dew.selecty2[getid])
 					* Math.abs(1 + dew.selectz1[getid] - dew.selectz2[getid]);
 
-			p.sendMessage("ptdew&dewdd: Block 1 = (" + dew.selectx1[getid]
-					+ "," + dew.selecty1[getid] + "," + dew.selectz1[getid]
-					+ ") to (" + dew.selectx2[getid] + ","
-					+ dew.selecty2[getid] + "," + dew.selectz2[getid] + ") = "
-					+ countblock);
+			p.sendMessage("ptdew&dewdd: Block 1 = (" + dew.selectx1[getid] + "," + dew.selecty1[getid] + ","
+					+ dew.selectz1[getid] + ") to (" + dew.selectx2[getid] + "," + dew.selecty2[getid] + ","
+					+ dew.selectz2[getid] + ") = " + countblock);
 			e.setCancelled(true);
 			return;
 		}
 
-		if (p.getItemInHand().getTypeId() == 290
-				&& e.getAction() == Action.RIGHT_CLICK_BLOCK) {
+		if (p.getItemInHand().getTypeId() == 290 && e.getAction() == Action.RIGHT_CLICK_BLOCK) {
 			// set x1y1z1
 
 			int getid = dew.getfreeselect(p);
@@ -2100,16 +1968,13 @@ public class skywar implements Listener {
 			dew.selectz2[getid] = b.getZ();
 			dew.selectworldname[getid] = b.getWorld().getName();
 
-			int countblock = Math.abs(1 + dew.selectx1[getid]
-					- dew.selectx2[getid])
+			int countblock = Math.abs(1 + dew.selectx1[getid] - dew.selectx2[getid])
 					* Math.abs(1 + dew.selecty1[getid] - dew.selecty2[getid])
 					* Math.abs(1 + dew.selectz1[getid] - dew.selectz2[getid]);
 
-			p.sendMessage("ptdew&dewdd: Block 2 = (" + dew.selectx1[getid]
-					+ "," + dew.selecty1[getid] + "," + dew.selectz1[getid]
-					+ ") to (" + dew.selectx2[getid] + ","
-					+ dew.selecty2[getid] + "," + dew.selectz2[getid] + ") = "
-					+ countblock);
+			p.sendMessage("ptdew&dewdd: Block 2 = (" + dew.selectx1[getid] + "," + dew.selecty1[getid] + ","
+					+ dew.selectz1[getid] + ") to (" + dew.selectx2[getid] + "," + dew.selecty2[getid] + ","
+					+ dew.selectz2[getid] + ") = " + countblock);
 			e.setCancelled(true);
 		}
 
@@ -2121,17 +1986,14 @@ public class skywar implements Listener {
 			dew.selectblock[getid] = b;
 			dew.selectworldname[getid] = b.getWorld().getName();
 
-			p.sendMessage("ptdew&dewdd: dew a selectblock with sword = block at ("
-					+ dew.selectblock[getid].getX()
-					+ ","
-					+ dew.selectblock[getid].getY()
-					+ ","
-					+ dew.selectblock[getid].getZ() + ")");
+			p.sendMessage("ptdew&dewdd: dew a selectblock with sword = block at (" + dew.selectblock[getid].getX() + ","
+					+ dew.selectblock[getid].getY() + "," + dew.selectblock[getid].getZ() + ")");
 			// event.setCancelled(true);
 		}
 
 		if (e.getAction() == Action.LEFT_CLICK_BLOCK) {
-			if (e.getPlayer().hasPermission(skywar_in.poveride)) return;
+			if (e.getPlayer().hasPermission(skywar_in.poveride))
+				return;
 
 			if (!dew.canbuild(e.getClickedBlock(), e.getPlayer()))
 				e.setCancelled(true);
@@ -2146,11 +2008,12 @@ public class skywar implements Listener {
 						dew.join(Integer.parseInt(sign.getLine(2)), p);
 			}
 
-			if (e.getPlayer().hasPermission(skywar_in.poveride)) return;
+			if (e.getPlayer().hasPermission(skywar_in.poveride))
+				return;
 
 			if (!dew.canbuild(e.getClickedBlock(), e.getPlayer())
-					&& !dew.canbuild(e.getClickedBlock(),
-							skywar_in.flagrightclick)) e.setCancelled(true);
+					&& !dew.canbuild(e.getClickedBlock(), skywar_in.flagrightclick))
+				e.setCancelled(true);
 
 			if (b.getTypeId() == 63 || b.getTypeId() == 68) {
 				Sign sign = (Sign) b.getState();
@@ -2183,25 +2046,20 @@ public class skywar implements Listener {
 
 			}
 
-		}
-		else if (e.getTo().getWorld().getName().equalsIgnoreCase("skywar")) {
+		} else if (e.getTo().getWorld().getName().equalsIgnoreCase("skywar")) {
 			// check item
 			for (int cl = 0; cl < p.getInventory().getSize(); cl++)
 				if (p.getInventory().getItem(cl) != null) {
-					p.sendMessage(tr
-							.gettr("can't_go_to_skywar_world_empty_your_inven"));
+					p.sendMessage(tr.gettr("can't_go_to_skywar_world_empty_your_inven"));
 					e.setCancelled(true);
 					return;
 				}
 
-			if (p.getInventory().getBoots() != null
-					|| p.getInventory().getChestplate() != null
-					|| p.getInventory().getHelmet() != null
-					|| p.getInventory().getLeggings() != null
+			if (p.getInventory().getBoots() != null || p.getInventory().getChestplate() != null
+					|| p.getInventory().getHelmet() != null || p.getInventory().getLeggings() != null
 
 			) {
-				p.sendMessage(tr
-						.gettr("can't_go_to_skywar_world_empty_your_inven"));
+				p.sendMessage(tr.gettr("can't_go_to_skywar_world_empty_your_inven"));
 				e.setCancelled(true);
 				return;
 			}
@@ -2212,28 +2070,27 @@ public class skywar implements Listener {
 } // class
 
 interface skywar_in {
-	public String	file_name			= "ptdew_dewdd_skywar_location.txt";
-	public String	flagrightclick		= "<right>";
+	public String file_name = "ptdew_dewdd_skywar_location.txt";
+	public String flagrightclick = "<right>";
 
-	public String	folder_name_skywar	= "plugins" + File.separator
-												+ "dewdd_skywar";
+	public String folder_name_skywar = "plugins" + File.separator + "dewdd_skywar";
 
-	public int		fongnam				= 19;
-	public int		maxbuilder			= 10;
-	public String	pbp					= "dewdd.skywar.bp";
-	public String	pcreate				= "dewdd.skywar.create";
-	public String	pdelete				= "dewdd.skywar.delete";
+	public int fongnam = 19;
+	public int maxbuilder = 10;
+	public String pbp = "dewdd.skywar.bp";
+	public String pcreate = "dewdd.skywar.create";
+	public String pdelete = "dewdd.skywar.delete";
 
-	public String	peditmember			= "dewdd.skywar.editmember";
+	public String peditmember = "dewdd.skywar.editmember";
 
-	public String	pjoin				= "dewdd.skywar.join";
-	public String	poveride			= "dewdd.skywar.overide";
-	public String	powner				= "dewdd.skywar.owner";
-	public String	preload				= "dewdd.skywar.reload";
-	public String	prunnow				= "dewdd.skywar.runnow";
-	public String	pforceplay			= "dewdd.skywar.forceplay";
+	public String pjoin = "dewdd.skywar.join";
+	public String poveride = "dewdd.skywar.overide";
+	public String powner = "dewdd.skywar.owner";
+	public String preload = "dewdd.skywar.reload";
+	public String prunnow = "dewdd.skywar.runnow";
+	public String pforceplay = "dewdd.skywar.forceplay";
 
-	public String	worldrun			= "skywar";
+	public String worldrun = "skywar";
 
 	public boolean add(Player p, int rsid, String name);
 

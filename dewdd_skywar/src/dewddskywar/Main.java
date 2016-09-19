@@ -12,14 +12,13 @@ import org.bukkit.plugin.java.JavaPlugin;
 import dewddtran.tr;
 
 public class Main extends JavaPlugin {
-	Logger	log;
-	skywar	ax	= new skywar();
+	Logger log;
+	skywar ax = new skywar();
 
 	@Override
 	public void onDisable() {
 		getServer().getPluginManager().disablePlugin(this);
-		dprint.r.printAll("ptdew&dewdd : " + tr.gettr("unloaded_plugin")
-				+ " dewdd skywar");
+		dprint.r.printAll("ptdew&dewdd : " + tr.gettr("unloaded_plugin") + " dewdd skywar");
 	}
 
 	@Override
@@ -31,8 +30,7 @@ public class Main extends JavaPlugin {
 
 		getServer().getPluginManager().registerEvents(ax, this);
 
-		dprint.r.printAll("ptdew&dewdd : " + tr.gettr("loaded_plugin")
-				+ " dewdd skywar");
+		dprint.r.printAll("ptdew&dewdd : " + tr.gettr("loaded_plugin") + " dewdd skywar");
 
 	}
 

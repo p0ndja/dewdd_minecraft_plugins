@@ -16,19 +16,22 @@ import org.bukkit.plugin.java.JavaPlugin;
 public class gettps implements Listener {
 	class close_chunk implements Runnable {
 
+		@Override
 		public void run() {
 
-		/*	dprint.r.printC("Online Player = "
-					+ Bukkit.getOnlinePlayers().length);
-*/
+			/*
+			 * dprint.r.printC("Online Player = " +
+			 * Bukkit.getOnlinePlayers().length);
+			 */
 			if (Bukkit.getOnlinePlayers().size() == 0) {
 
 				for (World w : Bukkit.getWorlds()) {
 					for (org.bukkit.Chunk chunk : w.getLoadedChunks()) {
-						/*dprint.r.printC("unload chunk cuz no player = "
-								+ (chunk.getX() * 16) + ","
-								+ (chunk.getZ() * 16) + " as  "
-								+ chunk.getWorld().getName());*/
+						/*
+						 * dprint.r.printC("unload chunk cuz no player = " +
+						 * (chunk.getX() * 16) + "," + (chunk.getZ() * 16) +
+						 * " as  " + chunk.getWorld().getName());
+						 */
 						chunk.unload(true);
 					}
 				}
@@ -39,13 +42,13 @@ public class gettps implements Listener {
 
 	class recu extends Thread {
 
+		@Override
 		public void run() {
 
 			while (true) {
 				try {
 					Thread.sleep(60000);
-				}
-				catch (InterruptedException e) {
+				} catch (InterruptedException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
@@ -54,7 +57,7 @@ public class gettps implements Listener {
 		}
 	}
 
-	public JavaPlugin	ac	= null;
+	public JavaPlugin ac = null;
 
 	public gettps() {
 		recu arr = new recu();
@@ -80,4 +83,3 @@ public class gettps implements Listener {
 	}
 
 } // class
-

@@ -29,20 +29,19 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 class Dewminecraft {
 
-	public String	folder_name		= "plugins" + File.separator
-											+ "dewdd_automessage";
+	public String folder_name = "plugins" + File.separator + "dewdd_automessage";
 
-	Random			randomGenerator	= new Random();
-	int				randomInt		= randomGenerator.nextInt(9);
+	Random randomGenerator = new Random();
+	int randomInt = randomGenerator.nextInt(9);
 
 	// loadsignfile
-	int				countLoop		= 0;
-	int				countShow		= 0;
+	int countLoop = 0;
+	int countShow = 0;
 
-	String			autostr[];
-	int				autostrmax		= -1;
-	int				autostrnow		= -1;
-	int				countmax		= 100;
+	String autostr[];
+	int autostrmax = -1;
+	int autostrnow = -1;
+	int countmax = 100;
 
 	public Dewminecraft() {
 		loadautomessagefile();
@@ -66,8 +65,7 @@ class Dewminecraft {
 					wor.save();
 					for (Player pla : wor.getPlayers()) {
 						randomInt = randomGenerator.nextInt(9);
-						pla.sendMessage("§" + randomInt + "ptdew&dewdd : "
-								+ autostr[autostrnow]);
+						pla.sendMessage("§" + randomInt + "ptdew&dewdd : " + autostr[autostrnow]);
 						pla.saveData();
 					}
 				}
@@ -87,8 +85,7 @@ class Dewminecraft {
 		try {
 			fff.createNewFile();
 
-			System.out.println("ptdeW&DewDD Automessage: Starting Loading "
-					+ filena);
+			System.out.println("ptdeW&DewDD Automessage: Starting Loading " + filena);
 			// Open the file that is the first
 			// command line parameter
 			FileInputStream fstream = new FileInputStream(filena);
@@ -113,14 +110,12 @@ class Dewminecraft {
 				if (firsttime == true) {
 					countmax = Integer.parseInt(strLine);
 					firsttime = false;
-				}
-				else {
+				} else {
 					if (strLine.equalsIgnoreCase("*") == true) {
 						autostrmax++;
 						autostr[autostrmax] = strAll;
 						strAll = "";
-					}
-					else {
+					} else {
 						strAll = strAll + strLine;
 					}
 				}
@@ -129,8 +124,7 @@ class Dewminecraft {
 			System.out.println("ptdew&DewDD AutoMessage: Loaded " + filena);
 
 			in.close();
-		}
-		catch (Exception e) {// Catch exception if any
+		} catch (Exception e) {// Catch exception if any
 			System.err.println("Error: " + e.getMessage());
 		}
 	}
@@ -139,8 +133,8 @@ class Dewminecraft {
 
 public class DigEventListener2 implements Listener {
 
-	Dewminecraft	dew	= new Dewminecraft();
-	JavaPlugin		ac	= null;
+	Dewminecraft dew = new Dewminecraft();
+	JavaPlugin ac = null;
 
 	@EventHandler
 	public void eventja(AsyncPlayerChatEvent event) {

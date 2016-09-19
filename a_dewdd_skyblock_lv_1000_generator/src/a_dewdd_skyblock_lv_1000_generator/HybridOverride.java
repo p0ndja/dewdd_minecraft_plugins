@@ -12,131 +12,9 @@ import java.util.Random;
 import core_optimization_api.Chromosome;
 import ga_optimization_api.Hybrid;
 
-public class HybridOverride extends Hybrid{
+public class HybridOverride extends Hybrid {
 
 	public static int maxUnUnique = 0;
-
-	public Chromosome loadChroFile(File fi) {
-
-		String filena = fi.getAbsolutePath();
-		File fff = new File(filena);
-
-		Chromosome ceo = new Chromosome();
-		ceo.dna = new double[Core.dnaSize];
-	
-
-		try {
-
-			fff.createNewFile();
-
-			d.pl("loading sellable file : " + filena);
-			// Open the file that is the first
-			// command line parameter
-			FileInputStream fstream = new FileInputStream(filena);
-			// Get the object of DataInputStream
-			DataInputStream in = new DataInputStream(fstream);
-			BufferedReader br = new BufferedReader(new InputStreamReader(in));
-			String strLine;
-			// Read File Line By Line
-
-			String m[];
-
-			int curDnaID = 0;
-			ceo.fitness = Double.MIN_VALUE;
-			while ((strLine = br.readLine()) != null) {
-
-				
-			//	m = strLine.split(":");
-				// Print the content on the console
-
-				if (ceo.fitness == Double.MIN_VALUE) {
-					m = strLine.split("\\s+");
-					ceo.fitness = Double.parseDouble(m[0]);
-				}
-				else {
-					ceo.dna[curDnaID] = Double.parseDouble(strLine);
-					curDnaID++;
-				
-				}
-			}
-
-			d.pl(" Loaded " + filena);
-
-			in.close();
-
-		} catch (Exception e) {// Catch exception if any
-			d.pl("Error load " + filena + e.getMessage());
-		}
-		return ceo;
-	}
-
-	public ArrayList<Chromosome> loadAndSortTheBestFromRamdisk() {
-		ArrayList<Chromosome> cho = new ArrayList<Chromosome>();
-
-		File fie = new File(EventListenerOverride.folder_Name + File.separator + "lastGen");
-
-		if (fie.listFiles() != null) {
-			for (File fi : fie.listFiles()) {
-				d.pl(fi.getAbsolutePath());
-
-				cho.add(loadChroFile(fi));
-				// read
-
-			}
-		}
-
-		// let's sort them
-		if (cho.size() > Main.populationSize) {
-
-			Chromosome[] gem = new Chromosome[cho.size()];
-			for (int i = 0; i < cho.size(); i++) {
-				gem[i] = new Chromosome();
-				gem[i].fitness = cho.get(i).fitness;
-				gem[i].dna = cho.get(i).dna;
-			}
-
-			boolean flag = true; // set flag to true to begin first pass
-
-			while (flag) {
-				flag = false; // set flag to false awaiting a possible swap
-				for (int j = 0; j < gem.length - 1; j++) {
-
-					if (gem[j].fitness < gem[j + 1].fitness) // change
-																				// to
-																				// >
-																				// for
-																				// ascending
-																				// sort
-					{
-						Chromosome tmpgem = gem[j].copyChromosome();
-						// swap elements
-						gem[j] = gem[j + 1].copyChromosome();
-						gem[j + 1] = tmpgem;
-						flag = true; // shows a swap occurred
-						d.pl("bubble sort  " + j + " and " + (j + 1) + " > " + gem[j].fitness + ","
-								+ gem[j + 1].fitness);
-					}
-
-				}
-			}
-
-			for (int i = 0; i < Main.populationSize; i++) {
-				d.pl("sorted best fitness = " + i + " = " + cho.get(i).fitness);
-
-			}
-
-			// re copy
-			cho.clear();
-			for (int j = 0; j < Main.populationSize; j++) {
-				cho.add(gem[j]);
-			}
-		}
-
-		return cho;
-	}
-	
-	
-	
 
 	@Override
 	public double fitness(double dna[]) {
@@ -388,16 +266,17 @@ public class HybridOverride extends Hybrid{
 			ps.money = 0;
 			for (int i = 0; i < Core.sellAsList.size(); i++) {
 				SellableType se = Core.sellAsList.get(i);
-				SellableType seTmpSe =  tmpSell.get(i);
-				
-				AllBlockInGameType seTmpSeBlock = Core.allBlockInGameAsList[  seTmpSe.index];
+				SellableType seTmpSe = tmpSell.get(i);
+
+				AllBlockInGameType seTmpSeBlock = Core.allBlockInGameAsList[seTmpSe.index];
 
 				double tmpMoney = 0;
 				tmpMoney = se.allItemYouCanFind * seTmpSe.sellPerPrice;
 				if (printPls == true)
-					d.pl(i + " sell "  + seTmpSeBlock.getIDData() + " > " + se.allItemYouCanFind + " * " + seTmpSe.sellPerPrice + " = " + (tmpMoney) +
+					d.pl(i + " sell " + seTmpSeBlock.getIDData() + " > " + se.allItemYouCanFind + " * "
+							+ seTmpSe.sellPerPrice + " = " + (tmpMoney) +
 
-					" index " +  seTmpSe.index);
+					" index " + seTmpSe.index);
 				ps.money += tmpMoney;
 
 			}
@@ -562,9 +441,9 @@ public class HybridOverride extends Hybrid{
 			double tmpFitness = 0;
 
 			double fitCurLV = (-Math.abs(tmpLV.size() - curLVLoop)) * 100;
-			double fitMoneyLeft = -Math.abs(Core.moneyLeft-ps.money);
+			double fitMoneyLeft = -Math.abs(Core.moneyLeft - ps.money);
 			double fitMaxMoney = -Math.abs(psMaxMoney - Core.maxMoney);
-			//fitMaxMoney = psMaxMoney;
+			// fitMaxMoney = psMaxMoney;
 
 			double fitAtTheEndItem = 0;
 
@@ -581,19 +460,134 @@ public class HybridOverride extends Hybrid{
 			}
 
 			tmpFitness = fitCurLV + fitMoneyLeft + fitMaxMoney + fitAtTheEndItem;
-			tmpFitness = (fitCurLV)  + (fitMaxMoney) ;
+			tmpFitness = (fitCurLV) + (fitMaxMoney);
 
-			
 			d.pl("fitness " + tmpFitness + ", f curLV " + fitCurLV + " , f money left " + fitMoneyLeft
 					+ " ,f Max money " + fitMaxMoney + " , fit at the end " + fitAtTheEndItem);
 
-			fitness +=1/tmpFitness;
+			fitness += 1 / tmpFitness;
 		}
 
-		double av =  fitness / avg;
-		
+		double av = fitness / avg;
+
 		return av;
 
+	}
+
+	public ArrayList<Chromosome> loadAndSortTheBestFromRamdisk() {
+		ArrayList<Chromosome> cho = new ArrayList<Chromosome>();
+
+		File fie = new File(EventListenerOverride.folder_Name + File.separator + "lastGen");
+
+		if (fie.listFiles() != null) {
+			for (File fi : fie.listFiles()) {
+				d.pl(fi.getAbsolutePath());
+
+				cho.add(loadChroFile(fi));
+				// read
+
+			}
+		}
+
+		// let's sort them
+		if (cho.size() > Main.populationSize) {
+
+			Chromosome[] gem = new Chromosome[cho.size()];
+			for (int i = 0; i < cho.size(); i++) {
+				gem[i] = new Chromosome();
+				gem[i].fitness = cho.get(i).fitness;
+				gem[i].dna = cho.get(i).dna;
+			}
+
+			boolean flag = true; // set flag to true to begin first pass
+
+			while (flag) {
+				flag = false; // set flag to false awaiting a possible swap
+				for (int j = 0; j < gem.length - 1; j++) {
+
+					if (gem[j].fitness < gem[j + 1].fitness) // change
+																// to
+																// >
+																// for
+																// ascending
+																// sort
+					{
+						Chromosome tmpgem = gem[j].copyChromosome();
+						// swap elements
+						gem[j] = gem[j + 1].copyChromosome();
+						gem[j + 1] = tmpgem;
+						flag = true; // shows a swap occurred
+						d.pl("bubble sort  " + j + " and " + (j + 1) + " > " + gem[j].fitness + ","
+								+ gem[j + 1].fitness);
+					}
+
+				}
+			}
+
+			for (int i = 0; i < Main.populationSize; i++) {
+				d.pl("sorted best fitness = " + i + " = " + cho.get(i).fitness);
+
+			}
+
+			// re copy
+			cho.clear();
+			for (int j = 0; j < Main.populationSize; j++) {
+				cho.add(gem[j]);
+			}
+		}
+
+		return cho;
+	}
+
+	public Chromosome loadChroFile(File fi) {
+
+		String filena = fi.getAbsolutePath();
+		File fff = new File(filena);
+
+		Chromosome ceo = new Chromosome();
+		ceo.dna = new double[Core.dnaSize];
+
+		try {
+
+			fff.createNewFile();
+
+			d.pl("loading sellable file : " + filena);
+			// Open the file that is the first
+			// command line parameter
+			FileInputStream fstream = new FileInputStream(filena);
+			// Get the object of DataInputStream
+			DataInputStream in = new DataInputStream(fstream);
+			BufferedReader br = new BufferedReader(new InputStreamReader(in));
+			String strLine;
+			// Read File Line By Line
+
+			String m[];
+
+			int curDnaID = 0;
+			ceo.fitness = Double.MIN_VALUE;
+			while ((strLine = br.readLine()) != null) {
+
+				// m = strLine.split(":");
+				// Print the content on the console
+
+				if (ceo.fitness == Double.MIN_VALUE) {
+					m = strLine.split("\\s+");
+					ceo.fitness = Double.parseDouble(m[0]);
+				} else {
+					ceo.dna[curDnaID] = Double.parseDouble(strLine);
+					curDnaID++;
+
+				}
+			}
+
+			d.pl(" Loaded " + filena);
+
+			in.close();
+
+		} catch (Exception e) {// Catch exception if any
+			d.pl("Error load " + filena + e.getMessage());
+		}
+		return ceo;
 	}
 
 	public boolean notFillyet(AllBlockInGameType itm, AllBlockInGameType myInv, int needAmount) {
