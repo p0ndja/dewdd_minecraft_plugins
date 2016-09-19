@@ -10,6 +10,7 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.Socket;
+import java.net.SocketException;
 
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -17,65 +18,67 @@ import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 
-public class DigEventListener2 implements Listener {
-	JavaPlugin ac = null;
-Socket clientSocket = null;
-DataOutputStream outToServer = null;
-String sentence = "...";
 
+class Reconnect_c implements Runnable {
+	Socket clientSocket = null;
+	DataOutputStream outToServer = null;
+	String sentence = "...";
 
-class reconnectc implements Runnable {
+	
 	@Override
 	public void run() {
 		// TODO Auto-generated method stub
 
-
 		BufferedReader inFromUser = new BufferedReader(new InputStreamReader(System.in));
-		
+
 		try {
 			clientSocket = new Socket("localhost", 6789);
-			 outToServer = new DataOutputStream(clientSocket.getOutputStream());
+			outToServer = new DataOutputStream(clientSocket.getOutputStream());
 			BufferedReader inFromServer = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
-			//sentence = inFromUser.readLine();
-			outToServer.writeBytes("just join" + '\n');
-			
-			
-			//System.out.println("FROM SERVER: " + modifiedSentence);
-			//clientSocket.close();
+			// sentence = inFromUser.readLine();
+			outToServer.writeBytes("connected" + '\n');
+
+			// System.out.println("FROM SERVER: " + modifiedSentence);
+			// clientSocket.close();
 
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}	
+		}
 	}
 }
-public void reconnect() {
-	reconnectc abc = new reconnectc();
-	Thread abx = new Thread(abc);
-	abx.start();
-}
+
+public class DigEventListener2 implements Listener {
+	JavaPlugin ac = null;
+	Reconnect_c abc = null;
+
+
+	public void Reconnect() {
+		 abc = new Reconnect_c();
+		Thread abx = new Thread(abc);
+		abx.start();
+	}
+
 	public DigEventListener2() {
-		reconnect();
-
-	}
-
-	@EventHandler
-	public void eventja(AsyncPlayerChatEvent event) {
-		event.getPlayer();
+		Reconnect();
 
 	}
 
 	@EventHandler
 	public void eventja(PlayerJoinEvent event) {
 		try {
-			outToServer.writeBytes(sentence + '\n');
+			abc.outToServer.writeBytes(event.getPlayer().getName() + " joining \n");
+		} catch (SocketException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			Reconnect();
+		} catch (NullPointerException e) {
+			e.printStackTrace();
+			Reconnect();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-			reconnect();
-		}
-		catch (NullPointerException e) {
-			reconnect();
+			Reconnect();
 		}
 	}
 
