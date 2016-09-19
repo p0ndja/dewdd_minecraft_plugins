@@ -19,6 +19,7 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockExplodeEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
+import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import dewddtran.tr;
@@ -37,7 +38,13 @@ class Delay implements Runnable {
 		}
 
 		MainLoop mainLoop = new MainLoop();
-		Bukkit.getScheduler().scheduleSyncRepeatingTask(DigEventListener2.ac, mainLoop, 0, 20);
+
+		long repeat = (int) tr.gettrint("CONFIG_GRAVITY_REPEAT_CHECKING_DELAY_AS_TICK");
+		if (repeat <= 0) {
+			repeat = 20;
+		}
+
+		Bukkit.getScheduler().scheduleSyncRepeatingTask(DigEventListener2.ac, mainLoop, 0, repeat);
 
 	}
 }
@@ -58,11 +65,23 @@ public class DigEventListener2 implements Listener {
 	// BlockPlaceEvent
 
 	@EventHandler
-	public void eventja(AsyncPlayerChatEvent e) {
-		if (e.getMessage().equalsIgnoreCase("gravity")) {
-			e.getPlayer().sendMessage("0.6");
-		}
+	public void eventja(PlayerCommandPreprocessEvent e) {
+		String m[] = e.getMessage().split(" ");
+		
+		if (m[0].equalsIgnoreCase("/gravity")) {
+			if (m.length == 1) {
+				e.getPlayer().sendMessage("/gravity reload");
 
+			} else if (m.length == 2) {
+				if (m[1].equalsIgnoreCase("reload")) {
+					e.getPlayer().sendMessage("1.2");
+					Bukkit.getScheduler().cancelTasks(ac);
+					Delay delay = new Delay();
+					Thread th = new Thread(delay);
+					th.start();
+				}
+			}
+		}
 	}
 
 	@EventHandler
@@ -185,8 +204,6 @@ class Gravity implements Runnable {
 
 	static long countDone = 0;
 
-	
-
 	public static boolean needBlock(Block block) {
 		switch (block.getType()) {
 		case STATIONARY_WATER:
@@ -219,7 +236,8 @@ class Gravity implements Runnable {
 		// Bukkit.getScheduler().scheduleSyncDelayedTask(DigEventListener2.ac,
 		// this, rnd.nextInt(100) + 20);
 
-		//Bukkit.getScheduler().scheduleSyncDelayedTask(DigEventListener2.ac, this);
+		// Bukkit.getScheduler().scheduleSyncDelayedTask(DigEventListener2.ac,
+		// this);
 
 	}
 
@@ -320,8 +338,9 @@ class Gravity implements Runnable {
 
 		long timeUsed = System.currentTimeMillis() - Gravity.startTime;
 		MainLoop.lostTime += timeUsed;
-		//dprint.r.printAll("><><> end " + (timeUsed) + " T " + Gravity.countDone + " F " + Gravity.countFailed + " sum "
-		//		+ MainLoop.lostTime);
+		// dprint.r.printAll("><><> end " + (timeUsed) + " T " +
+		// Gravity.countDone + " F " + Gravity.countFailed + " sum "
+		// + MainLoop.lostTime);
 
 		if (found == false) {
 			Material mat = this.start.getType();
@@ -443,6 +462,7 @@ class MainLoop implements Runnable {
 
 	public static long lostTime = 0;
 	public static long maxTime = 50;
+
 	public MainLoop() {
 
 	}
@@ -450,11 +470,20 @@ class MainLoop implements Runnable {
 	@Override
 	public void run() {
 		// always get Item from jobs
-		
+
+		maxTime = (long) tr.gettrint("CONFIG_GRAVITY_MAXTIME_DO_THE_JOB");
+		if (maxTime <= 0) {
+			maxTime = 50;
+		}
+		Gravity.stick = (int) tr.gettrint("CONFIG_GRAVITY_STICKY_RADIUS");
+		if (Gravity.stick <= 0) {
+			Gravity.stick = 5;
+		}
 
 		long startTime = System.currentTimeMillis();
 
-		//dprint.r.printAll("Recall " + MainLoop.jobs.getSize() + " " + MainLoop.lostTime);
+		// dprint.r.printAll("Recall " + MainLoop.jobs.getSize() + " " +
+		// MainLoop.lostTime);
 
 		if (MainLoop.lostTime >= maxTime) {
 			MainLoop.lostTime -= maxTime;
@@ -463,23 +492,23 @@ class MainLoop implements Runnable {
 				MainLoop.lostTime = 0;
 			}
 
-			/*if (MainLoop.jobs.getSize() > 0) {
-				dprint.r.printAll("(( sleep " + MainLoop.jobs.getSize() + " " + MainLoop.lostTime);
-			}
-*/
+			/*
+			 * if (MainLoop.jobs.getSize() > 0) { dprint.r.printAll("(( sleep "
+			 * + MainLoop.jobs.getSize() + " " + MainLoop.lostTime); }
+			 */
 			return;
-		}
-		else {
+		} else {
 			if (jobs.getSize() > 0) {
-			 dprint.r.printC("gravity size left "  + " , " + jobs.getSize() + " ... " + MainLoop.lostTime);
+				dprint.r.printC("gravity size left " + " , " + jobs.getSize() + " ... " + MainLoop.lostTime);
 			}
 		}
 
 		while (MainLoop.jobs.getSize() > 0 && lostTime < maxTime) {
-			// dprint.r.printAll("done size "  + " , " + jobs.getSize());
+			// dprint.r.printAll("done size " + " , " + jobs.getSize());
 
 			if (MainLoop.lostTime > maxTime) {
-				//dprint.r.printAll("__ break cuz time out " + (MainLoop.lostTime));
+				// dprint.r.printAll("__ break cuz time out " +
+				// (MainLoop.lostTime));
 				return;
 			}
 
@@ -495,11 +524,11 @@ class MainLoop implements Runnable {
 				Gravity noop = new Gravity(blo, null, 1);
 				Bukkit.getScheduler().scheduleSyncDelayedTask(DigEventListener2.ac, noop);
 
-
 			}
 
 			if (MainLoop.jobs.getSize() > 0) {
-				//dprint.r.printAll("*** size " + MainLoop.jobs.getSize() + " " + MainLoop.lostTime);
+				// dprint.r.printAll("*** size " + MainLoop.jobs.getSize() + " "
+				// + MainLoop.lostTime);
 			}
 
 		}

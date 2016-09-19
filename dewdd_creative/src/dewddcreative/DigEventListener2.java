@@ -159,76 +159,6 @@ public class DigEventListener2 implements Listener {
 						if (m.length == 2) {
 							dew.gotofreezone(player);
 							return;
-						} else if (m.length == 4) {
-							if (m[2].equalsIgnoreCase("ph") && !m[3].equalsIgnoreCase("max")) {
-
-								int id = Integer.parseInt(m[2]);
-								// goto that player
-								// -5000 to 5000
-
-								int count = -1;
-								Block b = null;
-
-								for (int x = -5000; x <= 5000; x += 100) {
-									for (int z = -5000; z <= 5000; z += 100) {
-										b = player.getWorld().getBlockAt(x, api_creative.signY, z);
-										if (b.getTypeId() == 63 || b.getTypeId() == 68) {
-											count++;
-											Sign sign = (Sign) b.getState();
-											dprint.r.printAll(sign.getLine(1) + " at " + b.getX() + "," + b.getZ()
-													+ "  id " + count);
-
-											if (count == id) {
-												// teleport
-												player.teleport(b.getLocation());
-
-												return;
-											}
-										}
-
-									}
-
-								}
-
-							} else if (m[2].equalsIgnoreCase("ph") && m[3].equalsIgnoreCase("max")) {
-								int count = 0;
-								Block b = null;
-
-								for (int x = -5000; x <= 5000; x += 100) {
-									for (int z = -5000; z <= 5000; z += 100) {
-										b = player.getWorld().getBlockAt(x, api_creative.signY, z);
-										if (b.getTypeId() == 63 || b.getTypeId() == 68) {
-											count++;
-
-											Sign sign = (Sign) b.getState();
-											dprint.r.printAll(sign.getLine(1) + " at " + b.getX() + "," + b.getZ()
-													+ "  id " + count);
-										}
-
-									}
-
-								}
-							} else if (m[2].equalsIgnoreCase("ph") && m[3].equalsIgnoreCase("load")) {
-								int count = 0;
-								Block b = null;
-
-								for (int x = -5000; x <= 5000; x += 100) {
-									for (int z = -5000; z <= 5000; z += 100) {
-										b = player.getWorld().getBlockAt(x, api_creative.signY, z);
-										if (b.getTypeId() == 63 || b.getTypeId() == 68) {
-											count++;
-
-											Sign sign = (Sign) b.getState();
-											dprint.r.printAll(sign.getLine(1) + " at " + b.getX() + "," + b.getZ()
-													+ "  id " + count);
-											b.getChunk().load();
-										}
-
-									}
-
-								}
-							}
-
 						}
 					}
 
@@ -410,7 +340,7 @@ public class DigEventListener2 implements Listener {
 										b2.getChunk().load();
 									}
 
-									if (b2.getTypeId() != 0 && dy != 253) {
+									if (b2.getTypeId() != 0 && dy != 253 || dy == 0) {
 										if (dx == zx || dx == (zx + 99) || dz == zz || dz == (zz + 99) || dx == zz
 												|| dx == (zz + 99) || dz == zx || dz == (zx + 99)) {
 											if (dy >= 255) {
