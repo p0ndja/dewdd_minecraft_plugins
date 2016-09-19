@@ -902,13 +902,27 @@ public class api_skyblock {
 		saveRSProtectFile();
 
 	}
+	
 
 	public void printToAllPlayerOnRS(int rsID, String message) {
+		//dprint.r.printA("printToallplayeronrs " + rsID + " , " + message);
+		
 		for (int i = 0; i < RSMaxPlayer; i++) {
+			
 			Player player = Bukkit.getPlayer(rs[rsID].p[i]);
+			
 			if (player == null) {
 				continue;
 			}
+			
+			
+		//	dprint.r.printA("player " + i + " = " + player.getName());
+			
+			if (player.isOnline() == false) {
+				continue;
+			}
+			
+			//dprint.r.printA("online player " + i + " = " + player.getName());
 
 			player.sendMessage(dprint.r.color(message));
 		}
