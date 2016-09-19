@@ -1063,8 +1063,14 @@ public class api_skyblock {
 					block2 = block.getRelative(0, 4, 0);
 					Chest chest = (Chest) block2.getState();
 					chest.getInventory().clear();
+					
+					ItemStack itm = new ItemStack(Material.DIAMOND, 3);
+					chest.getInventory().addItem(itm.getData().toItemStack(3));
+					
+					 itm = new ItemStack(Material.COAL, 3);
+					chest.getInventory().addItem(itm.getData().toItemStack(3));
 
-					ItemStack itm = new ItemStack(Material.SAPLING, 3);
+					 itm = new ItemStack(Material.SAPLING, 3);
 					chest.getInventory().addItem(itm.getData().toItemStack(3));
 
 					itm = new ItemStack(Material.SAPLING, 3);
@@ -1166,7 +1172,7 @@ public class api_skyblock {
 					saveRSProtectFile();
 					buildcomplete = true;
 
-					addSmallIslandNearThisBlock(block, 20);
+				//	addSmallIslandNearThisBlock(block, 20);
 
 				}
 

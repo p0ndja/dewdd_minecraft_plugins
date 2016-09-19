@@ -1098,6 +1098,13 @@ public class DigEventListener2 implements Listener {
 				reloadPL();
 				p.sendMessage("reloaded");
 			} else if (m[1].equalsIgnoreCase("list")) {
+				p.sendMessage(tr.gettr("[autosell] /dft list closed /warp shop instead"));
+
+				int xx = 10;
+				if (xx == 10) {
+					return;
+				}
+				
 				// bubble sort
 				for (int i = 0; i < DigEventListener2.sellmax; i++) {
 					for (int j = 0; j < DigEventListener2.sellmax - 1 - i; j++) {
