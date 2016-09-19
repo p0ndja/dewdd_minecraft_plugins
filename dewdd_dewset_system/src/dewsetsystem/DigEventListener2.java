@@ -6,6 +6,7 @@
 package dewsetsystem;
 
 import java.util.ArrayList;
+
 import java.util.Random;
 
 import org.bukkit.Bukkit;
@@ -22,6 +23,11 @@ import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.plugin.java.JavaPlugin;
+
+import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
+import com.sk89q.worldguard.protection.ApplicableRegionSet;
+import com.sk89q.worldguard.protection.managers.RegionManager;
+import com.sk89q.worldedit.BlockVector;
 
 import dewddflower.dewset;
 import dewddflower.dewset_interface;
@@ -188,7 +194,10 @@ public class DigEventListener2 implements Listener {
 			dew.runtime = (int) tr.gettrint("dewset runtime as milisecond");
 
 			dew.sleeptime = (int) tr.gettrint("dewset sleeptime as tick");
-
+			int value = ((int)tr.gettrint("CONFIG dewset only work in protected zone set to 1 for enable")) ;
+			dew.CONFIG_NEED_PROTECT = value  == 1 ? true : false;
+			//player.sendMessage("need protect " + dew.CONFIG_NEED_PROTECT);
+			
 			String[] m = message.split("\\s+");
 
 			// down
@@ -802,8 +811,12 @@ public class DigEventListener2 implements Listener {
 
 	@EventHandler
 	public void eventja(PlayerInteractEvent event) {
+		
 		if (!tr.isrunworld(ac.getName(), event.getPlayer().getWorld().getName()))
 			return;
+		
+		
+	
 
 		Action act;
 		act = event.getAction();
@@ -816,7 +829,7 @@ public class DigEventListener2 implements Listener {
 
 		Block block = event.getClickedBlock();
 		
-
+	
 
 		boolean goodc1 = false;
 		goodc1 = dew.cando_all(block, player, "right");

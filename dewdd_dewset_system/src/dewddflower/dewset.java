@@ -27,6 +27,7 @@ import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
+import com.sk89q.worldguard.protection.ApplicableRegionSet;
 
 import api_skyblock.api_skyblock;
 import dewddtran.tr;
@@ -36,37 +37,32 @@ import net.coreprotect.CoreProtectAPI;
 
 public class dewset extends dewset_interface {
 
-	public boolean saveHistory(CoreProtectAPI CoreProtect,Player player, Block hostBlock, Block setBlock,boolean saveHistoryOnPlacing) {
+	public boolean saveHistory(CoreProtectAPI CoreProtect, Player player, Block hostBlock, Block setBlock,
+			boolean saveHistoryOnPlacing) {
 		if (CoreProtect != null) { // Ensure we have
 			// access
 			// to the API
 			boolean success = false;
 			// mean set 0
 			if (hostBlock.getType() == Material.AIR && setBlock.getType() != Material.AIR) {
-				 success = CoreProtect.logPlacement
-					(player.getName(), setBlock.getLocation(), setBlock.getType(),
-					setBlock.getData());
-				 setBlock.setTypeIdAndData(hostBlock.getTypeId(), hostBlock.getData(), false);
-				 return success;
-			}
-			else {
+				success = CoreProtect.logPlacement(player.getName(), setBlock.getLocation(), setBlock.getType(),
+						setBlock.getData());
+				setBlock.setTypeIdAndData(hostBlock.getTypeId(), hostBlock.getData(), false);
+				return success;
+			} else {
 				setBlock.setTypeIdAndData(hostBlock.getTypeId(), hostBlock.getData(), false);
 				if (saveHistoryOnPlacing == true) {
-					
-				 success = CoreProtect.logPlacement
-							(player.getName(), setBlock.getLocation(), setBlock.getType(),
-							setBlock.getData());
-				 
-				}
-				 return success;
-			}
-			
-			
 
-		}
-		else {
+					success = CoreProtect.logPlacement(player.getName(), setBlock.getLocation(), setBlock.getType(),
+							setBlock.getData());
+
+				}
+				return success;
+			}
+
+		} else {
 			setBlock.setTypeIdAndData(hostBlock.getTypeId(), hostBlock.getData(), false);
-			
+
 		}
 		return false;
 	}
@@ -368,7 +364,7 @@ public class dewset extends dewset_interface {
 			CoreProtectAPI CoreProtect = getCoreProtect();
 
 			boolean arxx = !player.hasPermission(pmaininfinite);
-			boolean perDelete = player.hasPermission(pmaindelete) ;
+			boolean perDelete = player.hasPermission(pmaindelete);
 
 			Block setBlock = null;
 			// amountloop = start with 1
@@ -533,9 +529,7 @@ public class dewset extends dewset_interface {
 									}
 								}
 
-								
-								saveHistory(CoreProtect, player, hostBlock, setBlock,false);
-								
+								saveHistory(CoreProtect, player, hostBlock, setBlock, false);
 
 								// dprint.r.printAll ("comple " + xlx + "," +
 								// ylx + "," + zlx + " mx " + mx + "," + my +
@@ -561,7 +555,7 @@ public class dewset extends dewset_interface {
 										}
 
 										setChest.update(true);
-										saveHistory(CoreProtect, player, hostBlock, setBlock,true);
+										saveHistory(CoreProtect, player, hostBlock, setBlock, true);
 										break;
 									case DISPENSER:
 
@@ -579,7 +573,7 @@ public class dewset extends dewset_interface {
 										}
 
 										setDispenser.update(true);
-										saveHistory(CoreProtect, player, hostBlock, setBlock,true);
+										saveHistory(CoreProtect, player, hostBlock, setBlock, true);
 										break;
 
 									case HOPPER:
@@ -597,7 +591,7 @@ public class dewset extends dewset_interface {
 										}
 
 										setHopper.update(true);
-										saveHistory(CoreProtect, player, hostBlock, setBlock,true);
+										saveHistory(CoreProtect, player, hostBlock, setBlock, true);
 										break;
 
 									case DROPPER:
@@ -616,11 +610,10 @@ public class dewset extends dewset_interface {
 										}
 
 										setDropper.update(true);
-										saveHistory(CoreProtect, player, hostBlock, setBlock,true);
+										saveHistory(CoreProtect, player, hostBlock, setBlock, true);
 										break;
 									}
-									
-									
+
 								}
 
 								zlx++;
@@ -827,8 +820,8 @@ public class dewset extends dewset_interface {
 
 			Block hostBlock = null;
 			boolean arxx = !player.hasPermission(pmaininfinite);
-			boolean perDelete = player.hasPermission(pmaindelete) ;
-			
+			boolean perDelete = player.hasPermission(pmaindelete);
+
 			while (xlx <= mx) {
 				while (ylx <= my) {
 					while (zlx <= mz) {
@@ -884,8 +877,8 @@ public class dewset extends dewset_interface {
 
 						// if (setBlock.getType() != hostBlock.getType() &&
 						// setBlock.getData() != hostBlock.getData()) {
-						saveHistory(CoreProtect, player, hostBlock, setBlock,false);
-						
+						saveHistory(CoreProtect, player, hostBlock, setBlock, false);
+
 						// }
 
 						if (hostBlock.getType() == Material.SIGN_POST || hostBlock.getType() == Material.WALL_SIGN) {
@@ -897,7 +890,7 @@ public class dewset extends dewset_interface {
 								setSign.setLine(i, hostSign.getLine(i));
 
 							setSign.update(true);
-							saveHistory(CoreProtect, player, hostBlock, setBlock,true);
+							saveHistory(CoreProtect, player, hostBlock, setBlock, true);
 						}
 
 						if (amountloop == 3 && player.hasPermission(pmainalsocopyinventoryblockwhenyouusedewset)) {
@@ -921,7 +914,7 @@ public class dewset extends dewset_interface {
 								}
 
 								setChest.update(true);
-								saveHistory(CoreProtect, player, hostBlock, setBlock,true);
+								saveHistory(CoreProtect, player, hostBlock, setBlock, true);
 								break;
 							case DISPENSER:
 
@@ -939,7 +932,7 @@ public class dewset extends dewset_interface {
 								}
 
 								setDispenser.update(true);
-								saveHistory(CoreProtect, player, hostBlock, setBlock,true);
+								saveHistory(CoreProtect, player, hostBlock, setBlock, true);
 								break;
 
 							case HOPPER:
@@ -957,7 +950,7 @@ public class dewset extends dewset_interface {
 								}
 
 								setHopper.update(true);
-								saveHistory(CoreProtect, player, hostBlock, setBlock,true);
+								saveHistory(CoreProtect, player, hostBlock, setBlock, true);
 								break;
 
 							case DROPPER:
@@ -976,7 +969,7 @@ public class dewset extends dewset_interface {
 								}
 
 								setDropper.update(true);
-								saveHistory(CoreProtect, player, hostBlock, setBlock,true);
+								saveHistory(CoreProtect, player, hostBlock, setBlock, true);
 								break;
 							}
 
@@ -1030,7 +1023,7 @@ public class dewset extends dewset_interface {
 		@Override
 		public void run() {
 			boolean arxx = !player.hasPermission(pmaininfinite);
-			boolean perDelete = player.hasPermission(pmaindelete) ;
+			boolean perDelete = player.hasPermission(pmaindelete);
 
 			Block setBlock = player.getLocation().getBlock().getRelative(0, -2, 0);
 			if (isprotectitemid(setBlock.getType()) == true)
@@ -1051,19 +1044,15 @@ public class dewset extends dewset_interface {
 			dprint.r.printC("ptdew&dewdd : '" + player.getName() + "'" + tr.gettr("starting") + " dewdown " + handid
 					+ ":" + handdata);
 
-			
-			
 			if (setBlock.getTypeId() == handid && setBlock.getData() == handdata) {
-				//zlx++;
+				// zlx++;
 				return;
 			}
 			CoreProtectAPI CoreProtect = getCoreProtect();
-			
 
 			if (handid == 0) { // if delete
 				if (!perDelete) {
-					player.sendMessage(
-							dprint.r.color(tr.gettr("don't_have_permission_for_access_delete_command")));
+					player.sendMessage(dprint.r.color(tr.gettr("don't_have_permission_for_access_delete_command")));
 					return;
 				}
 				if (CoreProtect != null) { // Ensure we have access
@@ -1078,8 +1067,7 @@ public class dewset extends dewset_interface {
 			else { // if place
 				if (arxx)
 					if (decreseitem1(player, handid, handdata, true) == false) {
-						player.sendMessage(
-								dprint.r.color("ptdew&dewdd : " + tr.gettr("don't_have_enough_item")));
+						player.sendMessage(dprint.r.color("ptdew&dewdd : " + tr.gettr("don't_have_enough_item")));
 						return;
 					}
 
@@ -1094,8 +1082,7 @@ public class dewset extends dewset_interface {
 				//
 
 			}
-			
-			
+
 			dprint.r.printC("ptdew&dewdd : dewdown " + player.getName() + " " + tr.gettr("complete"));
 		}
 	}
@@ -1319,7 +1306,7 @@ public class dewset extends dewset_interface {
 
 			boolean arxx = !player.hasPermission(pmaininfinite);
 
-			boolean perDelete = player.hasPermission(pmaindelete) ;
+			boolean perDelete = player.hasPermission(pmaindelete);
 
 			Block blb = null;
 
@@ -1434,7 +1421,7 @@ public class dewset extends dewset_interface {
 		}
 	}
 
-	public CoreProtectAPI getCoreProtect() {
+	public static CoreProtectAPI getCoreProtect() {
 		Plugin plugin = ac.getServer().getPluginManager().getPlugin("CoreProtect");
 
 		// Check that CoreProtect is loaded
@@ -1588,7 +1575,7 @@ public class dewset extends dewset_interface {
 			long starttime = System.currentTimeMillis();
 			Block blb = null;
 			boolean arxx = !player.hasPermission(pmaininfinite);
-			boolean perDelete = player.hasPermission(pmaindelete) ;
+			boolean perDelete = player.hasPermission(pmaindelete);
 
 			boolean t1 = false;
 			boolean t2 = false;
@@ -1692,7 +1679,6 @@ public class dewset extends dewset_interface {
 							//
 
 						}
-						
 
 						zlx++;
 					}
@@ -1776,8 +1762,7 @@ public class dewset extends dewset_interface {
 					+ IDDataType.arrayListToString(item) + " >_< " + IDDataType.arrayListToString(itemSearch));
 
 			boolean arxx = !player.hasPermission(pmaininfinite);
-			boolean perDelete = player.hasPermission(pmaindelete) ;
-
+			boolean perDelete = player.hasPermission(pmaindelete);
 
 			CoreProtectAPI CoreProtect = getCoreProtect();
 
@@ -1809,20 +1794,19 @@ public class dewset extends dewset_interface {
 				byte data = item.get(ranslot).data;
 
 				if (blb.getTypeId() == id && blb.getData() == data) {
-					//zlx++;
+					// zlx++;
 					continue;
 				}
 
 				if (id == 0) { // if delete
 					if (!perDelete) {
-						player.sendMessage(
-								dprint.r.color(tr.gettr("don't_have_permission_for_access_delete_command")));
+						player.sendMessage(dprint.r.color(tr.gettr("don't_have_permission_for_access_delete_command")));
 						return;
 					}
 					if (CoreProtect != null) { // Ensure we have access
 												// to the API
-						boolean success = CoreProtect.logRemoval(player.getName(), blb.getLocation(),
-								blb.getType(), blb.getData());
+						boolean success = CoreProtect.logRemoval(player.getName(), blb.getLocation(), blb.getType(),
+								blb.getData());
 					}
 					blb.setTypeId(0);
 
@@ -1831,8 +1815,7 @@ public class dewset extends dewset_interface {
 				else { // if place
 					if (arxx)
 						if (decreseitem1(player, id, data, true) == false) {
-							player.sendMessage(
-									dprint.r.color("ptdew&dewdd : " + tr.gettr("don't_have_enough_item")));
+							player.sendMessage(dprint.r.color("ptdew&dewdd : " + tr.gettr("don't_have_enough_item")));
 							return;
 						}
 
@@ -1840,8 +1823,8 @@ public class dewset extends dewset_interface {
 
 					if (CoreProtect != null) { // Ensure we have access
 												// to the API
-						boolean success = CoreProtect.logPlacement(player.getName(), blb.getLocation(),
-								blb.getType(), blb.getData());
+						boolean success = CoreProtect.logPlacement(player.getName(), blb.getLocation(), blb.getType(),
+								blb.getData());
 					}
 
 					//
@@ -1907,8 +1890,7 @@ public class dewset extends dewset_interface {
 			Block blb = null;
 			boolean ne = false;
 			boolean arxx = !player.hasPermission(pmaininfinite);
-			boolean perDelete = player.hasPermission(pmaindelete) ;
-			
+			boolean perDelete = player.hasPermission(pmaindelete);
 
 			addItemIfItemIsZero(item, player);
 
@@ -2220,7 +2202,7 @@ public class dewset extends dewset_interface {
 			long endtime = 0;
 
 			boolean arxx = !player.hasPermission(pmaininfinite);
-			boolean perDelete = player.hasPermission(pmaindelete) ;
+			boolean perDelete = player.hasPermission(pmaindelete);
 
 			addItemIfItemIsZero(item, player);
 			Block blb = null;
@@ -2457,7 +2439,7 @@ public class dewset extends dewset_interface {
 
 			Block blb = null;
 			boolean arxx = !player.hasPermission(pmaininfinite);
-			boolean perDelete = player.hasPermission(pmaindelete) ;
+			boolean perDelete = player.hasPermission(pmaindelete);
 
 			addItemIfItemIsZero(item, player);
 
@@ -2718,7 +2700,7 @@ public class dewset extends dewset_interface {
 
 			CoreProtectAPI CoreProtect = getCoreProtect();
 			boolean arxx = !player.hasPermission(pmaininfinite);
-			boolean perDelete = player.hasPermission(pmaindelete) ;
+			boolean perDelete = player.hasPermission(pmaindelete);
 
 			while (bd.size() > 0) { // bll
 				b3 = bd.poll();
@@ -2743,24 +2725,26 @@ public class dewset extends dewset_interface {
 							int randid = rnd.nextInt(item.size());
 							int id = item.get(randid).id;
 							byte data = item.get(randid).data;
-							
-							// do not allow to spread Air Block ( it's will be infinite loop)
+
+							// do not allow to spread Air Block ( it's will be
+							// infinite loop)
 							if (id == 0) {
 								return;
 							}
 
 							if (blb.getTypeId() == id && blb.getData() == data) {
-								//zlx++;
+								// zlx++;
 								continue;
 							}
 
 							if (id == 0) { // if delete
 								if (!perDelete) {
-									player.sendMessage(
-											dprint.r.color(tr.gettr("don't_have_permission_for_access_delete_command")));
+									player.sendMessage(dprint.r
+											.color(tr.gettr("don't_have_permission_for_access_delete_command")));
 									return;
 								}
-								if (CoreProtect != null) { // Ensure we have access
+								if (CoreProtect != null) { // Ensure we have
+															// access
 															// to the API
 									boolean success = CoreProtect.logRemoval(player.getName(), blb.getLocation(),
 											blb.getType(), blb.getData());
@@ -2770,16 +2754,17 @@ public class dewset extends dewset_interface {
 							}
 
 							else { // if place
-								//if (arxx)
-									if (decreseitem1(player, id, data, true) == false) {
-										player.sendMessage(
-												dprint.r.color("ptdew&dewdd : " + tr.gettr("don't_have_enough_item")));
-										return;
-									}
+									// if (arxx)
+								if (decreseitem1(player, id, data, true) == false) {
+									player.sendMessage(
+											dprint.r.color("ptdew&dewdd : " + tr.gettr("don't_have_enough_item")));
+									return;
+								}
 
 								blb.setTypeIdAndData(id, data, false);
 
-								if (CoreProtect != null) { // Ensure we have access
+								if (CoreProtect != null) { // Ensure we have
+															// access
 															// to the API
 									boolean success = CoreProtect.logPlacement(player.getName(), blb.getLocation(),
 											blb.getType(), blb.getData());
@@ -2884,7 +2869,7 @@ public class dewset extends dewset_interface {
 
 			CoreProtectAPI CoreProtect = getCoreProtect();
 			boolean arxx = !player.hasPermission(pmaininfinite);
-			boolean perDelete = player.hasPermission(pmaindelete) ;
+			boolean perDelete = player.hasPermission(pmaindelete);
 
 			while (bd.size() > 0) { // bll
 				blb = bd.poll();
@@ -2904,46 +2889,45 @@ public class dewset extends dewset_interface {
 				int randid = rnd.nextInt(item.size());
 				int id = item.get(randid).id;
 				byte data = item.get(randid).data;
-				
-				// do not allow to spread Air Block ( it's will be infinite loop)
+
+				// do not allow to spread Air Block ( it's will be infinite
+				// loop)
 				if (id == 0) {
 					return;
 				}
 
 				if (blb.getTypeId() == id && blb.getData() == data) {
-				//	zlx++;
+					// zlx++;
 					continue;
 				}
 
 				if (id == 0) { // if delete
 					if (!perDelete) {
-						player.sendMessage(
-								dprint.r.color(tr.gettr("don't_have_permission_for_access_delete_command")));
+						player.sendMessage(dprint.r.color(tr.gettr("don't_have_permission_for_access_delete_command")));
 						return;
 					}
 					if (CoreProtect != null) { // Ensure we have access
 												// to the API
-						boolean success = CoreProtect.logRemoval(player.getName(), blb.getLocation(),
-								blb.getType(), blb.getData());
+						boolean success = CoreProtect.logRemoval(player.getName(), blb.getLocation(), blb.getType(),
+								blb.getData());
 					}
 					blb.setTypeId(0);
 
 				}
 
 				else { // if place
-					//if (arxx)
-						if (decreseitem1(player, id, data, true) == false) {
-							player.sendMessage(
-									dprint.r.color("ptdew&dewdd : " + tr.gettr("don't_have_enough_item")));
-							return;
-						}
+						// if (arxx)
+					if (decreseitem1(player, id, data, true) == false) {
+						player.sendMessage(dprint.r.color("ptdew&dewdd : " + tr.gettr("don't_have_enough_item")));
+						return;
+					}
 
 					blb.setTypeIdAndData(id, data, false);
 
 					if (CoreProtect != null) { // Ensure we have access
 												// to the API
-						boolean success = CoreProtect.logPlacement(player.getName(), blb.getLocation(),
-								blb.getType(), blb.getData());
+						boolean success = CoreProtect.logPlacement(player.getName(), blb.getLocation(), blb.getType(),
+								blb.getData());
 					}
 
 					//
@@ -3054,8 +3038,8 @@ public class dewset extends dewset_interface {
 			Block blockmid = player.getWorld().getBlockAt((int) midtx, (int) midty, (int) midtz);
 
 			boolean arxx = !player.hasPermission(pmaininfinite);
-			boolean perDelete = player.hasPermission(pmaindelete) ;
-			
+			boolean perDelete = player.hasPermission(pmaindelete);
+
 			CoreProtectAPI CoreProtect = getCoreProtect();
 
 			while (xlx <= mx) {
@@ -3306,7 +3290,7 @@ public class dewset extends dewset_interface {
 
 	}
 
-	public WorldGuardPlugin getWorldGuard() {
+	public static WorldGuardPlugin getWorldGuard() {
 		Plugin plugin = ac.getServer().getPluginManager().getPlugin("WorldGuard");
 
 		// WorldGuard may not be loaded
@@ -3318,28 +3302,62 @@ public class dewset extends dewset_interface {
 	}
 
 	public WorldGuardPlugin wgapi = null;
+	public boolean CONFIG_NEED_PROTECT = false;
 
 	public boolean cando_all(Block block, Player player, String modeevent) {
 
+		boolean wg = false;
+		boolean wgHasProtect = false;
+
 		if (wgapi == null) {
 			wgapi = getWorldGuard();
-			if (wgapi == null) {
-				return false;
-			}
 		}
 
-		boolean wg = wgapi.canBuild(player, block);
-		
+		if (wgapi != null) {
+			if (CONFIG_NEED_PROTECT == true) {
+
+			ApplicableRegionSet set = wgapi.getRegionManager(block.getWorld())
+					.getApplicableRegions(block.getLocation());
+			//player.sendMessage("rg size " + set.getRegions().size());
+				if (set.getRegions().size() >= 1) {
+					wgHasProtect = true;
+				}
+
+			}
+			wg = wgapi.canBuild(player, block);
+
+		}
+
 		boolean sky = false;
+		boolean skyHasProtect = false;
 		if (Bukkit.getPluginManager().getPlugin("dewddskyblock") == null) {
 			sky = true;
 		} else {
 			sky = api_skyblock.cando(block, player, modeevent);
+			if (CONFIG_NEED_PROTECT == true) {
+				 skyHasProtect = api_skyblock.getProtectid(block) > -1 ? true : false;
+				
+				
+			}
+		}
+
+		boolean candoYap = wg && sky;
+		boolean hasProtectYap = wgHasProtect || skyHasProtect;
+		boolean output = false;
+		
+		if (CONFIG_NEED_PROTECT == true) {
+			if (hasProtectYap == true ) {
+				output = candoYap;
+			}
+			else {
+				output = false;
+			}
+		}
+		else {
+			output = candoYap;
 		}
 		
-		
-
-		return wg && sky;
+		return  output;
 	}
 
 	/*
