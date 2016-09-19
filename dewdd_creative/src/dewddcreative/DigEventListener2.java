@@ -24,8 +24,9 @@ import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityExplodeEvent;
 import org.bukkit.event.entity.ItemDespawnEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
-import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
+import org.bukkit.event.player.PlayerBucketEmptyEvent;
+import org.bukkit.event.player.PlayerBucketFillEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
@@ -420,12 +421,12 @@ public class DigEventListener2 implements Listener {
 
 	@EventHandler
 	public void eventja(ItemDespawnEvent event) {
-		if (!tr.isrunworld(ac.getName(), event.getLocation().getWorld().getName())) {
+	/*	if (!tr.isrunworld(ac.getName(), event.getLocation().getWorld().getName())) {
 			return;
 		}
 
 		event.getEntity().getItemStack().setType(Material.AIR);
-
+*/
 	}
 
 	@EventHandler
@@ -474,6 +475,38 @@ public class DigEventListener2 implements Listener {
 			event.setCancelled(true);
 		}
 	}
+	
+	@EventHandler
+	public void eventja(PlayerBucketEmptyEvent e) {
+		if (!tr.isrunworld(ac.getName(), e.getPlayer().getWorld().getName())) {
+			return;
+		}
+		
+		Block block = e.getBlockClicked();
+		Player player = e.getPlayer();
+		
+		boolean cando = api_creative.cando(block, player);
+		if (cando == false) {
+			e.setCancelled(true);
+			return;
+		}
+	}
+
+	@EventHandler
+	public void eventja(PlayerBucketFillEvent e) {
+		if (!tr.isrunworld(ac.getName(), e.getPlayer().getWorld().getName())) {
+			return;
+		}
+		
+		Block block = e.getBlockClicked();
+		Player player = e.getPlayer();
+		
+		boolean cando = api_creative.cando(block, player);
+		if (cando == false) {
+			e.setCancelled(true);
+			return;
+		}
+	}
 
 	@EventHandler
 	public void eventja(PlayerRespawnEvent event) {
@@ -495,13 +528,13 @@ public class DigEventListener2 implements Listener {
 
 	@EventHandler
 	public void eventja(InventoryOpenEvent event) {
-		if (tr.isrunworld(ac.getName(), event.getPlayer().getWorld().getName())) {
+	/*	if (tr.isrunworld(ac.getName(), event.getPlayer().getWorld().getName())) {
 			if (event.getInventory().getType() == InventoryType.ENDER_CHEST) {
 				event.getPlayer().sendMessage(
 						dprint.r.color(tr.gettr("Creative Don't allow to open ender chest as this world")));
 				event.setCancelled(true);
 			}
-		}
+		}*/
 	}
 
 	@EventHandler
