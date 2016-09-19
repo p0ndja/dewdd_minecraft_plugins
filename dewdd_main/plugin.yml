@@ -22,6 +22,14 @@ commands:
     description: dewfillwall is fill blocks for wal
     usage: /<command>
     aliases: [dfw]
+  dewsetblock:
+    description: dewsetblock is replace blocks for build block
+    usage: /<command>
+    aliases: [dsb]
+  dewfillblock:
+    description: dewfillblock is fill blocks for wal
+    usage: /<command>
+    aliases: [dfb]
   dewa:
     description: dewa is stack selected blocked to some direction
     usage: /<command>

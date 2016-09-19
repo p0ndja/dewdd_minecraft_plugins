@@ -34,6 +34,8 @@ import api_skyblock.api_skyblock;
 import dewddtran.tr;
 
 public class dewset extends dewset_interface {
+	
+
 
 	class autosortchest2_class implements Runnable {
 		private Block block;
@@ -1323,6 +1325,8 @@ public class dewset extends dewset_interface {
 									Bukkit.getWorld(selectworldname[getid])
 											.getBlockAt(bbd.getX(), bbd.getY(), bbd.getZ()).getData(),
 									false);
+					
+					
 
 				}
 			}
@@ -1401,7 +1405,8 @@ public class dewset extends dewset_interface {
 			dprint.r.printAll("ptdew&dewdd : dewdelete " + tr.gettr("done") + " : " + player.getName());
 		}
 	}
-
+	
+	
 	class dewdig_c implements Runnable {
 		private Player player;
 
