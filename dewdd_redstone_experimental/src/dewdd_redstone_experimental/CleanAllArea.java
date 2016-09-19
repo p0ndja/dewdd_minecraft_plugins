@@ -4,8 +4,8 @@ import org.bukkit.Bukkit;
 import org.bukkit.block.Block;
 
 public class CleanAllArea implements Runnable {
-	private Redex redex;
-	private int curId = 0;
+	private Redex	redex;
+	private int		curId	= 0;
 
 	public CleanAllArea(Redex redex, int curId) {
 		this.redex = redex;
@@ -21,16 +21,17 @@ public class CleanAllArea implements Runnable {
 
 		// dprint.r.printAll("CleanAllArea curid " + curId);
 
-		AreaType at = redex.listEx.get(curId);
+		AreaType at = this.redex.listEx.get(this.curId);
 
-		CleanSubArea sub = new CleanSubArea(redex, curId);
+		CleanSubArea sub = new CleanSubArea(this.redex, this.curId);
 		sub.run();
 
-		curId++;
-		if (curId < redex.listEx.size()) {
+		this.curId++;
+		if (this.curId < this.redex.listEx.size()) {
 			// recall own self
-			CleanAllArea caa = new CleanAllArea(redex, curId);
-			Bukkit.getScheduler().scheduleSyncDelayedTask(DigEventListener2.ac, caa, 1);
+			CleanAllArea caa = new CleanAllArea(this.redex, this.curId);
+			Bukkit.getScheduler().scheduleSyncDelayedTask(DigEventListener2.ac,
+					caa, 1);
 			return;
 		}
 

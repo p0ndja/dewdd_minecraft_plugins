@@ -6,8 +6,8 @@ import org.bukkit.block.Block;
 import core_optimization_api.Chromosome;
 
 public class DecodeSubDNA implements Runnable {
-	private Redex redex;
-	private int curId = 0;
+	private Redex	redex;
+	private int		curId	= 0;
 
 	public DecodeSubDNA(Redex redex, int curId) {
 		this.redex = redex;
@@ -23,20 +23,19 @@ public class DecodeSubDNA implements Runnable {
 		Block hostBlock = null;
 		Block setBlock = null;
 
-		if (curId % 100 == 0) {
-		dprint.r.printAll("Decoding : curid " + curId);
+		if ((this.curId % 100) == 0) {
+			dprint.r.printAll("Decoding : curid " + this.curId);
 
 		}
-		
-		
-		//dprint.r.printAll("dnaList Length " + redex.dnaList.size());
-		AreaType at = redex.listEx.get(curId);
-		at.isRunning = true;
-		Chromosome dna = redex.dnaList.get(curId);
 
-		int diffX = redex.output.loc.rx - redex.output.loc.lx;
-		int diffY = redex.output.loc.ry - redex.output.loc.ly;
-		int diffZ = redex.output.loc.rz - redex.output.loc.lz;
+		// dprint.r.printAll("dnaList Length " + redex.dnaList.size());
+		AreaType at = this.redex.listEx.get(this.curId);
+		at.isRunning = true;
+		Chromosome dna = this.redex.dnaList.get(this.curId);
+
+		int diffX = this.redex.output.loc.rx - this.redex.output.loc.lx;
+		int diffY = this.redex.output.loc.ry - this.redex.output.loc.ly;
+		int diffZ = this.redex.output.loc.rz - this.redex.output.loc.lz;
 
 		// decoding DNA in these range
 
@@ -49,7 +48,7 @@ public class DecodeSubDNA implements Runnable {
 
 		Block leftTopBlock = at.getBlocklxlylz();
 
-		while (startPoint + 4 < Redex.dnaLength) {
+		while ((startPoint + 4) < Redex.dnaLength) {
 			double tmpx = Math.abs(dna.dna[startPoint]) * diffX;
 			tmpx = tmpx % diffX;
 			int posx = (int) tmpx;
@@ -72,7 +71,7 @@ public class DecodeSubDNA implements Runnable {
 			switch (tmpb2) {
 			case 0:
 
-				if (startPoint + 4 >= Redex.dnaLength) {
+				if ((startPoint + 4) >= Redex.dnaLength) {
 					return;
 				}
 
@@ -81,7 +80,8 @@ public class DecodeSubDNA implements Runnable {
 				// dprint.r.printAll("piston grep " +
 				// Math.abs(dna.dna[startPoint + 4]));
 
-				int tmpFace = (int) Math.round(Math.abs(dna.dna[startPoint + 4]) * 6);
+				int tmpFace = (int) Math
+						.round(Math.abs(dna.dna[startPoint + 4]) * 6);
 				if (tmpFace < 0) {
 					tmpFace = 0;
 				}
@@ -94,7 +94,7 @@ public class DecodeSubDNA implements Runnable {
 
 				break;
 			case 1:
-				if (startPoint + 4 >= Redex.dnaLength) {
+				if ((startPoint + 4) >= Redex.dnaLength) {
 					return;
 				}
 
@@ -103,7 +103,8 @@ public class DecodeSubDNA implements Runnable {
 				// dprint.r.printAll("piston grep " +
 				// Math.abs(dna.dna[startPoint + 4]));
 
-				tmpFace = (int) Math.round(Math.abs(dna.dna[startPoint + 4]) * 6);
+				tmpFace = (int) Math
+						.round(Math.abs(dna.dna[startPoint + 4]) * 6);
 				if (tmpFace < 0) {
 					tmpFace = 0;
 				}
@@ -134,7 +135,8 @@ public class DecodeSubDNA implements Runnable {
 				b2.setData(pistonFace);
 
 			}
-			//dprint.r.printC(posx + "," + posy + "," + posz + " = " + setType.name());
+			// dprint.r.printC(posx + "," + posy + "," + posz + " = " +
+			// setType.name());
 
 			startPoint += 4;
 		}

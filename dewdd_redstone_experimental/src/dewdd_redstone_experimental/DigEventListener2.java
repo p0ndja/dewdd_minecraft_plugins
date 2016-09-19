@@ -14,7 +14,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
-import org.bukkit.event.block.BlockPistonEvent;
 import org.bukkit.event.block.BlockPistonExtendEvent;
 import org.bukkit.event.block.BlockPistonRetractEvent;
 import org.bukkit.event.block.BlockRedstoneEvent;
@@ -35,7 +34,8 @@ class Delayed implements Runnable {
 		while (DigEventListener2.ac == null) {
 			try {
 				Thread.sleep(1000);
-			} catch (InterruptedException e) {
+			}
+			catch (InterruptedException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
@@ -47,72 +47,30 @@ class Delayed implements Runnable {
 		}
 		RedstoneTimer ti = new RedstoneTimer();
 
-		Bukkit.getScheduler().scheduleSyncRepeatingTask(DigEventListener2.ac, ti, 0, 2);
+		Bukkit.getScheduler().scheduleSyncRepeatingTask(DigEventListener2.ac,
+				ti, 0, 2);
 	}
 
 }
 
 public class DigEventListener2 implements Listener {
 
-	public static JavaPlugin ac = null;
+	public static JavaPlugin	ac	= null;
 
-	Random rnd = new Random();
+	public static Redex			redex;
 
-	public static Redex redex;
+	Random						rnd	= new Random();
 
 	public DigEventListener2() {
 		Delayed ti = new Delayed();
 		Thread th = new Thread(ti);
 		th.start();
-		
-	}
-
-	@EventHandler
-	public void eventja(ChunkUnloadEvent e) {
-		if (!isrunworld(e.getChunk().getWorld().getName())) {
-			return;
-		}
 
 	}
-
-	@EventHandler
-	public void eventja(PlayerCommandPreprocessEvent e) {
-		if (!isrunworld(e.getPlayer().getWorld().getName())) {
-			return;
-		}
-
-		Player player = e.getPlayer();
-		String m[] = e.getMessage().split("\\s+");
-
-		CommandRuning newThread = new CommandRuning(m, player, redex);
-		Bukkit.getScheduler().scheduleSyncDelayedTask(ac, newThread);
-
-	}
-
-	@EventHandler
-	public void eventja(BlockRedstoneEvent e) {
-		if (!isrunworld(e.getBlock().getWorld().getName())) {
-			return;
-		}
-		
-		Block b = e.getBlock();
-
-		int curid = redex.getIdOfThisLocation(b.getLocation());
-		if (curid == -1) {
-			return;
-		}
-		
-		redex.listEx.get(curid).lastRedstoneActivity = Redex.redstoneTimer;
-	}
-
-	/*
-	 * @EventHandler public void eventja(BlockPistonEvent e) { if
-	 * (!isrunworld(e.getBlock().getWorld().getName())) { return; } }
-	 */
 
 	@EventHandler
 	public void eventja(BlockPistonExtendEvent e) {
-		if (!isrunworld(e.getBlock().getWorld().getName())) {
+		if (!this.isrunworld(e.getBlock().getWorld().getName())) {
 			return;
 		}
 
@@ -122,7 +80,8 @@ public class DigEventListener2 implements Listener {
 
 		Block b2 = b;
 
-		int curid = redex.getIdOfThisLocation(b.getLocation());
+		int curid = DigEventListener2.redex
+				.getIdOfThisLocation(b.getLocation());
 		if (curid == -1) {
 			return;
 		}
@@ -137,7 +96,8 @@ public class DigEventListener2 implements Listener {
 				continue;
 			}
 
-			int extendid = redex.getIdOfThisLocation(b2.getLocation());
+			int extendid = DigEventListener2.redex
+					.getIdOfThisLocation(b2.getLocation());
 			// dprint.r.printAll(tr.locationToString(b2.getLocation()));
 			if (extendid != curid) {
 
@@ -145,15 +105,16 @@ public class DigEventListener2 implements Listener {
 				// + " out " + extendid);
 				// game Over
 
-				redex.listEx.get(curid).isRunning = false;
-				redex.listEx.get(curid).outOfRange = true;
+				DigEventListener2.redex.listEx.get(curid).isRunning = false;
+				DigEventListener2.redex.listEx.get(curid).outOfRange = true;
 				e.setCancelled(true);
 				return;
 			}
 
-			if (lop == e.getBlocks().size() - 1) {
+			if (lop == (e.getBlocks().size() - 1)) {
 				b2 = b2.getRelative(e.getDirection());
-				extendid = redex.getIdOfThisLocation(b2.getLocation());
+				extendid = DigEventListener2.redex
+						.getIdOfThisLocation(b2.getLocation());
 				// dprint.r.printAll(tr.locationToString(b2.getLocation()));
 				if (extendid != curid) {
 
@@ -161,8 +122,8 @@ public class DigEventListener2 implements Listener {
 					// curid + " out " + extendid);
 					// game Over
 
-					redex.listEx.get(curid).isRunning = false;
-					redex.listEx.get(curid).outOfRange = true;
+					DigEventListener2.redex.listEx.get(curid).isRunning = false;
+					DigEventListener2.redex.listEx.get(curid).outOfRange = true;
 					e.setCancelled(true);
 
 					return;
@@ -170,10 +131,9 @@ public class DigEventListener2 implements Listener {
 			}
 
 		}
-		
-		
 
-		 redex.listEx.get(curid).lastRedstoneActivity = Redex.redstoneTimer;
+		DigEventListener2.redex.listEx
+				.get(curid).lastRedstoneActivity = Redex.redstoneTimer;
 
 		/*
 		 * 
@@ -199,23 +159,72 @@ public class DigEventListener2 implements Listener {
 
 	@EventHandler
 	public void eventja(BlockPistonRetractEvent e) {
-		if (!isrunworld(e.getBlock().getWorld().getName())) {
+		if (!this.isrunworld(e.getBlock().getWorld().getName())) {
 			return;
 		}
 	}
 
 	@EventHandler
+	public void eventja(BlockRedstoneEvent e) {
+		if (!this.isrunworld(e.getBlock().getWorld().getName())) {
+			return;
+		}
+
+		Block b = e.getBlock();
+
+		int curid = DigEventListener2.redex
+				.getIdOfThisLocation(b.getLocation());
+		if (curid == -1) {
+			return;
+		}
+
+		DigEventListener2.redex.listEx
+				.get(curid).lastRedstoneActivity = Redex.redstoneTimer;
+	}
+
+	/*
+	 * @EventHandler public void eventja(BlockPistonEvent e) { if
+	 * (!isrunworld(e.getBlock().getWorld().getName())) { return; } }
+	 */
+
+	@EventHandler
+	public void eventja(ChunkUnloadEvent e) {
+		if (!this.isrunworld(e.getChunk().getWorld().getName())) {
+			return;
+		}
+
+	}
+
+	@EventHandler
+	public void eventja(PlayerCommandPreprocessEvent e) {
+		if (!this.isrunworld(e.getPlayer().getWorld().getName())) {
+			return;
+		}
+
+		Player player = e.getPlayer();
+		String m[] = e.getMessage().split("\\s+");
+
+		CommandRuning newThread = new CommandRuning(m, player,
+				DigEventListener2.redex);
+		Bukkit.getScheduler().scheduleSyncDelayedTask(DigEventListener2.ac,
+				newThread);
+
+	}
+
+	@EventHandler
 	public void eventja(PlayerInteractEvent e) {
 
-		if (!isrunworld(e.getPlayer().getWorld().getName())) {
+		if (!this.isrunworld(e.getPlayer().getWorld().getName())) {
 			return;
 		}
 
 		Action act;
 		act = e.getAction();
 
-		if ((act == Action.RIGHT_CLICK_BLOCK || act == Action.LEFT_CLICK_BLOCK) == false)
+		if (((act == Action.RIGHT_CLICK_BLOCK)
+				|| (act == Action.LEFT_CLICK_BLOCK)) == false) {
 			return;
+		}
 
 		Player player = e.getPlayer();
 		Block block = e.getClickedBlock();
@@ -223,6 +232,6 @@ public class DigEventListener2 implements Listener {
 	}
 
 	public boolean isrunworld(String worldName) {
-		return tr.isrunworld(ac.getName(), worldName);
+		return tr.isrunworld(DigEventListener2.ac.getName(), worldName);
 	}
 } // class

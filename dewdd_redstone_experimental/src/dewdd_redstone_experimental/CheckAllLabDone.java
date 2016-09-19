@@ -12,7 +12,7 @@ public class CheckAllLabDone implements Runnable {
 		// check All Alea if everything done produce next gen
 
 		for (int lop = 0; lop < Redex.maxPopulation; lop++) {
-			AreaType at = redex.listEx.get(lop);
+			AreaType at = this.redex.listEx.get(lop);
 
 			if (at.isRunning == true) {
 				dprint.r.printAll("check All lab done False");
@@ -20,6 +20,8 @@ public class CheckAllLabDone implements Runnable {
 			}
 
 		}
+
+		this.redex.curMode = 0; // back to setup mode
 
 		dprint.r.printAll("check All lab done true");
 

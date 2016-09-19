@@ -4,8 +4,8 @@ import org.bukkit.Bukkit;
 import org.bukkit.block.Block;
 
 public class DecodeAllDNA implements Runnable {
-	private Redex redex;
-	private int curId = 0;
+	private Redex	redex;
+	private int		curId	= 0;
 
 	public DecodeAllDNA(Redex redex, int curId) {
 		this.redex = redex;
@@ -21,20 +21,21 @@ public class DecodeAllDNA implements Runnable {
 
 		// dprint.r.printAll("Decoding curid " + curId);
 
-		AreaType at = redex.listEx.get(curId);
+		AreaType at = this.redex.listEx.get(this.curId);
 
-		DecodeSubDNA sub = new DecodeSubDNA(redex, curId);
+		DecodeSubDNA sub = new DecodeSubDNA(this.redex, this.curId);
 		sub.run();
 
-		curId++;
-		if (curId < redex.listEx.size()) {
+		this.curId++;
+		if (this.curId < this.redex.listEx.size()) {
 			// recall own self
-			DecodeAllDNA caa = new DecodeAllDNA(redex, curId);
-			Bukkit.getScheduler().scheduleSyncDelayedTask(DigEventListener2.ac, caa, 1);
+			DecodeAllDNA caa = new DecodeAllDNA(this.redex, this.curId);
+			Bukkit.getScheduler().scheduleSyncDelayedTask(DigEventListener2.ac,
+					caa, 1);
 			return;
 		}
 
 		dprint.r.printAll("Decoding Done");
-		
+
 	}
 }

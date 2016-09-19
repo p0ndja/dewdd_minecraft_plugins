@@ -11,26 +11,32 @@ public class CheckNoRedstoneActivity implements Runnable {
 	@Override
 	public void run() {
 		// loop all
-		
-		for (int lop  = 0 ; lop < Redex.maxPopulation ; lop ++ ) {
-			
-			AreaType at = redex.listEx.get(lop);
-			
+
+		for (int lop = 0; lop < Redex.maxPopulation; lop++) {
+
+			AreaType at = this.redex.listEx.get(lop);
+
 			if (at.isRunning == false) {
 				continue;
 			}
-			
-			long diff = Redex.redstoneTimer  - at.lastRedstoneActivity;
-			
+
+			long diff = Redex.redstoneTimer - at.lastRedstoneActivity;
+
 			if (diff > Redex.maxNoRedstoneActivityInTick) {
 				at.isRunning = false;
-				dprint.r.printAll("CheckNoRedstoneActivity : " + lop + " die " + 
-				(Redex.redstoneTimer) + " - " + at.lastRedstoneActivity + " = " + diff);
+				dprint.r.printAll("CheckNoRedstoneActivity : " + lop + " die "
+						+ (Redex.redstoneTimer) + " - "
+						+ at.lastRedstoneActivity + " = " + diff);
+
+				// check score
+				FitnessSubArea fs = new FitnessSubArea(this.redex, lop);
+				fs.run();
+
 			}
 		}
-		
+
 		dprint.r.printAll("CheckNoRedstoneActivity Done");
-		
-		redex.CheckAllLabDone();
+
+		this.redex.CheckAllLabDone();
 	}
 }

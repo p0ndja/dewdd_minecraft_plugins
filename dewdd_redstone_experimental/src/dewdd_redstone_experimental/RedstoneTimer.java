@@ -3,8 +3,8 @@ package dewdd_redstone_experimental;
 import org.bukkit.Bukkit;
 
 public class RedstoneTimer implements Runnable {
-	public static long curNoRedstoneActivityInTick = 0;
-	public static long curNothingBetterInTick = 0;
+	public static long	curNoRedstoneActivityInTick	= 0;
+	public static long	curNothingBetterInTick		= 0;
 
 	public RedstoneTimer() {
 
@@ -12,28 +12,41 @@ public class RedstoneTimer implements Runnable {
 
 	@Override
 	public void run() {
+
+		// if in setup mode
+		if (DigEventListener2.redex.curMode == 0) {
+			Redex.redstoneTimer = 0;
+			RedstoneTimer.curNoRedstoneActivityInTick = 0;
+			RedstoneTimer.curNothingBetterInTick = 0;
+			return;
+		}
+
 		Redex.redstoneTimer++;
 		// dprint.r.printAll("RedStone Time " + Redex.redstoneTimer);
 
-		curNoRedstoneActivityInTick++;
-		curNothingBetterInTick++;
+		RedstoneTimer.curNoRedstoneActivityInTick++;
+		RedstoneTimer.curNothingBetterInTick++;
 
-		if (curNoRedstoneActivityInTick > Redex.maxNoRedstoneActivityInTick) {
-			curNoRedstoneActivityInTick = 0;
+		if (RedstoneTimer.curNoRedstoneActivityInTick > Redex.maxNoRedstoneActivityInTick) {
+			RedstoneTimer.curNoRedstoneActivityInTick = 0;
 			// recheck
 
-			CheckNoRedstoneActivity caa = new CheckNoRedstoneActivity(DigEventListener2.redex);
-			Bukkit.getScheduler().scheduleSyncDelayedTask(DigEventListener2.ac, caa);
+			CheckNoRedstoneActivity caa = new CheckNoRedstoneActivity(
+					DigEventListener2.redex);
+			Bukkit.getScheduler().scheduleSyncDelayedTask(DigEventListener2.ac,
+					caa);
 
 		}
 
-		if (curNothingBetterInTick > Redex.maxNothingBetterInTick) {
-			curNothingBetterInTick = 0;
+		if (RedstoneTimer.curNothingBetterInTick > Redex.maxNothingBetterInTick) {
+			RedstoneTimer.curNothingBetterInTick = 0;
 			// recheck
 
-			CheckNothingBetter caa = new CheckNothingBetter(DigEventListener2.redex);
+			CheckNothingBetter caa = new CheckNothingBetter(
+					DigEventListener2.redex);
 
-			Bukkit.getScheduler().scheduleSyncDelayedTask(DigEventListener2.ac, caa);
+			Bukkit.getScheduler().scheduleSyncDelayedTask(DigEventListener2.ac,
+					caa);
 
 		}
 

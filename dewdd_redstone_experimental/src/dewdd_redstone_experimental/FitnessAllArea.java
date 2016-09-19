@@ -4,8 +4,8 @@ import org.bukkit.Bukkit;
 import org.bukkit.block.Block;
 
 public class FitnessAllArea implements Runnable {
-	private Redex redex;
-	private int curId = 0;
+	private Redex	redex;
+	private int		curId	= 0;
 
 	public FitnessAllArea(Redex redex, int curId) {
 		this.redex = redex;
@@ -21,16 +21,17 @@ public class FitnessAllArea implements Runnable {
 
 		// dprint.r.printAll("CleanAllArea curid " + curId);
 
-		AreaType at = redex.listEx.get(curId);
+		AreaType at = this.redex.listEx.get(this.curId);
 
-		FitnessSubArea sub = new FitnessSubArea(redex, curId);
+		FitnessSubArea sub = new FitnessSubArea(this.redex, this.curId);
 		sub.run();
-		
-		curId++;
-		
-		if (curId < Redex.maxPopulation) {
-			FitnessAllArea recall = new FitnessAllArea(redex, curId);
-			Bukkit.getScheduler().scheduleSyncDelayedTask(DigEventListener2.ac, recall,1);
+
+		this.curId++;
+
+		if (this.curId < Redex.maxPopulation) {
+			FitnessAllArea recall = new FitnessAllArea(this.redex, this.curId);
+			Bukkit.getScheduler().scheduleSyncDelayedTask(DigEventListener2.ac,
+					recall, 1);
 		}
 
 	}

@@ -5,8 +5,8 @@ import org.bukkit.Material;
 import org.bukkit.block.Block;
 
 public class CleanSubArea implements Runnable {
-	private Redex redex;
-	private int curId = 0;
+	private Redex	redex;
+	private int		curId	= 0;
 
 	public CleanSubArea(Redex redex, int curId) {
 		this.redex = redex;
@@ -20,12 +20,12 @@ public class CleanSubArea implements Runnable {
 		Block hostBlock = null;
 		Block setBlock = null;
 
-		if (curId % 100 == 0) {
-			dprint.r.printAll("Cleaning : curid " + curId);
+		if ((this.curId % 100) == 0) {
+			dprint.r.printAll("Cleaning : curid " + this.curId);
 		}
 
-		AreaType at = redex.listEx.get(curId);
-		
+		AreaType at = this.redex.listEx.get(this.curId);
+
 		// Clean Or Data
 		at.curTick = 0;
 		at.isRunning = false;
@@ -38,35 +38,37 @@ public class CleanSubArea implements Runnable {
 
 		boolean clean1 = false;
 
-		for (int x = redex.start.loc.lx; x <= redex.start.loc.rx; x++) {
+		for (int x = this.redex.start.loc.lx; x <= this.redex.start.loc.rx; x++) {
 
-			for (int y = redex.start.loc.ly; y <= redex.start.loc.ry; y++) {
+			for (int y = this.redex.start.loc.ly; y <= this.redex.start.loc.ry; y++) {
 
-				for (int z = redex.start.loc.lz; z <= redex.start.loc.rz; z++) {
+				for (int z = this.redex.start.loc.lz; z <= this.redex.start.loc.rz; z++) {
 					hostBlock = at.world.getBlockAt(x, y, z);
 
-					int gx = at.loc.lx + (x - redex.start.loc.lx);
+					int gx = at.loc.lx + (x - this.redex.start.loc.lx);
 					int gy = at.loc.ly + (y);
-					int gz = at.loc.lz + (z - redex.start.loc.lz);
+					int gz = at.loc.lz + (z - this.redex.start.loc.lz);
 
 					setBlock = at.world.getBlockAt(gx, gy, gz);
 
 					if (hostBlock.getType() == Material.BEACON) {
 						// remember start position
-						redex.beaconX = x - redex.start.loc.lx;
-						redex.beaconY = y;
-						redex.beaconZ = z - redex.start.loc.lz;
+						this.redex.beaconX = x - this.redex.start.loc.lx;
+						this.redex.beaconY = y;
+						this.redex.beaconZ = z - this.redex.start.loc.lz;
 						setBlock.setType(Material.AIR);
 
 						continue;
 					}
 
-					if (hostBlock.getType() == setBlock.getType() && hostBlock.getData() == setBlock.getData()) {
+					if ((hostBlock.getType() == setBlock.getType())
+							&& (hostBlock.getData() == setBlock.getData())) {
 						continue;
 					}
 
 					clean1 = true;
-					setBlock.setTypeIdAndData(hostBlock.getType().getId(), hostBlock.getData(), true);
+					setBlock.setTypeIdAndData(hostBlock.getType().getId(),
+							hostBlock.getData(), true);
 
 				}
 			}
@@ -74,11 +76,13 @@ public class CleanSubArea implements Runnable {
 
 		// if still has to clean try again
 		if (clean1 == true) {
-			CleanSubArea sub2 = new CleanSubArea(redex, curId);
-			Bukkit.getScheduler().scheduleSyncDelayedTask(DigEventListener2.ac, sub2);
+			CleanSubArea sub2 = new CleanSubArea(this.redex, this.curId);
+			Bukkit.getScheduler().scheduleSyncDelayedTask(DigEventListener2.ac,
+					sub2);
 
-			sub2 = new CleanSubArea(redex, curId);
-			Bukkit.getScheduler().scheduleSyncDelayedTask(DigEventListener2.ac, sub2);
+			sub2 = new CleanSubArea(this.redex, this.curId);
+			Bukkit.getScheduler().scheduleSyncDelayedTask(DigEventListener2.ac,
+					sub2);
 		}
 	}
 }

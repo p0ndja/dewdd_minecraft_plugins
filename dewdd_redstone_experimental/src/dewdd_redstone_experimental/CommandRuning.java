@@ -6,9 +6,9 @@ import org.bukkit.entity.Player;
 import dewddtran.tr;
 
 public class CommandRuning implements Runnable {
-	private String m[];
-	private Player p;
-	private Redex redex;
+	private String	m[];
+	private Player	p;
+	private Redex	redex;
 
 	public CommandRuning(String m[], Player p, Redex redex) {
 		this.m = m;
@@ -19,79 +19,99 @@ public class CommandRuning implements Runnable {
 
 	@Override
 	public void run() {
-		if (m[0].equalsIgnoreCase("/redex")) {
-			if (p.hasPermission(Redex.predex) == false) {
-				p.sendMessage(tr.gettr("you don't have permission" + Redex.predex));
+		if (this.m[0].equalsIgnoreCase("/redex")) {
+			if (this.p.hasPermission(Redex.predex) == false) {
+				this.p.sendMessage(
+						tr.gettr("you don't have permission" + Redex.predex));
 				return;
-			} else {
-				if (m.length == 1) {
-					p.sendMessage("/redex start");
-					p.sendMessage("/redex clean");
-					p.sendMessage("/redex decode");
-					p.sendMessage("/redex activate");
-					p.sendMessage("/redex fitness");
+			}
+			else {
+				if (this.m.length == 1) {
+					this.p.sendMessage("/redex start");
+					this.p.sendMessage("/redex clean");
+					this.p.sendMessage("/redex decode");
+					this.p.sendMessage("/redex activate");
+					this.p.sendMessage("/redex fitness");
 
-				} else if (m.length >= 2) {
+				}
+				else if (this.m.length >= 2) {
 
 					// if (rene)
-					dprint.r.printAll("command run redex null == " + (redex == null ? "yes" : "no") + " ");
+					dprint.r.printAll("command run redex null == "
+							+ (this.redex == null ? "yes" : "no") + " ");
 
-					if (m[1].equalsIgnoreCase("start")) {
+					if (this.m[1].equalsIgnoreCase("start")) {
 
 						// start process
-					
-						redex.CleanAllArea();
 
-					} else if (m[1].equalsIgnoreCase("clean")) {
-						if (m.length == 2) {
+						this.redex.CleanAllArea();
+
+					}
+					else if (this.m[1].equalsIgnoreCase("clean")) {
+						if (this.m.length == 2) {
 
 							// start process
-							
-							redex.CleanAllArea();
-						} else if (m.length == 3) {
-							
-							CleanSubArea cc = new CleanSubArea(redex, Integer.parseInt(m[2]));
-							Bukkit.getScheduler().scheduleSyncDelayedTask(DigEventListener2.ac, cc);
+
+							this.redex.CleanAllArea();
+						}
+						else if (this.m.length == 3) {
+
+							CleanSubArea cc = new CleanSubArea(this.redex,
+									Integer.parseInt(this.m[2]));
+							Bukkit.getScheduler().scheduleSyncDelayedTask(
+									DigEventListener2.ac, cc);
 						}
 
-					} else if (m[1].equalsIgnoreCase("decode")) {
-						if (m.length == 2) {
+					}
+					else if (this.m[1].equalsIgnoreCase("decode")) {
+						if (this.m.length == 2) {
 							// start process
-							
-							redex.DecodeAllArea();
-						} else if (m.length == 3) {
-							
-							DecodeSubDNA cc = new DecodeSubDNA(redex, Integer.parseInt(m[2]));
-							Bukkit.getScheduler().scheduleSyncDelayedTask(DigEventListener2.ac, cc);
+
+							this.redex.DecodeAllArea();
+						}
+						else if (this.m.length == 3) {
+
+							DecodeSubDNA cc = new DecodeSubDNA(this.redex,
+									Integer.parseInt(this.m[2]));
+							Bukkit.getScheduler().scheduleSyncDelayedTask(
+									DigEventListener2.ac, cc);
 
 						}
 					}
-					else if (m[1].equalsIgnoreCase("activate")) {
-						if (m.length == 2) {
+					else if (this.m[1].equalsIgnoreCase("activate")) {
+						if (this.m.length == 2) {
 							// start process
-							
-							redex.ActivateAllArea();
-						} else if (m.length == 3) {
-							
-							int curid = Integer.parseInt(m[2]);
-							ActivateSubArea cc = new ActivateSubArea(redex, curid );
-							Bukkit.getScheduler().scheduleSyncDelayedTask(DigEventListener2.ac, cc);
-							
-							dprint.r.printAll("activate " + curid + " = " + redex.listEx.get(curid).score);
+
+							this.redex.ActivateAllArea();
+						}
+						else if (this.m.length == 3) {
+
+							int curid = Integer.parseInt(this.m[2]);
+							ActivateSubArea cc = new ActivateSubArea(this.redex,
+									curid);
+							Bukkit.getScheduler().scheduleSyncDelayedTask(
+									DigEventListener2.ac, cc);
+
+							dprint.r.printAll("activate " + curid + " = "
+									+ this.redex.listEx.get(curid).score);
 						}
 					}
-					else if (m[1].equalsIgnoreCase("fitness")) {
-						if (m.length == 2) {
+					else if (this.m[1].equalsIgnoreCase("fitness")) {
+						if (this.m.length == 2) {
 							// start process
-							
-							redex.FitnessAllArea();
-						} else if (m.length == 3) {
-							
-							int curid = Integer.parseInt(m[2]);
-							FitnessSubArea cc = new FitnessSubArea(redex, curid );
-							Bukkit.getScheduler().scheduleSyncDelayedTask(DigEventListener2.ac, cc);
-							
-							dprint.r.printAll("Fitness " + curid + " = " + redex.listEx.get(curid).score);
+
+							this.redex.FitnessAllArea();
+						}
+						else if (this.m.length == 3) {
+
+							int curid = Integer.parseInt(this.m[2]);
+							FitnessSubArea cc = new FitnessSubArea(this.redex,
+									curid);
+							Bukkit.getScheduler().scheduleSyncDelayedTask(
+									DigEventListener2.ac, cc);
+
+							dprint.r.printAll("Fitness " + curid + " = "
+									+ this.redex.listEx.get(curid).score);
 						}
 					}
 

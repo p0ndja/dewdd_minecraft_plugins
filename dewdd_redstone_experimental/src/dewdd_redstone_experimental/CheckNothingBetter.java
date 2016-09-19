@@ -14,28 +14,28 @@ public class CheckNothingBetter implements Runnable {
 
 		for (int lop = 0; lop < Redex.maxPopulation; lop++) {
 
-			AreaType at = redex.listEx.get(lop);
-			
+			AreaType at = this.redex.listEx.get(lop);
+
 			if (at.isRunning == false) {
 				continue;
 			}
 
 			// call check score
-			FitnessSubArea sub = new FitnessSubArea(redex, lop);
+			FitnessSubArea sub = new FitnessSubArea(this.redex, lop);
 			sub.run();
 
 			if (at.lastCheckScore <= at.score) { // nothing better
 				at.isRunning = false;
-				dprint.r.printAll("CheckNothingBetter : " + lop + " die " + at.lastCheckScore + " | " + at.score);
+				dprint.r.printAll("CheckNothingBetter : " + lop + " die "
+						+ at.lastCheckScore + " | " + at.score);
 
 			}
 
 			at.lastCheckScore = at.score;
 		}
-		
-		dprint.r.printAll("CheckNothingBetter Done");
-		
 
-		redex.CheckAllLabDone();
+		dprint.r.printAll("CheckNothingBetter Done");
+
+		this.redex.CheckAllLabDone();
 	}
 }
