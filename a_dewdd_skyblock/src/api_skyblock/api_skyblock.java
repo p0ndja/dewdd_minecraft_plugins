@@ -19,6 +19,7 @@ import org.bukkit.Chunk;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
 import org.bukkit.block.Chest;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -28,10 +29,10 @@ import dewddtran.tr;
 
 public class api_skyblock {
 
-	class cleanthischunktcrs0 implements Runnable {
+	class CleanThisChunkTCRS implements Runnable {
 		private Chunk chunk = null;
 
-		public cleanthischunktcrs0(Chunk chunk) {
+		public CleanThisChunkTCRS(Chunk chunk) {
 			this.chunk = chunk;
 		}
 
@@ -84,11 +85,11 @@ public class api_skyblock {
 
 	}
 
-	class createskyblockrs implements Runnable {
+	class CreateSkyblockRS implements Runnable {
 
 		private Player player;
 
-		public createskyblockrs(Player player) {
+		public CreateSkyblockRS(Player player) {
 			this.player = player;
 		}
 
@@ -295,7 +296,7 @@ public class api_skyblock {
 					// add item done
 
 					// save file
-					saversprotectfile();
+					saveRSProtectFile();
 					buildcomplete = true;
 				}
 			} // loop build complete
@@ -311,7 +312,7 @@ public class api_skyblock {
 
 	}
 
-	class missionNotification implements Runnable {
+	class MissionNotification implements Runnable {
 
 		@Override
 		public void run() {
@@ -321,13 +322,19 @@ public class api_skyblock {
 					continue;
 				}
 
-				int id = getOWNIslandID(player, false);
+				//int id = getOWNIslandID(player, false);
+				
+				int id = getprotectid(player.getLocation().getBlock());
+				
 				// island not found
 				if (id == -1) {
 					continue;
 				}
+				
+				if (getplayerinslot(player.getName(), id) > -1) {
 
 				player.sendMessage(getFullMissionHeadAndCurLevel(rs[id].mission));
+				}
 
 				// check his
 			}
@@ -342,6 +349,8 @@ public class api_skyblock {
 		public int z;
 
 		public int mission = 0;
+		
+		public int tmpValue1 = 0;
 
 		public String p[] = null;
 		public int autoCutCount = 0;
@@ -490,7 +499,7 @@ public class api_skyblock {
 	int mode2 = 1;
 
 	public api_skyblock() {
-		loadrsprotectfile();
+		loadRSProtectFile();
 
 	}
 
@@ -565,10 +574,100 @@ public class api_skyblock {
 			printToAllPlayerOnRS(rsID,tr.gettr("got_reward_lv_" + rs[rsID].mission));
 
 
+			
+			rs[rsID].tmpValue1 = 0;
+			
 			break;
 		case 2:
 
-			printToAllPlayerOnRS(rsID, tr.gettr("got_reward_lv_" + rs[rsID].mission));
+
+			 bo = getBlockMiddleRS(rsID);
+			 bo2 = searchSpaceCube(bo, 5, 5);
+
+			for (int i = 0; i < 5; i++) {
+				for (int i2 = 0; i2 < 5; i2++) {
+					for (int i3 = 0; i3 < 5; i3++) {
+
+						Block bo3 = bo2.getRelative(i, i2, i3);
+						if (bo3.getType() != Material.AIR) {
+							dprint.r.printAll(tr.gettr("error while applyReward lv 0 block is != air"));
+							break;
+						}
+
+					}
+				}
+			}
+			
+			bo2.setType(Material.CHEST);
+			
+			Chest chest = (Chest) bo2.getState();
+			
+			ItemStack itm = new ItemStack(Material.SAPLING, 3);
+			chest.getInventory().addItem(itm.getData().toItemStack(3));
+
+			itm = new ItemStack(Material.SAPLING, 3);
+			itm.getData().setData((byte) 1);
+			chest.getInventory().addItem(itm.getData().toItemStack(3));
+
+			itm = new ItemStack(Material.SAPLING, 3);
+			itm.getData().setData((byte) 2);
+			chest.getInventory().addItem(itm.getData().toItemStack(3));
+
+			itm = new ItemStack(Material.SAPLING, 3);
+			itm.getData().setData((byte) 3);
+			chest.getInventory().addItem(itm.getData().toItemStack(3));
+
+			itm = new ItemStack(Material.CARROT, 3);
+
+			chest.getInventory().addItem(itm.getData().toItemStack(10));
+			itm = new ItemStack(Material.POTATO, 3);
+
+			chest.getInventory().addItem(itm.getData().toItemStack(10));
+			itm = new ItemStack(Material.PUMPKIN_SEEDS, 3);
+
+			chest.getInventory().addItem(itm.getData().toItemStack(10));
+			itm = new ItemStack(Material.MELON_SEEDS, 3);
+
+			chest.getInventory().addItem(itm.getData().toItemStack(10));
+			itm = new ItemStack(Material.SEEDS, 3);
+
+			chest.getInventory().addItem(itm.getData().toItemStack(10));
+			itm = new ItemStack(Material.SUGAR_CANE, 3);
+			chest.getInventory().addItem(itm.getData().toItemStack(10));
+			
+			
+			itm = new ItemStack(Material.CACTUS, 1);
+
+			itm.setData(itm.getData());
+			chest.getInventory().addItem(itm);
+
+			itm = new ItemStack(Material.BROWN_MUSHROOM, 2);
+
+			itm.setData(itm.getData());
+			chest.getInventory().addItem(itm);
+
+			itm = new ItemStack(Material.RED_MUSHROOM, 2);
+
+			itm.setData(itm.getData());
+			chest.getInventory().addItem(itm);
+
+			itm = new ItemStack(Material.SAND, 7);
+
+			itm.setData(itm.getData());
+			chest.getInventory().addItem(itm);
+			
+			
+			bo2.getRelative(BlockFace.DOWN).setType(Material.BOOKSHELF);
+			bo2.getRelative(0,-1,1).setType(Material.TORCH);
+			
+
+			
+		
+			printToAllPlayerOnRS (rsID,tr.gettr("generated_small_island_at") 
+					+ " " + bo2.getX() + "," + bo2.getY() + "," + bo2.getZ());
+			
+			printToAllPlayerOnRS(rsID,tr.gettr("got_reward_lv_" + rs[rsID].mission));
+
 
 			break;
 		default:
@@ -579,8 +678,8 @@ public class api_skyblock {
 		}
 	}
 
-	public void createskyblockrs(Player player) {
-		createskyblockrs ab = new createskyblockrs(player);
+	public void createSkyblockRS(Player player) {
+		CreateSkyblockRS ab = new CreateSkyblockRS(player);
 
 		Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(ac, ab);
 
@@ -684,7 +783,7 @@ public class api_skyblock {
 		}
 	}
 
-	public void loadrsprotectfile() {
+	public void loadRSProtectFile() {
 		String worldf = "ptdew_dewdd_rs_protect.txt";
 
 		File dir = new File(folder_name);
@@ -761,7 +860,7 @@ public class api_skyblock {
 
 		printToAllPlayerOnRS(rsID, (getMissionHeader(rs[rsID].mission) + " ..."));
 
-		saversprotectfile();
+		saveRSProtectFile();
 
 	}
 
@@ -785,7 +884,7 @@ public class api_skyblock {
 		// 180
 	}
 
-	public void saversprotectfile() {
+	public void saveRSProtectFile() {
 
 		File dir = new File(folder_name);
 		dir.mkdir();
@@ -888,6 +987,6 @@ public class api_skyblock {
 	public void startMissionNotificationLoopShowing() {
 		Bukkit.getScheduler().cancelTasks(ac);
 
-		Bukkit.getScheduler().scheduleSyncRepeatingTask(ac, new missionNotification(), 1, 2400);
+		Bukkit.getScheduler().scheduleSyncRepeatingTask(ac, new MissionNotification(), 1, 2400);
 	}
 }

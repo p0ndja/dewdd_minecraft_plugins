@@ -57,12 +57,12 @@ import dewddtran.tr;
 
 public class DigEventListener2 implements Listener {
 
-	class autoabsorb implements Runnable {
+	class AutoAbsorb implements Runnable {
 		private Block b;
 		private int pid;
 		private ItemStack sid;
 
-		public autoabsorb(Block b, int pid, ItemStack sid) {
+		public AutoAbsorb(Block b, int pid, ItemStack sid) {
 			this.b = b;
 			this.pid = pid;
 			this.sid = sid;
@@ -117,11 +117,11 @@ public class DigEventListener2 implements Listener {
 		
 	}
 	
-	class lv1destroyStone implements Runnable {
+	class LV1DestroyStone implements Runnable {
 		private Block b;
 		private int curRSID;
 
-		public  lv1destroyStone(Block b, int rsID) {
+		public  LV1DestroyStone(Block b, int rsID) {
 			//dprint.r.printAll("lv1destroystone constructure");
 			this.b = b;
 			this.curRSID = rsID;
@@ -141,11 +141,27 @@ public class DigEventListener2 implements Listener {
 		}
 	}
 	
-	class autocut implements Runnable {
+	
+	class callNextMission implements Runnable {
+
+		private int curRSID;
+		public callNextMission(int rsid) {
+		
+			this.curRSID = rsid;
+		}
+
+		@Override
+		public void run() {
+			 dew.nextMission(curRSID);
+		}
+		
+	}
+	
+	class Autocut implements Runnable {
 		private Block b;
 		private int curRSID;
 
-		public autocut(Block b, int pid, int sid) {
+		public Autocut(Block b, int pid, int sid) {
 			this.b = b;
 			this.curRSID = pid;
 		}
@@ -266,7 +282,7 @@ public class DigEventListener2 implements Listener {
 
 				if (api_skyblock.rs[curRSID].autoCutCount > dew.maxautocut) {
 					// retry it
-					autocut aee = new autocut(b, curRSID, 0);
+					Autocut aee = new Autocut(b, curRSID, 0);
 					Bukkit.getScheduler().scheduleSyncDelayedTask(ac, aee, 1);
 
 					return;
@@ -385,7 +401,7 @@ public class DigEventListener2 implements Listener {
 					Block bd = Bukkit.getWorld("world").getBlockAt(api_skyblock.rs[getid].x,
 							api_skyblock.rs[getid].y ,api_skyblock.rs[getid].z);
 					
-					lv1destroyStone ee = new lv1destroyStone(bd, getid);
+					LV1DestroyStone ee = new LV1DestroyStone(bd, getid);
 					Bukkit.getScheduler().scheduleSyncDelayedTask(ac, ee);
 					
 					
@@ -421,14 +437,14 @@ public class DigEventListener2 implements Listener {
 			for (Player pl : Bukkit.getOnlinePlayers())
 				if (api_skyblock.rs[getid].p[lop].equalsIgnoreCase(pl.getName())) {
 
-					autocut ax = new autocut(b, getid, se);
+					Autocut ax = new Autocut(b, getid, se);
 					Bukkit.getScheduler().scheduleSyncDelayedTask(ac, ax);
 
 					for (int xx = -5; xx <= 5; xx++) {
 						for (int yy = -5; yy <= 5; yy++) {
 							for (int zz = -5; zz <= 5; zz++) {
 
-								autocut ax2 = new autocut(b.getRelative(xx, yy, zz), getid, se);
+								Autocut ax2 = new Autocut(b.getRelative(xx, yy, zz), getid, se);
 								Bukkit.getScheduler().scheduleSyncDelayedTask(ac, ax2);
 
 							}
@@ -455,6 +471,45 @@ public class DigEventListener2 implements Listener {
 		if (cando == false) {
 			e.setCancelled(true);
 			return;
+		}
+		
+		int getid = api_skyblock.getprotectid(player.getLocation().getBlock());
+
+		if (getid > -1) {
+			// have protect
+			
+			// check you are in that home
+			
+			int gx =  dew.getplayerinslot(player.getName() , getid);
+			
+		//	dprint.r.printAll("blockbreak lv 1 gx = " + gx);
+			
+			if (gx > -1) {
+				
+				// check mission
+				if (api_skyblock.rs[getid].mission == 2) { // bone
+					
+					if (player.getItemInHand().getType() == Material.INK_SACK) {
+						api_skyblock.rs[getid].tmpValue1 ++;
+						dew.printToAllPlayerOnRS(getid, 
+								tr.gettr("bone_meal_use_counting_=") + api_skyblock.rs[getid].tmpValue1 + "/45");
+						
+						if (api_skyblock.rs[getid].tmpValue1 >= 45) {
+							
+							callNextMission ee = new callNextMission(getid);
+							Bukkit.getScheduler().scheduleSyncDelayedTask(ac, ee);
+						}
+					}
+					
+					
+					// search nearest stone
+					
+					
+					
+				}
+			}
+			
+			
 		}
 
 	}
@@ -775,7 +830,7 @@ public class DigEventListener2 implements Listener {
 		for (int lop = 0; lop < api_skyblock.RSMaxPlayer; lop++)
 			for (Player pl : Bukkit.getOnlinePlayers())
 				if (api_skyblock.rs[getid].p[lop].equalsIgnoreCase(pl.getName())) {
-					autoabsorb ax = new autoabsorb(b, getid, e.getEntity().getItemStack());
+					AutoAbsorb ax = new AutoAbsorb(b, getid, e.getEntity().getItemStack());
 					Bukkit.getScheduler().scheduleSyncDelayedTask(ac, ax);
 
 					return;
@@ -896,7 +951,7 @@ public class DigEventListener2 implements Listener {
 									+ api_skyblock.rs[api_skyblock.rsMax - 1].z + ") host is "
 									+ api_skyblock.rs[api_skyblock.rsMax - 1].p[0]));
 
-					dew.saversprotectfile();
+					dew.saveRSProtectFile();
 					return;
 				} else if (m[1].equalsIgnoreCase("resetlv")) {
 					int getid = api_skyblock.getprotectid(player.getLocation().getBlock());
@@ -910,6 +965,10 @@ public class DigEventListener2 implements Listener {
 					api_skyblock.rs[getid].mission = 0;
 					dprint.r.printAll(tr.gettr("reseted_lv_of_is_this_guys") + api_skyblock.rs[getid].p[0]);
 
+					
+					dew.printToAllPlayerOnRS(getid,dew.getMissionHeader(dew.rs[getid].mission));
+					
+					
 				} else if (m[1].equalsIgnoreCase("go")) {
 					// go
 
@@ -1012,7 +1071,9 @@ public class DigEventListener2 implements Listener {
 
 					}
 
+					
 					player.sendMessage("lv = " + api_skyblock.rs[getid].mission);
+					dew.printToAllPlayerOnRS(getid,  dew.getMissionHeader(dew.rs[getid].mission));
 				}
 
 				else if (m[1].equalsIgnoreCase("owner")) {
@@ -1045,7 +1106,7 @@ public class DigEventListener2 implements Listener {
 						api_skyblock.rs[getid].p[0] = m[2];
 						player.sendMessage(
 								dprint.r.color(tr.gettr("this_skyblock_owner_is") + api_skyblock.rs[getid].p[0]));
-						dew.saversprotectfile();
+						dew.saveRSProtectFile();
 						return;
 
 					}
@@ -1091,7 +1152,7 @@ public class DigEventListener2 implements Listener {
 						if (api_skyblock.rs[getid].p[i].equalsIgnoreCase("null")) {
 							api_skyblock.rs[getid].p[i] = m[2];
 							player.sendMessage(dprint.r.color(tr.gettr("added") + m[2] + tr.gettr("to_your_skyblock")));
-							dew.saversprotectfile();
+							dew.saveRSProtectFile();
 							return;
 						}
 
@@ -1134,7 +1195,7 @@ public class DigEventListener2 implements Listener {
 							api_skyblock.rs[getid].p[i] = "null";
 							player.sendMessage(
 									dprint.r.color(tr.gettr("removed") + m[2] + tr.gettr("from_your_skyblock")));
-							dew.saversprotectfile();
+							dew.saveRSProtectFile();
 							return;
 						}
 
@@ -1177,13 +1238,13 @@ public class DigEventListener2 implements Listener {
 
 					player.sendMessage(dprint.r.color(tr.gettr("this_is_hardcore_skyblock")));
 
-					dew.createskyblockrs(player);
+					dew.createSkyblockRS(player);
 
 					return;
 
 				} else if (m[1].equalsIgnoreCase("reload") == true) {
 
-					dew.loadrsprotectfile();
+					dew.loadRSProtectFile();
 				}
 		}
 
@@ -1384,7 +1445,7 @@ public class DigEventListener2 implements Listener {
 						for (int lop = 0; lop < api_skyblock.RSMaxPlayer; lop++)
 							for (Player pl : Bukkit.getOnlinePlayers())
 								if (api_skyblock.rs[getid].p[lop].equalsIgnoreCase(pl.getName())) {
-									autocut ax = new autocut(block3, getid, se);
+									Autocut ax = new Autocut(block3, getid, se);
 									Bukkit.getScheduler().scheduleSyncDelayedTask(ac, ax);
 
 									continue;
