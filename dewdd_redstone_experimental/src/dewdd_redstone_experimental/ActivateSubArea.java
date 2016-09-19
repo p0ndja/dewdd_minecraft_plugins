@@ -16,7 +16,7 @@ public class ActivateSubArea implements Runnable {
 	public void run() {
 		Block setBlock = null;
 
-		if ((this.curId % 100) == 0) {
+		if ((this.curId % (Redex.maxPopulation / 10)) == 0) {
 			dprint.r.printAll("Activate : curid " + this.curId);
 
 		}

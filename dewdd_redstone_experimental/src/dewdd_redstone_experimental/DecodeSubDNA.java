@@ -34,7 +34,7 @@ public class DecodeSubDNA implements Runnable {
 		Block setBlock = null;
 
 		if (this.isAreaTypeMode == false) {
-		if ((this.curId % 100) == 0) {
+			if ((this.curId % (Redex.maxPopulation / 10)) == 0) {
 			dprint.r.printAll("Decoding : curid " + this.curId);
 
 		}

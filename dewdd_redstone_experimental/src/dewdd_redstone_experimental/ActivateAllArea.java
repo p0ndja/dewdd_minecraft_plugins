@@ -19,8 +19,9 @@ public class ActivateAllArea implements Runnable {
 
 			// recall own self
 			ActivateSubArea caa = new ActivateSubArea(this.redex, lop);
-			Bukkit.getScheduler().scheduleSyncDelayedTask(DigEventListener2.ac,
-					caa, 1);
+			caa.run();
+			/*Bukkit.getScheduler().scheduleSyncDelayedTask(DigEventListener2.ac,
+					caa, 1);*/
 		}
 
 		this.redex.curMode = 1; // start calculating fitness

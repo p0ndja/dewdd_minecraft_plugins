@@ -5,17 +5,18 @@ import org.bukkit.Material;
 import org.bukkit.block.Block;
 
 public class CleanSubArea implements Runnable {
-	private Redex	redex;
-	private int		curId	= 0;
+	private Redex		redex;
+	private int			curId					= 0;
+	public boolean		showCleaningIdMessage	= true;
 
-	private AreaType areaType = null;
-	private boolean isAreaTypeMode = false;
-	
+	private AreaType	areaType				= null;
+	private boolean		isAreaTypeMode			= false;
+
 	public CleanSubArea(Redex redex, int curId) {
 		this.redex = redex;
 		this.curId = curId;
 	}
-	
+
 	public CleanSubArea(Redex redex, AreaType areaType) {
 		this.redex = redex;
 		this.areaType = areaType;
@@ -30,13 +31,15 @@ public class CleanSubArea implements Runnable {
 		Block setBlock = null;
 
 		if (this.isAreaTypeMode == false) {
-		if ((this.curId % 100) == 0) {
-			dprint.r.printAll("Cleaning : curid " + this.curId);
-		}
+			if (this.showCleaningIdMessage == true) {
+				if ((this.curId % (Redex.maxPopulation / 10)) == 0) {
+					dprint.r.printAll("Cleaning : curid " + this.curId);
+				}
+			}
 		}
 
-		AreaType at = isAreaTypeMode == false ? this.redex.listEx.get(this.curId) : areaType;
-		
+		AreaType at = isAreaTypeMode == false
+				? this.redex.listEx.get(this.curId) : areaType;
 
 		// Clean Or Data
 		at.curTick = 0;
@@ -89,10 +92,12 @@ public class CleanSubArea implements Runnable {
 		// if still has to clean try again
 		if (clean1 == true) {
 			CleanSubArea sub2 = new CleanSubArea(this.redex, this.curId);
+			sub2.showCleaningIdMessage = false;
 			Bukkit.getScheduler().scheduleSyncDelayedTask(DigEventListener2.ac,
 					sub2);
 
 			sub2 = new CleanSubArea(this.redex, this.curId);
+			sub2.showCleaningIdMessage = false;
 			Bukkit.getScheduler().scheduleSyncDelayedTask(DigEventListener2.ac,
 					sub2);
 		}
