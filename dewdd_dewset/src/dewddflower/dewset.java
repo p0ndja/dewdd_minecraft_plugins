@@ -222,9 +222,7 @@ public class dewset extends dewset_interface {
 			int slotp = -1;
 
 			for (Player player : Bukkit.getOnlinePlayers()) {
-				if (api_admin.dewddadmin.is2moderator(player) == true) {
-					continue;
-				}
+			
 				// search nearby box and sign ... ummm yes
 				block = player.getLocation().getBlock();
 
@@ -359,9 +357,7 @@ public class dewset extends dewset_interface {
 			Block block = null;
 
 			for (Player player : Bukkit.getOnlinePlayers()) {
-				if (api_admin.dewddadmin.is2moderator(player) == true) {
-					continue;
-				}
+				
 				// search nearby box and sign ... ummm yes
 				block = player.getLocation().getBlock();
 
@@ -747,7 +743,7 @@ public class dewset extends dewset_interface {
 							bd.put(tr.locationToString(block.getLocation()), block.getLocation());
 						}
 
-						dprint.r.printAdmin("delete Recursive > first add > " + block.getX() + "," + block.getY() + ","
+						dprint.r.printAll("delete Recursive > first add > " + block.getX() + "," + block.getY() + ","
 								+ block.getZ() + " size " + bd.size() + " , id data " + block.getTypeId() + ":"
 								+ block.getData());
 
@@ -850,7 +846,7 @@ public class dewset extends dewset_interface {
 						}
 
 						if (first == 0) {
-							dprint.r.printAdmin("delete recursive > break > " + getStack.getX() + "," + getStack.getY()
+							dprint.r.printAll("delete recursive > break > " + getStack.getX() + "," + getStack.getY()
 									+ "," + getStack.getZ() + " " + getStack.getType().name() + ":" + getStack.getData()
 									+ " size " + bd.size() + " " + getStack.getWorld().getName() + " > id data "
 									+ getStack.getTypeId() + ":" + getStack.getData() + " blockdo " + blockdo + "/"
@@ -911,7 +907,7 @@ public class dewset extends dewset_interface {
 
 			DeleteRecursive_Thread newRun = new DeleteRecursive_Thread(bd, world, 0, ee, item, chunklimit, search);
 			Bukkit.getScheduler().scheduleSyncDelayedTask(ac, newRun, sleeptime);
-			dprint.r.printAdmin("recalling > " + bd.size() + " " + " avg = "
+			dprint.r.printAll("recalling > " + bd.size() + " " + " avg = "
 					+ (int) ((double) blockdo / (System.currentTimeMillis() - startTime + 1)));
 
 		}
@@ -1374,11 +1370,7 @@ public class dewset extends dewset_interface {
 
 		@Override
 		public void run() {
-			if (api_admin.dewddadmin.is2moderator(player) == true) {
-				player.sendMessage(dprint.r.color("ptdew&dewdd : " + tr.gettr("staff_can't_dewbuy")));
-				isok = false;
-				return;
-			}
+			
 
 			int getid = getfreeselect(player);
 			if (selectx1[getid] == 0 && selecty1[getid] == 0 && selectz1[getid] == 0) {
@@ -1588,11 +1580,7 @@ public class dewset extends dewset_interface {
 
 		@Override
 		public void run() {
-			if (api_admin.dewddadmin.is2moderator(player) == true) {
-				player.sendMessage(
-						dprint.r.color("ptdew&dewdd : " + tr.gettr("staff_can't") + tr.gettr("buy") + "zone"));
-				return;
-			}
+			
 
 			RSWorld worldid = getWorld(player.getWorld().getName());
 			int getid = getProtectid(block2, worldid);
@@ -4181,12 +4169,7 @@ public class dewset extends dewset_interface {
 					continue;
 				}
 
-				if (api_admin.dewddadmin.is2admin(pxpsub) == true) {
-					continue;
-				}
-				if (api_admin.dewddadmin.is2moderator(pxpsub) == true) {
-					continue;
-				}
+			
 
 				// if normal player or vip so can do
 				pxpmax++;
@@ -5407,12 +5390,7 @@ public class dewset extends dewset_interface {
 		int countblock = (2 + Math.abs(selectx1[getid] - selectx2[getid]))
 				* (2 + Math.abs(selecty1[getid] - selecty2[getid])) * (2 + Math.abs(selectz1[getid] - selectz2[getid]));
 
-		if (countblock > 2560000 && api_admin.dewddadmin.is2admin(player) == false) {
-			player.sendMessage(dprint.r.color(tr.gettr("only_admin_can_dewset_more_than_limited_block") + "2,560,000"));
-			Block blocktemp[] = null;
-
-			return blocktemp;
-		}
+		
 
 		player.sendMessage(dprint.r.color("countblock = " + countblock));
 
@@ -5997,8 +5975,7 @@ public class dewset extends dewset_interface {
 			if (block.getTypeId() != typeid || block.getData() != typedata)
 				return;
 
-			if (api_admin.dewddadmin.is2vip(player) == false)
-				return;
+		
 
 			if (cando_all(block, player, "delete") == false)
 				return;

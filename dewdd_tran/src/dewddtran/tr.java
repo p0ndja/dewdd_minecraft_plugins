@@ -42,22 +42,27 @@ public class tr {
 
 		System.out.println("generating_runworld_file");
 
-		String[] r = new String[Bukkit.getPluginManager().getPlugins().length];
-
-		int i = 0;
+		ArrayList<String>r = new ArrayList<String>();
 
 		for (Plugin pl : Bukkit.getPluginManager().getPlugins()) {
 			if (pl == null) {
 				continue;
 			}
+			
+			if (pl.getName().indexOf("dew") == -1 && pl.getName().indexOf("dd") == -1) {
+				continue;
+			}
 
-			r[i] = pl.getName() + " skywar";
+			r.add ( pl.getName() + " *");
 
-			i++;
 
 		}
 
-		tr.writeFile("dewdd_tran", "drunworld.txt", r);
+		String r2 []  = new String[r.size()];
+		for (int i = 0 ; i < r.size() ; i ++ ) {
+			r2[i] = r.get(i);
+		}
+		tr.writeFile("dewdd_tran", "drunworld.txt", r2);
 		tr.loadRunWorldFile();
 
 	}

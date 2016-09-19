@@ -13,7 +13,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
 import org.bukkit.entity.CreatureType;
@@ -64,7 +63,6 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.potion.PotionEffectType;
 
-import api_admin.dewddadmin;
 import dewddflower.RSData;
 import dewddflower.RSWorld;
 import dewddflower.dewset;
@@ -507,8 +505,8 @@ public class DigEventListener2 implements Listener {
 
 			if (m[0].equalsIgnoreCase("gotohell") == true) {
 				// search player
-				if (dewddadmin.is2admin(player) == false) {
-					player.sendMessage("ptdew&dewdd : " + tr.gettr("gotohell_only_admin"));
+				if (player.hasPermission(pgotohell)) {
+					player.sendMessage("ptdew&dewdd : " + tr.gettr("you don't have permission") + pgotohell);
 					return;
 				}
 
@@ -801,11 +799,7 @@ public class DigEventListener2 implements Listener {
 
 			// hi
 			if (message.equalsIgnoreCase("drop") == true) {
-				if (api_admin.dewddadmin.is2moderator(player) == true) {
-					player.sendMessage("ptdew&dewdd : " + tr.gettr("staff_can't_drop_item"));
-
-					return;
-				}
+				
 
 				for (int xx = 0; xx <= 39; xx++) {
 
@@ -856,11 +850,16 @@ public class DigEventListener2 implements Listener {
 			
 
 			// pt dew
-			if (api_admin.dewddadmin.is2admin(player.getPlayer()) == true) {
+			
 
 				// dewpicturemap
 
 				if (m[0].equalsIgnoreCase("setamo")) {
+					if (player.hasPermission(psetamo) == false) {
+						player.sendMessage(dprint.r.color(tr.gettr("you don't have permission") + psetamo));
+						return;
+					}
+					
 					player.getItemInHand().setAmount(Integer.parseInt(m[1]));
 					player.sendMessage("set " + Integer.parseInt(m[1]) + " done");
 					return;
@@ -872,7 +871,7 @@ public class DigEventListener2 implements Listener {
 
 				// flyspeed
 
-			}
+			
 
 			// *****************************************
 
@@ -1372,6 +1371,8 @@ public class DigEventListener2 implements Listener {
 	public JavaPlugin ac = null;
 
 	public String pseecommand = "dewdd.main.seecommand";
+	public String pgotohell = "dewdd.main.gotohell";
+	public String psetamo = "dewdd.main.setamo";
 
 	private Random rnd = new Random();
 
@@ -1478,10 +1479,7 @@ public class DigEventListener2 implements Listener {
 			event.setCancelled(true);
 		}
 
-		if (block.getType() == Material.MOB_SPAWNER && api_admin.dewddadmin.is2admin(player) == false) {
-			player.sendMessage("ptdew&dewdd : " + tr.gettr("only_admin_can_destroy_spawner"));
-			event.setCancelled(true);
-		}
+		
 
 		boolean goodc1 = false;
 		goodc1 = dewset.cando_all(block, player, "delete");
@@ -1491,11 +1489,7 @@ public class DigEventListener2 implements Listener {
 			event.setCancelled(true);
 		} else {
 
-			if (api_admin.dewddadmin.is2moderator(player) == true) {
-				block.setType(Material.AIR);
-				event.setCancelled(true);
-				return;
-			}
+			
 
 			// dew.cutwoodsub(event.getBlock(), event.getPlayer(), true);
 
@@ -1657,20 +1651,7 @@ public class DigEventListener2 implements Listener {
 					dew.dewsetLightAround(player, item);
 				}
 
-				// free break
-				if (player.getInventory().first(354) != -1)
-					if (player.getItemInHand().getType().getMaxDurability() > 0)
-						if (dew.randomG.nextInt(100) < player.getLevel()
-								&& api_admin.dewddadmin.is2moderator(player) == false && player.getLevel() < 101) {
-
-							if (dew.isprotectitemid(block.getType()) == true)
-								return;
-
-							block.breakNaturally(player.getItemInHand());
-							player.getItemInHand()
-									.setDurability((short) (player.getItemInHand().getDurability() + (short) 1));
-
-						} // free break
+				
 
 			} // have permission
 
@@ -2057,13 +2038,7 @@ public class DigEventListener2 implements Listener {
 		if (!tr.isrunworld(ac.getName(), event.getPlayer().getWorld().getName()))
 			return;
 
-		if (api_admin.dewddadmin.is2moderator((Player) event.getPlayer()) == true)
-			if (InventoryType.PLAYER != event.getInventory().getType()
-					&& InventoryType.WORKBENCH != event.getInventory().getType()
-					&& InventoryType.CRAFTING != event.getInventory().getType()
-					&& InventoryType.CREATIVE != event.getInventory().getType()) {
-				event.setCancelled(true);
-			}
+		
 
 	}
 
@@ -2217,46 +2192,9 @@ public class DigEventListener2 implements Listener {
 
 		Player player = event.getPlayer();
 
-		if (event.getMessage().equalsIgnoreCase("/who") == true && api_admin.dewddadmin.is2admin(player) == false) {
-			event.setCancelled(true);
-			event.getPlayer().sendMessage("ptdew&dewdd : Block who command");
-			return;
-		}
-		if (event.getMessage().equalsIgnoreCase("/list") == true && api_admin.dewddadmin.is2admin(player) == false) {
-			event.setCancelled(true);
-			event.getPlayer().sendMessage("ptdew&dewdd : Block list command");
-			return;
-		}
-		if (event.getMessage().startsWith("/motd") == true && api_admin.dewddadmin.is2admin(player) == false) {
-			event.setCancelled(true);
-			event.getPlayer().sendMessage("ptdew&dewdd : Block motd command");
-			return;
-		}
+		
 
-		if ((event.getMessage().toLowerCase().startsWith("/eco") == true
-				|| event.getMessage().toLowerCase().startsWith("/economy") == true)
-				&& api_admin.dewddadmin.is2admin(player) == false) {
-			event.setCancelled(true);
-			event.getPlayer().sendMessage("ptdew&dewdd : Block eco command");
-			return;
-		}
 
-		if (event.getMessage().equalsIgnoreCase("/fly") == true || event.getMessage().equalsIgnoreCase("/tp ") == true
-				|| event.getMessage().equalsIgnoreCase("/gm") == true
-				|| event.getMessage().equalsIgnoreCase("/give") == true
-				|| event.getMessage().equalsIgnoreCase("/invsee") == true
-				|| event.getMessage().equalsIgnoreCase("/back") == true
-				|| event.getMessage().equalsIgnoreCase("/gamemode") == true
-				|| event.getMessage().equalsIgnoreCase("/time") == true
-				|| event.getMessage().equalsIgnoreCase("/online") == true
-				|| event.getMessage().equalsIgnoreCase("/nick") == true
-				|| event.getMessage().equalsIgnoreCase("/top") == true)
-			if (api_admin.dewddadmin.is2vip(player) == false && api_admin.dewddadmin.is2moderator(player) == false
-					&& api_admin.dewddadmin.is2admin(player) == false) {
-				dprint.r.printAll("ptdew&dewdd : '" + player.getName() + "' try to use '" + event.getMessage() + "' ");
-
-				event.setCancelled(true);
-			}
 
 		if (event.getMessage().toLowerCase().startsWith("/l ") == false
 				&& event.getMessage().toLowerCase().startsWith("/login ") == false
@@ -2297,11 +2235,7 @@ public class DigEventListener2 implements Listener {
 
 		event.getDeathMessage();
 
-		if (api_admin.dewddadmin.is2moderator(player) == true) {
-			event.getDrops().clear();
-			event.setDroppedExp(0);
-			return;
-		}
+		
 		player.sendMessage("ptdew&dewdd : Wak!!!!!");
 
 	}
@@ -2315,12 +2249,7 @@ public class DigEventListener2 implements Listener {
 		Player player = event.getPlayer();
 		dew.randomplaynote(event.getPlayer().getLocation());
 
-		int idc = dew.getfreeselect(player);
-
-		if (api_admin.dewddadmin.is2moderator(player) == true) {
-			player.getItemInHand().setType(Material.AIR);
-			event.setCancelled(true);
-		}
+		
 
 	}
 
@@ -2334,8 +2263,7 @@ public class DigEventListener2 implements Listener {
 
 		Player player = event.getPlayer();
 		if (event.getNewGameMode() == GameMode.CREATIVE) {
-			boolean xgz = dewddadmin.is2admin(player) || dewddadmin.is2moderator(player)
-					|| dewddadmin.is2gamemode(player) || player.hasPermission("essentials.gamemode");
+			boolean xgz = player.hasPermission("essentials.gamemode");
 
 			if ((!xgz)) {
 				event.setCancelled(true);
@@ -2495,21 +2423,11 @@ public class DigEventListener2 implements Listener {
 			}
 		}, 100);
 
-		if (api_admin.dewddadmin.is2admin(player) == false && api_admin.dewddadmin.is2moderator(player) == false
-				&& api_admin.dewddadmin.is2vip(player) == false) {
-			Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "give " + player.getName() + " apple 1");
-		}
+		
 
 		int idc = dew.getfreeselect(player);
 
-		if (api_admin.dewddadmin.is2admin(player) == true) {
-			event.setJoinMessage("");
-		}
-
-		if (api_admin.dewddadmin.is2admin(player) == false) {
-			player.setGameMode(GameMode.SURVIVAL);
-			player.setFlying(false);
-		}
+	
 
 		System.gc();
 
@@ -2638,10 +2556,7 @@ public class DigEventListener2 implements Listener {
 				dew.gotohell(event.getPlayer(), lo1, lo2);
 			}
 
-		if (event.getFrom().getWorld().getName().equalsIgnoreCase(event.getTo().getWorld().getName()) == false)
-			if (dewddadmin.is2admin(event.getPlayer()) == false) {
-				event.getPlayer().setGameMode(GameMode.SURVIVAL);
-			}
+	
 
 	}
 
@@ -2721,8 +2636,7 @@ public class DigEventListener2 implements Listener {
 	// PlayerRespawnEvent
 
 	public void signprotectrail(Block block, Player player) {
-		if (api_admin.dewddadmin.is2admin(player) == false)
-			return;
+
 
 	}
 

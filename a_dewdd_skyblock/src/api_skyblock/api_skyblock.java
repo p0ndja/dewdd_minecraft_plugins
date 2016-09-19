@@ -411,7 +411,7 @@ startTime = System.currentTimeMillis();
 
 			fff.createNewFile();
 
-			dprint.r.printAdmin("loading mission file : " + filena);
+			dprint.r.printC("loading mission file : " + filena);
 			// Open the file that is the first
 			// command line parameter
 			FileInputStream fstream = new FileInputStream(filena);
@@ -446,14 +446,14 @@ startTime = System.currentTimeMillis();
 				// rs[rsMax - 1].mission = 0;
 
 				if (allBlockInGame.get(miss.theName + ":" + miss.data) != null) {
-					dprint.r.printAdmin("loading not null");
+					dprint.r.printC("loading not null");
 
 				}
 				allBlockInGame.put(miss.theName + ":" + miss.data, miss);
 				allBlockInGameAsList.add(miss);
 			}
 
-			dprint.r.printAdmin(" Loaded " + filena);
+			dprint.r.printC(" Loaded " + filena);
 
 			in.close();
 
@@ -463,7 +463,7 @@ startTime = System.currentTimeMillis();
 
 			return sit;
 		} catch (Exception e) {// Catch exception if any
-			dprint.r.printAdmin("Error load " + filena + e.getMessage());
+			dprint.r.printC("Error load " + filena + e.getMessage());
 			return null;
 		}
 	}
@@ -1029,7 +1029,7 @@ startTime = System.currentTimeMillis();
 				return;
 			}
 
-			//dprint.r.printAll("ptdew&dewdd : " + tr.gettr("searching_freezone_for_build_skyblock"));
+			dprint.r.printAll("ptdew&dewdd : " + tr.gettr("searching_freezone_for_build_skyblock"));
 			lastcreate = System.currentTimeMillis();
 
 			player.getInventory().clear();
@@ -1042,7 +1042,7 @@ startTime = System.currentTimeMillis();
 			int y = 0;
 			int z = 0;
 
-			int searchRadius = 1;
+			int searchRadius = 2;
 			int searchCount = 0;
 			
 			double thelx = tr.gettrint("sky random search lx");
@@ -1073,7 +1073,7 @@ startTime = System.currentTimeMillis();
 				
 				y = rnd.nextInt(200) + 50;
 
-				//dprint.r.printAll("searching..." + x + "," + y + "," + z);
+				//dprint.r.printAll("searching..." + x + "," + y + "," + z + " searchCount " + searchCount + ", " + searchRadius);
 
 				boolean checkrs = true;
 
@@ -1095,9 +1095,15 @@ startTime = System.currentTimeMillis();
 					}
 				}
 
+				//dprint.r.printAll("checkRS " + checkrs + ", buildComplete" + buildcomplete);
+				
+				
 				if (checkrs == false) {
 					buildcomplete = false;
+					//dprint.r.printAll("checkrs = false " + buildcomplete);
+					
 				} else { // if x y z this can do
+					
 					dprint.r.printAll("random " + x + "," + y + "," + z);
 
 					int oldID = getOWNIslandID(player.getName(), false);
@@ -1268,8 +1274,12 @@ startTime = System.currentTimeMillis();
 					addSmallIslandNearThisBlock(block, 20);
 					
 				}
+				
+				//dprint.r.printAll("looping " + checkrs + " , " + buildcomplete);
 
 			} // loop build complete
+			
+		//	dprint.r.printAll("build comople " + buildcomplete + " , " );
 		}
 	}
 
@@ -2328,7 +2338,7 @@ startTime = System.currentTimeMillis();
 
 		printToAllPlayerOnRS(rsID, tr.gettr("next_mission"));
 
-		dprint.r.printAdmin(tr.gettr("owner_of_island_name") + rs[rsID].p[0] + " " + tr.gettr("did_mission_complete")
+		dprint.r.printC(tr.gettr("owner_of_island_name") + rs[rsID].p[0] + " " + tr.gettr("did_mission_complete")
 				+ " " + (rs[rsID].mission));
 
 		int tmpID = (cur);

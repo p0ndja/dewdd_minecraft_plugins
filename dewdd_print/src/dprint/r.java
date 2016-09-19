@@ -24,14 +24,6 @@ public class r {
 		}
 	}
 
-	public static void printAdmin(String abc) {
-		for (Player pla : Bukkit.getOnlinePlayers()) {
-			if (api_admin.dewddadmin.is2admin(pla) == true) {
-				pla.sendMessage("§" + randomColorInt() + abc);
-			}
-		}
-	}
-
 	public static void printAll(String abc) {
 		printC(abc);
 		printA(abc);
