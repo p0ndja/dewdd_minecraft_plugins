@@ -869,6 +869,11 @@ public class DigEventListener2 implements Listener {
 	}
 	
 	public void randomShop() {
+		
+		int minShopPrice = (int)tr.gettrint("CONFIG_SHOP_PLAY_MIN_PRICE");
+		int maxShopPrice = (int)tr.gettrint("CONFIG_SHOP_PLAY_MAX_PRICE");
+		
+		
 		// let's random
 		allShop.clear();
 
@@ -915,11 +920,13 @@ public class DigEventListener2 implements Listener {
 
 			} while (newShop.size <= maxSlot && newShop.size < 10);
 			
-			newShop.playPrice = 1000 + (rnd.nextInt(5000));
+			newShop.playPrice = minShopPrice + (rnd.nextInt(maxShopPrice));
 			
 			allShop.add(newShop);
 	
 		}
+		
+		
 	}
 
 	@EventHandler
