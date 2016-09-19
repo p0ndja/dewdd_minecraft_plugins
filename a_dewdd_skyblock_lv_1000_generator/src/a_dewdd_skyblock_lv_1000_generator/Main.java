@@ -291,12 +291,13 @@ class HybridOverride extends Hybrid {
 			
 			// bought = item  to finish lv
 			
-			boolean checkAreTherItemNotFill = false;
 			
-			while (checkAreTherItemNotFill == false) {
+			boolean notFill = false;
+			while (notFill == false) {
 				
 				// check are there item not fill
-				boolean notFill = false;
+				 notFill = false;
+				 
 				for (int j = 0 ; j < curLV.needSize ; j ++ ){
 					AllBlockInGameType itm = Main.co.allBlockInGameAsList.get(curLV.needIndex[j]);
 					
@@ -349,6 +350,23 @@ class HybridOverride extends Hybrid {
 										// bet it xD (bet is bad thing it the world , even in my server)
 										
 										
+										// just + amount , - money
+										int betid = rnd.nextInt(  ex.size);
+										
+										ps.money -= ex.playPrice;
+										d.pl("beting " + betid + " , price " + ex.playPrice + " , money left " + ps.money);
+										
+										String itName = ex.item[betid] + ":" + ex.data[betid];
+										
+										AllBlockInGameType ff = ps.allMyInventory.get(itName);
+										ff.curAmount += ex.amount[c2];
+										
+									break;
+										
+										
+									}
+									else { // don't have money left
+										
 										
 									}
 									
@@ -356,11 +374,13 @@ class HybridOverride extends Hybrid {
 							}
 						}
 						
-					}
+						
+						
+					} // loop all shop
 					
 					
 					
-				}
+				} // not fill true  trying to buy
 			}
 
 			ps.curSecond++;
