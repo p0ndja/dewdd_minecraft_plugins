@@ -132,6 +132,49 @@ public class DigEventListener2 implements Listener {
 					player.sendMessage(lop + " = " + dew.dewworldlist[lop]);
 				}
 			}
+			
+			if (m[0].equalsIgnoreCase("cleardrop") == true
+					|| m[0].equalsIgnoreCase("cp") == true
+					|| m[0].equalsIgnoreCase("cd") == true) {
+
+				for (Entity ent : player.getWorld().getEntities()) {
+
+					if (ent.getType() == org.bukkit.entity.EntityType.DROPPED_ITEM) {
+						Location lo2 = dew.giftblock.getLocation();
+
+						lo2.setWorld(Bukkit.getWorld("world"));
+						if (player.getWorld().getName()
+								.equalsIgnoreCase("world") == true) {
+
+							ent.teleport(lo2);
+
+						}
+						else {
+
+							ent.remove();
+
+						}
+
+					}
+
+					if (ent.getType() == org.bukkit.entity.EntityType.FIREBALL) {
+						ent.remove();
+					}
+
+					if (ent.getType() == org.bukkit.entity.EntityType.ARROW) {
+						ent.remove();
+					}
+
+					if (ent.getType() == org.bukkit.entity.EntityType.SMALL_FIREBALL) {
+						ent.remove();
+					}
+
+				}
+				player.sendMessage("ptdew&dewdd:ClearDroped");
+				canc = true;
+				return;
+
+			}
 
 			if (m[0].equalsIgnoreCase("gotohell") == true) {
 				// search player
@@ -2430,6 +2473,8 @@ public class DigEventListener2 implements Listener {
 
 	}
 
+	
+
 	@EventHandler
 	public void eventja(ItemDespawnEvent event) {
 		if (!tr.isrunworld(ac.getName(), event.getEntity().getWorld().getName()))
@@ -2444,6 +2489,8 @@ public class DigEventListener2 implements Listener {
 			dew.loadgiftfile();
 		}
 
+		
+		
 		lo2 = dew.giftblock.getLocation();
 
 		ItemStack abx = event.getEntity().getItemStack();

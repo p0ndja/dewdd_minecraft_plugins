@@ -1192,51 +1192,7 @@ public class DigEventListener2 implements Listener {
 					return;
 				}
 
-				if (m[0].equalsIgnoreCase("cleardrop") == true
-						|| m[0].equalsIgnoreCase("cp") == true
-						|| m[0].equalsIgnoreCase("cd") == true) {
-
-					for (Entity ent : player.getWorld().getEntities()) {
-
-						if (ent.getType() == org.bukkit.entity.EntityType.DROPPED_ITEM) {
-							Location lo2 = ent.getLocation();
-							lo2.setX(-300);
-							lo2.setY(255);
-							lo2.setZ(-300);
-
-							lo2.setWorld(Bukkit.getWorld("world"));
-							if (player.getWorld().getName()
-									.equalsIgnoreCase("world") == true) {
-
-								ent.teleport(lo2);
-
-							}
-							else {
-
-								ent.remove();
-
-							}
-
-						}
-
-						if (ent.getType() == org.bukkit.entity.EntityType.FIREBALL) {
-							ent.remove();
-						}
-
-						if (ent.getType() == org.bukkit.entity.EntityType.ARROW) {
-							ent.remove();
-						}
-
-						if (ent.getType() == org.bukkit.entity.EntityType.SMALL_FIREBALL) {
-							ent.remove();
-						}
-
-					}
-					player.sendMessage("ptdew&dewdd:ClearDroped");
-					canc = true;
-					return;
-
-				}
+				
 
 				if (m[0].equalsIgnoreCase("unloadchunk") == true) {
 					dprint.r.printAll("ptdew&dewdd: unloading all chunk with no player");

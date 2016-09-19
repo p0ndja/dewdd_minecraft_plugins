@@ -3067,12 +3067,15 @@ public class dewset extends dewset_interface {
 		private int handid;
 		private Player player;
 		private Boolean isfirst;
+		private Queue<Block> bd;
 
-		public dewspreadq_c(Player player, int handid, byte handdata, boolean isfirst) {
+		public dewspreadq_c(Player player, int handid, byte handdata, boolean isfirst, Queue<Block> bd ) {
 			this.player = player;
 			this.handid = handid;
 			this.handdata = handdata;
 			this.isfirst = isfirst;
+			this.bd = bd;
+			
 			Bukkit.getScheduler().scheduleSyncDelayedTask(ac, this, rnd.nextInt(20));
 		}
 
@@ -3152,7 +3155,7 @@ public class dewset extends dewset_interface {
 				}
 
 				if (ccc > 10) {
-					new dewspreadq_c(player, handid, handdata, false);
+					new dewspreadq_c(player, handid, handdata, false,bd);
 					return;
 				}
 
@@ -3962,7 +3965,7 @@ public class dewset extends dewset_interface {
 
 	Random rnd = new Random();
 
-	Queue<Block> bd = new LinkedList<Block>();
+	
 
 	public static JavaPlugin ac = null;
 
@@ -4971,8 +4974,8 @@ public class dewset extends dewset_interface {
 	}
 
 	public void dewspreadq(Player player, int handid, byte handdata) {
-		bd.clear();
-		new dewspreadq_c(player, handid, handdata, true);
+		Queue<Block> bd = new LinkedList<Block>();
+		new dewspreadq_c(player, handid, handdata, true,bd);
 	}
 
 	public void dewwallcircle(Player player, int handid, byte handdata, boolean isfillmode) {

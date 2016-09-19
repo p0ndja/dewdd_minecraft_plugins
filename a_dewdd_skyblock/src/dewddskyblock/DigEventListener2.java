@@ -69,6 +69,7 @@ import org.bukkit.util.Vector;
 
 import api_skyblock.Constant;
 import api_skyblock.LV1000Type;
+import api_skyblock.RSData;
 import api_skyblock.api_skyblock;
 import dewddtran.tr;
 import net.minecraft.server.v1_7_R4.EntityPlayer;
@@ -1237,6 +1238,35 @@ public class DigEventListener2 implements Listener {
 					}
 					dew.adjustProtect2(player.getLocation().getBlock(), player);
 
+					
+				} else if (m[1].equalsIgnoreCase("position")) {
+					RSData rs[] = dew.rs;
+					int lx = rs[0].x;
+					int rx = rs[0].x;
+					int lz = rs[0].z;
+					int rz = rs[0].z;
+
+					for (int i = 0; i < dew.rsMax; i++) {
+						if (rs[i].x < lx) {
+							lx = rs[i].x;
+						}
+
+						if (rs[i].x > rx) {
+							rx = rs[i].x;
+						}
+
+						if (rs[i].z < lz) {
+							lz = rs[i].z;
+						}
+
+						if (rs[i].z > rz) {
+							rz = rs[i].z;
+						}
+
+					}
+					
+					player.sendMessage("xy " + lx + "," + lz + " to " + rx + "," + rz);
+					
 				} else if (m[1].equalsIgnoreCase("buyhere")) {
 					// for buy these zone
 
