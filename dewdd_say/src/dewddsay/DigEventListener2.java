@@ -961,14 +961,7 @@ public class DigEventListener2 implements Listener {
 					}
 				}
 
-				if (m[0].equalsIgnoreCase("gc") == true) {
-
-					dprint.r.printAll("ptdew&dewdd: starting gc...");
-					System.gc();
-					dprint.r.printAll("ptdew&dewdd: finished gc...");
-					canc = true;
-					return;
-				}
+			
 
 				if (m[0].equalsIgnoreCase("drops") == true) {
 					canc = true;

@@ -71,6 +71,7 @@ import org.bukkit.potion.PotionEffectType;
 import api_admin.dewddadmin;
 import dewddflower.dewset;
 import dewddtran.tr;
+import li.Constant_Protect;
 import li.LXRXLZRZType;
 import net.minecraft.server.v1_8_R3.EntityPlayer;
 
@@ -470,7 +471,7 @@ public class DigEventListener2 implements Listener {
 							 * == false &&
 							 * api_admin.dewddadmin.isadminname(whoin) == false
 							 * && whoin.startsWith("<") == false &&
-							 * whoin.equalsIgnoreCase(dew.flag_everyone) ==
+							 * whoin.equalsIgnoreCase(Constant_Protect.flag_everyone) ==
 							 * false && whoin.equalsIgnoreCase("null") == false)
 							 * { memberfound = true; dprint.r.printAll(
 							 * "member = " + whoin); }
@@ -735,7 +736,7 @@ public class DigEventListener2 implements Listener {
 					 * if (api_admin.dewddadmin.issubsubadminname(str11) ==
 					 * false && api_admin.dewddadmin.isadminname(str11) == false
 					 * && api_admin.dewddadmin.is2moderator(player) == true) {
-					 * if (str11.equalsIgnoreCase(dew.flag_sell) == true) {
+					 * if (str11.equalsIgnoreCase(Constant_Protect.flag_sell) == true) {
 					 * dprint.r.printAll("ptdew&dewdd : staff " +
 					 * player.getName() + " try to add <sell> to protect");
 					 * return; } player.sendMessage("ptdew&dewdd : " +
@@ -1812,6 +1813,12 @@ public class DigEventListener2 implements Listener {
 				if (player.getItemInHand().getItemMeta() != null)
 					if (player.getItemInHand().getItemMeta().getDisplayName() != null) {
 						String itName[] = player.getItemInHand().getItemMeta().getDisplayName().split(" ");
+						
+						if (!player.hasPermission(dew.puseitem55)) {
+							player.sendMessage(dprint.r.color(tr.gettr("you don't have permission ")  +dew.puseitem55));
+							
+							return;
+						}
 
 						// player.sendMessage("itName " + itName[0] + " " +
 						// itName[1]);
@@ -2243,7 +2250,7 @@ public class DigEventListener2 implements Listener {
 			if (dew.checkpermissionarea(event.getEntity().getLocation().getBlock(), true) != -1)
 				if (dew.havethisnameinthishome(dew.getworldid(event.getEntity().getWorld().getName()),
 						dew.checkpermissionarea(event.getEntity().getLocation().getBlock(), true),
-						dew.flag_monster) == false) {
+						Constant_Protect.flag_monster) == true) {
 					event.setCancelled(true);
 					return;
 				}
@@ -2449,12 +2456,19 @@ public class DigEventListener2 implements Listener {
 
 		Block block = event.getLocation().getBlock();
 		// event.setCancelled(true);
-		if (dew.checkpermissionarea(block) == true) {
-			event.setCancelled(true);
+		
+		int hasProtect = dew.checkpermissionarea(block,true);
+		if (hasProtect == -1) {
 			return;
 		}
 
-		boolean vinear = false;
+		if (dew.havethisnameinthishome(dew.getworldid(block.getWorld().getName()), hasProtect,
+				Constant_Protect.flag_explode)) {
+			event.setCancelled(true);
+		}
+		
+
+		/*boolean vinear = false;
 		int exe = dew.randomG.nextInt(100);
 		if (exe < 10) {
 			vinear = false;
@@ -2471,17 +2485,13 @@ public class DigEventListener2 implements Listener {
 				return;
 			}
 
-			// block.getWorld().createExplosion(block.getLocation(),
-			// dew.randomG.nextInt(30), true);
-			// block.getWorld().strikeLightning(block.getLocation());
+			
 		} else {
 			vinear = false;
 			for (Player vi : event.getEntity().getWorld().getPlayers())
 				if (api_admin.dewddadmin.is2vip(vi) == true)
 					if (vi.getLocation().distance(event.getEntity().getLocation()) <= 50) {
-						// vi.sendMessage("ptdew&dewdd :
-						// เราได้หยุดการระเบิดครั้งใหญ่เพราะคุณเป็น vip
-						// อยู่ใกล้การระเบิด 50 บล็อค");
+					
 						vinear = true;
 						break;
 					}
@@ -2490,7 +2500,7 @@ public class DigEventListener2 implements Listener {
 				event.setCancelled(true);
 				return;
 			}
-		}
+		}*/
 
 	}
 
@@ -3253,7 +3263,7 @@ public class DigEventListener2 implements Listener {
 
 					} else {
 						
-						if (dew.dewsignname[curWorldID][curStandID][0].equalsIgnoreCase(dew.flag_sell)) {
+						if (dew.dewsignname[curWorldID][curStandID][0].equalsIgnoreCase(Constant_Protect.flag_sell)) {
 							int price = Integer.parseInt(dew.dewsignname[curWorldID][curStandID][1]);
 							
 							p.sendMessage(dprint.r.color(tr.gettr("this zone sell as price") + price));
@@ -3442,65 +3452,6 @@ public class DigEventListener2 implements Listener {
 
 	// PlayerRespawnEvent
 
-	@EventHandler(priority = EventPriority.HIGHEST)
-	public void onBlockFromTo(BlockFromToEvent event) {
-		if (!tr.isrunworld(ac.getName(), event.getToBlock().getWorld().getName()))
-			return;
-
-		Block block = event.getBlock();
-
-		Block block2 = event.getToBlock();
-
-		if (block.getTypeId() == 8 || block.getTypeId() == 9 || block.getTypeId() == 10 || block.getTypeId() == 11) {
-			int b1pro = dew.checkpermissionarea(block, true);
-			if (b1pro >= 0) { // b1 pro
-
-				if (block2.getTypeId() == 0) {
-
-					int proid = dew.checkpermissionarea(block2, true);
-					if (proid >= 0) { // b2 protect
-
-						boolean ab = dew.havethisnameinthishome(dew.getworldid(block2.getWorld().getName()), proid,
-								dew.flag_stopwater);
-						if (ab == true) {
-							event.setCancelled(true);
-						}
-
-					} // b2pro
-					else {
-						boolean ab = dew.havethisnameinthishome(dew.getworldid(block.getWorld().getName()), b1pro,
-								dew.flag_nooutwater);
-						if (ab == true) {
-							event.setCancelled(true);
-						}
-					}
-
-					// do what you need here.
-
-					// dprint.r.printAll("water");
-				}
-
-			} // b1 pro
-			else // dprint.r.printAll(block2.getTypeId() + "");
-			if (block2.getTypeId() == 0) {
-
-				int proid = dew.checkpermissionarea(block2, true);
-				if (proid == -1)
-					return;
-
-				boolean ab = dew.havethisnameinthishome(dew.getworldid(block2.getWorld().getName()), proid,
-						dew.flag_noinwater);
-				if (ab == true) {
-					// block2.getWorld().strikeLightningEffect(block2.getLocation());
-					event.setCancelled(true);
-				}
-			} else {
-
-			}
-
-		}
-
-	}
 
 	public void signprotectrail(Block block, Player player) {
 		if (api_admin.dewddadmin.is2admin(player) == false)

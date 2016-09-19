@@ -35,6 +35,8 @@ public abstract class dewset_interface extends dewsetdatabase {
 	public String pmainplaceblocknoprotect = "dewdd.main.placeblock.noprotect";
 	
 	public String pmainalsocopyinventoryblockwhenyouusedewset = "dewdd.main.dewset.copyinventoryblocks";
+	
+	public String puseitem55 = "dewdd.main.dewset.item55";
 
 
 

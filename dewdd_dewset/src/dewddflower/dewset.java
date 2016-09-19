@@ -48,7 +48,7 @@ public class dewset extends dewset_interface {
 	public  void DeleteRecursive_mom (HashMap<String, Location> bd, World world, int firstAdded,LXRXLZRZType ee, 
 			int id ,byte data,int chunklimit,int search) {
 		DeleteRecursive_Thread dr = new DeleteRecursive_Thread(bd, world, firstAdded, ee, id, data,chunklimit,search);
-		Bukkit.getScheduler().scheduleSyncDelayedTask(ac, dr,1);
+		Bukkit.getScheduler().scheduleSyncDelayedTask(ac, dr);
 		
 	}
 	
@@ -78,10 +78,19 @@ public class dewset extends dewset_interface {
 		@Override
 		public void run() {
 
-			if (Bukkit.getOnlinePlayers().size() != 1) {
-				return;
+			
+			for(Player player : Bukkit.getOnlinePlayers()) {
+				if (player == null ) {
+					continue;
+					
+				}
+				
+				
+				if (player.getItemInHand().getType() == Material.STICK) {
+					bd = null;
+					return;
+				}
 			}
-
 			
 
 			long startTime = System.currentTimeMillis();
@@ -126,11 +135,7 @@ public class dewset extends dewset_interface {
 					}
 					
 					Block getStack = player.getLocation().getBlock();
-					if (player.getItemInHand().getType() == Material.STICK) {
-						bd = null;
-						return;
-					}
-						
+				
 					
 					for (int x = -search; x <= search; x++)
 						for (int y = -search; y <= search; y++) {
@@ -161,7 +166,7 @@ public class dewset extends dewset_interface {
 
 					dprint.r.printAll("recall ... " + bd.size());
 					DeleteRecursive_Thread newRun = new DeleteRecursive_Thread(bd, world, 0,ee,id,data,chunklimit,search);
-					Bukkit.getScheduler().scheduleSyncDelayedTask(ac, newRun, 20L);
+					Bukkit.getScheduler().scheduleSyncDelayedTask(ac, newRun, sleeptime);
 					return;
 				}
 
@@ -213,7 +218,7 @@ public class dewset extends dewset_interface {
 							first = 1;
 						}
 
-						//getStack.breakNaturally();
+					//	getStack.breakNaturally();
 						getStack.setType(Material.AIR);
 
 						for (int x = -search; x <= search; x++)
@@ -269,7 +274,7 @@ public class dewset extends dewset_interface {
 
 			if (bd.size() >= 0) {
 				DeleteRecursive_Thread newRun = new DeleteRecursive_Thread(bd, world, 0,ee,id,data,chunklimit,search);
-				Bukkit.getScheduler().scheduleSyncDelayedTask(ac, newRun, 20L);
+				Bukkit.getScheduler().scheduleSyncDelayedTask(ac, newRun, sleeptime);
 				return;
 			}
 
@@ -1141,7 +1146,7 @@ public class dewset extends dewset_interface {
 		@Override
 		public void run() {
 
-			Bukkit.getScheduler().scheduleSyncDelayedTask(ac, ab, rnd.nextInt(100));
+			Bukkit.getScheduler().scheduleSyncDelayedTask(ac, ab, sleeptime);
 
 		}
 	}
@@ -3260,7 +3265,7 @@ public class dewset extends dewset_interface {
 							dprint.r.printC(
 									"low " + lx + " , " + ly + " , " + lz + " high " + mx + "," + my + "," + mz);
 
-							Bukkit.getScheduler().scheduleSyncDelayedTask(ac, xgn2, randomG.nextInt(500) + 50);
+							Bukkit.getScheduler().scheduleSyncDelayedTask(ac, xgn2, sleeptime);
 
 							return;
 						}
@@ -3432,7 +3437,7 @@ public class dewset extends dewset_interface {
 							dprint.r.printC(
 									"low " + lx + " , " + ly + " , " + lz + " high " + mx + "," + my + "," + mz);
 
-							Bukkit.getScheduler().scheduleSyncDelayedTask(ac, xgn2, randomG.nextInt(500) + 50);
+							Bukkit.getScheduler().scheduleSyncDelayedTask(ac, xgn2, sleeptime);
 
 							return;
 						}
@@ -3697,7 +3702,7 @@ public class dewset extends dewset_interface {
 							dprint.r.printC(
 									"low " + lx + " , " + ly + " , " + lz + " high " + mx + "," + my + "," + mz);
 
-							Bukkit.getScheduler().scheduleSyncDelayedTask(ac, xgn2, randomG.nextInt(500) + 50);
+							Bukkit.getScheduler().scheduleSyncDelayedTask(ac, xgn2, sleeptime);
 
 							return;
 						}
@@ -4034,7 +4039,7 @@ public class dewset extends dewset_interface {
 			this.isfirst = isfirst;
 			this.bd = bd;
 
-			Bukkit.getScheduler().scheduleSyncDelayedTask(ac, this, rnd.nextInt(20));
+			Bukkit.getScheduler().scheduleSyncDelayedTask(ac, this, sleeptime);
 		}
 
 		@Override
@@ -4971,7 +4976,7 @@ public class dewset extends dewset_interface {
 
 	public int runtime = 1000;
 
-	public long sleeptime = 10L;
+	public long sleeptime = 20L;
 
 	public Block selectblock[] = new Block[selectmax + 1];
 
@@ -5707,7 +5712,7 @@ public class dewset extends dewset_interface {
 
 		dewfill_mom aer = new dewfill_mom(player, handid, handdata);
 
-		Bukkit.getScheduler().scheduleSyncDelayedTask(ac, aer, sleeptime);
+		Bukkit.getScheduler().scheduleSyncDelayedTask(ac, aer);
 
 	}
 
@@ -5878,21 +5883,21 @@ public class dewset extends dewset_interface {
 	public void dewset(Player player, int e1, byte e2, int e3, byte e4, boolean invert) {
 		dewset_mom aer = new dewset_mom(player, e1, e2, e3, e4, invert);
 
-		Bukkit.getScheduler().scheduleSyncDelayedTask(ac, aer, sleeptime);
+		Bukkit.getScheduler().scheduleSyncDelayedTask(ac, aer);
 	}
 
 	public void dewsetblock(Player player, int handid, byte handdata, boolean isfillmode) {
 
 		dewsetblock_mom aer = new dewsetblock_mom(player, handid, handdata, isfillmode);
 
-		Bukkit.getScheduler().scheduleSyncDelayedTask(ac, aer, sleeptime);
+		Bukkit.getScheduler().scheduleSyncDelayedTask(ac, aer);
 
 	}
 
 	public void dewsetl(Player player, int handid, byte handdata) {
 
 		dewsetl_mom aer = new dewsetl_mom(player, handid, handdata);
-		Bukkit.getScheduler().scheduleSyncDelayedTask(ac, aer, sleeptime);
+		Bukkit.getScheduler().scheduleSyncDelayedTask(ac, aer);
 
 	}
 
@@ -5900,7 +5905,7 @@ public class dewset extends dewset_interface {
 		dewselectcube(player, 3);
 
 		dewsetl_mom aer = new dewsetl_mom(player, handid, handdata);
-		Bukkit.getScheduler().scheduleSyncDelayedTask(ac, aer, sleeptime);
+		Bukkit.getScheduler().scheduleSyncDelayedTask(ac, aer);
 
 	}
 
@@ -5914,7 +5919,7 @@ public class dewset extends dewset_interface {
 
 		dewsetroom_mom aer = new dewsetroom_mom(player, handid, handdata, isfillmode);
 
-		Bukkit.getScheduler().scheduleSyncDelayedTask(ac, aer, sleeptime);
+		Bukkit.getScheduler().scheduleSyncDelayedTask(ac, aer);
 
 	}
 
@@ -5922,7 +5927,7 @@ public class dewset extends dewset_interface {
 
 		dewsetwall_mom aer = new dewsetwall_mom(player, handid, handdata, isfillmode);
 
-		Bukkit.getScheduler().scheduleSyncDelayedTask(ac, aer, sleeptime);
+		Bukkit.getScheduler().scheduleSyncDelayedTask(ac, aer);
 
 	}
 
@@ -5942,7 +5947,7 @@ public class dewset extends dewset_interface {
 
 		dewwallcircle_mom aer = new dewwallcircle_mom(player, handid, handdata, isfillmode);
 
-		Bukkit.getScheduler().scheduleSyncDelayedTask(ac, aer, sleeptime);
+		Bukkit.getScheduler().scheduleSyncDelayedTask(ac, aer);
 
 	}
 
@@ -6290,7 +6295,7 @@ public class dewset extends dewset_interface {
 	public void gotohell(Player player, Location lo1, Location lo2) {
 		// copy to hell
 		gotohellt ae = new gotohellt(player, lo1, lo2);
-		Bukkit.getScheduler().scheduleSyncDelayedTask(ac, ae, sleeptime);
+		Bukkit.getScheduler().scheduleSyncDelayedTask(ac, ae);
 	}
 
 	// obsidianabsorb
@@ -6846,7 +6851,7 @@ public class dewset extends dewset_interface {
 		// auto give item" + tr.gettr("for") + "all player on server
 		redtorchchestt ee = new redtorchchestt(block, player);
 
-		Bukkit.getScheduler().scheduleSyncDelayedTask(ac, ee, sleeptime);
+		Bukkit.getScheduler().scheduleSyncDelayedTask(ac, ee);
 
 	}
 
