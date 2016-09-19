@@ -8,6 +8,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import dewddtran.tr;
+import li.Useful;
 
 public  class api_creative {
 	public static String perdewremove = "dewdd.creative.dewremove";
@@ -131,7 +132,9 @@ public  class api_creative {
 
 			x = this.randomG.nextInt(max_b * 2) - max_b;
 			z = this.randomG.nextInt(max_b * 2) - max_b;
-			e = player.getLocation().getWorld().getBlockAt(x, 70, z);
+			e = player.getLocation().getWorld().getBlockAt(x, 150, z);
+			e = Useful.getTopBlockHigh(e);
+			
 			cd = isProtectedArea(e);
 
 		} while (cd == false);

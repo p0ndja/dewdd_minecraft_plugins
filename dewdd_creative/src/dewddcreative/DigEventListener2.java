@@ -462,7 +462,7 @@ public class DigEventListener2 implements Listener {
 		if (!tr.isrunworld(ac.getName(), event.getPlayer().getWorld().getName())) {
 			return;
 		}
-
+/*
 		if (isbadarea((int) event.getPlayer().getLocation().getX(), (int) event.getPlayer().getLocation().getY(),
 				(int) event.getPlayer().getLocation().getZ()) == true) {
 			Location xx = event.getPlayer().getLocation();
@@ -473,7 +473,7 @@ public class DigEventListener2 implements Listener {
 			dprint.r.printAll("ptdew&dewdd : ' move " + event.getPlayer().getName() + "' don't go to bad area");
 
 			event.setCancelled(true);
-		}
+		}*/
 	}
 	
 	@EventHandler
@@ -513,7 +513,7 @@ public class DigEventListener2 implements Listener {
 		if (!tr.isrunworld(ac.getName(), event.getPlayer().getWorld().getName())) {
 			return;
 		}
-
+/*
 		if (isbadarea((int) event.getRespawnLocation().getX(), (int) event.getRespawnLocation().getY(),
 				(int) event.getRespawnLocation().getZ()) == true) {
 			Location xx = event.getRespawnLocation();
@@ -523,7 +523,7 @@ public class DigEventListener2 implements Listener {
 			event.getPlayer().teleport(xx);
 			dprint.r.printAll("ptdew&dewdd : 'respawn " + event.getPlayer().getName() + "' don't go to bad area");
 
-		}
+		}*/
 	}
 
 	@EventHandler
@@ -594,7 +594,7 @@ public class DigEventListener2 implements Listener {
 			}
 		}
 
-		if (isbadarea((int) event.getTo().getX(), (int) event.getTo().getY(), (int) event.getTo().getZ()) == true) {
+		/*if (isbadarea((int) event.getTo().getX(), (int) event.getTo().getY(), (int) event.getTo().getZ()) == true) {
 			Location xx = event.getTo();
 			xx.setX(0);
 			xx.setY(255);
@@ -602,19 +602,19 @@ public class DigEventListener2 implements Listener {
 			event.getPlayer().teleport(xx);
 			dprint.r.printAll("ptdew&dewdd : ' teleport " + event.getPlayer().getName() + "' don't go to bad area");
 			event.setCancelled(true);
-		}
+		}*/
 	}
 
-	public boolean isbadarea(int x, int y, int z) {
+	/*public boolean isbadarea(int x, int y, int z) {
 
 		if (Math.pow(Math.pow(x - 717, 2) + Math.pow(y - 64, 2) + Math.pow(z - 3, 2), 0.5) < 100) {
 			return true;
 		} else if (Math.pow(Math.pow(x - (-225), 2) + Math.pow(y - 87, 2) + Math.pow(z - 867, 2), 0.5) < 100) {
-			return true;
+			return true; 
 		}
 
 		return false;
-	}
+	}*/
 
 	public void runpro(String message, Player player) throws UserDoesNotExistException, NoLoanPermittedException {
 		RunPro_c abc = new RunPro_c();

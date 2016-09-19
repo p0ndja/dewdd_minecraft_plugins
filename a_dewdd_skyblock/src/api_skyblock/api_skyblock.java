@@ -38,6 +38,7 @@ import dewddskyblock.AllBlockInGameType;
 import dewddtran.tr;
 import li.Constant_Protect;
 import li.LXRXLZRZType;
+import li.Useful;
 
 public class api_skyblock {
 	
@@ -813,18 +814,7 @@ startTime = System.currentTimeMillis();
 		}
 	}
 	
-	public Block gethFirstBlockHigh(Block block) {
-		for (int i = 255 ;  i >= 0 ; i --) {
-			
-			Block rela = block.getWorld().getBlockAt(block.getX(),i,block.getZ());
-			if (rela.getType() != Material.AIR) {
-				return rela.getRelative(0,2,0);
-			}
-		}
-		
-		return null;
-	}
-
+	
 
 	class AdjustProtect implements Runnable {
 		private Block midBlockX0Z0;
@@ -2477,14 +2467,14 @@ startTime = System.currentTimeMillis();
 							api_skyblock.rs[idid].z);
 					block.getChunk().load();
 
-					Block thetop = gethFirstBlockHigh(block);
+					Block thetop = Useful.getTopBlockHigh(block);
 					if (thetop == null) {
 						
 						block.setType(Material.GLASS);
 						player.sendMessage(dprint.r.color(
 								tr.gettr("can't warp to this sky island cuz there are no middle block to stand")));
 						//return;
-						thetop = gethFirstBlockHigh(block);
+						thetop = Useful.getTopBlockHigh(block);
 					}
 					
 					
@@ -2502,14 +2492,14 @@ startTime = System.currentTimeMillis();
 							api_skyblock.rs[idid].z);
 					block.getChunk().load();
 
-					Block thetop = gethFirstBlockHigh(block);
+					Block thetop = Useful.getTopBlockHigh(block);
 					if (thetop == null) {
 						
 						block.setType(Material.GLASS);
 						player.sendMessage(dprint.r.color(
 								tr.gettr("can't warp to this sky island cuz there are no middle block to stand")));
 						//return;
-						thetop = gethFirstBlockHigh(block);
+						thetop = Useful.getTopBlockHigh(block);
 					}
 					
 					player.teleport(thetop.getLocation());
@@ -2580,14 +2570,14 @@ startTime = System.currentTimeMillis();
 								Block block = player.getWorld().getBlockAt(api_skyblock.rs[lop2].x,
 										api_skyblock.rs[lop2].y + 10, api_skyblock.rs[lop2].z);
 								block.getChunk().load();
-								Block thetop = gethFirstBlockHigh(block);
+								Block thetop = Useful.getTopBlockHigh(block);
 								if (thetop == null) {
 									
 									block.setType(Material.GLASS);
 									player.sendMessage(dprint.r.color(
 											tr.gettr("can't warp to this sky island cuz there are no middle block to stand")));
 									//return;
-									thetop = gethFirstBlockHigh(block);
+									thetop = Useful.getTopBlockHigh(block);
 								}
 								player.teleport(thetop.getLocation());
 								player.sendMessage(dprint.r.color("teleported you to (" + block.getX() + ","
@@ -3041,10 +3031,10 @@ startTime = System.currentTimeMillis();
 
 				while (System.currentTimeMillis() - startTime < 1000) {
 
-					int x = li.useful.randomInteger(ee.lx, ee.rx);
-					int z = li.useful.randomInteger(ee.lz, ee.rz);
+					int x = li.Useful.randomInteger(ee.lx, ee.rx);
+					int z = li.Useful.randomInteger(ee.lz, ee.rz);
 
-					int y = li.useful.randomInteger(0, 40);
+					int y = li.Useful.randomInteger(0, 40);
 
 					Block block = world.getBlockAt(x, y, z);
 					if (block.getType() != Material.AIR) {

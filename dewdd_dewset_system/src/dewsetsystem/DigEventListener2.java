@@ -909,24 +909,27 @@ public class DigEventListener2 implements Listener {
 	// PlayerInteractEvent
 
 	@EventHandler
-	public void eventja(PlayerInteractEvent event) {
+	public void eventja(PlayerInteractEvent e) {
 
-		if (!tr.isrunworld(this.ac.getName(), event.getPlayer().getWorld().getName())) {
+		if (!tr.isrunworld(this.ac.getName(), e.getPlayer().getWorld().getName())) {
 			return;
 		}
 
 		Action act;
-		act = event.getAction();
+		act = e.getAction();
 
 		if (((act == Action.RIGHT_CLICK_BLOCK) || (act == Action.LEFT_CLICK_BLOCK)) == false) {
 			return;
 		}
 
-		Player player = event.getPlayer();
+		Player player = e.getPlayer();
 
-		Block block = event.getClickedBlock();
+		Block block = e.getClickedBlock();
 
 		boolean goodc1 = false;
+		if (block == null) {
+			return;
+		}
 		goodc1 = dew.cando_all(block, player, "right");
 
 		if (goodc1 == false) {
@@ -949,7 +952,7 @@ public class DigEventListener2 implements Listener {
 						"ptdew&dewdd : Block 1 = (" + this.dew.selectx1[getid] + "," + this.dew.selecty1[getid] + ","
 								+ this.dew.selectz1[getid] + ") to (" + this.dew.selectx2[getid] + ","
 								+ this.dew.selecty2[getid] + "," + this.dew.selectz2[getid] + ") = " + countblock);
-				event.setCancelled(true);
+				e.setCancelled(true);
 				return;
 			}
 
@@ -970,7 +973,7 @@ public class DigEventListener2 implements Listener {
 						"ptdew&dewdd : Block 2 = (" + this.dew.selectx1[getid] + "," + this.dew.selecty1[getid] + ","
 								+ this.dew.selectz1[getid] + ") to (" + this.dew.selectx2[getid] + ","
 								+ this.dew.selecty2[getid] + "," + this.dew.selectz2[getid] + ") = " + countblock);
-				event.setCancelled(true);
+				e.setCancelled(true);
 			}
 
 			if ((player.getItemInHand().getType() == Material.DIAMOND_SWORD // diamondsword
