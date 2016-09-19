@@ -11,7 +11,6 @@ import java.util.Random;
 import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
 import org.bukkit.Location;
-import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.Chest;
@@ -27,9 +26,11 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.block.BlockDamageEvent;
 import org.bukkit.event.block.BlockFormEvent;
 import org.bukkit.event.block.BlockFromToEvent;
 import org.bukkit.event.block.BlockPhysicsEvent;
+import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
@@ -93,74 +94,69 @@ public class DigEventListener2 implements Listener {
 		public String l2;
 		public String l3;
 	}
-	
+
 	class CleanThisChunk_c_paste_part implements Runnable {
 		private Chunk chunk;
 		private int lastY = 0;
 		private int lastCurY = 0;
 		private int bid[][][];
 		private byte bdata[][][];
-		private World world ;
+		private World world;
 		private LinkedList<SpawnerBlockType> spawner = new LinkedList<SpawnerBlockType>();
 		private LinkedList<ChestBlockType> chester = new LinkedList<ChestBlockType>();
 		private LinkedList<SignType> signer = new LinkedList<SignType>();
-		
+
 		private int maxYdo = 7;
-		
-		public CleanThisChunk_c_paste_part(World world,Chunk chunk ,
-				int lastY,int lastCurY,int bid[][][] , byte bdata[][][],
-				LinkedList<SpawnerBlockType> spawner , LinkedList<ChestBlockType> chester , 
+
+		public CleanThisChunk_c_paste_part(World world, Chunk chunk, int lastY, int lastCurY, int bid[][][],
+				byte bdata[][][], LinkedList<SpawnerBlockType> spawner, LinkedList<ChestBlockType> chester,
 				LinkedList<SignType> signer) {
 			this.chunk = chunk;
-			this.lastCurY  = lastCurY;
+			this.lastCurY = lastCurY;
 			this.lastY = lastY; // 255
 			this.bid = bid;
-			this.bdata =  bdata;
+			this.bdata = bdata;
 			this.world = world;
 			this.spawner = spawner;
 			this.chester = chester;
 			this.signer = signer;
-			
+
 		}
-		
+
 		@Override
 		public void run() {
 			Block block;
 			lastClean = System.currentTimeMillis();
 			long startClean = System.currentTimeMillis();
 			Block block2;
-			
+
 			int countY = 0;
-			
+
 			int curY = lastCurY;// 255;
-			
+
 			for (int y = lastY; y < 256; y++) {
-				countY ++ ;
-				
+				countY++;
+
 				lastClean = System.currentTimeMillis();
-				
+
 				if (countY >= maxYdo) {
 					// pause
-					
-					CleanThisChunk_c_paste_part newThread = new
-							CleanThisChunk_c_paste_part(world, chunk, y, 
-									curY, bid, bdata, spawner, chester, signer);
-					Bukkit.getScheduler().scheduleSyncDelayedTask(ac, newThread,1);
+
+					CleanThisChunk_c_paste_part newThread = new CleanThisChunk_c_paste_part(world, chunk, y, curY, bid,
+							bdata, spawner, chester, signer);
+					Bukkit.getScheduler().scheduleSyncDelayedTask(ac, newThread, 1);
 					lastClean = System.currentTimeMillis();
-					//dprint.r.printAll("recall paste Y " + y + " , "  + curY);
-					
+					// dprint.r.printAll("recall paste Y " + y + " , " + curY);
+
 					return;
 				}
-				
-				
-				
+
 				curY = 255 - y;
 				// printC("cleaning... : " + (chunk.getX() *16) + "," +
 				// y + "," + (chunk.getZ() *16)
 				// +" > " + chunkdel_max);
 				// printA("cleaning... : " + (chunk.getX() *16) + "," +
 				// y + "," + (chunk.getZ() *16));
-				
 
 				int gz = -1;
 				int gx = -1;
@@ -169,12 +165,12 @@ public class DigEventListener2 implements Listener {
 					gx = -1;
 					for (int x = ((chunk.getX() * 16)); x <= ((chunk.getX() * 16) + 15); x++) {
 						gx++;
-						
+
 						if (bid[gx][y][gz] == 0 && bid[gx][curY][gz] == 0) {
-							
+
 							continue;
 						}
-						
+
 						block = world.getBlockAt(x, curY, z);
 						/*
 						 * bid[x][y][z] = block.getTypeId(); bdata[x][y][z] =
@@ -294,12 +290,11 @@ public class DigEventListener2 implements Listener {
 
 			} // time
 
-			
-			//dprint.r.printC("pasting time used " + (System.currentTimeMillis() - startClean));
+			// dprint.r.printC("pasting time used " +
+			// (System.currentTimeMillis() - startClean));
 
 			startClean = System.currentTimeMillis();
-			
-			
+
 			for (Entity en : chunk.getEntities()) {
 				if (en == null) {
 					continue;
@@ -317,10 +312,11 @@ public class DigEventListener2 implements Listener {
 				en.teleport(loc2);
 			}
 
-			//dprint.r.printC("Entity copying time used " + (System.currentTimeMillis() - startClean));
+			// dprint.r.printC("Entity copying time used " +
+			// (System.currentTimeMillis() - startClean));
 
 			startClean = System.currentTimeMillis();
-			
+
 			// add to new chunk
 			block2 = world.getBlockAt(chunk.getX() * 16, 255, chunk.getZ() * 16);
 			block2.setTypeId(19);
@@ -330,7 +326,7 @@ public class DigEventListener2 implements Listener {
 			 * == EntityType.DROPPED_ITEM){ en.remove(); } }
 			 */
 
-		//	MaxDelay = System.currentTimeMillis() - startClean;
+			// MaxDelay = System.currentTimeMillis() - startClean;
 			long timeUsed = System.currentTimeMillis() - startClean;
 
 			if (MaxDelay < 5000) {
@@ -340,10 +336,9 @@ public class DigEventListener2 implements Listener {
 			if (MaxDelay > 60000) {
 				MaxDelay = 60000;
 			}
-			
 
 			dprint.r.printC("invert cleaned Area : " + (chunk.getX() * 16) + ",?," + (chunk.getZ() * 16));
-			
+
 			lastClean = System.currentTimeMillis();
 			// printA("cleaned Area : " + (chunk.getX() *16) + ",?," +
 			// (chunk.getZ() *16)+ " > " + chunkdel_max );
@@ -352,56 +347,52 @@ public class DigEventListener2 implements Listener {
 
 		}
 	}
-	
-	class CleanThisChunk_c_copy_part implements Runnable{
-		
+
+	class CleanThisChunk_c_copy_part implements Runnable {
+
 		private Chunk chunk;
 		private int lastY = 0;
 		private int bid[][][];
 		private byte bdata[][][];
-		private World world ;
+		private World world;
 		private LinkedList<SpawnerBlockType> spawner = new LinkedList<SpawnerBlockType>();
 		private LinkedList<ChestBlockType> chester = new LinkedList<ChestBlockType>();
 		private LinkedList<SignType> signer = new LinkedList<SignType>();
-		
+
 		private int maxYdo = 7;
-		
-		public CleanThisChunk_c_copy_part(World world,Chunk chunk ,
-				int lastY,int bid[][][] , byte bdata[][][],
-				LinkedList<SpawnerBlockType> spawner , LinkedList<ChestBlockType> chester , 
-				LinkedList<SignType> signer) {
+
+		public CleanThisChunk_c_copy_part(World world, Chunk chunk, int lastY, int bid[][][], byte bdata[][][],
+				LinkedList<SpawnerBlockType> spawner, LinkedList<ChestBlockType> chester, LinkedList<SignType> signer) {
 			this.chunk = chunk;
 			this.lastY = lastY; // 255
 			this.bid = bid;
-			this.bdata =  bdata;
+			this.bdata = bdata;
 			this.world = world;
 			this.spawner = spawner;
 			this.chester = chester;
 			this.signer = signer;
-			
+
 		}
-		
-		
+
 		@Override
 		public void run() {
 			// TODO Auto-generated method stub
-			
+
 			Block block;
 			long startClean = System.currentTimeMillis();
 			lastClean = System.currentTimeMillis();
-			
+
 			int countY = 0;
 			for (int y = this.lastY; y < 256; y++) {
-				countY ++;
+				countY++;
 				lastClean = System.currentTimeMillis();
-				if (countY  > maxYdo) {
-					CleanThisChunk_c_copy_part newThread = 
-							new CleanThisChunk_c_copy_part(world, chunk, y,
-									bid, bdata, spawner, chester, signer);
-					Bukkit.getScheduler().scheduleSyncDelayedTask(ac, newThread,1);
+				if (countY > maxYdo) {
+					CleanThisChunk_c_copy_part newThread = new CleanThisChunk_c_copy_part(world, chunk, y, bid, bdata,
+							spawner, chester, signer);
+					Bukkit.getScheduler().scheduleSyncDelayedTask(ac, newThread, 1);
 					lastClean = System.currentTimeMillis();
-					//dprint.r.printAll("recall copy Y " + y + " , "  + y);
-					
+					// dprint.r.printAll("recall copy Y " + y + " , " + y);
+
 					return;
 				}
 				// printC("cleaning... : " + (chunk.getX() *16) + "," +
@@ -556,21 +547,19 @@ public class DigEventListener2 implements Listener {
 							break;
 						}
 
-						//block.setType(Material.AIR);
+						// block.setType(Material.AIR);
 					}
 				}
 
 			} // time
-			
-			
-		//	dprint.r.printC("copying time used " + (System.currentTimeMillis() - startClean));
+
+			// dprint.r.printC("copying time used " +
+			// (System.currentTimeMillis() - startClean));
 
 			startClean = System.currentTimeMillis();
-			
-			
-			CleanThisChunk_c_paste_part newThread = new
-					CleanThisChunk_c_paste_part(world, chunk, 0, 
-							255, bid, bdata, spawner, chester, signer);
+
+			CleanThisChunk_c_paste_part newThread = new CleanThisChunk_c_paste_part(world, chunk, 0, 255, bid, bdata,
+					spawner, chester, signer);
 			Bukkit.getScheduler().scheduleSyncDelayedTask(ac, newThread);
 			return;
 		}
@@ -627,12 +616,12 @@ public class DigEventListener2 implements Listener {
 			 * for (int j = 0 ; j < 256 ; j++ ) { bdata[i][j] = new byte[16]; }
 			 * }
 			 */
-			
-			//Copying
-			
-			CleanThisChunk_c_copy_part newThread = new 
-					CleanThisChunk_c_copy_part(world, chunk, 0, bid, bdata, spawner, chester, signer);
-			Bukkit.getScheduler().scheduleSyncDelayedTask(ac, newThread,2);
+
+			// Copying
+
+			CleanThisChunk_c_copy_part newThread = new CleanThisChunk_c_copy_part(world, chunk, 0, bid, bdata, spawner,
+					chester, signer);
+			Bukkit.getScheduler().scheduleSyncDelayedTask(ac, newThread, 2);
 		} // run
 
 	} // project
@@ -903,7 +892,6 @@ public class DigEventListener2 implements Listener {
 		}
 
 	}
-	
 
 	@EventHandler
 	public void eventja(BlockFromToEvent e) {
@@ -942,6 +930,29 @@ public class DigEventListener2 implements Listener {
 		}
 
 	}
+	
+	@EventHandler
+	public void eventja(BlockDamageEvent e) {
+		if (!isRunWorld(e.getBlock().getWorld().getName())) {
+			return;
+		}
+
+		if (e.getBlock().getTypeId() == 19 && e.getBlock().getY() == 255) {
+			e.setCancelled(true);
+			return;
+		}
+
+		if (isCleanedChunk(e.getPlayer().getLocation().getChunk()) == true) {
+			Player player = e.getPlayer();
+			cleannearchunk(player);
+		}
+		else {
+			e.setCancelled(true);
+			return;
+		}
+
+		
+	}
 
 	@EventHandler
 	public void eventja(BlockBreakEvent e) {
@@ -955,11 +966,38 @@ public class DigEventListener2 implements Listener {
 		}
 
 		if (isCleanedChunk(e.getPlayer().getLocation().getChunk()) == true) {
+			Player player = e.getPlayer();
+			cleannearchunk(player);
+		}
+		else {
+			e.setCancelled(true);
 			return;
 		}
 
-		Player player = e.getPlayer();
-		cleannearchunk(player);
+		
+	}
+
+	@EventHandler
+	public void eventja(BlockPlaceEvent e) {
+		if (!isRunWorld(e.getBlock().getWorld().getName())) {
+			return;
+		}
+
+		if (e.getBlock().getTypeId() == 19 && e.getBlock().getY() == 255) {
+			e.setCancelled(true);
+			return;
+		}
+
+		if (isCleanedChunk(e.getPlayer().getLocation().getChunk()) == true) {
+			Player player = e.getPlayer();
+			cleannearchunk(player);
+		}
+		else {
+			e.setCancelled(true);
+			return;
+		}
+
+		
 	}
 
 	@EventHandler
