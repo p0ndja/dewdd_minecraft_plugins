@@ -448,19 +448,26 @@ public class DigEventListener2 implements Listener {
 		}
 
 		Sign s = (Sign) nn.lastblock[getid].getState();
-		if (s.getLine(0).equalsIgnoreCase("[dewdd]") == true
-				&& s.getLine(1).equalsIgnoreCase(player.getName()) == true) {
+		if (s.getLine(0).endsWith("[dewdd]") == true  || s.getLine(0).endsWith("[private]") == true ){ 
+				s.setLine(0, dprint.r.color("[dewdd]"));
+			s.update();
+			
+				if (s.getLine(1).equalsIgnoreCase(player.getName()) == true) {
 
 			player.sendMessage("ptdew&dewdd:  you can change line 3 and line 4 (your friend name");
 			player.sendMessage("/dewsetline 3 ptdew");
 			player.sendMessage("/dewsetline 4 pondja_kung");
+			
+		
+		}
 
 		}
 
+		
 	}
 
 	@EventHandler
-	public void eventja(SignChangeEvent event) throws IndexOutOfBoundsException {
+	public void eventja(SignChangeEvent event)  {
 
 		if (!tr.isrunworld(ac.getName(), event.getPlayer().getWorld().getName())) {
 			return;
@@ -472,7 +479,7 @@ public class DigEventListener2 implements Listener {
 				&& event.getLine(1).equalsIgnoreCase("") == true
 				&& event.getLine(2).equalsIgnoreCase("") == true
 				&& event.getLine(3).equalsIgnoreCase("") == true) {
-			event.setLine(0, "[dewdd]");
+			event.setLine(0, dprint.r.color( "[dewdd]"));
 			event.setLine(1, player.getName());
 		}
 
@@ -480,7 +487,8 @@ public class DigEventListener2 implements Listener {
 				|| event.getLine(0).toLowerCase().endsWith("[private]") == true
 
 		) {
-
+			event.setLine(0, dprint.r.color( "[dewdd]"));
+			
 			if (event.getLine(1).equalsIgnoreCase(player.getName()) == false
 					&& event.getLine(2).equalsIgnoreCase(player.getName()) == false
 					&& event.getLine(3).equalsIgnoreCase(player.getName()) == false) {
