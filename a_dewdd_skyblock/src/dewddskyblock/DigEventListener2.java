@@ -45,6 +45,7 @@ import org.bukkit.event.hanging.HangingBreakEvent;
 import org.bukkit.event.hanging.HangingBreakEvent.RemoveCause;
 import org.bukkit.event.hanging.HangingPlaceEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerBucketEmptyEvent;
@@ -972,18 +973,34 @@ public class DigEventListener2 implements Listener {
 	}
 
 	@EventHandler
+	public void eventja(InventoryCloseEvent e) {
+		Inventory inv = e.getInventory();
+		if (inv == null) {
+			return;
+		}
+
+		if (inv.getName().equalsIgnoreCase("sky lv")) {
+			
+			Player p =  (Player) e.getPlayer();
+			p.sendMessage("inv lv closed");
+			
+		}
+	}
+	
+	
+	@EventHandler
 	public void eventja(InventoryOpenEvent e) {
 
 	}
 
 	@EventHandler
 	public void eventja(InventoryClickEvent e) {
-Inventory inv = e.getClickedInventory();
-			if (inv == null) {
-				return;
-			}
+		Inventory inv = e.getClickedInventory();
+		if (inv == null) {
+			return;
+		}
+
 		if (inv.getName().equalsIgnoreCase("sky lv")) {
-			
 
 			if (e.getSlot() >= 0 && e.getSlot() <= 10) {
 				e.setCancelled(true);
@@ -992,6 +1009,60 @@ Inventory inv = e.getClickedInventory();
 			if (e.getSlot() >= 44 && e.getSlot() <= 54) {
 				e.setCancelled(true);
 			}
+
+			// check inventory
+
+			Player p = (Player) e.getWhoClicked();
+			int idx = dew.getprotectid(p.getLocation().getBlock());
+
+			LV1000Type lv = dew.lv1000.get(dew.rs[idx].mission);
+
+			boolean allDone = true;
+
+			for (int i = 0; i < lv.needSize; i++) {
+				boolean there = false;
+
+				Material m1 = lv.getMaterial(lv.needNameData[i]);
+
+				ItemStack needItem = new ItemStack(m1, lv.needAmount[i], lv.getData(lv.needNameData[i]));
+
+				for (int j = 11; j < 44; j++) {
+					ItemStack itemInInv = inv.getItem(j);
+					if (itemInInv == null) {
+						continue;
+					}
+					
+					
+					if (needItem.getType().name().equalsIgnoreCase(itemInInv.getType().name())) {
+						if (needItem.getData().getData() == itemInInv.getData().getData()) {
+							if (needItem.getAmount() <= itemInInv.getAmount()) {
+							there = true;
+							break;
+							
+							}
+						}
+						
+					}
+					
+					if (there == true) {
+						break;
+					}
+				}
+				
+				if (there == false ) {
+					allDone = false;
+					break;
+				}
+
+			}
+			
+			
+			p.sendMessage("allDone " + allDone);
+			if (allDone == false) {
+				return;
+			}
+			
+			
 
 		}
 	}
