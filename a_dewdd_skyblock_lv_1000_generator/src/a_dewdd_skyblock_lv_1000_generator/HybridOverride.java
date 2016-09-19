@@ -301,8 +301,8 @@ public class HybridOverride extends Hybrid {
 			// bought = item  to finish lv
 			
 			
-			boolean notFill = false;
-			while (notFill == false && moneyNotFoundxD == false) {
+			boolean notFill = true;
+			while (notFill == true && moneyNotFoundxD == false) {
 				d.pl("not fill " + notFill + " , moneyNotFound " + moneyNotFoundxD);
 				// check are there item not fill
 				 notFill = false;
@@ -320,6 +320,8 @@ public class HybridOverride extends Hybrid {
 				
 				
 				if (notFill == true) {
+					d.pl("not fill = true");
+					
 					
 					// random bought item
 					int ranbuy =  -1 ;
