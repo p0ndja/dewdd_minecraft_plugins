@@ -578,8 +578,8 @@ public class DigEventListener2 implements Listener {
 
 					Location la = player.getLocation();
 					la.setY(200);
-					player.sendMessage(
-							"ptdew&dewdd : xx >" + xx + " = " + player.getInventory().getItem(xx).getType().name());
+					/*player.sendMessage(
+							"ptdew&dewdd : xx >" + xx + " = " + player.getInventory().getItem(xx).getType().name());*/
 					player.getWorld().dropItem(la, itm);
 					itm.setTypeId(0);
 					player.getInventory().setItem(xx, itm);
@@ -2871,8 +2871,11 @@ public class DigEventListener2 implements Listener {
 			return;
 
 		Player player = event.getPlayer();
-		if (event.getNewGameMode() == GameMode.CREATIVE)
-			if ((!dewddadmin.is2admin(player))) {
+		if (event.getNewGameMode() == GameMode.CREATIVE) {
+			boolean xgz = dewddadmin.is2admin(player) || dewddadmin.is2moderator(player) || dewddadmin.is2gamemode(player);
+			
+			
+			if ((!xgz  )) {
 				event.setCancelled(true);
 				player.setGameMode(GameMode.SURVIVAL);
 				/*
@@ -2883,6 +2886,7 @@ public class DigEventListener2 implements Listener {
 				dprint.r.printAll("ptdew&dewdd :" + player.getName() + tr.gettr("can_be_creative_mode_not_admin"));
 
 			}
+		}
 	}
 
 	// PlayerInteractEvent

@@ -19,6 +19,7 @@ public class dewddadmin {
 	static String	pvip		= "dewdd.admin.vip";
 	static String	pmoderator	= "dewdd.admin.moderator";
 	static String	padmin		= "dewdd.admin.admin";
+	static String   pgamemode = "dewdd.admin.gamemode";
 
 	public static String	adminlist[]	= new String[100];
 
@@ -284,6 +285,9 @@ public class dewddadmin {
 
 	public static boolean is2vip(Player nn) {
 		return (nn.hasPermission(pvip) == true && nn.hasPermission(pmoderator) == false);
+	}
+	public static boolean is2gamemode(Player nn) {
+		return (nn.hasPermission(pgamemode) == true && nn.hasPermission(pmoderator) == false);
 	}
 
 	public static boolean isadminname(String playername) {
