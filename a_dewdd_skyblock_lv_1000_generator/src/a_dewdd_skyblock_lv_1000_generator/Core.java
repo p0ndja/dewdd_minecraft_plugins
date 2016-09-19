@@ -64,15 +64,13 @@ public class Core {
 
 	public static int minShopSize = 3;
 	public static int swapMultipy = 100;
-	
-	
 
 	public static double SellMaxCost = 1000;
 
 	public static double ShopMaxCost = 10000;
-	
+
 	public static double maxMoney = 100000;
-	
+
 	public static int maxLV = 100;
 	private int curChro = 0;
 
@@ -138,25 +136,22 @@ public class Core {
 		// check is the last shop ( have enough item >= minshop)
 
 		if (tmpType.amount[tmpType.shopSlotMax - 1] < minShopSize) {
-			
+
 			for (int i = 0; i < tmpType.shopSlotMax - 1; i++) {
 				if (tmpType.amount[i] < maxShopSize) {
 					tmpType.amount[i]++;
 					tmpType.amount[tmpType.shopSlotMax - 1] = 0;
 					tmpType.price[tmpType.shopSlotMax - 1] = 0;
 					tmpType.shopSlotMax--;
-					
+
 					if (tmpType.shopSlotMax == 0) {
 
-					
 						break;
-					
+
 					}
 
 				}
 			}
-
-			
 
 		}
 
@@ -187,16 +182,50 @@ public class Core {
 						d.pl("raw_Beff data > 0");
 					}
 				}
-				
+
 				curItemIndex++;
-				/*if (curItemIndex == allBlockInGameAsList.size()) {
-					break;
-				}*/
+				/*
+				 * if (curItemIndex == allBlockInGameAsList.size()) { break; }
+				 */
 			}
-			
-			//curItemIndex += tmpType.amount[i];
+
+			// curItemIndex += tmpType.amount[i];
 
 			tmpType.outputAllShop.add(ab);
+
+		}
+
+		// check that all item in shop has all item in game
+
+		int countItemInShop = 0;
+
+		for (int i = 0; i < allBlockInGameAsList.size(); i++) {
+			AllBlockInGameType all = allBlockInGameAsList.get(i);
+			boolean fou = false;
+
+			// search
+
+			for (int j = 0; j < tmpType.outputAllShop.size(); j++) {
+				AllShop shp = tmpType.outputAllShop.get(j);
+
+				for (int k = 0; k < shp.size; k++) {
+					countItemInShop++;
+					if (shp.item[k].equalsIgnoreCase(all.theName)) {
+						if (shp.data[k] == all.data) {
+							fou = true;
+							break;
+						}
+					}
+				}
+
+			}
+
+			if (fou == true) {
+				break;
+			} else {
+				d.pl("count item in shop " + countItemInShop + "/" + allBlockInGameAsList.size());
+				d.pl("item not found in shop");
+			}
 
 		}
 
@@ -230,7 +259,7 @@ public class Core {
 			for (int j = 0; j < amountUniqueItemPerLV.amount[curLV] && cur < allBlockInGameAsList.size(); j++) {
 				AllBlockInGameType eof = allBlockInGameAsList.get(rUnique.index[cur]);
 
-				l.needIndex[j] =rUnique.index[cur];
+				l.needIndex[j] = rUnique.index[cur];
 				l.needAmount[j] = (int) Math.round(decodeRandomGive01_() * eof.maxStack);
 				if (l.needAmount[j] <= 0) {
 					l.needAmount[j] = 1;
@@ -378,7 +407,7 @@ public class Core {
 
 			getNextUnuseMissionItem((int) (tmpReadChro * swapMultipy),
 
-					tmpBoolean);
+			tmpBoolean);
 
 			para.index[countItem] = curMissionItemSwapPosition;
 
@@ -442,7 +471,7 @@ public class Core {
 
 			bo.theName = allBlockInGameAsList.get(cur).theName;
 			bo.data = allBlockInGameAsList.get(cur).data;
-			
+
 			if (bo.theName.equalsIgnoreCase("RAW_BEEF")) {
 				if (bo.data > 0) {
 					d.pl("raw_BEEF DATA > 0 ");
@@ -675,13 +704,13 @@ public class Core {
 				AllBlockInGameType miss = new AllBlockInGameType();
 				miss.theName = m[0];
 				miss.data = Byte.parseByte(m[1]);
-				
+
 				if (miss.theName.equalsIgnoreCase("RAW_BEEF")) {
-					if (miss.data > 0){
+					if (miss.data > 0) {
 						d.pl("raw_beef load data > 0");
 					}
 				}
-				
+
 				miss.maxStack = Integer.parseInt(m[2]);
 				miss.isBlock = Boolean.parseBoolean(m[3]);
 
@@ -753,11 +782,10 @@ public class Core {
 				} else {
 					sb.index = getIndexFromKeyAlBlockInGame(m[0] + ":" + m[1]);
 					sb.timeToGet = convertStringToTime(m[3]);
-					
+
 					if (m.length == 5) {
 						sb.allItemYouCanFind = Integer.parseInt(m[4]);
-					}
-					else {
+					} else {
 						sb.allItemYouCanFind = 0;
 					}
 					// rs[rsMax - 1].mission = 0;
