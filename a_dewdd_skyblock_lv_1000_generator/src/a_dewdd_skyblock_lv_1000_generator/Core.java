@@ -202,11 +202,7 @@ public class Core {
 				ab.data[j] = abigt.data;
 				ab.amount[j] = abigt.curAmount;
 
-				if (ab.item[j].equalsIgnoreCase("RAW_BEEF")) {
-					if (ab.data[j] > 0) {
-						d.pl("raw_Beff data > 0");
-					}
-				}
+				
 
 				curItemIndex++;
 				/*
@@ -223,45 +219,35 @@ public class Core {
 		// check that all item in shop has all item in game
 
 		d.pl("curItemIndex " + curItemIndex);
-		int countItemInShop = 0;
 
-		for (int i = 0; i < allBlockInGameAsList.size(); i++) {
-			AllBlockInGameType all = allBlockInGameAsList.get(i);
-			boolean fou = false;
-
-			// search
-			
-
-			for (int j = 0; j < tmpType.outputAllShop.size(); j++) {
-				AllShop shp = tmpType.outputAllShop.get(j);
-
-				for (int k = 0; k < shp.size; k++) {
-					countItemInShop++;
-					
-					if (shp.item[k].equalsIgnoreCase(all.theName)) {
-						if (shp.data[k] == all.data) {
-							fou = true;
+		
+		// check item Lost Again
+		for (int a = 0; a < Main.co.allBlockInGameAsList.size(); a++) {
+			AllBlockInGameType edo = Main.co.allBlockInGameAsList.get(a);
+			boolean found = false;
+			for (int i = 0; i < tmpType.outputAllShop.size(); i++) {
+				AllShop as = tmpType.outputAllShop.get(i);
+				for (int j = 0; j < as.size; j++) {
+					if (as.item[j].equalsIgnoreCase(edo.theName)) {
+						if (as.data[j] == edo.data) {
+							found = true;
 							break;
 						}
 					}
+					
 				}
-
-			}
-
-			if (fou == true) {
-				continue;
-			} else {
 				
-				d.pl("count item in shop " + countItemInShop + "/" + allBlockInGameAsList.size());
-				d.pl("item not found in shop");
 				
-				Exception e = new Exception("error item lost");
-				e.printStackTrace();
-				System.exit(0);
+				
 			}
-
+if (found == false) {
+					d.pl("a " + a + " , " + edo.getIDData());
+					Exception exp = new Exception("error item lost");
+					exp.printStackTrace();
+					System.exit(0);
+				}
 		}
-
+		
 		d.pl("converted tmpShop to AllShop ");
 	}
 
@@ -613,7 +599,32 @@ public class Core {
 		convertTmpShopPriceAmountOfItemInShopToAllShopType(tmp3);
 
 		// ******************************************************************************************
-
+		// check item Lost Again
+		for (int a = 0; a < Main.co.allBlockInGameAsList.size(); a++) {
+			AllBlockInGameType edo = Main.co.allBlockInGameAsList.get(a);
+			boolean found = false;
+			for (int i = 0; i < tmpAllShop.size(); i++) {
+				AllShop as = tmpAllShop.get(i);
+				for (int j = 0; j < as.size; j++) {
+					if (as.item[j].equalsIgnoreCase(edo.theName)) {
+						if (as.data[j] == edo.data) {
+							found = true;
+							break;
+						}
+					}
+					
+				}
+				
+				
+				
+			}
+if (found == false) {
+					d.pl("a " + a + " , " + edo.getIDData());
+					Exception exp = new Exception("error item lost");
+					exp.printStackTrace();
+					System.exit(0);
+				}
+		}
 		// decode level
 
 		ParameterLVType tmp4 = new ParameterLVType();
@@ -635,6 +646,34 @@ public class Core {
 		}
 
 		decodeTmpLV(tmp4);
+		
+		
+		// check item Lost Again
+		for (int a = 0; a < Main.co.allBlockInGameAsList.size(); a++) {
+			AllBlockInGameType edo = Main.co.allBlockInGameAsList.get(a);
+			boolean found = false;
+			for (int i = 0; i < tmpAllShop.size(); i++) {
+				AllShop as = tmpAllShop.get(i);
+				for (int j = 0; j < as.size; j++) {
+					if (as.item[j].equalsIgnoreCase(edo.theName)) {
+						if (as.data[j] == edo.data) {
+							found = true;
+							break;
+						}
+					}
+					
+				}
+				
+				
+				
+			}
+if (found == false) {
+					d.pl("a " + a + " , " + edo.getIDData());
+					Exception exp = new Exception("error item lost");
+					exp.printStackTrace();
+					System.exit(0);
+				}
+		}
 
 		d.pl("abc");
 		d.pl("end curChro " + curChro);

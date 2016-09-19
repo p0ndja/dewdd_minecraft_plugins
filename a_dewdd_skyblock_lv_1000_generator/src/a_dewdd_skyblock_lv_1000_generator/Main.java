@@ -89,9 +89,9 @@ public class Main {
 		
 		hy.registerEvent(evn);
 
-		//hy.fitness(hy.population.get(0).dna);
+		hy.fitness(hy.population.get(0).dna);
 
-		 hy.run();
+		// hy.run();
 		// hy.run();
 	}
 

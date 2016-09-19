@@ -33,15 +33,15 @@ public class HybridOverride extends Hybrid {
 					
 				}
 				
-				if (found == false) {
+				
+				
+			}
+if (found == false) {
 					d.pl("a " + a + " , " + edo.getIDData());
 					Exception exp = new Exception("error item lost");
 					exp.printStackTrace();
 					System.exit(0);
 				}
-				
-			}
-
 		}
 
 		boolean printPls = false;
@@ -398,28 +398,30 @@ public class HybridOverride extends Hybrid {
 							}
 						}
 
-						d.pl("foundInShop " + foundInShop);
-						if (foundInShop == false) {
-							// print all item in shop
-							for (int i = 0; i < tmpAllShop.size(); i++) {
-								AllShop shp = tmpAllShop.get(i);
-								for (int j = 0; j < shp.size; j++) {
-
-									d.pl(i + "/" + j + "  = " + shp.item[j] + ":" + shp.data[j] + " ? searching "
-											+ itm.getIDData());
-									if ((shp.item + ":" + shp.data).equalsIgnoreCase(itm.getIDData())) {
-										d.pl("found it !!");
-										break;
-									}
-								}
-							}
-
-							Exception e = new Exception("error item lost");
-							e.printStackTrace();
-							System.exit(0);
-						}
+						
 
 					} // loop all shop
+					
+					d.pl("foundInShop " + foundInShop);
+					if (foundInShop == false) {
+						// print all item in shop
+						for (int i = 0; i < tmpAllShop.size(); i++) {
+							AllShop shp = tmpAllShop.get(i);
+							for (int j = 0; j < shp.size; j++) {
+
+								d.pl(i + "/" + j + "  = " + shp.item[j] + ":" + shp.data[j] + " ? searching "
+										+ itm.getIDData());
+								if ((shp.item + ":" + shp.data).equalsIgnoreCase(itm.getIDData())) {
+									d.pl("found it !!");
+									break;
+								}
+							}
+						}
+
+						Exception e = new Exception("error item lost");
+						e.printStackTrace();
+						System.exit(0);
+					}
 
 				} // not fill true trying to buy
 			}
