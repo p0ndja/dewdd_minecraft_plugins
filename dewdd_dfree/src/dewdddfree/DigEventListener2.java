@@ -33,6 +33,7 @@ import com.earth2me.essentials.api.Economy;
 import com.earth2me.essentials.api.NoLoanPermittedException;
 import com.earth2me.essentials.api.UserDoesNotExistException;
 
+import dewddflower.dewset;
 import dewddtran.tr;
 
 public class DigEventListener2 implements Listener {
@@ -53,6 +54,8 @@ public class DigEventListener2 implements Listener {
 
 				}
 
+				
+				dew = new dewset();
 				/*
 				 * while (dew == null) {
 				 * 
@@ -98,6 +101,8 @@ public class DigEventListener2 implements Listener {
 	String psetamount = "dewdd.dfree.setamount";
 
 	Random rnd = new Random();
+	
+	dewset dew = null;
 
 	public DigEventListener2() {
 		delay eee = new delay();
@@ -492,7 +497,7 @@ public class DigEventListener2 implements Listener {
 
 							if (sign.getLine(0).equalsIgnoreCase("[autosort]") == true) {
 
-								dewddflower.Main.ds.autosortchest2(block, player);
+								dew.autosortchest2(block, player);
 
 								return;
 

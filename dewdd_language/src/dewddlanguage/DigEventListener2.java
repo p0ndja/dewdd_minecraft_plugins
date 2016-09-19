@@ -48,7 +48,7 @@ class Dewminecraft {
 					break;
 				case 2:
 					for (Player ics : world.getPlayers()) {
-						ics.sendMessage("ptdew&dewdd language Plugin :  My E-Mail(MSN) : dew_patipat@hotmail.com");
+						ics.sendMessage("ptdew&dewdd language Plugin :  My E-Mail : dew_patipat@gmail.com");
 					}
 					break;
 				case 3:
