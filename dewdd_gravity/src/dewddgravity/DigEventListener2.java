@@ -456,7 +456,7 @@ class MainLoop implements Runnable {
 
 		//dprint.r.printAll("Recall " + MainLoop.jobs.getSize() + " " + MainLoop.lostTime);
 
-		if (MainLoop.lostTime > maxTime) {
+		if (MainLoop.lostTime >= maxTime) {
 			MainLoop.lostTime -= maxTime;
 
 			if (MainLoop.lostTime < 0) {
@@ -469,9 +469,14 @@ class MainLoop implements Runnable {
 */
 			return;
 		}
+		else {
+			if (jobs.getSize() > 0) {
+			 dprint.r.printC("gravity size left "  + " , " + jobs.getSize() + " ... " + MainLoop.lostTime);
+			}
+		}
 
 		while (MainLoop.jobs.getSize() > 0 && lostTime < maxTime) {
-			// dprint.r.printAll("done size " + done + " , " + jobs.getSize());
+			// dprint.r.printAll("done size "  + " , " + jobs.getSize());
 
 			if (MainLoop.lostTime > maxTime) {
 				//dprint.r.printAll("__ break cuz time out " + (MainLoop.lostTime));
