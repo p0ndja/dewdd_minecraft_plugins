@@ -13,14 +13,13 @@ import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.Chest;
-import org.bukkit.block.CreatureSpawner;
 import org.bukkit.enchantments.Enchantment;
-import org.bukkit.entity.CreatureType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -33,44 +32,35 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import dewddtran.tr;
+
 public class DigEventListener2 implements Listener {
-	class lastinv {
-		public Inventory	inv;
-		public String		s;
-		public int			now;
-		public int			x[];
-		public int			y[];
-		public int			z[];
-		public String		wn[];
+	class LastInv {
+		public Inventory inv;
+		public String playerName;
+		public int now;
+		public int x[];
+		public int y[];
+		public int z[];
+		public String wn[];
 	}
 
-	int					msize		= 54;
-	int					goslot		= 1;
-	int					backslot	= 0;
+	int msize = 1000;
+	int goslot = 1;
+	int backslot = 0;
 
-	int					picback		= Material.LEATHER.getId();
-	int					picgo		= Material.LEVER.getId();
+	int picback = Material.LEATHER.getId();
+	int picgo = Material.LEVER.getId();
 
-	public int			maxch		= 10;
+	public int maxch = 10;
 
-	public JavaPlugin	ac			= null;
-	int					maxl		= 29;
-	lastinv[]			inv			= new lastinv[maxl];
+	public JavaPlugin ac = null;
+	ArrayList<LastInv> inv = new ArrayList<LastInv>();
 
-	public String	folder_name	= "plugins" + File.separator + "dewdd_inv";
+	public String folder_name = "plugins" + File.separator + "dewdd_inv";
 
 	public DigEventListener2() {
 
-		for (int i = 0; i < maxl; i++) {
-			if ((inv[i] == null)) {
-				inv[i] = new lastinv();
-			}
-			inv[i].x = new int[maxch];
-			inv[i].y = new int[maxch];
-			inv[i].z = new int[maxch];
-			inv[i].wn = new String[maxch];
-
-		}
 
 	}
 
@@ -93,8 +83,7 @@ public class DigEventListener2 implements Listener {
 
 		if (er.getItem(goslot) == null) {
 			fou = false;
-		}
-		else {
+		} else {
 			if (er.getItem(goslot).getTypeId() != picgo) {
 				fou = false;
 			}
@@ -108,8 +97,7 @@ public class DigEventListener2 implements Listener {
 		fou = true;
 		if (er.getItem(backslot) == null) {
 			fou = false;
-		}
-		else {
+		} else {
 			if (er.getItem(backslot).getTypeId() != picback) {
 				fou = false;
 			}
@@ -120,34 +108,29 @@ public class DigEventListener2 implements Listener {
 		}
 
 		if (fou == true) {
-			// p.sendMessage("ptdew_inv " + inv[getid].now);
+			// p.sendMessage("ptdew_inv " + inv.get(getid).now);
 
-			if (e.getSlot() == goslot
-					&& e.getCurrentItem().getTypeId() == picgo) {
+			if (e.getSlot() == goslot && e.getCurrentItem().getTypeId() == picgo) {
 				e.setCancelled(true);
-				inv[getid].now++;
-				if (inv[getid].now >= maxch) {
-					inv[getid].now = 0;
+				inv.get(getid).now++;
+				if (inv.get(getid).now >= maxch) {
+					inv.get(getid).now = 0;
 				}
 
-				Block b3 = Bukkit.getWorld(inv[getid].wn[inv[getid].now])
-						.getBlockAt(inv[getid].x[inv[getid].now],
-								inv[getid].y[inv[getid].now],
-								inv[getid].z[inv[getid].now]);
+				Block b3 = Bukkit.getWorld(inv.get(getid).wn[inv.get(getid).now]).getBlockAt(inv.get(getid).x[inv.get(getid).now],
+						inv.get(getid).y[inv.get(getid).now], inv.get(getid).z[inv.get(getid).now]);
 
 				/*
 				 * if (dewset.checkpermissionarea(b3, p, "right") == true) {
-				 * p.sendMessage
-				 * ("That is another protcetd block you can't open it!");
-				 * return; }
+				 * p.sendMessage (
+				 * "That is another protcetd block you can't open it!"); return;
+				 * }
 				 */
 
 				if (b3.getTypeId() != 54) {
-					p.sendMessage("can't open this chest " + inv[getid].now
-							+ " location at " + inv[getid].x[inv[getid].now]
-							+ "," + inv[getid].y[inv[getid].now] + ","
-							+ inv[getid].z[inv[getid].now] + " at "
-							+ inv[getid].wn[inv[getid].now]);
+					p.sendMessage("can't open this chest " + inv.get(getid).now + " location at "
+							+ inv.get(getid).x[inv.get(getid).now] + "," + inv.get(getid).y[inv.get(getid).now] + ","
+							+ inv.get(getid).z[inv.get(getid).now] + " at " + inv.get(getid).wn[inv.get(getid).now]);
 					return;
 				}
 
@@ -159,33 +142,28 @@ public class DigEventListener2 implements Listener {
 				p.openInventory(xr);
 
 			} // 26
-			else if (e.getSlot() == backslot
-					&& e.getCurrentItem().getTypeId() == picback) {
+			else if (e.getSlot() == backslot && e.getCurrentItem().getTypeId() == picback) {
 				e.setCancelled(true);
 
-				inv[getid].now--;
-				if (inv[getid].now < 0) {
-					inv[getid].now = maxch - 1;
+				inv.get(getid).now--;
+				if (inv.get(getid).now < 0) {
+					inv.get(getid).now = maxch - 1;
 				}
 
-				Block b3 = Bukkit.getWorld(inv[getid].wn[inv[getid].now])
-						.getBlockAt(inv[getid].x[inv[getid].now],
-								inv[getid].y[inv[getid].now],
-								inv[getid].z[inv[getid].now]);
+				Block b3 = Bukkit.getWorld(inv.get(getid).wn[inv.get(getid).now]).getBlockAt(inv.get(getid).x[inv.get(getid).now],
+						inv.get(getid).y[inv.get(getid).now], inv.get(getid).z[inv.get(getid).now]);
 
 				/*
 				 * if (dewset.checkpermissionarea(b3, p, "right") == true) {
-				 * p.sendMessage
-				 * ("That is another protcetd block you can't open it!");
-				 * return; }
+				 * p.sendMessage (
+				 * "That is another protcetd block you can't open it!"); return;
+				 * }
 				 */
 
 				if (b3.getTypeId() != 54) {
-					p.sendMessage("can't open this chest " + inv[getid].now
-							+ " location at " + inv[getid].x[inv[getid].now]
-							+ "," + inv[getid].y[inv[getid].now] + ","
-							+ inv[getid].z[inv[getid].now] + " at "
-							+ inv[getid].wn[inv[getid].now]);
+					p.sendMessage("can't open this chest " + inv.get(getid).now + " location at "
+							+ inv.get(getid).x[inv.get(getid).now] + "," + inv.get(getid).y[inv.get(getid).now] + ","
+							+ inv.get(getid).z[inv.get(getid).now] + " at " + inv.get(getid).wn[inv.get(getid).now]);
 					return;
 				}
 
@@ -209,10 +187,10 @@ public class DigEventListener2 implements Listener {
 		}
 
 		int getid = getid(e.getPlayer().getName());
-		// printall("Inventory open  " + e.getInventory().getType().name());
+		// printall("Inventory open " + e.getInventory().getType().name());
 		// printall("Inventory open type " + e.getInventory().getName());
 
-		inv[getid].inv = e.getInventory();
+		inv.get(getid).inv = e.getInventory();
 
 		Player p = (Player) e.getPlayer();
 
@@ -223,8 +201,7 @@ public class DigEventListener2 implements Listener {
 
 		if (er.getItem(goslot) == null) {
 			fou = false;
-		}
-		else {
+		} else {
 			if (er.getItem(goslot).getTypeId() != picgo) {
 				fou = false;
 			}
@@ -238,8 +215,7 @@ public class DigEventListener2 implements Listener {
 		fou = true;
 		if (er.getItem(backslot) == null) {
 			fou = false;
-		}
-		else {
+		} else {
 			if (er.getItem(backslot).getTypeId() != picback) {
 				fou = false;
 			}
@@ -302,15 +278,18 @@ public class DigEventListener2 implements Listener {
 
 		String m[] = e.getMessage().split("\\s+");
 		Player p = e.getPlayer();
+		
+		int getid = getid(p.getName());
+		LastInv tmp = inv.get(getid);
 
 		if (m[0].equalsIgnoreCase("/dinvl")) {
-			if (inv[getid(p.getName())].inv == null) {
+			if (tmp.inv == null) {
 				p.sendMessage("ptdew&dewdd : Please Open some inventory...");
 
 				return;
 			}
 
-			p.openInventory(inv[getid(p.getName())].inv);
+			p.openInventory(tmp.inv);
 
 		}
 
@@ -321,111 +300,43 @@ public class DigEventListener2 implements Listener {
 			saveinventoryfile(p.getName());
 		}
 
-		if (m[0].equalsIgnoreCase("/dspawner")) {
-			if (m.length == 1) {
-				for (CreatureType xy : CreatureType.values()) {
-					p.sendMessage(xy.getTypeId() + " " + xy.name());
-				}
-				Block b3 = p.getLocation().getBlock().getRelative(0, -1, 0);
-				if (b3.getTypeId() != 52) {
-					p.sendMessage("not spawner");
-					return;
-				}
-				CreatureSpawner x = (CreatureSpawner) b3.getState();
-				p.sendMessage(x.getCreatureTypeName() + " " + x.getDelay()
-						+ " " + x.getSpawnedType().getName());
-
-				p.sendMessage("/dspawner creaturename delay");
-				return;
-			}
-			else if (m.length == 2) {
-				Block b3 = p.getLocation().getBlock().getRelative(0, -1, 0);
-				if (b3.getTypeId() != 52) {
-					p.sendMessage("not spawner");
-					return;
-				}
-				CreatureSpawner x = (CreatureSpawner) b3.getState();
-				for (CreatureType xy : CreatureType.values()) {
-					if (xy.getName().toLowerCase().indexOf(m[1].toLowerCase()) > -1) {
-						p.sendMessage(xy.getTypeId() + " " + xy.name());
-						x.setCreatureTypeByName(xy.getName());
-						p.sendMessage("set spawner done");
-
-						return;
-					}
-
-				}
-
-			}
-			else if (m.length == 3) {
-				Block b3 = p.getLocation().getBlock().getRelative(0, -1, 0);
-				if (b3.getTypeId() != 52) {
-					p.sendMessage("not spawner");
-					return;
-				}
-				CreatureSpawner x = (CreatureSpawner) b3.getState();
-				for (CreatureType xy : CreatureType.values()) {
-					if (xy.getName().toLowerCase().indexOf(m[1].toLowerCase()) > -1) {
-						p.sendMessage(xy.getTypeId() + " " + xy.name());
-						x.setCreatureTypeByName(xy.getName());
-						p.sendMessage("set spawner done");
-
-						break;
-					}
-
-				}
-
-				x.setDelay(Integer.parseInt(m[2]));
-
-				p.sendMessage("set delay done " + m[2]);
-
-			}
-
-		}
-
 		if (m[0].equalsIgnoreCase("/dinv")) {
-			int getid = getid(p.getName());
+			
 			p.sendMessage("/dinv <set||open> <0-10> )");
 			if (m.length == 1) {
 				// show all chest
 				Block b3 = null;
 				for (int l1 = 0; l1 < maxch; l1++) {
-					if (inv[getid].wn[l1] == null) {
-						inv[getid].wn[l1] = "world";
+					if (tmp.wn[l1] == null) {
+						tmp.wn[l1] = "world";
 					}
 
-					if (inv[getid].wn[l1].equalsIgnoreCase("")) {
+					if (tmp.wn[l1].equalsIgnoreCase("")) {
 						continue;
 					}
 
-					b3 = Bukkit.getWorld(inv[getid].wn[l1]).getBlockAt(
-							inv[getid].x[l1], inv[getid].y[l1],
-							inv[getid].z[l1]);
+					b3 = Bukkit.getWorld(tmp.wn[l1]).getBlockAt(tmp.x[l1], tmp.y[l1],
+							tmp.z[l1]);
 
 					if (b3.getTypeId() != 54) {
 						continue;
 					}
 
-					p.sendMessage("inv_" + l1 + " at " + inv[getid].x[l1] + ","
-							+ inv[getid].y[l1] + "," + inv[getid].z[l1]
-							+ " at " + inv[getid].wn[l1]);
+					p.sendMessage("inv_" + l1 + " at " + tmp.x[l1] + "," + tmp.y[l1] + ","
+							+ tmp.z[l1] + " at " + tmp.wn[l1]);
 
 				}
 
-			}
-			else if (m.length == 3) {
+			} else if (m.length == 3) {
 				int n3 = Integer.parseInt(m[2]);
 
 				Boolean mode = false;
 
 				if (m[1].equalsIgnoreCase("set") || m[1].equalsIgnoreCase("s")) {
 					mode = true;
-				}
-				else if (m[1].equalsIgnoreCase("open")
-						|| m[1].equalsIgnoreCase("o")) {
+				} else if (m[1].equalsIgnoreCase("open") || m[1].equalsIgnoreCase("o")) {
 					mode = false;
-				}
-				else {
+				} else {
 					p.sendMessage("arguments 2 must be  set,s,open,s");
 					return;
 				}
@@ -441,22 +352,19 @@ public class DigEventListener2 implements Listener {
 
 					// printall ("set");
 
-					inv[getid].x[n3] = b3.getX();
-					inv[getid].y[n3] = b3.getY();
-					inv[getid].z[n3] = b3.getZ();
-					inv[getid].wn[n3] = b3.getWorld().getName();
+					tmp.x[n3] = b3.getX();
+					tmp.y[n3] = b3.getY();
+					tmp.z[n3] = b3.getZ();
+					tmp.wn[n3] = b3.getWorld().getName();
 
-					p.sendMessage("saved chest " + n3 + " location at "
-							+ inv[getid].x[n3] + "," + inv[getid].y[n3] + ","
-							+ inv[getid].z[n3] + " at " + inv[getid].wn[n3]);
+					p.sendMessage("saved chest " + n3 + " location at " + tmp.x[n3] + "," + tmp.y[n3]
+							+ "," + tmp.z[n3] + " at " + tmp.wn[n3]);
 					saveinventoryfile(p.getName());
 
-				}
-				else { // mode open
+				} else { // mode open
 
-					Block b3 = Bukkit.getWorld(inv[getid].wn[n3]).getBlockAt(
-							inv[getid].x[n3], inv[getid].y[n3],
-							inv[getid].z[n3]);
+					Block b3 = Bukkit.getWorld(tmp.wn[n3]).getBlockAt(tmp.x[n3], tmp.y[n3],
+							tmp.z[n3]);
 
 					// check permission
 
@@ -468,10 +376,8 @@ public class DigEventListener2 implements Listener {
 					 */
 
 					if (b3.getTypeId() != 54) {
-						p.sendMessage("can't open this chest " + n3
-								+ " location at " + inv[getid].x[n3] + ","
-								+ inv[getid].y[n3] + "," + inv[getid].z[n3]
-								+ " at " + inv[getid].wn[n3]);
+						p.sendMessage("can't open this chest " + n3 + " location at " + tmp.x[n3] + ","
+								+ tmp.y[n3] + "," + tmp.z[n3] + " at " + tmp.wn[n3]);
 
 						return;
 					}
@@ -484,7 +390,7 @@ public class DigEventListener2 implements Listener {
 					 * Inventory xr = Bukkit.createInventory
 					 * (xrch.getInventory().getHolder(),
 					 * xrch.getInventory().getSize(), "ptdew_inv " +
-					 * inv[getid].now); Bukkit.
+					 * tmp.now); Bukkit.
 					 */
 					Inventory xr = xrch.getInventory();
 
@@ -492,8 +398,7 @@ public class DigEventListener2 implements Listener {
 
 					if (xr.getItem(goslot) == null) {
 						fou = false;
-					}
-					else {
+					} else {
 						if (xr.getItem(goslot).getTypeId() != picgo) {
 							fou = false;
 						}
@@ -519,8 +424,7 @@ public class DigEventListener2 implements Listener {
 
 					if (xr.getItem(backslot) == null) {
 						fou = false;
-					}
-					else {
+					} else {
 						if (xr.getItem(backslot).getTypeId() != picback) {
 							fou = false;
 						}
@@ -563,30 +467,19 @@ public class DigEventListener2 implements Listener {
 
 	public int getid(String n) {
 
-		for (int i = 0; i < maxl; i++) {
+		for (int i = 0; i < inv.size(); i++) {
+			LastInv tmp = inv.get(i);
 
-			if ((inv[i].s == null)) {
-				inv[i].s = "";
-			}
-
-			if (Bukkit.getOfflinePlayer(inv[i].s) == null) {
-				inv[i].s = "";
-			}
-
-			if (n.equalsIgnoreCase(inv[i].s)) {
+			if (n.equalsIgnoreCase(tmp.playerName)) {
 				return i;
 			}
 		}
+		
+		LastInv newer = new LastInv();
+		newer.playerName = n;
+		inv.add(newer);
 
-		for (int i = 0; i < maxl; i++) {
-
-			if ((inv[i].s.equalsIgnoreCase(""))) {
-				inv[i].s = n;
-				return i;
-			}
-		}
-
-		return -1;
+		return inv.size()-1;
 	}
 
 	public void loadinventoryfile(String pname) {
@@ -610,12 +503,12 @@ public class DigEventListener2 implements Listener {
 			// * save
 			String m[];
 			int getid = getid(pname);
-			inv[getid].now = -1;
+			inv.get(getid).now = -1;
 			for (int l1 = 0; l1 < maxch; l1++) {
-				inv[getid].x[l1] = 0;
-				inv[getid].y[l1] = 0;
-				inv[getid].z[l1] = 0;
-				inv[getid].wn[l1] = "world";
+				inv.get(getid).x[l1] = 0;
+				inv.get(getid).y[l1] = 0;
+				inv.get(getid).z[l1] = 0;
+				inv.get(getid).wn[l1] = "world";
 
 			}
 
@@ -624,21 +517,19 @@ public class DigEventListener2 implements Listener {
 
 				m = strLine.split("\\s+");
 				count++;
-				inv[getid].x[count - 1] = Integer.parseInt(m[0]);
-				inv[getid].y[count - 1] = Integer.parseInt(m[1]);
-				inv[getid].z[count - 1] = Integer.parseInt(m[2]);
-				inv[getid].wn[count - 1] = (m[3]);
+				inv.get(getid).x[count - 1] = Integer.parseInt(m[0]);
+				inv.get(getid).y[count - 1] = Integer.parseInt(m[1]);
+				inv.get(getid).z[count - 1] = Integer.parseInt(m[2]);
+				inv.get(getid).wn[count - 1] = (m[3]);
 
 			}
 
 			in.close();
 
-		}
-		catch (FileNotFoundException e) {
+		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}
-		catch (IOException e) {
+		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
@@ -666,8 +557,8 @@ public class DigEventListener2 implements Listener {
 			int getid = getid(pname);
 
 			for (int l1 = 0; l1 < maxch; l1++) {
-				String wr = inv[getid].x[l1] + " " + inv[getid].y[l1] + " "
-						+ inv[getid].z[l1] + " " + inv[getid].wn[l1];
+				String wr = inv.get(getid).x[l1] + " " + inv.get(getid).y[l1] + " " + inv.get(getid).z[l1] + " "
+						+ inv.get(getid).wn[l1];
 
 				fwriter.write(wr + System.getProperty("line.separator"));
 
@@ -677,12 +568,10 @@ public class DigEventListener2 implements Listener {
 			dprint.r.printC("ptdew&dewdd:saved " + filena);
 			return;
 
-		}
-		catch (FileNotFoundException e) {
+		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}
-		catch (IOException e) {
+		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}

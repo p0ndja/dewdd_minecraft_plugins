@@ -3423,6 +3423,8 @@ public class dewset extends dewset_interface {
 			wg = wgapi.canBuild(player, block);
 
 		}
+		
+		//*****************************************
 
 		boolean sky = false;
 		boolean skyHasProtect = false;
@@ -3451,10 +3453,27 @@ public class dewset extends dewset_interface {
 			}
 		}
 		
+		//............................
+		
+		boolean pri = false;
+		boolean priHasProtect = false;
+		if (Bukkit.getPluginManager().getPlugin("dewddprivate") == null) {
+			pri= true;
+		} else {
+			pri = api_private.DewddPrivate.cando( block, player) ;// .cando(block, player, modeevent);
+			if (CONFIG_NEED_PROTECT == true) {
+				priHasProtect = api_private.DewddPrivate.hasProtect(block);
+
+			}
+		}
+		
+		
+		
+		
 		//........................
 
-		boolean candoYap = wg && sky && cre;
-		boolean hasProtectYap = wgHasProtect || skyHasProtect || creHasProtect ;
+		boolean candoYap = wg && sky && cre && pri;
+		boolean hasProtectYap = wgHasProtect || skyHasProtect || creHasProtect || priHasProtect ;
 		boolean output = false;
 
 		if (CONFIG_NEED_PROTECT == true) {
