@@ -5,7 +5,7 @@ import java.util.LinkedList;
 import ga_optimization_api.Hybrid;
 
 class HybridOverride extends Hybrid {
-	
+
 	public static int maxUnUnique = 0;
 
 	@Override
@@ -15,30 +15,30 @@ class HybridOverride extends Hybrid {
 		LinkedList<LV1000Type> tmpLV = new LinkedList<LV1000Type>();
 
 		Main.co.dnaDecoder(dna, tmpAllShop, tmpSell, tmpLV);
-		
+
 		boolean printPls = false;
 
 		for (int i = 0; i < tmpSell.size(); i++) {
-			
+
 			if (printPls == true)
-			d.pl("tmpSell : " + i + " = " + tmpSell.get(i).theName + ":" + tmpSell.get(i).data + ":"
-					+ tmpSell.get(i).timeToGet + ":" + tmpSell.get(i).sellPerPrice);
+				d.pl("tmpSell : " + i + " = " + tmpSell.get(i).theName + ":" + tmpSell.get(i).data + ":"
+						+ tmpSell.get(i).timeToGet + ":" + tmpSell.get(i).sellPerPrice);
 		}
 
 		// Shop
 		for (int i = 0; i < tmpAllShop.size(); i++) {
 
 			if (printPls == true) {
-			d.pl("tmpAllShop ID " + i);
+				d.pl("tmpAllShop ID " + i);
 			}
-			
+
 			if (printPls == true) {
-			d.pl("PlayPrice " + " = " + tmpAllShop.get(i).PlayPrice);
+				d.pl("PlayPrice " + " = " + tmpAllShop.get(i).PlayPrice);
 			}
 			for (int j = 0; j < tmpAllShop.get(i).size; j++) {
 				if (printPls == true) {
-				d.pl("Slot " + " = " + tmpAllShop.get(i).Item[j] + ":" + tmpAllShop.get(i).data[j] + ":"
-						+ tmpAllShop.get(i).amount[j]);
+					d.pl("Slot " + " = " + tmpAllShop.get(i).Item[j] + ":" + tmpAllShop.get(i).data[j] + ":"
+							+ tmpAllShop.get(i).amount[j]);
 				}
 
 			}
@@ -49,21 +49,21 @@ class HybridOverride extends Hybrid {
 
 		for (int i = 0; i < tmpLV.size(); i++) {
 			if (printPls == true) {
-			d.pl("tmpLV ID " + i);
+				d.pl("tmpLV ID " + i);
 			}
 
 			for (int j = 0; j < tmpLV.get(i).needSize; j++) {
 				if (printPls == true) {
-				d.pl("need slot " + j + " = " + tmpLV.get(i).needItem[j] + ":" + tmpLV.get(i).needData[j] + ":"
-						+ tmpLV.get(i).needAmount[j]);
+					d.pl("need slot " + j + " = " + tmpLV.get(i).needItem[j] + ":" + tmpLV.get(i).needData[j] + ":"
+							+ tmpLV.get(i).needAmount[j]);
 				}
 
 			}
 
 			for (int j = 0; j < tmpLV.get(i).rewardSize; j++) {
 				if (printPls == true) {
-				d.pl("reward slot " + j + " = " + tmpLV.get(i).rewardItem[j] + ":" + tmpLV.get(i).rewardData[j] + ":"
-						+ tmpLV.get(i).rewardAmount[j]);
+					d.pl("reward slot " + j + " = " + tmpLV.get(i).rewardItem[j] + ":" + tmpLV.get(i).rewardData[j]
+							+ ":" + tmpLV.get(i).rewardAmount[j]);
 				}
 
 			}
@@ -75,30 +75,30 @@ class HybridOverride extends Hybrid {
 		for (int i = 0; i < Main.co.allBlockInGameAsList.size(); i++) {
 			needSlotUsedIt[i] = false;
 		}
-		
+
 		boolean rewardSlotUsedIt[] = new boolean[Main.co.allBlockInGameAsList.size()];
 		for (int i = 0; i < Main.co.allBlockInGameAsList.size(); i++) {
 			rewardSlotUsedIt[i] = false;
 		}
-		
+
 		int duplicate = 0;
 
 		for (int i = 0; i < tmpLV.size(); i++) {
 			if (printPls == true) {
-			d.pl("tmpLV ID " + i);
+				d.pl("tmpLV ID " + i);
 			}
 
 			for (int j = 0; j < tmpLV.get(i).needSize; j++) {
 				if (printPls == true) {
-				d.pl("need slot " + j + " = " + tmpLV.get(i).needItem[j] + ":" + tmpLV.get(i).needData[j] + ":"
-						+ tmpLV.get(i).needAmount[j]);
+					d.pl("need slot " + j + " = " + tmpLV.get(i).needItem[j] + ":" + tmpLV.get(i).needData[j] + ":"
+							+ tmpLV.get(i).needAmount[j]);
 				}
-				
+
 				for (int k = 0; k < Main.co.allBlockInGameAsList.size(); k++) {
 					if (Main.co.allBlockInGameAsList.get(k).theName.equalsIgnoreCase(tmpLV.get(i).needItem[j])) {
-						
+
 						if (needSlotUsedIt[k] == true) {
-							duplicate ++;
+							duplicate++;
 						}
 						needSlotUsedIt[k] = true;
 						break;
@@ -109,16 +109,16 @@ class HybridOverride extends Hybrid {
 			}
 
 			for (int j = 0; j < tmpLV.get(i).rewardSize; j++) {
-				
+
 				if (printPls == true) {
-				d.pl("reward slot " + j + " = " + tmpLV.get(i).rewardItem[j] + ":" + tmpLV.get(i).rewardData[j] + ":"
-						+ tmpLV.get(i).rewardAmount[j]);
+					d.pl("reward slot " + j + " = " + tmpLV.get(i).rewardItem[j] + ":" + tmpLV.get(i).rewardData[j]
+							+ ":" + tmpLV.get(i).rewardAmount[j]);
 				}
-				
+
 				for (int k = 0; k < Main.co.allBlockInGameAsList.size(); k++) {
 					if (Main.co.allBlockInGameAsList.get(k).theName.equalsIgnoreCase(tmpLV.get(i).rewardItem[j])) {
 						if (rewardSlotUsedIt[k] == true) {
-							duplicate ++;
+							duplicate++;
 						}
 						rewardSlotUsedIt[k] = true;
 						break;
@@ -128,38 +128,31 @@ class HybridOverride extends Hybrid {
 
 			}
 		}
-		
-		
+
 		int countTrue = 0;
-		for (int i = 0; i < Main.co.allBlockInGameAsList.size() ; i++ ) {
+		for (int i = 0; i < Main.co.allBlockInGameAsList.size(); i++) {
 			if (needSlotUsedIt[i] == true) {
-				countTrue ++;
+				countTrue++;
 			}
-			
+
 			if (rewardSlotUsedIt[i] == true) {
-				countTrue ++;
+				countTrue++;
 			}
-			
-			
+
 		}
-		
-		
+
 		if (countTrue > maxUnUnique) {
 			maxUnUnique = countTrue;
-			
+
 			d.pl("maxUnique " + countTrue);
 		}
-		
+
 		if (countTrue < Main.co.allBlockInGameAsList.size() * 2) {
 			d.pl("duplicate " + duplicate);
 			d.pl("countTrue < Max Unique Item " + countTrue + "/" + (Main.co.allBlockInGameAsList.size() * 2));
 			return countTrue;
-			//break;
+			// break;
 		}
-		
-		
-		
-		
 
 		// ...............................................
 		// simulating
@@ -313,7 +306,7 @@ public class Main {
 
 		hy.fitness(hy.population.get(0).dna);
 
-	//	hy.run();
+		// hy.run();
 		// hy.run();
 	}
 

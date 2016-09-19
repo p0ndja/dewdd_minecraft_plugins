@@ -2,7 +2,46 @@ package a_dewdd_skyblock_lv_1000_generator;
 
 import java.util.HashMap;
 
+class Animal {
+
+	public String itemId = "";
+	public byte data = 0;
+
+	public int amount = 0;
+	public long countTick = 0;
+
+	// COOKED_CHICKEN , EGG
+	// WOOL
+	// COOKED_BEEF cow , mushroom
+	// GRILLED_PORK pig
+
+	// MONSTER_EGG:90 pig
+	// MONSTER_EGG:91 sheep
+	// MONSTER_EGG:92 cow
+	// MONSTER_EGG:93 chicken
+	// MONSTER_EGG:96 cow mushroom
+
+}
+
+// each plant has own hashmap
+class Farm {
+
+	// 1 block 1 plant
+	public String itemIdData = ""; // SEEDS:0 , RED_MUSHROOM:0 , BROWN_MUSHROOM
+									// ,
+									// CACTUS ,
+									// SUGAR_CANE , PUMPKIN , POTATO , WHEAT ,
+									// CARROT_ITEM , MELON , NETHER_STALK
+
+	public long countTick[] = new long[PlayerSimulating.MaxSizeOfFarm];
+
+	public int sizeFarm = 0;
+
+}
+
 public class PlayerSimulating {
+
+	public static int MaxSizeOfFarm = 6000;
 
 	public double money = 0;
 
@@ -15,9 +54,67 @@ public class PlayerSimulating {
 																			// :
 																			// animal
 
-	public static int MaxSizeOfFarm = 6000;
-
 	public long curSecond = 0;
+
+	public PlayerSimulating() {
+
+		// setup farmMap
+		String tmpAdd[] = new String[10];
+		tmpAdd[0] = "WHEAT";
+		tmpAdd[1] = "RED_MUSHROOM";
+		tmpAdd[2] = "BROWN_MUSHROOM";
+		tmpAdd[3] = "CACTUS";
+		tmpAdd[4] = "SUGAR_CANE";
+		tmpAdd[5] = "PUMPKIN";
+		tmpAdd[6] = "POTATO_ITEM";
+		tmpAdd[7] = "CARROT_ITEM";
+		tmpAdd[8] = "MELON";
+		tmpAdd[9] = "NETHER_STALK";
+
+		for (int i = 0; i < tmpAdd.length; i++) {
+			Farm x = new Farm();
+			x.itemIdData = tmpAdd[i] + ":0";
+			x.countTick[x.sizeFarm] = 0;
+
+			x.sizeFarm++;
+			/*
+			 * x.countTick = 0; x.amount = 0;
+			 */
+
+			farmMap.put(tmpAdd[i] + ":0", x);
+		}
+
+		// setup animalMap
+
+		byte tmpAdd2[] = new byte[5];
+		tmpAdd2[0] = 99; // pig
+		tmpAdd2[1] = 91; // sheep
+		tmpAdd2[2] = 92; // cow
+		tmpAdd2[3] = 93; // chicken
+		tmpAdd2[4] = 96; // cow mush room
+
+		for (int i = 0; i < tmpAdd2.length; i++) {
+			Animal x = new Animal();
+			x.itemId = "MONSTER_EGG";
+			x.data = tmpAdd2[i];
+			x.countTick = 0;
+
+			animalMap.put(x.data, x);
+		}
+
+		// setup allMyInventory
+
+		allMyInventory.clear();
+
+		for (int i = 0; i < Main.co.allBlockInGame.size(); i++) {
+			AllBlockInGameType x = Main.co.allBlockInGameAsList.get(i).copyIt();
+			x.curAmount = 0;
+
+			allMyInventory.put(x.theName + ":" + x.data, x);
+
+		}
+
+	}
 
 	public void letPlantAllThingAsItCan() {
 
@@ -82,9 +179,7 @@ public class PlayerSimulating {
 							plant.curAmount--;
 							grass.curAmount--;
 
-							
-
-							d.pl(curSecond +  " > buy : " + tmpFarm.itemIdData + " , sizeFarm " + tmpFarm.sizeFarm);
+							d.pl(curSecond + " > buy : " + tmpFarm.itemIdData + " , sizeFarm " + tmpFarm.sizeFarm);
 
 						}
 					}
@@ -146,8 +241,6 @@ public class PlayerSimulating {
 
 							plant.curAmount--;
 							sand.curAmount--;
-
-						
 
 							d.pl(curSecond + " > buy : " + tmpFarm.itemIdData + " , sizeFarm " + tmpFarm.sizeFarm);
 
@@ -216,7 +309,73 @@ public class PlayerSimulating {
 							plant.curAmount--;
 							darkBlock.curAmount--;
 
-					
+							d.pl(curSecond + " > buy : " + tmpFarm.itemIdData + " , sizeFarm " + tmpFarm.sizeFarm);
+
+						}
+					}
+				}
+			}
+
+		}
+
+		// wart
+
+		// ************************************
+		// mushroom
+
+		// check mush room
+
+		String glowWart[] = new String[2];
+
+		glowWart[0] = "RED_MUSHROOM";
+		glowWart[1] = "BROWN_MUSHROOM";
+
+		lowestID = 0;
+		lowestString = glowWart[lowestID] + ":0";
+
+		for (int glowInGrassLoop = 1; glowInGrassLoop < 2; glowInGrassLoop++) {
+			if (farmMap.get(glowWart[glowInGrassLoop] + ":0").sizeFarm < farmMap
+					.get(glowWart[lowestID] + ":0").sizeFarm) {
+
+				lowestID = glowInGrassLoop;
+
+			}
+
+		}
+
+		lowestString = glowWart[lowestID] + ":0";
+
+		AllBlockInGameType wartBlock = allMyInventory.get("COBBLESTONE:0");
+		if (wartBlock == null) {
+			wartBlock = allMyInventory.get("STONE:0");
+
+		}
+		if (wartBlock == null) {
+			wartBlock = allMyInventory.get("DIRT:0");
+
+		}
+
+		if (wartBlock != null) {
+
+			if (wartBlock.curAmount > 0) {
+
+				// search
+
+				AllBlockInGameType plant = allMyInventory.get(lowestString);
+				if (plant != null) {
+					if (plant.curAmount > 0) {
+
+						// add new plant
+
+						Farm tmpFarm = farmMap.get(lowestString);
+						if (tmpFarm != null) {
+
+							tmpFarm.itemIdData = lowestString;
+							tmpFarm.countTick[tmpFarm.sizeFarm] = 0;
+							tmpFarm.sizeFarm++;
+
+							plant.curAmount--;
+							wartBlock.curAmount--;
 
 							d.pl(curSecond + " > buy : " + tmpFarm.itemIdData + " , sizeFarm " + tmpFarm.sizeFarm);
 
@@ -226,173 +385,7 @@ public class PlayerSimulating {
 			}
 
 		}
-		
-		// wart
-		
-		// ************************************
-				// mushroom
-
-				// check mush room
-
-				String glowWart[] = new String[2];
-
-				glowWart[0] = "RED_MUSHROOM";
-				glowWart[1] = "BROWN_MUSHROOM";
-
-				lowestID = 0;
-				lowestString = glowWart[lowestID] + ":0";
-
-				for (int glowInGrassLoop = 1; glowInGrassLoop < 2; glowInGrassLoop++) {
-					if (farmMap.get(glowWart[glowInGrassLoop] + ":0").sizeFarm < farmMap
-							.get(glowWart[lowestID] + ":0").sizeFarm) {
-
-						lowestID = glowInGrassLoop;
-
-					}
-
-				}
-
-				lowestString = glowWart[lowestID] + ":0";
-
-				AllBlockInGameType wartBlock = allMyInventory.get("COBBLESTONE:0");
-				if (wartBlock == null) {
-					wartBlock = allMyInventory.get("STONE:0");
-
-				}
-				if (wartBlock == null) {
-					wartBlock = allMyInventory.get("DIRT:0");
-
-				}
-
-				if (wartBlock != null) {
-
-					if (wartBlock.curAmount > 0) {
-
-						// search
-
-						AllBlockInGameType plant = allMyInventory.get(lowestString);
-						if (plant != null) {
-							if (plant.curAmount > 0) {
-
-								// add new plant
-
-								Farm tmpFarm = farmMap.get(lowestString);
-								if (tmpFarm != null) {
-
-									tmpFarm.itemIdData = lowestString;
-									tmpFarm.countTick[tmpFarm.sizeFarm] = 0;
-									tmpFarm.sizeFarm++;
-
-									plant.curAmount--;
-									wartBlock.curAmount--;
-
-									
-
-									d.pl(curSecond + " > buy : " + tmpFarm.itemIdData + " , sizeFarm " + tmpFarm.sizeFarm);
-
-								}
-							}
-						}
-					}
-
-				}
 
 	}
-
-	public PlayerSimulating() {
-
-		// setup farmMap
-		String tmpAdd[] = new String[10];
-		tmpAdd[0] = "WHEAT";
-		tmpAdd[1] = "RED_MUSHROOM";
-		tmpAdd[2] = "BROWN_MUSHROOM";
-		tmpAdd[3] = "CACTUS";
-		tmpAdd[4] = "SUGAR_CANE";
-		tmpAdd[5] = "PUMPKIN";
-		tmpAdd[6] = "POTATO_ITEM";
-		tmpAdd[7] = "CARROT_ITEM";
-		tmpAdd[8] = "MELON";
-		tmpAdd[9] = "NETHER_STALK";
-
-		for (int i = 0; i < tmpAdd.length; i++) {
-			Farm x = new Farm();
-			x.itemIdData = tmpAdd[i] + ":0";
-			x.countTick[x.sizeFarm] = 0;
-
-			x.sizeFarm++;
-			/*
-			 * x.countTick = 0; x.amount = 0;
-			 */
-
-			farmMap.put(tmpAdd[i] + ":0", x);
-		}
-
-		// setup animalMap
-
-		byte tmpAdd2[] = new byte[5];
-		tmpAdd2[0] = 99; // pig
-		tmpAdd2[1] = 91; // sheep
-		tmpAdd2[2] = 92; // cow
-		tmpAdd2[3] = 93; // chicken
-		tmpAdd2[4] = 96; // cow mush room
-
-		for (int i = 0; i < tmpAdd2.length; i++) {
-			Animal x = new Animal();
-			x.itemId = "MONSTER_EGG";
-			x.data = tmpAdd2[i];
-			x.countTick = 0;
-
-			animalMap.put(x.data, x);
-		}
-
-		// setup allMyInventory
-
-		allMyInventory.clear();
-
-		for (int i = 0; i < Main.co.allBlockInGame.size(); i++) {
-			AllBlockInGameType x = Main.co.allBlockInGameAsList.get(i).copyIt();
-			x.curAmount = 0;
-
-			allMyInventory.put(x.theName + ":" + x.data, x);
-
-		}
-
-	}
-
-}
-
-// each plant has own hashmap
-class Farm {
-
-	// 1 block 1 plant
-	public String itemIdData = ""; // SEEDS:0 , RED_MUSHROOM:0 , BROWN_MUSHROOM ,
-								// CACTUS ,
-								// SUGAR_CANE , PUMPKIN , POTATO , WHEAT ,
-								// CARROT_ITEM , MELON , NETHER_STALK
-
-	public long countTick[] = new long[PlayerSimulating.MaxSizeOfFarm];
-
-	public int sizeFarm = 0;
-
-}
-
-class Animal {
-
-	public String itemId = "";
-	public byte data = 0;
-
-	public int amount = 0;
-	public long countTick = 0;
-
-	// COOKED_CHICKEN , EGG
-	// WOOL
-	// COOKED_BEEF cow , mushroom
-	// GRILLED_PORK pig
-
-	// MONSTER_EGG:90 pig
-	// MONSTER_EGG:91 sheep
-	// MONSTER_EGG:92 cow
-	// MONSTER_EGG:93 chicken
-	// MONSTER_EGG:96 cow mushroom
 
 }
