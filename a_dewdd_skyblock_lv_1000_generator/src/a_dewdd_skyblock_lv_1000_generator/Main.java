@@ -14,6 +14,8 @@ class HybridOverride extends Hybrid {
 		LinkedList<SellableType> tmpSell = new LinkedList<SellableType>();
 		LinkedList<LV1000Type> tmpLV = new LinkedList<LV1000Type>();
 
+		
+		
 		Main.co.dnaDecoder(dna, tmpAllShop, tmpSell, tmpLV);
 
 		boolean printPls = false;
