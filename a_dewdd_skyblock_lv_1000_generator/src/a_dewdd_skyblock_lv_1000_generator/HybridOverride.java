@@ -443,7 +443,7 @@ if (found == false) {
 
 		double fitCurLV = curLVLoop * 100;
 		double fitMoneyLeft = -Math.abs(ps.money);
-		double fitMaxMoney = Math.abs(psMaxMoney - Main.co.maxMoney);
+		double fitMaxMoney = -Math.abs(psMaxMoney - Main.co.maxMoney);
 
 		double fitAtTheEndItem = 0;
 
