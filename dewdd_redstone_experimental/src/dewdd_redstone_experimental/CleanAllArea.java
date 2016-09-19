@@ -31,7 +31,9 @@ public class CleanAllArea implements Runnable {
 			// recall own self
 			CleanAllArea caa = new CleanAllArea(redex, curId);
 			Bukkit.getScheduler().scheduleSyncDelayedTask(DigEventListener2.ac, caa, 1);
+			return;
 		}
 
+		dprint.r.printAll("Cleaning Done");
 	}
 }

@@ -1,6 +1,7 @@
 package dewdd_redstone_experimental;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.block.Block;
 
 public class CleanSubArea implements Runnable {
@@ -19,9 +20,21 @@ public class CleanSubArea implements Runnable {
 		Block hostBlock = null;
 		Block setBlock = null;
 
-		dprint.r.printAll("Cleaning curid " + curId);
+		if (curId % 100 == 0) {
+			dprint.r.printAll("Cleaning : curid " + curId);
+		}
 
 		AreaType at = redex.listEx.get(curId);
+		
+		// Clean Or Data
+		at.curTick = 0;
+		at.isRunning = false;
+		at.lastCheckScore = 0;
+		Redex.redstoneTimer = 0;
+		at.lastRedstoneActivity = Redex.redstoneTimer;
+		at.lastTimeBetter = Redex.redstoneTimer;
+		at.outOfRange = false;
+		at.score = 0;
 
 		boolean clean1 = false;
 
@@ -37,6 +50,16 @@ public class CleanSubArea implements Runnable {
 					int gz = at.loc.lz + (z - redex.start.loc.lz);
 
 					setBlock = at.world.getBlockAt(gx, gy, gz);
+
+					if (hostBlock.getType() == Material.BEACON) {
+						// remember start position
+						redex.beaconX = x - redex.start.loc.lx;
+						redex.beaconY = y;
+						redex.beaconZ = z - redex.start.loc.lz;
+						setBlock.setType(Material.AIR);
+
+						continue;
+					}
 
 					if (hostBlock.getType() == setBlock.getType() && hostBlock.getData() == setBlock.getData()) {
 						continue;

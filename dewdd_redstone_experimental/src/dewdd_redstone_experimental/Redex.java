@@ -14,13 +14,24 @@ import ga_optimization_api.Hybrid;
 import li.LXRXLZRZType;
 
 public class Redex {
+	// Clean
+	// Decode
+	// Activate Beacon
+	// Fitness
+	// update the best
+	// produce next gen
 	
 	
 	public static int maxPopulation = 1000;
-	public static long maxNothingBetterInTick = (60 * 5) * 20;
+	public static long maxNothingBetterInTick = (60 * 1) * 10; // 1 minutes
+	public static long maxNoRedstoneActivityInTick = (5 * 1) * 10;
 
 	public static String predex = "dewdd.redex.run";
 	public static int spaceBlockEachArea = 5;
+
+	public int beaconX = 0;
+	public int beaconY = 0;
+	public int beaconZ = 0;
 	
 	public static long redstoneTimer = 0;
 
@@ -34,15 +45,12 @@ public class Redex {
 
 	public LinkedList<AreaType> listEx = new LinkedList<AreaType>();
 
-	public Player player;
-
 	public ArrayList<Chromosome> dnaList;
 
 	public Hybrid hybrid;
 
-	public Redex(World world, Player player) {
+	public Redex(World world) {
 		this.world = world;
-		this.player = player;
 
 		hybrid = new Hybrid();
 		hybrid.setDnaLength(Redex.dnaLength);
@@ -136,10 +144,27 @@ public class Redex {
 
 		return -1;
 	}
+	
+	public void ActivateAllArea() {
+		ActivateAllArea caa = new ActivateAllArea(this);
+		Bukkit.getScheduler().scheduleSyncDelayedTask(DigEventListener2.ac, caa, 1);
+	}
+	
+
+	public void CheckAllLabDone() {
+		CheckAllLabDone caa = new CheckAllLabDone(this);
+		Bukkit.getScheduler().scheduleSyncDelayedTask(DigEventListener2.ac, caa, 1);
+	}
 
 	public void CleanAllArea() {
 
 		CleanAllArea caa = new CleanAllArea(this, 0);
+		Bukkit.getScheduler().scheduleSyncDelayedTask(DigEventListener2.ac, caa, 1);
+	}
+
+	public void FitnessAllArea() {
+
+		FitnessAllArea caa = new FitnessAllArea(this, 0);
 		Bukkit.getScheduler().scheduleSyncDelayedTask(DigEventListener2.ac, caa, 1);
 	}
 

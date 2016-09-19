@@ -3,6 +3,8 @@ package dewdd_redstone_experimental;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 
+import dewddtran.tr;
+
 public class FitnessSubArea implements Runnable {
 	private Redex redex;
 	private int curId = 0;
@@ -19,30 +21,38 @@ public class FitnessSubArea implements Runnable {
 		Block hostBlock = null;
 		Block setBlock = null;
 
-		dprint.r.printAll("Fitness curid " + curId);
+		dprint.r.printAll("Fitness : curid " + curId);
 
 		AreaType at = redex.listEx.get(curId);
 
-		int countTrue = 0;
-		int countFalse = 0;
+		double countTrue = 0;
+		double countFalse = 0;
 
-		boolean clean1 = false;
 
-		for (int x = redex.start.loc.lx; x <= redex.start.loc.rx; x++) {
 
-			for (int y = redex.start.loc.ly; y <= redex.start.loc.ry; y++) {
+		for (int x = redex.output.loc.lx; x <= redex.output.loc.rx; x++) {
 
-				for (int z = redex.start.loc.lz; z <= redex.start.loc.rz; z++) {
+			for (int y = redex.output.loc.ly; y <= redex.output.loc.ry; y++) {
+
+				for (int z = redex.output.loc.lz; z <= redex.output.loc.rz; z++) {
 					hostBlock = at.world.getBlockAt(x, y, z);
 
-					int gx = at.loc.lx + (x - redex.start.loc.lx);
+					int gx = at.loc.lx + (x - redex.output.loc.lx);
 					int gy = at.loc.ly + (y);
-					int gz = at.loc.lz + (z - redex.start.loc.lz);
+					int gz = at.loc.lz + (z - redex.output.loc.lz);
 
 					setBlock = at.world.getBlockAt(gx, gy, gz);
 
 					if (hostBlock.getType() == Material.AIR) {
 						continue;
+					}
+
+					if (hostBlock.getType() == Material.BED) {
+						dprint.r.printAll(
+								tr.locationToString(hostBlock.getLocation()) + " = " + hostBlock.getType().name() + ":"
+										+ hostBlock.getData() + " to " + tr.locationToString(setBlock.getLocation())
+										+ " = " + setBlock.getType().name() + ":" + setBlock.getData());
+
 					}
 
 					if (hostBlock.getType() == setBlock.getType() && hostBlock.getData() == setBlock.getData()) {
@@ -61,8 +71,10 @@ public class FitnessSubArea implements Runnable {
 			}
 		}
 
-		double score = (countTrue * 100) / (countTrue + countFalse);
+		double score = (countTrue / (countTrue + countFalse)) * 100;
 		at.score = score;
 
+		dprint.r.printAll("Score " + curId  + " = " + at.score);
+		
 	}
 }

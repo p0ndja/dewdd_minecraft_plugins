@@ -42,6 +42,9 @@ class Delayed implements Runnable {
 
 		}
 
+		if (DigEventListener2.redex == null) {
+			DigEventListener2.redex = new Redex(Bukkit.getWorld("world"));
+		}
 		RedstoneTimer ti = new RedstoneTimer();
 
 		Bukkit.getScheduler().scheduleSyncRepeatingTask(DigEventListener2.ac, ti, 0, 2);
@@ -55,7 +58,7 @@ public class DigEventListener2 implements Listener {
 
 	Random rnd = new Random();
 
-	Redex redex;
+	public static Redex redex;
 
 	public DigEventListener2() {
 		Delayed ti = new Delayed();
@@ -81,9 +84,6 @@ public class DigEventListener2 implements Listener {
 		Player player = e.getPlayer();
 		String m[] = e.getMessage().split("\\s+");
 
-		if (redex == null) {
-			redex = new Redex(player.getWorld(), player);
-		}
 		CommandRuning newThread = new CommandRuning(m, player, redex);
 		Bukkit.getScheduler().scheduleSyncDelayedTask(ac, newThread);
 
@@ -94,6 +94,15 @@ public class DigEventListener2 implements Listener {
 		if (!isrunworld(e.getBlock().getWorld().getName())) {
 			return;
 		}
+		
+		Block b = e.getBlock();
+
+		int curid = redex.getIdOfThisLocation(b.getLocation());
+		if (curid == -1) {
+			return;
+		}
+		
+		redex.listEx.get(curid).lastRedstoneActivity = Redex.redstoneTimer;
 	}
 
 	/*
@@ -137,6 +146,7 @@ public class DigEventListener2 implements Listener {
 				// game Over
 
 				redex.listEx.get(curid).isRunning = false;
+				redex.listEx.get(curid).outOfRange = true;
 				e.setCancelled(true);
 				return;
 			}
@@ -152,6 +162,7 @@ public class DigEventListener2 implements Listener {
 					// game Over
 
 					redex.listEx.get(curid).isRunning = false;
+					redex.listEx.get(curid).outOfRange = true;
 					e.setCancelled(true);
 
 					return;
@@ -162,7 +173,7 @@ public class DigEventListener2 implements Listener {
 		
 		
 
-		 redex.listEx.get(curid).lastTimeCircuit = Redex.redstoneTimer;
+		 redex.listEx.get(curid).lastRedstoneActivity = Redex.redstoneTimer;
 
 		/*
 		 * 

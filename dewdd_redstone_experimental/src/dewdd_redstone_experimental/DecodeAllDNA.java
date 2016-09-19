@@ -31,7 +31,10 @@ public class DecodeAllDNA implements Runnable {
 			// recall own self
 			DecodeAllDNA caa = new DecodeAllDNA(redex, curId);
 			Bukkit.getScheduler().scheduleSyncDelayedTask(DigEventListener2.ac, caa, 1);
+			return;
 		}
 
+		dprint.r.printAll("Decoding Done");
+		
 	}
 }

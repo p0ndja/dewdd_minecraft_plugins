@@ -23,9 +23,13 @@ public class DecodeSubDNA implements Runnable {
 		Block hostBlock = null;
 		Block setBlock = null;
 
-		dprint.r.printAll("Decoding curid " + curId);
+		if (curId % 100 == 0) {
+		dprint.r.printAll("Decoding : curid " + curId);
 
-		dprint.r.printAll("dnaList Length " + redex.dnaList.size());
+		}
+		
+		
+		//dprint.r.printAll("dnaList Length " + redex.dnaList.size());
 		AreaType at = redex.listEx.get(curId);
 		at.isRunning = true;
 		Chromosome dna = redex.dnaList.get(curId);
@@ -130,7 +134,7 @@ public class DecodeSubDNA implements Runnable {
 				b2.setData(pistonFace);
 
 			}
-			dprint.r.printC(posx + "," + posy + "," + posz + " = " + setType.name());
+			//dprint.r.printC(posx + "," + posy + "," + posz + " = " + setType.name());
 
 			startPoint += 4;
 		}

@@ -15,9 +15,11 @@ public class AreaType {
 
 	public long curTick = 0;
 	public long lastTimeBetter = 0;
-	public long lastTimeCircuit = 0;
+	public long lastRedstoneActivity = 0;
+	public boolean outOfRange = false;
 
 	public double score = 0;
+	public double lastCheckScore = 0;
 
 	public Chromosome chro;
 
