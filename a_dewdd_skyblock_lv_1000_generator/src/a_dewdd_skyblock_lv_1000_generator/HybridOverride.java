@@ -9,9 +9,10 @@ import java.util.LinkedList;
 import java.util.Random;
 
 import ga_optimization_api.Chromosome;
+import ga_optimization_api.Hybrid;
 import ga_optimization_api.HybridMultithreading;
 
-public class HybridOverride extends HybridMultithreading {
+public class HybridOverride extends Hybrid {
 
 	public static int maxUnUnique = 0;
 
@@ -22,7 +23,7 @@ public class HybridOverride extends HybridMultithreading {
 
 		Chromosome ceo = new Chromosome();
 		ceo.dna = new double[Core.dnaSize];
-		ceo.lastBestFitness = Double.MIN_VALUE;
+	
 
 		try {
 
@@ -47,12 +48,12 @@ public class HybridOverride extends HybridMultithreading {
 				m = strLine.split(":");
 				// Print the content on the console
 
-				if (ceo.lastBestFitness == Double.MIN_VALUE) {
-					ceo.lastBestFitness = Double.parseDouble(m[0].split(" ")[0]);
-				} else {
+			
+					ceo.fitness = Double.parseDouble(m[0].split(" ")[0]);
+			
 					ceo.dna[curDnaID] = Double.parseDouble(m[0]);
 					curDnaID++;
-				}
+				
 			}
 
 			d.pl(" Loaded " + filena);
@@ -86,7 +87,7 @@ public class HybridOverride extends HybridMultithreading {
 			Chromosome[] gem = new Chromosome[cho.size()];
 			for (int i = 0; i < cho.size(); i++) {
 				gem[i] = new Chromosome();
-				gem[i].lastBestFitness = cho.get(i).lastBestFitness;
+				gem[i].fitness = cho.get(i).fitness;
 				gem[i].dna = cho.get(i).dna;
 			}
 
@@ -96,7 +97,7 @@ public class HybridOverride extends HybridMultithreading {
 				flag = false; // set flag to false awaiting a possible swap
 				for (int j = 0; j < gem.length - 1; j++) {
 
-					if (gem[j].lastBestFitness < gem[j + 1].lastBestFitness) // change
+					if (gem[j].fitness < gem[j + 1].fitness) // change
 																				// to
 																				// >
 																				// for
@@ -108,15 +109,15 @@ public class HybridOverride extends HybridMultithreading {
 						gem[j] = gem[j + 1].copyChromosome();
 						gem[j + 1] = tmpgem;
 						flag = true; // shows a swap occurred
-						d.pl("bubble sort  " + j + " and " + (j + 1) + " > " + gem[j].lastBestFitness + ","
-								+ gem[j + 1].lastBestFitness);
+						d.pl("bubble sort  " + j + " and " + (j + 1) + " > " + gem[j].fitness + ","
+								+ gem[j + 1].fitness);
 					}
 
 				}
 			}
 
 			for (int i = 0; i < Main.populationSize; i++) {
-				d.pl("sorted best fitness = " + i + " = " + cho.get(i).lastBestFitness);
+				d.pl("sorted best fitness = " + i + " = " + cho.get(i).fitness);
 
 			}
 
@@ -573,7 +574,9 @@ public class HybridOverride extends HybridMultithreading {
 
 			tmpFitness = fitCurLV + fitMoneyLeft + fitMaxMoney + fitAtTheEndItem;
 			tmpFitness = fitMoneyLeft + fitMaxMoney + fitAtTheEndItem;
+			tmpFitness = fitMoneyLeft  + fitAtTheEndItem;
 
+			
 			d.pl("fitness " + tmpFitness + ", f curLV " + fitCurLV + " , f money left " + fitMoneyLeft
 					+ " ,f Max money " + fitMaxMoney + " , fit at the end " + fitAtTheEndItem);
 

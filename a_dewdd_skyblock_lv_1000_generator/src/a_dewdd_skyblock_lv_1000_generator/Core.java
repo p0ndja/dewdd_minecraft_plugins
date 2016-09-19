@@ -67,9 +67,9 @@ public class Core {
 	public static int minShopSize = 3;
 	public static int swapMultipy = 100;
 
-	public static double SellMaxCost = 10;
+	public static double SellMaxCost = 100;
 
-	public static double ShopMaxCost = 100;
+	public static double ShopMaxCost = 1000;
 
 	public static double maxMoney = 100000;
 
