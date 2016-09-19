@@ -31,7 +31,6 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import api_skyblock.api_skyblock;
-import dewddtps.tps;
 import dewddtran.tr;
 
 public class dewset extends dewset_interface {
@@ -202,7 +201,7 @@ public class dewset extends dewset_interface {
 		public createmonster_c(Player player, EntityType EntityTypeGot, int count) {
 			this.player = player;
 			this.EntityTypeGot = EntityTypeGot;
-			Bukkit.getScheduler().scheduleSyncDelayedTask(ac, this);
+			Bukkit.getScheduler().scheduleSyncDelayedTask(ac, this, sleeptime);
 		}
 
 		@Override
@@ -267,7 +266,7 @@ public class dewset extends dewset_interface {
 			this.player123 = player123;
 			this.countja = countja;
 
-			Bukkit.getScheduler().scheduleSyncDelayedTask(ac, this);
+			Bukkit.getScheduler().scheduleSyncDelayedTask(ac, this, sleeptime);
 		}
 
 		@Override
@@ -524,11 +523,7 @@ public class dewset extends dewset_interface {
 
 			Block block = player.getLocation().getBlock();
 
-			if (dewddtps.tps.getTPS() < 17) {
-				dprint.r.printAll("ptdew&dewdd : " + tr.gettr("tps_below_than_17") + dewddtps.tps.getTPS());
-
-				return;
-			}
+			
 
 			if (selectblock[getid] == null) {
 				player.sendMessage(dprint.r.color("ptdew&dewdd : dewa " + tr.gettr("dewa_diamond_sword_null")));
@@ -630,7 +625,7 @@ public class dewset extends dewset_interface {
 			aer.amount = amount;
 
 			aer.getid = getid;
-			Bukkit.getScheduler().scheduleSyncDelayedTask(ac, aer);
+			Bukkit.getScheduler().scheduleSyncDelayedTask(ac, aer, sleeptime);
 
 		}
 
@@ -717,7 +712,7 @@ public class dewset extends dewset_interface {
 								// zlx + " mx " + mx + "," + my + "," + mz);
 
 								endtime = System.currentTimeMillis();
-								if (endtime - starttime > runtime || dewddtps.tps.getTPS() <= 18) {
+								if (endtime - starttime > runtime ) {
 
 									dewa_thread xgn2 = new dewa_thread();
 
@@ -750,7 +745,7 @@ public class dewset extends dewset_interface {
 									dprint.r.printC("low " + lx + " , " + ly + " , " + lz + " high " + mx + "," + my
 											+ "," + mz);
 
-									Bukkit.getScheduler().scheduleSyncDelayedTask(ac, xgn2, 50L);
+									Bukkit.getScheduler().scheduleSyncDelayedTask(ac, xgn2, sleeptime);
 
 									return;
 								}
@@ -856,7 +851,7 @@ public class dewset extends dewset_interface {
 			this.handid = handid;
 			this.handdata = handdata;
 
-			Bukkit.getScheduler().scheduleSyncDelayedTask(ac, this);
+			Bukkit.getScheduler().scheduleSyncDelayedTask(ac, this, sleeptime);
 		}
 
 		@Override
@@ -1063,7 +1058,7 @@ public class dewset extends dewset_interface {
 
 		public dewbuydelete_c(Player player) {
 			this.player = player;
-			Bukkit.getScheduler().scheduleSyncDelayedTask(ac, this);
+			Bukkit.getScheduler().scheduleSyncDelayedTask(ac, this, sleeptime);
 
 		}
 
@@ -1104,7 +1099,7 @@ public class dewset extends dewset_interface {
 
 		public dewbuyremove_c(Player player) {
 			this.player = player;
-			Bukkit.getScheduler().scheduleSyncDelayedTask(ac, this);
+			Bukkit.getScheduler().scheduleSyncDelayedTask(ac, this, sleeptime);
 		}
 
 		@Override
@@ -1160,7 +1155,7 @@ public class dewset extends dewset_interface {
 		public dewbuyzone_c(Player player, Block block2) {
 			this.player = player;
 			this.block2 = block2;
-			Bukkit.getScheduler().scheduleSyncDelayedTask(ac, this);
+			Bukkit.getScheduler().scheduleSyncDelayedTask(ac, this, sleeptime);
 		}
 
 		@Override
@@ -1279,11 +1274,7 @@ public class dewset extends dewset_interface {
 
 			// Block bz = new Block();
 
-			if (dewddtps.tps.getTPS() < 17) {
-				dprint.r.printAll("ptdew&dewdd : dewcopy " + tr.gettr("tps_below_than_17") + dewddtps.tps.getTPS());
-
-				return;
-			}
+			
 
 			dprint.r.printAll("ptdew&dewdd : '" + player.getName() + "'" + tr.gettr("starting") + " dewcopy "
 					+ player.getItemInHand().getTypeId() + ":" + player.getItemInHand().getData());
@@ -1350,7 +1341,7 @@ public class dewset extends dewset_interface {
 			this.handid = handid;
 			this.handdata = handdata;
 
-			Bukkit.getScheduler().scheduleSyncDelayedTask(ac, this);
+			Bukkit.getScheduler().scheduleSyncDelayedTask(ac, this, sleeptime);
 
 		}
 
@@ -1416,7 +1407,7 @@ public class dewset extends dewset_interface {
 
 		public dewdig_c(Player player) {
 			this.player = player;
-			Bukkit.getScheduler().scheduleSyncDelayedTask(ac, this);
+			Bukkit.getScheduler().scheduleSyncDelayedTask(ac, this, sleeptime);
 		}
 
 		@Override
@@ -1491,7 +1482,7 @@ public class dewset extends dewset_interface {
 			this.handid = handid;
 			this.handdata = handdata;
 
-			Bukkit.getScheduler().scheduleSyncDelayedTask(ac, this);
+			Bukkit.getScheduler().scheduleSyncDelayedTask(ac, this, sleeptime);
 		}
 
 		@Override
@@ -1526,7 +1517,7 @@ public class dewset extends dewset_interface {
 
 		public dewextend_c(Player player) {
 			this.player = player;
-			Bukkit.getScheduler().scheduleSyncDelayedTask(ac, this);
+			Bukkit.getScheduler().scheduleSyncDelayedTask(ac, this, sleeptime);
 		}
 
 		@Override
@@ -1604,7 +1595,7 @@ public class dewset extends dewset_interface {
 
 			dewfill_thread aer = new dewfill_thread(player, handid, handdata, mx, my, mz, lx, ly, lz, lx, ly, lz);
 
-			Bukkit.getScheduler().scheduleSyncDelayedTask(ac, aer);
+			Bukkit.getScheduler().scheduleSyncDelayedTask(ac, aer, sleeptime);
 
 		}
 	}
@@ -1656,7 +1647,7 @@ public class dewset extends dewset_interface {
 					while (zlx <= mz) {
 
 						endtime = System.currentTimeMillis();
-						if (endtime - starttime > runtime || dewddtps.tps.getTPS() <= 18) {
+						if (endtime - starttime > runtime ) {
 
 							dewfill_thread xgn2 = new dewfill_thread(player, handid, handdata, mx, my, mz, lx, ly, lz,
 									xlx, ylx, zlx);
@@ -1665,7 +1656,7 @@ public class dewset extends dewset_interface {
 							dprint.r.printC(
 									"low " + lx + " , " + ly + " , " + lz + " high " + mx + "," + my + "," + mz);
 
-							Bukkit.getScheduler().scheduleSyncDelayedTask(ac, xgn2, 50L);
+							Bukkit.getScheduler().scheduleSyncDelayedTask(ac, xgn2, sleeptime);
 
 							return;
 						}
@@ -1803,7 +1794,7 @@ public class dewset extends dewset_interface {
 		public dewselectcube_c(Player player, int rad) {
 			this.player = player;
 			this.rad = rad;
-			Bukkit.getScheduler().scheduleSyncDelayedTask(ac, this);
+			Bukkit.getScheduler().scheduleSyncDelayedTask(ac, this, sleeptime);
 		}
 
 		@Override
@@ -1842,7 +1833,7 @@ public class dewset extends dewset_interface {
 
 		public dewselectprotect_c(Player player) {
 			this.player = player;
-			Bukkit.getScheduler().scheduleSyncDelayedTask(ac, this);
+			Bukkit.getScheduler().scheduleSyncDelayedTask(ac, this, sleeptime);
 		}
 
 		@Override
@@ -1929,11 +1920,7 @@ public class dewset extends dewset_interface {
 				return;
 			}
 
-			if (dewddtps.tps.getTPS() < 17) {
-				dprint.r.printAll("ptdew&dewdd : dewset " + tr.gettr("tps_below_than_17") + dewddtps.tps.getTPS());
-
-				return;
-			}
+			
 
 			// player.sendMessage(dprint.r.color(". " + e1 + "," + e2 + "|" + e3
 			// + "," + e4);
@@ -2060,7 +2047,7 @@ public class dewset extends dewset_interface {
 						blb = player.getWorld().getBlockAt(xlx, ylx, zlx);
 
 						endtime = System.currentTimeMillis();
-						if (endtime - starttime > runtime || dewddtps.tps.getTPS() <= 18) {
+						if (endtime - starttime > runtime ) {
 
 							dewset_thread xgn2 =
 
@@ -2071,7 +2058,7 @@ public class dewset extends dewset_interface {
 							dprint.r.printC(
 									"low " + lx + " , " + ly + " , " + lz + " high " + mx + "," + my + "," + mz);
 
-							Bukkit.getScheduler().scheduleSyncDelayedTask(ac, xgn2, 50L);
+							Bukkit.getScheduler().scheduleSyncDelayedTask(ac, xgn2, sleeptime);
 
 							return;
 						}
@@ -2217,7 +2204,7 @@ public class dewset extends dewset_interface {
 			// , int lx , int ly , int lz , int xlx , int ylx , int zlx , int
 			// getid , boolean isfillmode
 
-			Bukkit.getScheduler().scheduleSyncDelayedTask(ac, aer);
+			Bukkit.getScheduler().scheduleSyncDelayedTask(ac, aer, sleeptime);
 
 		}
 	}
@@ -2292,7 +2279,7 @@ public class dewset extends dewset_interface {
 							continue;
 						}
 						endtime = System.currentTimeMillis();
-						if (endtime - starttime > runtime || dewddtps.tps.getTPS() <= 18) {
+						if (endtime - starttime > runtime ) {
 
 							dewsetblock_thread xgn2 = new dewsetblock_thread(player, handid, handdata, mx, my, mz, lx,
 									ly, lz, xlx, ylx, zlx, getid, isfillmode);
@@ -2410,7 +2397,7 @@ public class dewset extends dewset_interface {
 			// , int lx , int ly , int lz , int xlx , int ylx , int zlx , int
 			// getid , boolean isfillmode
 
-			Bukkit.getScheduler().scheduleSyncDelayedTask(ac, aer);
+			Bukkit.getScheduler().scheduleSyncDelayedTask(ac, aer, sleeptime);
 
 		}
 	}
@@ -2465,7 +2452,7 @@ public class dewset extends dewset_interface {
 					while (zlx <= mz) {
 
 						endtime = System.currentTimeMillis();
-						if (endtime - starttime > runtime || dewddtps.tps.getTPS() <= 18) {
+						if (endtime - starttime > runtime ) {
 
 							dewsetl_thread xgn2 = new dewsetl_thread(player, handid, handdata, mx, my, mz, lx, ly, lz,
 									xlx, ylx, zlx, getid);
@@ -2536,7 +2523,7 @@ public class dewset extends dewset_interface {
 
 		public dewsetprivate_c(Player player) {
 			this.player = player;
-			Bukkit.getScheduler().scheduleSyncDelayedTask(ac, this);
+			Bukkit.getScheduler().scheduleSyncDelayedTask(ac, this, sleeptime);
 		}
 
 		@Override
@@ -2660,7 +2647,7 @@ public class dewset extends dewset_interface {
 			// , int lx , int ly , int lz , int xlx , int ylx , int zlx , int
 			// getid , boolean isfillmode
 
-			Bukkit.getScheduler().scheduleSyncDelayedTask(ac, aer);
+			Bukkit.getScheduler().scheduleSyncDelayedTask(ac, aer, sleeptime);
 
 		}
 	}
@@ -2729,7 +2716,7 @@ public class dewset extends dewset_interface {
 						}
 
 						endtime = System.currentTimeMillis();
-						if (endtime - starttime > runtime || dewddtps.tps.getTPS() <= 18) {
+						if (endtime - starttime > runtime ) {
 
 							dewsetroom_thread xgn2 = new dewsetroom_thread(player, handid, handdata, mx, my, mz, lx, ly,
 									lz, xlx, ylx, zlx, getid, isfillmode);
@@ -2847,7 +2834,7 @@ public class dewset extends dewset_interface {
 			// , int lx , int ly , int lz , int xlx , int ylx , int zlx , int
 			// getid , boolean isfillmode
 
-			Bukkit.getScheduler().scheduleSyncDelayedTask(ac, aer);
+			Bukkit.getScheduler().scheduleSyncDelayedTask(ac, aer, sleeptime);
 
 		}
 	}
@@ -2911,7 +2898,7 @@ public class dewset extends dewset_interface {
 						}
 
 						endtime = System.currentTimeMillis();
-						if (endtime - starttime > runtime || dewddtps.tps.getTPS() <= 18) {
+						if (endtime - starttime > runtime ) {
 
 							dewsetwall_thread xgn2 = new dewsetwall_thread(player, handid, handdata, mx, my, mz, lx, ly,
 									lz, xlx, ylx, zlx, getid, isfillmode);
@@ -2921,7 +2908,7 @@ public class dewset extends dewset_interface {
 							dprint.r.printC(
 									"low " + lx + " , " + ly + " , " + lz + " high " + mx + "," + my + "," + mz);
 
-							Bukkit.getScheduler().scheduleSyncDelayedTask(ac, xgn2, randomG.nextInt(500) + 50);
+							Bukkit.getScheduler().scheduleSyncDelayedTask(ac, xgn2, sleeptime);
 
 							return;
 						}
@@ -2971,7 +2958,7 @@ public class dewset extends dewset_interface {
 			this.player = player;
 			this.handid = handid;
 			this.handdata = handdata;
-			Bukkit.getScheduler().scheduleSyncDelayedTask(ac, this);
+			Bukkit.getScheduler().scheduleSyncDelayedTask(ac, this, sleeptime);
 		}
 
 		@Override
@@ -3269,7 +3256,7 @@ public class dewset extends dewset_interface {
 			// , int lx , int ly , int lz , int xlx , int ylx , int zlx , int
 			// getid , boolean isfillmode
 
-			Bukkit.getScheduler().scheduleSyncDelayedTask(ac, aer);
+			Bukkit.getScheduler().scheduleSyncDelayedTask(ac, aer, sleeptime);
 
 		}
 	}
@@ -3337,7 +3324,7 @@ public class dewset extends dewset_interface {
 					while (zlx <= mz) {
 
 						endtime = System.currentTimeMillis();
-						if (endtime - starttime > runtime || dewddtps.tps.getTPS() <= 18) {
+						if (endtime - starttime > runtime ) {
 
 							dewwallcircle_thread xgn2 = new dewwallcircle_thread(player, handid, handdata, mx, my, mz,
 									lx, ly, lz, xlx, ylx, zlx, getid, isfillmode, midr, midtx, midty, midtz);
@@ -3347,7 +3334,7 @@ public class dewset extends dewset_interface {
 							dprint.r.printC(
 									"low " + lx + " , " + ly + " , " + lz + " high " + mx + "," + my + "," + mz);
 
-							Bukkit.getScheduler().scheduleSyncDelayedTask(ac, xgn2, 50L);
+							Bukkit.getScheduler().scheduleSyncDelayedTask(ac, xgn2, sleeptime);
 
 							return;
 						}
@@ -3501,7 +3488,7 @@ public class dewset extends dewset_interface {
 
 	class hideshowrun_c implements Runnable {
 		public hideshowrun_c(Player player) {
-			Bukkit.getScheduler().scheduleSyncDelayedTask(ac, this);
+			Bukkit.getScheduler().scheduleSyncDelayedTask(ac, this, sleeptime);
 		}
 
 		@Override
@@ -3765,11 +3752,7 @@ public class dewset extends dewset_interface {
 				return;
 			}
 
-			if (dewddtps.tps.getTPS() < 17) {
-				dprint.r.printAll("ptdew&dewdd : " + tr.gettr("tps_below_than_17") + dewddtps.tps.getTPS());
-
-				return;
-			}
+		
 
 			if (e.equalsIgnoreCase("dewdown") || e.equalsIgnoreCase("dn") || e.equalsIgnoreCase("down")) {
 				dewdown(player, a1, a2);
@@ -4018,7 +4001,8 @@ public class dewset extends dewset_interface {
 
 	// cutwoodsub
 
-	public int runtime = 500;
+	public int runtime = 1000;
+	public long sleeptime = 10L;
 
 	public Block selectblock[] = new Block[selectmax + 1];
 
@@ -4758,7 +4742,7 @@ public class dewset extends dewset_interface {
 
 		dewfill_mom aer = new dewfill_mom(player, handid, handdata);
 
-		Bukkit.getScheduler().scheduleSyncDelayedTask(ac, aer);
+		Bukkit.getScheduler().scheduleSyncDelayedTask(ac, aer, sleeptime);
 
 	}
 
@@ -4922,21 +4906,21 @@ public class dewset extends dewset_interface {
 	public void dewset(Player player, int e1, byte e2, int e3, byte e4, boolean invert) {
 		dewset_mom aer = new dewset_mom(player, e1, e2, e3, e4, invert);
 
-		Bukkit.getScheduler().scheduleSyncDelayedTask(ac, aer);
+		Bukkit.getScheduler().scheduleSyncDelayedTask(ac, aer, sleeptime);
 	}
 
 	public void dewsetblock(Player player, int handid, byte handdata, boolean isfillmode) {
 
 		dewsetblock_mom aer = new dewsetblock_mom(player, handid, handdata, isfillmode);
 
-		Bukkit.getScheduler().scheduleSyncDelayedTask(ac, aer);
+		Bukkit.getScheduler().scheduleSyncDelayedTask(ac, aer, sleeptime);
 
 	}
 
 	public void dewsetl(Player player, int handid, byte handdata) {
 
 		dewsetl_mom aer = new dewsetl_mom(player, handid, handdata);
-		Bukkit.getScheduler().scheduleSyncDelayedTask(ac, aer);
+		Bukkit.getScheduler().scheduleSyncDelayedTask(ac, aer, sleeptime);
 
 	}
 
@@ -4944,7 +4928,7 @@ public class dewset extends dewset_interface {
 		dewselectcube(player, 3);
 
 		dewsetl_mom aer = new dewsetl_mom(player, handid, handdata);
-		Bukkit.getScheduler().scheduleSyncDelayedTask(ac, aer);
+		Bukkit.getScheduler().scheduleSyncDelayedTask(ac, aer, sleeptime);
 
 	}
 
@@ -4956,7 +4940,7 @@ public class dewset extends dewset_interface {
 
 		dewsetroom_mom aer = new dewsetroom_mom(player, handid, handdata, isfillmode);
 
-		Bukkit.getScheduler().scheduleSyncDelayedTask(ac, aer);
+		Bukkit.getScheduler().scheduleSyncDelayedTask(ac, aer, sleeptime);
 
 	}
 
@@ -4964,7 +4948,7 @@ public class dewset extends dewset_interface {
 
 		dewsetwall_mom aer = new dewsetwall_mom(player, handid, handdata, isfillmode);
 
-		Bukkit.getScheduler().scheduleSyncDelayedTask(ac, aer);
+		Bukkit.getScheduler().scheduleSyncDelayedTask(ac, aer, sleeptime);
 
 	}
 
@@ -4982,7 +4966,7 @@ public class dewset extends dewset_interface {
 
 		dewwallcircle_mom aer = new dewwallcircle_mom(player, handid, handdata, isfillmode);
 
-		Bukkit.getScheduler().scheduleSyncDelayedTask(ac, aer);
+		Bukkit.getScheduler().scheduleSyncDelayedTask(ac, aer, sleeptime);
 
 	}
 
@@ -5397,7 +5381,7 @@ public class dewset extends dewset_interface {
 	public void gotohell(Player player, Location lo1, Location lo2) {
 		// copy to hell
 		gotohellt ae = new gotohellt(player, lo1, lo2);
-		Bukkit.getScheduler().scheduleSyncDelayedTask(ac, ae);
+		Bukkit.getScheduler().scheduleSyncDelayedTask(ac, ae, sleeptime);
 	}
 
 	// sandmelon
@@ -5491,15 +5475,7 @@ public class dewset extends dewset_interface {
 		@Override
 		public void run() {
 
-			while (tps.getTPS() < 19) {
-
-				try {
-					Thread.sleep(rnd.nextInt(1000));
-				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			}
+		
 
 			Bukkit.getScheduler().scheduleSyncDelayedTask(ac, ab, rnd.nextInt(100));
 
@@ -5527,7 +5503,7 @@ public class dewset extends dewset_interface {
 	class chestabsorb_c implements Runnable {
 
 		public chestabsorb_c() {
-			Bukkit.getScheduler().scheduleSyncDelayedTask(ac, this);
+			Bukkit.getScheduler().scheduleSyncDelayedTask(ac, this, sleeptime);
 		}
 
 		@Override
@@ -5653,7 +5629,7 @@ public class dewset extends dewset_interface {
 	class chestabsorb_c2 implements Runnable {
 
 		public chestabsorb_c2() {
-			Bukkit.getScheduler().scheduleSyncDelayedTask(ac, this, 1);
+			Bukkit.getScheduler().scheduleSyncDelayedTask(ac, this, sleeptime);
 		}
 
 		@Override
@@ -6362,7 +6338,7 @@ public class dewset extends dewset_interface {
 		// auto give item" + tr.gettr("for") + "all player on server
 		redtorchchestt ee = new redtorchchestt(block, player);
 
-		Bukkit.getScheduler().scheduleSyncDelayedTask(ac, ee);
+		Bukkit.getScheduler().scheduleSyncDelayedTask(ac, ee, sleeptime);
 
 	}
 
@@ -6385,11 +6361,7 @@ public class dewset extends dewset_interface {
 			return;
 		}
 
-		if (dewddtps.tps.getTPS() < 17) {
-			dprint.r.printAll("ptdew&dewdd : dewset " + tr.gettr("tps_below_than_17") + dewddtps.tps.getTPS());
-
-			return;
-		}
+		
 
 		if (a1 == 0)
 			if (player.hasPermission(pmaindelete) == false) {
