@@ -7,8 +7,7 @@ public class AllBlockInGameType {
 	public boolean isBlock = false;
 	
 	public int curAmount = 0;
-	
-	public boolean useIt = false;
+
 	
 	
 	public AllBlockInGameType copyIt() {
