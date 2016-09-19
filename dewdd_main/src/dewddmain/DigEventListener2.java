@@ -2857,7 +2857,7 @@ public class DigEventListener2 implements Listener {
 
 		Player player = event.getPlayer();
 		if (event.getNewGameMode() == GameMode.CREATIVE)
-			if (player.hasPermission("essentials.gamemode") == false) {
+			if ((!dewddadmin.is2admin(player))) {
 				event.setCancelled(true);
 				player.setGameMode(GameMode.SURVIVAL);
 				/*
