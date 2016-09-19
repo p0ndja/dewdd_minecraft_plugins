@@ -10,19 +10,42 @@ public class main {
 
 	public static void main(String[] args) {
 		
+	
+		
 		Core co = new Core();
-		co.loadAndSortSellableFileAndSaveIt();
+		co.loadSellableFile();
 		LinkedList<SellableType> sorted = co.sortSell(co.sell);
 		
-		d.pl("");
+			d.pl("");
+			d.pl("");
+		d.pl("sellable max " + sorted.size());
 		
 		for (int i = 0 ; i < sorted.size() ; i++ ){
-			d.pl("" + i + " = " + sorted.get(i).theName  +
+			d.pl( sorted.get(i).theName  +
 					
 					":" + sorted.get(i).data + ":" + sorted.get(i).maxStack +
 					":" + co.convertTimeToString( sorted.get(i).timeToGet) ) ;
 			
 		}
+		
+		d.pl("");
+		d.pl("*******************");
+		d.pl("");
+		
+		co.loadMissionBlockFile();
+		LinkedList<MissionType>  mis = co.mission;
+		
+		d.pl("*** mission size = " + mis.size());
+		
+		/*for (int i = 0 ; i < mis.size() ; i++ ){
+			d.pl( mis.get(i).theName  +
+					
+					":" + mis.get(i).data + ":" + mis.get(i).maxStack +
+					":" + ( mis.get(i).isBlock) ) ;
+			
+		}*/
+		
+		
 		
 		
 		Hybrid hy = new Hybrid();
