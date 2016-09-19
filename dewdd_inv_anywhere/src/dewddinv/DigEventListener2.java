@@ -724,6 +724,7 @@ public class DigEventListener2 implements Listener {
 
 			DewInv tmp = inv.get(getid);
 			tmp.now = -1;
+			tmp.position.clear();
 
 			while ((strLine = br.readLine()) != null) {
 
