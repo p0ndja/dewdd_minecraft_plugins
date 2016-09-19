@@ -2,7 +2,17 @@ package a_dewdd_skyblock_lv_1000_generator;
 
 import java.util.LinkedList;
 
+
+
 import ga_optimization_api.Hybrid;
+
+class HybridOverride extends Hybrid{
+	
+	@Override
+	public double fitness(double dna[]) {
+		return 0;
+	}
+}
 
 public class main {
 	

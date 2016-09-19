@@ -6,6 +6,8 @@ public class SellableType {
 	public int maxStack;
 	public double timeToGet;
 	
+	public double sellPerPrice;
+	
 
 	
 	public SellableType copyIt() {
@@ -14,6 +16,7 @@ public class SellableType {
 		abc.data   =  this.data;
 		abc.maxStack = this.maxStack;
 		abc.timeToGet = this.timeToGet;
+		abc.sellPerPrice = this.sellPerPrice;
 		
 		return abc;
 	}
