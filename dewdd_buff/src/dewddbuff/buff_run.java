@@ -120,64 +120,8 @@ public class buff_run implements Listener {
 
 	Random rnd = new Random();
 
-	class clearItem1000 implements Runnable {
-		private Inventory inv;
 
-		public clearItem1000(Inventory inv) {
-			this.inv = inv;
-			Bukkit.getScheduler().scheduleSyncDelayedTask(ac, this,1);
-		}
-
-		@Override
-		public void run() {
-
-			if (inv == null) {
-				return;
-			}
-
-			for (int i = 0; i < inv.getSize(); i++) {
-				ItemStack itm = inv.getItem(i);
-				if (itm == null) {
-
-					continue;
-				}
-				
-			//	dprint.r.printAll("ii " + i);
-
-				// Enchantment ench;
-				boolean found = false;
-				for (Enchantment ench : org.bukkit.enchantments.Enchantment.values()) {
-					
-					if (itm.getEnchantmentLevel(ench) > 30 || itm.getEnchantmentLevel(ench) < -30) {
-					//	dprint.r.printAll("fnoud true " + i);
-						found = true;
-						break;
-					}
-				}
-				
-				if (found == true) {
-				//	dprint.r.printAll("remove " + i);
-				inv.remove(itm);
-				}
-			}
-		}
-
-	}
-	@EventHandler
-	public void eventja(InventoryClickEvent e) {
-			Inventory inv = e.getInventory();
-		//if (inv.getType() != InventoryType.CREATIVE) {
-			clearItem1000 xxx = new clearItem1000(inv);
-		//}
-	}
 	
-	@EventHandler
-	public void eventja(InventoryOpenEvent e) {
-		Inventory inv = e.getInventory();
-		//if (inv.getType() != InventoryType.CREATIVE) {
-			clearItem1000 xxx = new clearItem1000(inv);
-		//}
-	}
 
 	@EventHandler
 	public void eventja(AsyncPlayerChatEvent e) {
@@ -345,7 +289,7 @@ public class buff_run implements Listener {
 			pla.playSound(player, Sound.BLOCK_NOTE_HARP, rnd.nextInt(50), rnd.nextFloat() + 1);
 		}
 	}
-	
+
 	@EventHandler
 	public void eventja(PlayerExpChangeEvent e) {
 		if (!tr.isrunworld(ac.getName(), e.getPlayer().getWorld().getName())) {
@@ -401,7 +345,5 @@ public class buff_run implements Listener {
 				forc);
 
 	}
-
-	
 
 } // dig

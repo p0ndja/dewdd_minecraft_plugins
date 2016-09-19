@@ -106,9 +106,18 @@ public class DigEventListener2 implements Listener {
 			it.addUnsafeEnchantment(Enchantment.OXYGEN, 8);
 
 			// e.getInventory().setItem(menuslot, it);
-			e.getClickedInventory().setItem(menuslot, it);
+			try {
+				e.getClickedInventory().setItem(menuslot, it);
 			// dprint.r.printC("player added " + menuslot);
-
+			}
+			catch (NullPointerException eee) {
+					eee.printStackTrace();
+				return;
+			}
+			catch (Exception eee) {
+				eee.printStackTrace();
+				return;
+			}
 			if (e.getSlot() == menuslot) {
 				// dprint.r.printAll("seem");
 				// if

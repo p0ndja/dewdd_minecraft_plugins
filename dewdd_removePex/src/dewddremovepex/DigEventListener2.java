@@ -9,10 +9,16 @@ import java.util.Random;
 
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
+import org.bukkit.Material;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import com.earth2me.essentials.api.Economy;
@@ -22,6 +28,8 @@ import com.earth2me.essentials.api.UserDoesNotExistException;
 import dewddtran.tr;
 
 public class DigEventListener2 implements Listener {
+	public static String perenchant = "dewdd.removepex.holdunsafeenchantment";
+	
 
 	class delay extends Thread {
 
@@ -45,6 +53,79 @@ public class DigEventListener2 implements Listener {
 			Bukkit.getScheduler().scheduleSyncRepeatingTask(ac, a, 0,1200);
 			
 		}
+	}
+	
+	
+
+	class clearItem1000 implements Runnable {
+		private Inventory inv;
+		private Player player;
+
+		public clearItem1000(Inventory inv,String player) {
+			this.inv = inv;
+			this.player = Bukkit.getPlayer(player);
+			Bukkit.getScheduler().scheduleSyncDelayedTask(ac, this, 1);
+		}
+
+		@Override
+		public void run() {
+
+			if (inv == null) {
+				return;
+			}
+
+			for (int i = 0; i < inv.getSize(); i++) {
+				ItemStack itm = inv.getItem(i);
+				if (itm == null) {
+
+					continue;
+				}
+
+				// dprint.r.printAll("ii " + i);
+
+				// Enchantment ench;
+				boolean found = false;
+				for (Enchantment ench : org.bukkit.enchantments.Enchantment.values()) {
+
+					if (itm.getEnchantmentLevel(ench) > 30 || itm.getEnchantmentLevel(ench) < -30) {
+						// dprint.r.printAll("fnoud true " + i);
+						found = true;
+						break;
+					}
+					
+					if (itm.getEnchantmentLevel(ench) > 6 && player.hasPermission(perenchant) == false && itm.getType() != Material.CHEST) {
+						found = true;
+						dprint.r.printAll(player.getName() + tr.gettr("this_player_hold_unsafe_enchant_without_this_permission" + perenchant));
+						break;
+					}
+				}
+
+				if (found == true) {
+					// dprint.r.printAll("remove " + i);
+					inv.remove(itm);
+				}
+			}
+
+			
+		}
+
+	}
+	
+	@EventHandler
+	public void eventja(InventoryClickEvent e) {
+		Inventory inv = e.getClickedInventory();
+		// if (inv.getType() != InventoryType.CREATIVE) {
+		clearItem1000 xxx = new clearItem1000(inv,e.getWhoClicked().getName());
+		// }
+	}
+
+	@EventHandler
+	public void eventja(InventoryOpenEvent e) {
+		Inventory inv = e.getInventory();
+		// if (inv.getType() != InventoryType.CREATIVE) {
+		clearItem1000 xxx = new clearItem1000(inv,e.getPlayer().getName());
+		
+		// }
 	}
 
 	class delay_dewset extends Thread {
