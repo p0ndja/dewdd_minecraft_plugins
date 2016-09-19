@@ -2226,10 +2226,6 @@ public class DigEventListener2 implements Listener {
 				return;
 			}
 
-		} else {
-
-			event.setCancelled(true);
-			return;
 		}
 	}
 
@@ -2314,7 +2310,7 @@ public class DigEventListener2 implements Listener {
 		
 		if (e.getEntity() instanceof EntityPlayer) {
 		Player br = (Player) e.getEntity();
-		if (dew.checkpermissionarea(br.getLocation().getBlock(), br, "EntityDamageEvent") == true) {
+			if (dew.checkpermissionarea(br.getLocation().getBlock(), br, "EntityDamageEvent") == true) {
 			//br.sendMessage("ptdew&dewdd : " + tr.gettr("don't_place_hanging_picture_not_yours"));
 
 			e.setCancelled(true);
@@ -2715,11 +2711,11 @@ public class DigEventListener2 implements Listener {
 		boolean goodc1 = false;
 		goodc1 = dew.checkpermissionarea(block, player, "right");
 		
-		if (event.getAction().equals(Action.RIGHT_CLICK_BLOCK) && event.getClickedBlock().equals(Material.ITEM_FRAME)
+		/*if (event.getAction().equals(Action.RIGHT_CLICK_BLOCK) && event.getClickedBlock().equals(Material.ITEM_FRAME)
 				&& dew.checkpermissionarea(block, player, "playerInteractEvent") == true){
 			
 			event.setCancelled(true);
-		}
+		}*/
 
 		if (goodc1 == true) {
 			event.setCancelled(true);

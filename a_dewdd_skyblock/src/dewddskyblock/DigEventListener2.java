@@ -98,55 +98,6 @@ public class DigEventListener2 implements Listener {
 		}
 	}
 
-	class LV5DestroyNetherRact implements Runnable {
-		private Block signBlock;
-		private int curRSID;
-
-		public LV5DestroyNetherRact(Block signBlock, int rsID) {
-			// dprint.r.printAll("lv1destroystone constructure");
-			this.signBlock = signBlock;
-			this.curRSID = rsID;
-		}
-
-		@Override
-		public void run() {
-			// dprint.r.printAll("lv5 class");
-
-			if (signBlock.getType() == Material.SIGN_POST) {
-				// dprint.r.printAll("lv5 class sign");
-
-				Block nether = readBlockFromSign(signBlock);
-				if (nether.getType() != Material.NETHERRACK) {
-
-					// dprint.r.printAll("lv5 class nether");
-
-					int fixhere = -1;
-					CallNextMission oo = new CallNextMission(curRSID, -1);
-					Bukkit.getScheduler().scheduleSyncDelayedTask(ac, oo);
-				}
-
-			}
-
-		}
-	}
-
-	class CallNextMission implements Runnable {
-
-		private int curRSID;
-		private int curMission;
-
-		public CallNextMission(int rsid, int curMission) {
-			this.curMission = curMission;
-			this.curRSID = rsid;
-		}
-
-		@Override
-		public void run() {
-			dew.nextMission(curRSID, curMission);
-		}
-
-	}
-
 	class Autocut implements Runnable {
 		private Block b;
 		private int curRSID;
@@ -160,9 +111,6 @@ public class DigEventListener2 implements Listener {
 		public void run() {
 			if (b == null)
 				return;
-
-		
-			
 
 			switch (b.getType()) {
 			case PUMPKIN:
@@ -288,36 +236,138 @@ public class DigEventListener2 implements Listener {
 		}
 	}
 
-	public int countNearlyCreature(EntityType en, Block startBlock, int radius) {
+	class CallNextMission implements Runnable {
 
-		int count = 0;
+		private int curRSID;
+		private int curMission;
 
-		for (Entity enn : startBlock.getWorld().getEntities()) {
-			if (enn == null) {
-				continue;
+		public CallNextMission(int rsid, int curMission) {
+			this.curMission = curMission;
+			this.curRSID = rsid;
+		}
+
+		@Override
+		public void run() {
+			dew.nextMission(curRSID, curMission);
+		}
+
+	}
+
+	class delay extends Thread {
+
+		@Override
+		public void run() {
+			while (ac == null) {
+				try {
+					Thread.sleep(1000);
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+
+				// dprint.r.printC("ft waiting ac != null");
+
 			}
 
-			if (enn.getType() == en) {
-				// check radius
-				if (enn.getLocation().distance(startBlock.getLocation()) <= radius) {
-					count++;
+			dew.startMissionNotificationLoopShowing();
+
+			MissionRepeatChecker ee = new MissionRepeatChecker();
+
+			Bukkit.getScheduler().scheduleSyncRepeatingTask(ac, ee, 1, 60);
+		}
+	}
+
+	class drawProtectLine implements Runnable {
+
+		private Block block;
+		private Player player;
+		private boolean drawOrDelete = false;
+
+		public drawProtectLine(Block block, Player player, boolean drawOrDelete) {
+			this.block = block;
+			this.player = player;
+			this.drawOrDelete = drawOrDelete;
+		}
+
+		@Override
+		public void run() {
+
+			int getid = dew.getprotectid(block);
+			if (getid == -1) {
+				player.sendMessage(dprint.r.color(tr.gettr("this_zone_don't_have_any_protect")));
+				return;
+			}
+
+			// start draw Line
+
+			int lx = dew.rs[getid].x - 150;
+			int rx = dew.rs[getid].x + 149;
+
+			int lz = dew.rs[getid].z - 150;
+			int rz = dew.rs[getid].z + 149;
+
+			for (int x = lx; x <= rx; x++) {
+
+				for (int z = lz; z <= rz; z++) {
+
+					for (int y = 0; y < 256; y += 64) {
+
+						if ((z > lz && z < rz) && (x > lx && x < rx)) {
+							continue;
+						}
+
+						Block cc = block.getWorld().getBlockAt(x, y, z);
+						if (drawOrDelete == true) {
+							if (cc.getType() == Material.AIR) {
+								cc.setType(player.getItemInHand().getType());
+
+							}
+						} else {
+							if (cc.getType() == player.getItemInHand().getType()) {
+								cc.setType(Material.AIR);
+
+							}
+
+						}
+					}
 				}
 
 			}
+
 		}
 
-		return count;
 	}
 
-	public Block readBlockFromSign(Block signBlock) {
+	class LV5DestroyNetherRact implements Runnable {
+		private Block signBlock;
+		private int curRSID;
 
-		Sign sign = (Sign) signBlock.getState();
-		int x = Integer.parseInt(sign.getLine(1));
-		int y = Integer.parseInt(sign.getLine(2));
-		int z = Integer.parseInt(sign.getLine(3));
+		public LV5DestroyNetherRact(Block signBlock, int rsID) {
+			// dprint.r.printAll("lv1destroystone constructure");
+			this.signBlock = signBlock;
+			this.curRSID = rsID;
+		}
 
-		Block cd = signBlock.getWorld().getBlockAt(x, y, z);
-		return cd;
+		@Override
+		public void run() {
+			// dprint.r.printAll("lv5 class");
+
+			if (signBlock.getType() == Material.SIGN_POST) {
+				// dprint.r.printAll("lv5 class sign");
+
+				Block nether = readBlockFromSign(signBlock);
+				if (nether.getType() != Material.NETHERRACK) {
+
+					// dprint.r.printAll("lv5 class nether");
+
+					int fixhere = -1;
+					CallNextMission oo = new CallNextMission(curRSID, -1);
+					Bukkit.getScheduler().scheduleSyncDelayedTask(ac, oo);
+				}
+
+			}
+
+		}
 	}
 
 	class MissionRepeatChecker implements Runnable {
@@ -393,40 +443,37 @@ public class DigEventListener2 implements Listener {
 
 	}
 
-	class delay extends Thread {
-
-		@Override
-		public void run() {
-			while (ac == null) {
-				try {
-					Thread.sleep(1000);
-				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-
-				// dprint.r.printC("ft waiting ac != null");
-
-			}
-
-			dew.startMissionNotificationLoopShowing();
-
-			MissionRepeatChecker ee = new MissionRepeatChecker();
-
-			Bukkit.getScheduler().scheduleSyncRepeatingTask(ac, ee, 1, 60);
-		}
-	}
-
 	public JavaPlugin ac = null;
 
 	public api_skyblock dew = null;
-	Random rnd = new Random();
 
+	Random rnd = new Random();
 	public DigEventListener2() {
 		delay dl = new delay();
 		Thread dlt = new Thread(dl);
 		dlt.start();
 
+	}
+
+	public int countNearlyCreature(EntityType en, Block startBlock, int radius) {
+
+		int count = 0;
+
+		for (Entity enn : startBlock.getWorld().getEntities()) {
+			if (enn == null) {
+				continue;
+			}
+
+			if (enn.getType() == en) {
+				// check radius
+				if (enn.getLocation().distance(startBlock.getLocation()) <= radius) {
+					count++;
+				}
+
+			}
+		}
+
+		return count;
 	}
 
 	@EventHandler
@@ -614,48 +661,6 @@ public class DigEventListener2 implements Listener {
 	}
 
 	@EventHandler
-	public void eventja(PlayerInteractEntityEvent e) {
-		if (!api_skyblock.isrunworld(e.getPlayer().getWorld().getName())) {
-			return;
-		}
-		Block block = e.getPlayer().getLocation().getBlock();
-		Player player = e.getPlayer();
-
-		boolean cando = api_skyblock.cando(block, player, "break");
-		if (cando == false) {
-			e.setCancelled(true);
-			return;
-		}
-
-		int getid = api_skyblock.getprotectid(player.getLocation().getBlock());
-
-		if (getid > -1) {
-			// have protect
-
-			// check you are in that home
-
-			int gx = dew.getplayerinslot(player.getName(), getid);
-
-			// dprint.r.printAll("blockbreak lv 1 gx = " + gx);
-
-			if (gx > -1) {
-
-				/*
-				 * // search nearest stone Block bd =
-				 * Bukkit.getWorld("world").getBlockAt(api_skyblock.rs[getid].x,
-				 * api_skyblock.rs[getid].y, api_skyblock.rs[getid].z);
-				 * 
-				 * if (block.getType() == Material.COBBLESTONE) {
-				 * CallNextMission bb = new CallNextMission(getid,
-				 * Missional.LV_0_BREAK_COBBLESTONE);
-				 * Bukkit.getScheduler().scheduleSyncDelayedTask(ac, bb, 1); }
-				 */
-			}
-
-		}
-	}
-
-	@EventHandler
 	public void eventja(ChunkUnloadEvent e) {
 		if (!api_skyblock.isrunworld(e.getChunk().getWorld().getName())) {
 			return;
@@ -736,22 +741,6 @@ public class DigEventListener2 implements Listener {
 		if (api_skyblock.getplayerinslot(Constant.flag_monster, getid) > -1) {
 			e.setCancelled(true);
 			return;
-		}
-
-	}
-
-	@EventHandler
-	public void eventja(EntityDamageEvent e) {
-		if (api_skyblock.isrunworld(e.getEntity().getLocation().getWorld().getName()) == false)
-			return;
-
-		if (e.getEntity() instanceof EntityPlayer) {
-			Player br = (Player) e.getEntity();
-			if (api_skyblock.cando(br.getLocation().getBlock(), br, "entitydamageevent") == false) {
-
-				e.setCancelled(true);
-			}
-
 		}
 
 	}
@@ -856,6 +845,22 @@ public class DigEventListener2 implements Listener {
 	}
 
 	@EventHandler
+	public void eventja(EntityDamageEvent e) {
+		if (api_skyblock.isrunworld(e.getEntity().getLocation().getWorld().getName()) == false)
+			return;
+
+		if (e.getEntity() instanceof EntityPlayer) {
+			Player br = (Player) e.getEntity();
+			if (api_skyblock.cando(br.getLocation().getBlock(), br, "entitydamageevent") == false) {
+
+				e.setCancelled(true);
+			}
+
+		}
+
+	}
+
+	@EventHandler
 	public void eventja(EntityExplodeEvent e) {
 		if (!api_skyblock.isrunworld(e.getEntity().getWorld().getName())) {
 			return;
@@ -913,65 +918,67 @@ public class DigEventListener2 implements Listener {
 				return;
 			}
 
-		} else {
-
-			e.setCancelled(true);
-			return;
-		}
+		} 
 	}
 
-	public void updateLVInventory(Inventory inv, Player player) {
-		int idx = dew.getprotectid(player.getLocation().getBlock());
-		int id = dew.getplayerinslot(player.getName(), idx);
-
-		if (id == -1) {
+	@EventHandler
+	public void eventja(HangingBreakEvent e) {
+		if (!api_skyblock.isrunworld(e.getEntity().getWorld().getName())) {
 			return;
 		}
 
-		// add item
+		if (e.getEntity() instanceof EntityPlayer) {
 
-		inv.clear();
-		LV1000Type lv = dew.lv1000.get(dew.rs[idx].mission);
+			Player br = (Player) e.getEntity();
 
-		int curSlot = 0;
-		for (int i = 0; i < lv.needSize; i++) {
+			if (api_skyblock.cando(br.getLocation().getBlock(), br, "HangingBreakEvent") == false) {
+				e.setCancelled(true);
+				// br.sendMessage(dprint.r.color(tr.gettr("don't_break_hanging_picture_not_yours")));
+			}
 
-			ItemStack itm = new ItemStack(lv.getMaterial(lv.needNameData[i]),
-
-					lv.needAmount[i], lv.getData(lv.needNameData[i]));
-
-			itm.addUnsafeEnchantment(Enchantment.DAMAGE_UNDEAD, 1);
-
-			ItemMeta mm = itm.getItemMeta();
-			mm.setDisplayName(lv.needNameData[i] + " NEED");
-
-			itm.setItemMeta(mm);
-
-			inv.setItem(curSlot, itm);
-			curSlot++;
 		}
 
-		curSlot = 53;
+		if (e.getCause() == RemoveCause.EXPLOSION == true)
+			if (api_skyblock.getprotectid(e.getEntity().getLocation().getBlock()) > -1) {
+				e.setCancelled(true);
+				return;
+			}
 
-		for (int i = 0; i < lv.rewardSize; i++) {
+	}
 
-			ItemStack itm = new ItemStack(lv.getMaterial(lv.rewardNameData[i]),
-
-					lv.rewardAmount[i], lv.getData(lv.rewardNameData[i]));
-
-			itm.addUnsafeEnchantment(Enchantment.DIG_SPEED, 1);
-
-			ItemMeta mm = itm.getItemMeta();
-			mm.setDisplayName(lv.rewardNameData[i] + " as reward");
-
-			itm.setItemMeta(mm);
-
-			inv.setItem(curSlot, itm);
-			curSlot--;
+	@EventHandler
+	public void eventja(HangingPlaceEvent e) {
+		if (!api_skyblock.isrunworld(e.getEntity().getWorld().getName())) {
+			return;
 		}
 
-		// update inventory
+		Player br = e.getPlayer();
+		if (api_skyblock.cando(e.getPlayer().getLocation().getBlock(), br, "HangingPlaceEvent") == false) {
+			// br.sendMessage(dprint.r.color(tr.gettr("don't_place_hanging_picture_not_yours")));
 
+			e.setCancelled(true);
+		}
+
+	}
+
+	@EventHandler
+	public void eventja(InventoryClickEvent e) {
+		Inventory inv = e.getClickedInventory();
+		if (inv == null) {
+			return;
+		}
+
+		if (inv.getName().equalsIgnoreCase("sky lv")) {
+
+			if (e.getSlot() >= 0 && e.getSlot() <= 10) {
+				e.setCancelled(true);
+			}
+
+			if (e.getSlot() >= 44 && e.getSlot() <= 54) {
+				e.setCancelled(true);
+			}
+
+		}
 	}
 
 	@EventHandler
@@ -1029,7 +1036,7 @@ public class DigEventListener2 implements Listener {
 
 			// p.sendMessage("allDone " + allDone);
 			if (allDone == false) {
-				//p.sendMessage(dprint.r.color(tr.gettr("sky_lv_item_not_enough_to_complete_lv_so_return_all_item")));
+				// p.sendMessage(dprint.r.color(tr.gettr("sky_lv_item_not_enough_to_complete_lv_so_return_all_item")));
 
 				// drop item
 
@@ -1046,9 +1053,9 @@ public class DigEventListener2 implements Listener {
 				p.sendMessage(
 						dprint.r.color(tr.gettr("sky_lv_got_all_item_to_completed_cur_lv_") + dew.rs[idx].mission));
 
-				dew.rs[idx].mission ++;
+				dew.rs[idx].mission++;
 				dew.saveRSProtectFile();
-				
+
 				// give reward
 				for (int j = 0; j < lv.rewardSize; j++) {
 					ItemStack rewardIt = new ItemStack(lv.getMaterial(lv.rewardNameData[j]),
@@ -1066,70 +1073,6 @@ public class DigEventListener2 implements Listener {
 
 	@EventHandler
 	public void eventja(InventoryOpenEvent e) {
-
-	}
-
-	@EventHandler
-	public void eventja(InventoryClickEvent e) {
-		Inventory inv = e.getClickedInventory();
-		if (inv == null) {
-			return;
-		}
-
-		if (inv.getName().equalsIgnoreCase("sky lv")) {
-
-			if (e.getSlot() >= 0 && e.getSlot() <= 10) {
-				e.setCancelled(true);
-			}
-
-			if (e.getSlot() >= 44 && e.getSlot() <= 54) {
-				e.setCancelled(true);
-			}
-
-			
-
-		}
-	}
-
-	@EventHandler
-	public void eventja(HangingBreakEvent e) {
-		if (!api_skyblock.isrunworld(e.getEntity().getWorld().getName())) {
-			return;
-		}
-
-		if (e.getEntity() instanceof EntityPlayer) {
-
-			Player br = (Player) e.getEntity();
-
-			if (api_skyblock.cando(br.getLocation().getBlock(), br, "HangingBreakEvent") == false) {
-				e.setCancelled(true);
-				// br.sendMessage(dprint.r.color(tr.gettr("don't_break_hanging_picture_not_yours")));
-			}
-
-		} else {
-			e.setCancelled(true);
-		}
-
-		if (e.getCause() == RemoveCause.EXPLOSION == true)
-			if (api_skyblock.getprotectid(e.getEntity().getLocation().getBlock()) > -1) {
-				e.setCancelled(true);
-				return;
-			}
-
-	}
-
-	@EventHandler
-	public void eventja(HangingPlaceEvent e) {
-		if (!api_skyblock.isrunworld(e.getEntity().getWorld().getName())) {
-			return;
-		}
-
-		Player br = e.getPlayer();
-		if (api_skyblock.cando(e.getPlayer().getLocation().getBlock(), br, "HangingPlaceEvent") == false) {
-			// br.sendMessage(dprint.r.color(tr.gettr("don't_place_hanging_picture_not_yours")));
-
-			e.setCancelled(true);
-		}
 
 	}
 
@@ -1188,67 +1131,6 @@ public class DigEventListener2 implements Listener {
 		}
 		if (api_skyblock.cando(e.getBlockClicked(), e.getPlayer(), "build") == false)
 			e.setCancelled(true);
-	}
-
-	class drawProtectLine implements Runnable {
-
-		private Block block;
-		private Player player;
-		private boolean drawOrDelete = false;
-
-		public drawProtectLine(Block block, Player player, boolean drawOrDelete) {
-			this.block = block;
-			this.player = player;
-			this.drawOrDelete = drawOrDelete;
-		}
-
-		@Override
-		public void run() {
-
-			int getid = dew.getprotectid(block);
-			if (getid == -1) {
-				player.sendMessage(dprint.r.color(tr.gettr("this_zone_don't_have_any_protect")));
-				return;
-			}
-
-			// start draw Line
-
-			int lx = dew.rs[getid].x - 150;
-			int rx = dew.rs[getid].x + 149;
-
-			int lz = dew.rs[getid].z - 150;
-			int rz = dew.rs[getid].z + 149;
-
-			for (int x = lx; x <= rx; x++) {
-
-				for (int z = lz; z <= rz; z++) {
-
-					for (int y = 0; y < 256; y += 64) {
-
-						if ((z > lz && z < rz) && (x > lx && x < rx)) {
-							continue;
-						}
-
-						Block cc = block.getWorld().getBlockAt(x, y, z);
-						if (drawOrDelete == true) {
-							if (cc.getType() == Material.AIR) {
-								cc.setType(player.getItemInHand().getType());
-
-							}
-						} else {
-							if (cc.getType() == player.getItemInHand().getType()) {
-								cc.setType(Material.AIR);
-
-							}
-
-						}
-					}
-				}
-
-			}
-
-		}
-
 	}
 
 	@EventHandler
@@ -1468,7 +1350,7 @@ public class DigEventListener2 implements Listener {
 						api_skyblock.rs[getid].mission = (Integer.parseInt(m[2]));
 						dprint.r.printAll(tr.gettr("reseted_lv_of_is_this_guys") + api_skyblock.rs[getid].p[0]);
 
-						dew.printToAllPlayerOnRS(getid, tr.gettr("cur_lv_is") +(dew.rs[getid].mission));
+						dew.printToAllPlayerOnRS(getid, tr.gettr("cur_lv_is") + (dew.rs[getid].mission));
 
 					} else {
 						player.sendMessage(tr.gettr("/sky resetlv <lv>"));
@@ -1624,13 +1506,12 @@ public class DigEventListener2 implements Listener {
 								dprint.r.color(tr.gettr("owner_of_this_island_name") + " = " + dew.rs[getid].p[0]));
 					}
 
-					
 					if (dew.rs[getid].mission >= dew.lv1000.size()) {
 						player.sendMessage(dprint.r.color(tr.gettr("sky_lv_all_lv_done_thanks_to_play")));
 						return;
-						
+
 					}
-					
+
 					player.sendMessage(dprint.r.color(tr.gettr("cur_lv_is") + (dew.rs[getid].mission)));
 					dew.printToAllPlayerOnRS(getid, (tr.gettr("cur_lv_is") + dew.rs[getid].mission));
 
@@ -1880,95 +1761,6 @@ public class DigEventListener2 implements Listener {
 
 	}
 
-	public String ItemStackToStringWithTypeIDAndData(ItemStack itm) {
-		String oo = "";
-
-		if (itm == null) {
-
-		} else {
-			oo = itm.getType().name() + ":" + itm.getData().getData() + ":" + itm.getType().getMaxStackSize() + ":"
-					+ itm.getType().isBlock();
-		}
-
-		return oo;
-	}
-
-	public int[] recusiveSearchItemInChest(Block chestpls, String[] stringItemStack, Block[] bBlock,
-			int[] stringSizeAndBlockSize) {
-		// add
-
-		Block tmp = null;
-		int searchSpace = 2;
-		for (int x = -searchSpace; x <= searchSpace; x++) {
-			for (int y = -searchSpace; y <= searchSpace; y++) {
-				for (int z = -searchSpace; z <= searchSpace; z++) {
-					tmp = chestpls.getRelative(x, y, z);
-					if (tmp.getType() == Material.CHEST) {
-						// open it
-						Chest chest = (Chest) tmp.getState();
-
-						boolean searchChest = false;
-						for (int i = 0; i < stringSizeAndBlockSize[1]; i++) {
-							if (tmp.getLocation().getBlockX() == bBlock[i].getX()) {
-								if (tmp.getLocation().getBlockY() == bBlock[i].getY()) {
-									if (tmp.getLocation().getBlockZ() == bBlock[i].getZ()) {
-										searchChest = true;
-										break;
-									}
-								}
-							}
-						}
-						if (searchChest == true) {
-							continue;
-						}
-
-						bBlock[stringSizeAndBlockSize[1]] = tmp;
-						stringSizeAndBlockSize[1]++;
-
-						dprint.r.printAll("found chest " + tmp.getX() + "," + tmp.getY() + "," + tmp.getZ());
-
-						// loop itemstack
-						for (ItemStack itm : chest.getInventory().getContents()) {
-							if (itm == null) {
-								continue;
-							}
-
-							String curItm = ItemStackToStringWithTypeIDAndData(itm);
-
-							boolean foundx = false;
-							for (int ii = 0; ii < stringSizeAndBlockSize[0]; ii++) {
-								// dprint.r.printAll("curItm = " + curItm + " ,
-								// " + stringSizeAndBlockSize[0] + "/" +
-								// stringSizeAndBlockSize[1]);
-
-								if (curItm.equalsIgnoreCase(stringItemStack[ii])) {
-									foundx = true;
-									break;
-								}
-							}
-
-							if (foundx == false) {
-								stringItemStack[stringSizeAndBlockSize[0]] = curItm;
-								stringSizeAndBlockSize[0]++;
-
-							}
-						}
-
-						// call recursive
-
-						int returner[] = recusiveSearchItemInChest(tmp, stringItemStack, bBlock,
-								stringSizeAndBlockSize);
-						stringSizeAndBlockSize[0] = returner[0];
-						stringSizeAndBlockSize[1] = returner[1];
-					} // chest
-				}
-
-			}
-
-		}
-		return stringSizeAndBlockSize;
-	}
-
 	@EventHandler
 	public void eventja(PlayerDropItemEvent e) {
 		if (!api_skyblock.isrunworld(e.getPlayer().getWorld().getName())) {
@@ -2007,6 +1799,48 @@ public class DigEventListener2 implements Listener {
 
 		}
 
+	}
+
+	@EventHandler
+	public void eventja(PlayerInteractEntityEvent e) {
+		if (!api_skyblock.isrunworld(e.getPlayer().getWorld().getName())) {
+			return;
+		}
+		Block block = e.getPlayer().getLocation().getBlock();
+		Player player = e.getPlayer();
+
+		boolean cando = api_skyblock.cando(block, player, "break");
+		if (cando == false) {
+			e.setCancelled(true);
+			return;
+		}
+
+		int getid = api_skyblock.getprotectid(player.getLocation().getBlock());
+
+		if (getid > -1) {
+			// have protect
+
+			// check you are in that home
+
+			int gx = dew.getplayerinslot(player.getName(), getid);
+
+			// dprint.r.printAll("blockbreak lv 1 gx = " + gx);
+
+			if (gx > -1) {
+
+				/*
+				 * // search nearest stone Block bd =
+				 * Bukkit.getWorld("world").getBlockAt(api_skyblock.rs[getid].x,
+				 * api_skyblock.rs[getid].y, api_skyblock.rs[getid].z);
+				 * 
+				 * if (block.getType() == Material.COBBLESTONE) {
+				 * CallNextMission bb = new CallNextMission(getid,
+				 * Missional.LV_0_BREAK_COBBLESTONE);
+				 * Bukkit.getScheduler().scheduleSyncDelayedTask(ac, bb, 1); }
+				 */
+			}
+
+		}
 	}
 
 	@EventHandler
@@ -2112,11 +1946,11 @@ public class DigEventListener2 implements Listener {
 			}
 		} // sign
 
-		if (e.getClickedBlock().equals(Material.ITEM_FRAME)) {
-			if (api_skyblock.cando(block, player, "playerInteractEvent")) {
+	/*	if (e.getClickedBlock().equals(Material.ITEM_FRAME)) {
+			if (api_skyblock.cando(block, player, "playerInteractEvent") == false) {
 				e.setCancelled(true);
 			}
-		}
+		}*/
 
 		boolean cando = false;
 		if (act == Action.RIGHT_CLICK_BLOCK)
@@ -2130,10 +1964,6 @@ public class DigEventListener2 implements Listener {
 		}
 
 	}
-
-	// EntityExplodeEvent
-
-	// Chat e.class
 
 	@EventHandler
 	public void eventja(PlayerJoinEvent e) {
@@ -2166,7 +1996,7 @@ public class DigEventListener2 implements Listener {
 			player.sendMessage(tr.gettr("type_this_command_for_create_new_skyblock"));
 
 		} else {
-			player.sendMessage(tr.gettr("cur_lv_is") +(api_skyblock.rs[rsid].mission));
+			player.sendMessage(tr.gettr("cur_lv_is") + (api_skyblock.rs[rsid].mission));
 
 		}
 
@@ -2196,6 +2026,23 @@ public class DigEventListener2 implements Listener {
 			return;
 		}
 
+	}
+
+	// EntityExplodeEvent
+
+	// Chat e.class
+
+	public String ItemStackToStringWithTypeIDAndData(ItemStack itm) {
+		String oo = "";
+
+		if (itm == null) {
+
+		} else {
+			oo = itm.getType().name() + ":" + itm.getData().getData() + ":" + itm.getType().getMaxStackSize() + ":"
+					+ itm.getType().isBlock();
+		}
+
+		return oo;
 	}
 
 	@EventHandler(priority = EventPriority.HIGHEST)
@@ -2269,6 +2116,147 @@ public class DigEventListener2 implements Listener {
 
 				}
 		}
+	}
+
+	public Block readBlockFromSign(Block signBlock) {
+
+		Sign sign = (Sign) signBlock.getState();
+		int x = Integer.parseInt(sign.getLine(1));
+		int y = Integer.parseInt(sign.getLine(2));
+		int z = Integer.parseInt(sign.getLine(3));
+
+		Block cd = signBlock.getWorld().getBlockAt(x, y, z);
+		return cd;
+	}
+
+	public int[] recusiveSearchItemInChest(Block chestpls, String[] stringItemStack, Block[] bBlock,
+			int[] stringSizeAndBlockSize) {
+		// add
+
+		Block tmp = null;
+		int searchSpace = 2;
+		for (int x = -searchSpace; x <= searchSpace; x++) {
+			for (int y = -searchSpace; y <= searchSpace; y++) {
+				for (int z = -searchSpace; z <= searchSpace; z++) {
+					tmp = chestpls.getRelative(x, y, z);
+					if (tmp.getType() == Material.CHEST) {
+						// open it
+						Chest chest = (Chest) tmp.getState();
+
+						boolean searchChest = false;
+						for (int i = 0; i < stringSizeAndBlockSize[1]; i++) {
+							if (tmp.getLocation().getBlockX() == bBlock[i].getX()) {
+								if (tmp.getLocation().getBlockY() == bBlock[i].getY()) {
+									if (tmp.getLocation().getBlockZ() == bBlock[i].getZ()) {
+										searchChest = true;
+										break;
+									}
+								}
+							}
+						}
+						if (searchChest == true) {
+							continue;
+						}
+
+						bBlock[stringSizeAndBlockSize[1]] = tmp;
+						stringSizeAndBlockSize[1]++;
+
+						dprint.r.printAll("found chest " + tmp.getX() + "," + tmp.getY() + "," + tmp.getZ());
+
+						// loop itemstack
+						for (ItemStack itm : chest.getInventory().getContents()) {
+							if (itm == null) {
+								continue;
+							}
+
+							String curItm = ItemStackToStringWithTypeIDAndData(itm);
+
+							boolean foundx = false;
+							for (int ii = 0; ii < stringSizeAndBlockSize[0]; ii++) {
+								// dprint.r.printAll("curItm = " + curItm + " ,
+								// " + stringSizeAndBlockSize[0] + "/" +
+								// stringSizeAndBlockSize[1]);
+
+								if (curItm.equalsIgnoreCase(stringItemStack[ii])) {
+									foundx = true;
+									break;
+								}
+							}
+
+							if (foundx == false) {
+								stringItemStack[stringSizeAndBlockSize[0]] = curItm;
+								stringSizeAndBlockSize[0]++;
+
+							}
+						}
+
+						// call recursive
+
+						int returner[] = recusiveSearchItemInChest(tmp, stringItemStack, bBlock,
+								stringSizeAndBlockSize);
+						stringSizeAndBlockSize[0] = returner[0];
+						stringSizeAndBlockSize[1] = returner[1];
+					} // chest
+				}
+
+			}
+
+		}
+		return stringSizeAndBlockSize;
+	}
+
+	public void updateLVInventory(Inventory inv, Player player) {
+		int idx = dew.getprotectid(player.getLocation().getBlock());
+		int id = dew.getplayerinslot(player.getName(), idx);
+
+		if (id == -1) {
+			return;
+		}
+
+		// add item
+
+		inv.clear();
+		LV1000Type lv = dew.lv1000.get(dew.rs[idx].mission);
+
+		int curSlot = 0;
+		for (int i = 0; i < lv.needSize; i++) {
+
+			ItemStack itm = new ItemStack(lv.getMaterial(lv.needNameData[i]),
+
+					lv.needAmount[i], lv.getData(lv.needNameData[i]));
+
+			itm.addUnsafeEnchantment(Enchantment.DAMAGE_UNDEAD, 1);
+
+			ItemMeta mm = itm.getItemMeta();
+			mm.setDisplayName(lv.needNameData[i] + " NEED");
+
+			itm.setItemMeta(mm);
+
+			inv.setItem(curSlot, itm);
+			curSlot++;
+		}
+
+		curSlot = 53;
+
+		for (int i = 0; i < lv.rewardSize; i++) {
+
+			ItemStack itm = new ItemStack(lv.getMaterial(lv.rewardNameData[i]),
+
+					lv.rewardAmount[i], lv.getData(lv.rewardNameData[i]));
+
+			itm.addUnsafeEnchantment(Enchantment.DIG_SPEED, 1);
+
+			ItemMeta mm = itm.getItemMeta();
+			mm.setDisplayName(lv.rewardNameData[i] + " as reward");
+
+			itm.setItemMeta(mm);
+
+			inv.setItem(curSlot, itm);
+			curSlot--;
+		}
+
+		// update inventory
+
 	}
 
 } // class

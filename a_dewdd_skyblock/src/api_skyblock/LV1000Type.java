@@ -14,18 +14,18 @@ public class LV1000Type {
 	public int[] rewardAmount = new int[10];
 
 	public int rewardSize = 0;
-	
-	public  Material getMaterial (String idData) {
-		String m[] = idData.split(":");
-		Material mo = Material.getMaterial(m[0]);
-		
-		return mo;
-	}
-	
-	public  Byte getData (String idData) {
+
+	public Byte getData(String idData) {
 		String m[] = idData.split(":");
 		Byte b = Byte.parseByte(m[1]);
-		
+
 		return b;
+	}
+
+	public Material getMaterial(String idData) {
+		String m[] = idData.split(":");
+		Material mo = Material.getMaterial(m[0]);
+
+		return mo;
 	}
 }

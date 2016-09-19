@@ -28,153 +28,6 @@ import org.bukkit.plugin.java.JavaPlugin;
 import dewddtran.tr;
 
 public class api_skyblock {
-	
-	public boolean checkIsThatAreBlockOrNot(Block midBlockX0Z0 , Player player) {
-		int count = 0;
-		boolean thereBlock = false;
-
-		int search = 10;
-		for (int x = -search; x <= search; x++) {
-			for (int y = 0; y <= 256; y++) {
-
-				for (int z = -search; z <= search; z++) {
-
-					Block bbo = midBlockX0Z0.getWorld().getBlockAt(midBlockX0Z0.getX() + x, y,
-							midBlockX0Z0.getZ() + z);
-
-					if (bbo.getType() != Material.AIR) {
-
-						player.sendMessage(bbo.getX() + "," + bbo.getY() + "," + bbo.getZ() + " = "
-								+ bbo.getType().name() + ":" + bbo.getData());
-						thereBlock = true;
-						break;
-					}
-				}
-
-				if (thereBlock == true) {
-					break;
-				}
-			}
-
-			if (thereBlock == true) {
-				break;
-			}
-
-		}
-
-		while (count < 100000 && thereBlock == false) {
-			count++;
-
-			int x = rnd.nextInt(300) - 150;
-			int y = rnd.nextInt(256);
-			int z = rnd.nextInt(300) - 150;
-
-			Block bbo = midBlockX0Z0.getWorld().getBlockAt(midBlockX0Z0.getX() + x, y, midBlockX0Z0.getZ() + z);
-
-			if (bbo.getType() != Material.AIR) {
-
-				player.sendMessage(bbo.getX() + "," + bbo.getY() + "," + bbo.getZ() + " = " + bbo.getType().name()
-						+ ":" + bbo.getData());
-				thereBlock = true;
-				break;
-			}
-
-		}
-		
-		return thereBlock;
-	}
-	
-	
-	class AdjustProtect2 implements Runnable {
-		private Block midBlockX0Z0;
-		private Player player;
-
-		public AdjustProtect2(Block midBlockX0Z0, Player player) {
-			this.midBlockX0Z0 = midBlockX0Z0;
-			this.player = player;
-		}
-
-		
-		public void run() {
-			
-			// search top left
-			
-			// search top left
-			
-			int lx = rs[0].x;
-			int rx = rs[0].x;
-			int lz = rs[0].z;
-			int rz = rs[0].z;
-			
-			for (int i = 0; i < rsMax ; i ++ ){
-				if (rs[i].x < lx) {
-					lx = rs[i].x;
-				}
-				
-				if( rs[i].x > rx ) {
-					rx = rs[i].x;
-				}
-				
-				if (rs[i].z < lz) {
-					lz = rs[i].z;
-				}
-				
-				if (rs[i].z > rz ) {
-					rz = rs[i].z;
-				}
-				
-			}
-			
-			Block bb = null;
-			
-			for (int tmpx = lx ; tmpx <= rx ; tmpx += 300) {
-			for (int tmpz = lz ; tmpz <= rz ; tmpz += 300) {
-				
-				// check protect  if there   so skip
-				bb = midBlockX0Z0.getLocation().getWorld().getBlockAt(tmpx, 150, tmpz);
-				int checkid = getprotectid(bb);
-				if (checkid > -1) {
-					continue;
-				}
-				
-				player.sendMessage(dprint.r.color("searching no protect zone " + tmpx + ",150," + tmpz));
-				
-				
-				boolean thereBlock = checkIsThatAreBlockOrNot(bb, player);
-				
-				if (thereBlock == true) {
-					// buy new protect
-					
-					rs[rsMax] = new RSData();
-					
-					rs[rsMax].x = tmpx ;
-					rs[rsMax].z = tmpz;
-					rs[rsMax].y = 150;
-					rs[rsMax].p = new String[RSMaxPlayer];
-					
-					for (int i = 0 ; i < RSMaxPlayer ; i ++ ) {
-						rs[rsMax].p[i] = "null";
-					}
-					
-					rs[rsMax].p[0] = getNewOwnerName();
-					
-					player.sendMessage(dprint.r.color("bought new protect " + tmpx + ",150," + tmpz 
-							+ " owner name " + rs[rsMax].p[0] ));
-					
-					rsMax ++ ;
-					
-					
-				}
-				
-			}
-			}
-			
-			
-			
-			
-		}
-	}
-	
 
 	class AdjustProtect implements Runnable {
 		private Block midBlockX0Z0;
@@ -185,53 +38,129 @@ public class api_skyblock {
 			this.player = player;
 		}
 
-		
 		public void run() {
-			
+
 			RSData tmprs[] = new RSData[Constant.rsBuffer];
 			int curID = 0;
-			
-			for (int i = 0; i < Constant.rsBuffer ; i++ ){
+
+			for (int i = 0; i < Constant.rsBuffer; i++) {
 				tmprs[i] = new RSData();
-				tmprs[i].p = new String [RSMaxPlayer];
-				
+				tmprs[i].p = new String[RSMaxPlayer];
+
 			}
-			
-			
-			for (int i = 0; i < rsMax ; i ++ ){
-				Block bo = midBlockX0Z0.getWorld().getBlockAt(
-						rs[i].x, rs[i].y
-						, rs[i].z);
-				
+
+			for (int i = 0; i < rsMax; i++) {
+				Block bo = midBlockX0Z0.getWorld().getBlockAt(rs[i].x, rs[i].y, rs[i].z);
+
 				boolean thereBlock = checkIsThatAreBlockOrNot(bo, player);
 				if (thereBlock == true) {
 					// copy
-					
-					tmprs[curID]=    rs[i].copyIt();
-					
-					curID ++;
-					
-					
+
+					tmprs[curID] = rs[i].copyIt();
+
+					curID++;
+
 					continue;
-				}
-				else {
+				} else {
 					// delete protec
 					continue;
-					
+
 				}
-				
-				
+
 			}
-			
-			
-			// copyBack 
+
+			// copyBack
 			rsMax = curID;
-			for (int i = 0 ; i < curID ; i ++ ) {
+			for (int i = 0; i < curID; i++) {
 				rs[i] = tmprs[i].copyIt();
 			}
-			
-			//player.sendMessage("thereBlock " + thereBlock);
-			
+
+			// player.sendMessage("thereBlock " + thereBlock);
+
+		}
+	}
+
+	class AdjustProtect2 implements Runnable {
+		private Block midBlockX0Z0;
+		private Player player;
+
+		public AdjustProtect2(Block midBlockX0Z0, Player player) {
+			this.midBlockX0Z0 = midBlockX0Z0;
+			this.player = player;
+		}
+
+		public void run() {
+
+			// search top left
+
+			// search top left
+
+			int lx = rs[0].x;
+			int rx = rs[0].x;
+			int lz = rs[0].z;
+			int rz = rs[0].z;
+
+			for (int i = 0; i < rsMax; i++) {
+				if (rs[i].x < lx) {
+					lx = rs[i].x;
+				}
+
+				if (rs[i].x > rx) {
+					rx = rs[i].x;
+				}
+
+				if (rs[i].z < lz) {
+					lz = rs[i].z;
+				}
+
+				if (rs[i].z > rz) {
+					rz = rs[i].z;
+				}
+
+			}
+
+			Block bb = null;
+
+			for (int tmpx = lx; tmpx <= rx; tmpx += 300) {
+				for (int tmpz = lz; tmpz <= rz; tmpz += 300) {
+
+					// check protect if there so skip
+					bb = midBlockX0Z0.getLocation().getWorld().getBlockAt(tmpx, 150, tmpz);
+					int checkid = getprotectid(bb);
+					if (checkid > -1) {
+						continue;
+					}
+
+					player.sendMessage(dprint.r.color("searching no protect zone " + tmpx + ",150," + tmpz));
+
+					boolean thereBlock = checkIsThatAreBlockOrNot(bb, player);
+
+					if (thereBlock == true) {
+						// buy new protect
+
+						rs[rsMax] = new RSData();
+
+						rs[rsMax].x = tmpx;
+						rs[rsMax].z = tmpz;
+						rs[rsMax].y = 150;
+						rs[rsMax].p = new String[RSMaxPlayer];
+
+						for (int i = 0; i < RSMaxPlayer; i++) {
+							rs[rsMax].p[i] = "null";
+						}
+
+						rs[rsMax].p[0] = getNewOwnerName();
+
+						player.sendMessage(dprint.r.color(
+								"bought new protect " + tmpx + ",150," + tmpz + " owner name " + rs[rsMax].p[0]));
+
+						rsMax++;
+
+					}
+
+				}
+			}
+
 		}
 	}
 
@@ -311,13 +240,12 @@ public class api_skyblock {
 				} else { // if x y z this can do
 					dprint.r.printAll("random " + x + "," + y + "," + z);
 
-					int oldID = getOWNIslandID(player.getName(),false);
-						if (oldID > -1) {
-							rs[oldID].p[0] = getNewOwnerName();
-							
-						}
-					
-					
+					int oldID = getOWNIslandID(player.getName(), false);
+					if (oldID > -1) {
+						rs[oldID].p[0] = getNewOwnerName();
+
+					}
+
 					int newid = getOWNIslandID(player.getName(), true);
 					// get free slot for this player
 					rs[newid].x = x;
@@ -465,7 +393,7 @@ public class api_skyblock {
 
 					lastcreate = System.currentTimeMillis();
 
-					player.sendMessage( tr.gettr("cur_lv_is") + (rs[newid].mission));
+					player.sendMessage(tr.gettr("cur_lv_is") + (rs[newid].mission));
 
 					// add item done
 
@@ -517,6 +445,8 @@ public class api_skyblock {
 
 	public static JavaPlugin ac = null;
 
+	public static ArrayList<LV1000Type> lv1000 = new ArrayList<LV1000Type>();
+
 	public static boolean cando(Block block, Player player, String mode) {
 		if ((player.hasPermission(Constant.poveride)) == true) {
 			return true;
@@ -558,6 +488,26 @@ public class api_skyblock {
 
 	}
 
+	public static String getNewOwnerName() {
+		String abc = "";
+		boolean found = false;
+		do {
+			found = false;
+			Random rnd = new Random();
+			abc = "freeZone" + rnd.nextInt(1000);
+			for (int i = 0; i < rsMax; i++) {
+				if (rs[i].p[0].equalsIgnoreCase(abc) == true) {
+
+					found = true;
+					break;
+				}
+			}
+
+		} while (found == true);
+
+		return abc;
+	}
+
 	public static int getplayerinslot(String player, Block block) {
 
 		int getid = getprotectid(block);
@@ -583,8 +533,6 @@ public class api_skyblock {
 
 		return -1;
 	}
-	
-	public static ArrayList<LV1000Type> lv1000 = new ArrayList<LV1000Type>();
 
 	public static int getprotectid(Block block) {
 		// must check world
@@ -618,91 +566,24 @@ public class api_skyblock {
 
 	int amount = 0; // recusive
 					// count
-	
-	
-
-	
-	public void loadLVFile() {
-		String worldf = Constant.rsLV_filename;
-
-		File dir = new File(Constant.folder_name);
-		dir.mkdir();
-
-		String filena = Constant.folder_name + File.separator + worldf;
-		File fff = new File(filena);
-
-		try {
-
-			
-			lv1000.clear();
-
-			fff.createNewFile();
-
-			System.out.println("ptdeW&DewDD skyblock , lv loading : " + filena);
-			// Open the file that is the first
-			// command line parameter
-			FileInputStream fstream = new FileInputStream(filena);
-			// Get the object of DataInputStream
-			DataInputStream in = new DataInputStream(fstream);
-			BufferedReader br = new BufferedReader(new InputStreamReader(in));
-			String strLine;
-			// Read File Line By Line
-
-			// sthae
-			// aosthoeau
-			// * save
-
-			String m[];
-
-			while ((strLine = br.readLine()) != null) {
-				LV1000Type lvo = new LV1000Type();
-				
-				
-				
-				m = strLine.split("\\s+");
-				
-				lvo.needSize = Integer.parseInt(m[0]);
-				lvo.rewardSize = Integer.parseInt(m[1]);
-				
-				for (int i = 0; i < lvo.needSize ; i ++ ){
-					strLine = br.readLine();
-					
-					
-					String bem[] = strLine.split(" ");
-					
-					lvo.needNameData[i] = bem[0];
-					lvo.needAmount[i] = Integer.parseInt(bem[1]);
-					
-					
-				}
-				
-				for (int i = 0; i < lvo.rewardSize ; i ++ ){
-strLine = br.readLine();
-					
-					
-					String bem[] = strLine.split(" ");
-					lvo.rewardNameData[i] = bem[0];
-					lvo.rewardAmount[i] = Integer.parseInt(bem[1]);
-					
-					
-				}
-				
-
-				lv1000.add(lvo);
-
-			}
-
-			System.out.println("ptdew&DewDD skyblock : lv loaded " + filena);
-
-			in.close();
-		} catch (Exception e) {// Catch exception if any
-			System.err.println("Error load " + filena + " " + e.getMessage());
-		}
-	}
 
 	public api_skyblock() {
 		loadRSProtectFile();
 		loadLVFile();
+	}
+
+	public void adjustProtect(Block block, Player player) {
+
+		AdjustProtect abc = new AdjustProtect(block, player);
+		Bukkit.getScheduler().scheduleSyncDelayedTask(ac, abc, 1);
+
+	}
+
+	public void adjustProtect2(Block block, Player player) {
+
+		AdjustProtect2 abc = new AdjustProtect2(block, player);
+		Bukkit.getScheduler().scheduleSyncDelayedTask(ac, abc, 1);
+
 	}
 
 	public void applyReward(int rsID) {
@@ -1047,6 +928,60 @@ strLine = br.readLine();
 		}
 	}
 
+	public boolean checkIsThatAreBlockOrNot(Block midBlockX0Z0, Player player) {
+		int count = 0;
+		boolean thereBlock = false;
+
+		int search = 10;
+		for (int x = -search; x <= search; x++) {
+			for (int y = 0; y <= 256; y++) {
+
+				for (int z = -search; z <= search; z++) {
+
+					Block bbo = midBlockX0Z0.getWorld().getBlockAt(midBlockX0Z0.getX() + x, y, midBlockX0Z0.getZ() + z);
+
+					if (bbo.getType() != Material.AIR) {
+
+						player.sendMessage(bbo.getX() + "," + bbo.getY() + "," + bbo.getZ() + " = "
+								+ bbo.getType().name() + ":" + bbo.getData());
+						thereBlock = true;
+						break;
+					}
+				}
+
+				if (thereBlock == true) {
+					break;
+				}
+			}
+
+			if (thereBlock == true) {
+				break;
+			}
+
+		}
+
+		while (count < 100000 && thereBlock == false) {
+			count++;
+
+			int x = rnd.nextInt(300) - 150;
+			int y = rnd.nextInt(256);
+			int z = rnd.nextInt(300) - 150;
+
+			Block bbo = midBlockX0Z0.getWorld().getBlockAt(midBlockX0Z0.getX() + x, y, midBlockX0Z0.getZ() + z);
+
+			if (bbo.getType() != Material.AIR) {
+
+				player.sendMessage(bbo.getX() + "," + bbo.getY() + "," + bbo.getZ() + " = " + bbo.getType().name() + ":"
+						+ bbo.getData());
+				thereBlock = true;
+				break;
+			}
+
+		}
+
+		return thereBlock;
+	}
+
 	public void createSkyblockRS(Player player) {
 		CreateSkyblockRS ab = new CreateSkyblockRS(player);
 
@@ -1068,8 +1003,6 @@ strLine = br.readLine();
 
 		return b;
 	}
-
-	
 
 	public int getOWNIslandID(String player, boolean rebuild) {
 		// loop for check exits rs id and return or not build new one
@@ -1107,6 +1040,76 @@ strLine = br.readLine();
 			player.getInventory().addItem(itm);
 		}
 
+	}
+
+	public void loadLVFile() {
+		String worldf = Constant.rsLV_filename;
+
+		File dir = new File(Constant.folder_name);
+		dir.mkdir();
+
+		String filena = Constant.folder_name + File.separator + worldf;
+		File fff = new File(filena);
+
+		try {
+
+			lv1000.clear();
+
+			fff.createNewFile();
+
+			System.out.println("ptdeW&DewDD skyblock , lv loading : " + filena);
+			// Open the file that is the first
+			// command line parameter
+			FileInputStream fstream = new FileInputStream(filena);
+			// Get the object of DataInputStream
+			DataInputStream in = new DataInputStream(fstream);
+			BufferedReader br = new BufferedReader(new InputStreamReader(in));
+			String strLine;
+			// Read File Line By Line
+
+			// sthae
+			// aosthoeau
+			// * save
+
+			String m[];
+
+			while ((strLine = br.readLine()) != null) {
+				LV1000Type lvo = new LV1000Type();
+
+				m = strLine.split("\\s+");
+
+				lvo.needSize = Integer.parseInt(m[0]);
+				lvo.rewardSize = Integer.parseInt(m[1]);
+
+				for (int i = 0; i < lvo.needSize; i++) {
+					strLine = br.readLine();
+
+					String bem[] = strLine.split(" ");
+
+					lvo.needNameData[i] = bem[0];
+					lvo.needAmount[i] = Integer.parseInt(bem[1]);
+
+				}
+
+				for (int i = 0; i < lvo.rewardSize; i++) {
+					strLine = br.readLine();
+
+					String bem[] = strLine.split(" ");
+					lvo.rewardNameData[i] = bem[0];
+					lvo.rewardAmount[i] = Integer.parseInt(bem[1]);
+
+				}
+
+				lv1000.add(lvo);
+
+			}
+
+			System.out.println("ptdew&DewDD skyblock : lv loaded " + filena);
+
+			in.close();
+		} catch (Exception e) {// Catch exception if any
+			System.err.println("Error load " + filena + " " + e.getMessage());
+		}
 	}
 
 	public void loadRSProtectFile() {
@@ -1216,20 +1219,18 @@ strLine = br.readLine();
 
 			dprint.r.printAll("ptdew&DewDD Skyblock: Loaded " + filena);
 
-			
-			for (int i = rsMax -1 ; i >= 0 ; i -- ) {
-				
-				
-				for (int j = 0; j < i ; j++ ) {
-					
+			for (int i = rsMax - 1; i >= 0; i--) {
+
+				for (int j = 0; j < i; j++) {
+
 					if (rs[i].x == rs[j].x && rs[i].z == rs[j].z) {
 						dprint.r.printAll("duplicate x y on id " + j + " and " + i);
 						continue;
 					}
 				}
-				
+
 			}
-			
+
 			in.close();
 		} catch (Exception e) {// Catch exception if any
 			dprint.r.printAll("Error load " + filena + e.getMessage());
@@ -1245,7 +1246,7 @@ strLine = br.readLine();
 		printToAllPlayerOnRS(rsID, tr.gettr("next_mission"));
 
 		dprint.r.printAdmin(tr.gettr("owner_of_island_name") + rs[rsID].p[0] + " " + tr.gettr("did_mission_complete")
-				+ " " +(rs[rsID].mission));
+				+ " " + (rs[rsID].mission));
 
 		int tmpID = (cur);
 		tmpID++;
@@ -1287,27 +1288,6 @@ strLine = br.readLine();
 		return g;
 
 		// 180
-	}
-	
-	public static String getNewOwnerName() {
-		String abc  = "";
-		boolean found = false;
-		do {
-			found = false;
-			Random rnd = new Random();
-			abc = "freeZone" + rnd.nextInt(1000);
-			for (int i = 0 ; i < rsMax ; i++ ) {
-				if (rs[i].p[0].equalsIgnoreCase(abc) == true) {
-					
-					found = true;
-					break;
-				}
-			}
-			
-			
-		} while (found == true);
-		
-		return abc;
 	}
 
 	public void saveRSProtectFile() {
@@ -1354,22 +1334,6 @@ strLine = br.readLine();
 			// Auto-generated catch block
 			e.printStackTrace();
 		}
-
-	}
-
-	public void adjustProtect(Block block, Player player) {
-		
-		AdjustProtect abc = new AdjustProtect(block, player);
-		 Bukkit.getScheduler().scheduleSyncDelayedTask(ac, abc,1);
-		
-
-	}
-
-public void adjustProtect2(Block block, Player player) {
-		
-		AdjustProtect2 abc = new AdjustProtect2(block, player);
-		 Bukkit.getScheduler().scheduleSyncDelayedTask(ac, abc,1);
-		
 
 	}
 
