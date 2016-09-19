@@ -171,7 +171,7 @@ public class api_skyblock {
 				} else { // if x y z this can do
 					dprint.r.printAll("random " + x + "," + y + "," + z);
 
-					int newid = getOWNIslandID(player, true);
+					int newid = getOWNIslandID(player.getName(), true);
 					// get free slot for this player
 					rs[newid].x = x;
 					rs[newid].y = y;
@@ -441,8 +441,8 @@ public class api_skyblock {
 		// must check world
 
 		for (int lop = 0; lop < rsMax; lop++) {
-			if (block.getX() >= (rs[lop].x - 150) && block.getX() <= (rs[lop].x + 150)
-					&& block.getZ() >= (rs[lop].z - 150) && block.getZ() <= (rs[lop].z + 150)) {
+			if (block.getX() >= (rs[lop].x - 150) && block.getX() <= (rs[lop].x + 149)
+					&& block.getZ() >= (rs[lop].z - 150) && block.getZ() <= (rs[lop].z + 149)) {
 				return lop;
 			}
 		}
@@ -845,12 +845,12 @@ public class api_skyblock {
 		return aa;
 	}
 
-	public int getOWNIslandID(Player player, boolean rebuild) {
+	public int getOWNIslandID(String player, boolean rebuild) {
 		// loop for check exits rs id and return or not build new one
 
 		// find
 		for (int lop = 0; lop < rsMax; lop++) {
-			if (rs[lop].p[0].equalsIgnoreCase(player.getName())) {
+			if (rs[lop].p[0].equalsIgnoreCase(player)) {
 				return lop;
 			}
 		}
@@ -990,6 +990,20 @@ public class api_skyblock {
 
 			dprint.r.printAll("ptdew&DewDD Skyblock: Loaded " + filena);
 
+			
+			for (int i = rsMax -1 ; i >= 0 ; i -- ) {
+				
+				
+				for (int j = 0; j < i ; j++ ) {
+					
+					if (rs[i].x == rs[j].x && rs[i].z == rs[j].z) {
+						dprint.r.printAll("duplicate x y on id " + j + " and " + i);
+						continue;
+					}
+				}
+				
+			}
+			
 			in.close();
 		} catch (Exception e) {// Catch exception if any
 			dprint.r.printAll("Error load " + filena + e.getMessage());
@@ -1047,6 +1061,27 @@ public class api_skyblock {
 		return g;
 
 		// 180
+	}
+	
+	public static String getNewOwnerName() {
+		String abc  = "";
+		boolean found = false;
+		do {
+			found = false;
+			Random rnd = new Random();
+			abc = "freeZone" + rnd.nextInt(1000);
+			for (int i = 0 ; i < rsMax ; i++ ) {
+				if (rs[i].p[0].equalsIgnoreCase(abc) == true) {
+					
+					found = true;
+					break;
+				}
+			}
+			
+			
+		} while (found == true);
+		
+		return abc;
 	}
 
 	public void saveRSProtectFile() {

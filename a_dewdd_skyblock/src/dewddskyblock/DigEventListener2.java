@@ -518,8 +518,8 @@ public class DigEventListener2 implements Listener {
 					for (int xx = -5; xx <= 5; xx++) {
 						for (int yy = -5; yy <= 5; yy++) {
 							for (int zz = -5; zz <= 5; zz++) {
-								
-								if (b.getRelative(xx, yy, zz).getType() == Material.COBBLESTONE ) {
+
+								if (b.getRelative(xx, yy, zz).getType() == Material.COBBLESTONE) {
 									continue;
 								}
 
@@ -934,6 +934,67 @@ public class DigEventListener2 implements Listener {
 			e.setCancelled(true);
 	}
 
+	class drawProtectLine implements Runnable {
+
+		private Block block;
+		private Player player;
+		private boolean drawOrDelete = false;
+
+		public drawProtectLine(Block block, Player player, boolean drawOrDelete) {
+			this.block = block;
+			this.player = player;
+			this.drawOrDelete = drawOrDelete;
+		}
+
+		@Override
+		public void run() {
+
+			int getid = dew.getprotectid(block);
+			if (getid == -1) {
+				player.sendMessage(dprint.r.color(tr.gettr("this_zone_don't_have_any_protect")));
+				return;
+			}
+
+			// start draw Line
+
+			int lx = dew.rs[getid].x - 150;
+			int rx = dew.rs[getid].x + 149;
+
+			int lz = dew.rs[getid].z - 150;
+			int rz = dew.rs[getid].z + 149;
+
+			for (int x = lx; x <= rx; x++) {
+
+				for (int z = lz; z <= rz; z++) {
+
+					for (int y = 0; y < 256; y += 64) {
+
+						if ((z > lz && z < rz) && (x > lx && x < rx)) {
+							continue;
+						}
+
+						Block cc = block.getWorld().getBlockAt(x, y, z);
+						if (drawOrDelete == true) {
+							if (cc.getType() == Material.AIR) {
+								cc.setType(player.getItemInHand().getType());
+
+							}
+						} else {
+							if (cc.getType() == player.getItemInHand().getType()) {
+								cc.setType(Material.AIR);
+
+							}
+
+						}
+					}
+				}
+
+			}
+
+		}
+
+	}
+
 	@EventHandler
 	public void eventja(PlayerCommandPreprocessEvent e) {
 		if (!api_skyblock.isrunworld(e.getPlayer().getWorld().getName())) {
@@ -963,13 +1024,16 @@ public class DigEventListener2 implements Listener {
 				player.sendMessage(dprint.r.color("/skyblock goid <id>"));
 				player.sendMessage(dprint.r.color("/skyblock gorandom"));
 
+				player.sendMessage(dprint.r.color("/skyblock delete"));
+				player.sendMessage(dprint.r.color("/skyblock buyhere"));
+
 				player.sendMessage(dprint.r.color("/skyblock max"));
+				player.sendMessage(dprint.r.color("/skyblock drawprotect <true,false>"));
 
 				player.sendMessage("***************************");
 				player.sendMessage("Admin Section");
 				player.sendMessage(dprint.r.color("/skyblock resetlv <lv>"));
 
-				player.sendMessage(dprint.r.color("/skyblock buyhere"));
 				player.sendMessage(dprint.r.color("/skyblock reload"));
 				player.sendMessage(dprint.r.color("/skyblock arethereblock"));
 
@@ -1023,12 +1087,10 @@ public class DigEventListener2 implements Listener {
 						e1.printStackTrace();
 					}
 
-				}
-				else if (m[1].equalsIgnoreCase("arethereblock")) {
-					
+				} else if (m[1].equalsIgnoreCase("arethereblock")) {
+
 					dew.checkIsTHisZoneAreEmptyOrNot(player.getLocation().getBlock(), player);
-				}
-				else if (m[1].equalsIgnoreCase("buyhere")) {
+				} else if (m[1].equalsIgnoreCase("buyhere")) {
 					// for buy these zone
 
 					int getid = api_skyblock.getprotectid(player.getLocation().getBlock());
@@ -1038,6 +1100,14 @@ public class DigEventListener2 implements Listener {
 					}
 
 					// buy this zone
+
+					if (dew.getOWNIslandID(player.getName(), false) > -1) {
+						player.sendMessage(dprint.r.color(tr.gettr("you_can_buyhere_cuz_you_have_own_island")));
+						player.sendMessage(dprint.r
+								.color(tr.gettr("if_you_need_to_buyhere_this_zone_delete_own_island_first_type_here"
+										+ " /sky delete")));
+						return;
+					}
 
 					api_skyblock.rsMax++;
 					api_skyblock.rs[api_skyblock.rsMax - 1].p = new String[api_skyblock.RSMaxPlayer];
@@ -1050,30 +1120,32 @@ public class DigEventListener2 implements Listener {
 					api_skyblock.rs[api_skyblock.rsMax - 1].y = player.getLocation().getBlockY();
 
 					// x
-					double i3 = player.getLocation().getBlockX() / 300;
+					
+					boolean found = false;
+					
+					do {
+						found = false;
+					int tmpX = rnd.nextInt(100) * 300 * (rnd.nextInt(2) == 0 ? -1 : 1);
+					int tmpZ = rnd.nextInt(100) * 300 * (rnd.nextInt(2) == 0 ? -1 : 1);
+					Block block = player.getLocation().getBlock();
+					
+					if (block.getX() >= (tmpX - 150) 
+							&& block.getX() <= (tmpX + 149)
+							&& block.getZ() >= (tmpZ - 150) && 
+							block.getZ() <= (tmpZ + 149)) {
+						
+						dew.rs[dew.rsMax - 1].x = tmpX;
+					dew.rs[dew.rsMax - 1].z = tmpZ;
+					
+						found = true;
+						break;
+					}	
+						
+					} while (found == false) ;
+					
 
-					i3 = Math.floor(i3) * 300;
-
-					int i4 = (int) (i3 + 300);
-
-					if (Math.abs(player.getLocation().getBlockX() - i3) < Math
-							.abs(player.getLocation().getBlockX() - i4))
-						api_skyblock.rs[api_skyblock.rsMax - 1].x = (int) i3;
-					else
-						api_skyblock.rs[api_skyblock.rsMax - 1].x = i4;
-
+					
 					// z
-					i3 = player.getLocation().getBlockZ() / 300;
-
-					i3 = Math.floor(i3) * 300;
-
-					i4 = (int) (i3 + 300);
-
-					if (Math.abs(player.getLocation().getBlockZ() - i3) < Math
-							.abs(player.getLocation().getBlockZ() - i4))
-						api_skyblock.rs[api_skyblock.rsMax - 1].z = (int) i3;
-					else
-						api_skyblock.rs[api_skyblock.rsMax - 1].z = i4;
 
 					//
 					player.sendMessage(dprint.r
@@ -1084,7 +1156,28 @@ public class DigEventListener2 implements Listener {
 
 					dew.saveRSProtectFile();
 					return;
-				} else if (m[1].equalsIgnoreCase("resetlv")) {
+				} else if (m[1].equalsIgnoreCase("drawprotect")) {
+
+					int getid = api_skyblock.getprotectid(player.getLocation().getBlock());
+
+					if (getid == -1) {
+						player.sendMessage(dprint.r.color(tr.gettr("this_zone_don't_have_protect")));
+						return;
+
+					}
+
+					if (m.length != 3) {
+						player.sendMessage(dprint.r.color("/skyblock drawprotect true/false"));
+						return;
+					}
+
+					drawProtectLine dp = new drawProtectLine(player.getLocation().getBlock(), player,
+							Boolean.parseBoolean(m[2]));
+
+					Bukkit.getScheduler().scheduleSyncDelayedTask(ac, dp);
+				}
+
+				else if (m[1].equalsIgnoreCase("resetlv")) {
 					if (player.hasPermission(Constant.presetlv) == false) {
 						player.sendMessage(dprint.r.color(tr.gettr("you_don't_have_permission") + Constant.pskyblock));
 						return;
@@ -1189,6 +1282,9 @@ public class DigEventListener2 implements Listener {
 					for (int lop = 0; lop < api_skyblock.rsMax; lop++)
 						for (int lop2 = 0; lop2 < api_skyblock.RSMaxPlayer; lop2++)
 							if (api_skyblock.rs[lop].p[lop2].equalsIgnoreCase(player.getName())) {
+								// player.sendMessage("found " +
+								// api_skyblock.rs[lop].p[lop2] + " >< " +
+								// player.getName());
 								manyhomemax++;
 								manyhome[manyhomemax - 1] = lop;
 							}
@@ -1205,6 +1301,7 @@ public class DigEventListener2 implements Listener {
 						// if found his skyblock teleport him
 						Block block = player.getWorld().getBlockAt(api_skyblock.rs[manyhome[0]].x,
 								api_skyblock.rs[manyhome[0]].y + 10, api_skyblock.rs[manyhome[0]].z);
+
 						block.getChunk().load();
 						player.teleport(block.getLocation());
 						player.sendMessage(dprint.r.color(tr.gettr("teleported_to_skyblock") + " (" + block.getX() + ","
@@ -1292,7 +1389,17 @@ public class DigEventListener2 implements Listener {
 
 						// check that player online
 
+						// check if he already has own protect
+
+						int getido = dew.getOWNIslandID(m[2], false);
+						if (getido != -1) {
+							player.sendMessage(dprint.r.color(tr.gettr("can't_give_owner_to_this_guy") + " " + m[2]
+									+ " " + tr.gettr("cuz_he_already_owner_another_island")));
+							return;
+
+						}
 						api_skyblock.rs[getid].p[0] = m[2];
+
 						player.sendMessage(
 								dprint.r.color(tr.gettr("this_skyblock_owner_is") + api_skyblock.rs[getid].p[0]));
 						dew.saveRSProtectFile();
@@ -1399,9 +1506,13 @@ public class DigEventListener2 implements Listener {
 						return;
 					}
 
+					player.sendMessage(dprint.r.color("protect id ") + getid + " , position (" + dew.rs[getid].x + ","
+							+ dew.rs[getid].y + "," + dew.rs[getid].z + ")");
+
 					for (int i = 0; i < api_skyblock.RSMaxPlayer; i++)
 						if (api_skyblock.rs[getid].p[i].equalsIgnoreCase("null") == false)
 							player.sendMessage(dprint.r.color("Member " + i + " = " + api_skyblock.rs[getid].p[i]));
+
 				} else if (m[1].equalsIgnoreCase("new")) { // new
 
 					if (player.hasPermission(Constant.pskyblock) == false) {
@@ -1431,6 +1542,56 @@ public class DigEventListener2 implements Listener {
 
 					return;
 
+				} else if (m[1].equalsIgnoreCase("delete")) { // new
+
+					if (player.hasPermission(Constant.pskyblock) == false) {
+						player.sendMessage(dprint.r.color(tr.gettr("you_don't_have_permission") + Constant.pskyblock));
+						return;
+					}
+
+					// check item on player
+
+					int getido = dew.getprotectid(player.getLocation().getBlock());
+					if (getido == -1) {
+						player.sendMessage(
+								dprint.r.color(tr.gettr("this_zone_don't_have_any_protect_so_can't_delete")));
+						return;
+					}
+
+					if (dew.rs[getido].p[0].equalsIgnoreCase(player.getName()) == false) {
+
+						if (player.hasPermission(Constant.poveride) == false) {
+							player.sendMessage(dprint.r.color(
+									tr.gettr("you_can't_deleteisland_cuz_owner_here_is") + " " + dew.rs[getido].p[0]));
+							return;
+
+						} else {
+							player.sendMessage(
+									dprint.r.color(tr.gettr("override_to_delete_this_island_protect_owner_is") + " "
+											+ dew.rs[getido].p[0]));
+						}
+
+					}
+
+					boolean hav = false;
+
+					for (ItemStack itm : player.getInventory().getContents()) {
+						if (itm != null) {
+							hav = true;
+							break;
+						}
+					}
+
+					if (hav == true) {
+						player.sendMessage(dprint.r.color(tr.gettr("can_not_deleteskyprotect_if_have_item")));
+						return;
+					}
+
+					dew.rs[getido].p[0] = dew.getNewOwnerName();
+					dew.saveRSProtectFile();
+
+					return;
+
 				} else if (m[1].equalsIgnoreCase("reload") == true) {
 
 					dew.loadRSProtectFile();
@@ -1445,7 +1606,8 @@ public class DigEventListener2 implements Listener {
 		if (itm == null) {
 
 		} else {
-			oo = itm.getType().name() + ":" + itm.getData().getData() + ":" + itm.getType().getMaxStackSize() + ":" + itm.getType().isBlock();
+			oo = itm.getType().name() + ":" + itm.getData().getData() + ":" + itm.getType().getMaxStackSize() + ":"
+					+ itm.getType().isBlock();
 		}
 
 		return oo;
@@ -1703,18 +1865,15 @@ public class DigEventListener2 implements Listener {
 		 * 
 		 * 
 		 */
-		
-		
-		
-		
+
 		Bukkit.getScheduler().scheduleSyncDelayedTask(ac, new Runnable() {
-			
+
 			public void run() {
-			player.sendMessage(tr.gettr("on_skyblock_playerjoin_tell_him_this_word"));
+				player.sendMessage(tr.gettr("on_skyblock_playerjoin_tell_him_this_word"));
 			}
 		}, 100);
 
-		int rsid = dew.getOWNIslandID(player, false);
+		int rsid = dew.getOWNIslandID(player.getName(), false);
 
 		if (rsid == -1) {
 			player.sendMessage(tr.gettr("you_dont_have_anyskyblock"));
