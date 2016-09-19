@@ -285,15 +285,16 @@ class HybridOverride extends Hybrid {
 		
 		Random rnd = new Random();
 		
+		boolean moneyNotFoundxD  = false;
 		
-		while (curLVLoop < tmpLV.size()) {
+		while (curLVLoop < tmpLV.size() && moneyNotFoundxD == false) {
 			LV1000Type curLV = tmpLV.get(curLVLoop);
 			
 			// bought = item  to finish lv
 			
 			
 			boolean notFill = false;
-			while (notFill == false) {
+			while (notFill == false && moneyNotFoundxD == false) {
 				
 				// check are there item not fill
 				 notFill = false;
@@ -366,7 +367,8 @@ class HybridOverride extends Hybrid {
 										
 									}
 									else { // don't have money left
-										
+										moneyNotFoundxD = true;
+										break;
 										
 									}
 									
