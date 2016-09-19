@@ -281,7 +281,7 @@ public class api_skyblock {
 
 				if (getplayerinslot(player.getName(), id) > -1) {
 
-					player.sendMessage(getFullMissionHeadAndCurLevel(rs[id].mission));
+					player.sendMessage(dprint.r.color(  getFullMissionHeadAndCurLevel(rs[id].mission)));
 				}
 
 				// check his
@@ -882,7 +882,7 @@ public class api_skyblock {
 		}
 	}
 
-	public synchronized void nextMission(int rsID) {
+	public synchronized void nextMission(int rsID,Missional cur) {
 		printToAllPlayerOnRS(rsID, (Constant.getMissionHeader(rs[rsID].mission) + " " + tr.gettr("mission_complete")));
 
 		// dprint.r.printAll("0 calling apply reward");
@@ -893,7 +893,7 @@ public class api_skyblock {
 		dprint.r.printAdmin(tr.gettr("owner_of_island_name") + rs[rsID].p[0] + " " + tr.gettr("did_mission_complete")
 				+ " " + Constant.getMissionHeader(rs[rsID].mission));
 
-		int tmpID = Missional.getID(rs[rsID].mission);
+		int tmpID = Missional.getID(cur);
 		tmpID++;
 		rs[rsID].mission = Missional.idToMission(tmpID);
 
@@ -1040,6 +1040,6 @@ public class api_skyblock {
 	public void startMissionNotificationLoopShowing() {
 		Bukkit.getScheduler().cancelTasks(ac);
 
-		Bukkit.getScheduler().scheduleSyncRepeatingTask(ac, new MissionNotification(), 1, 2400);
+		Bukkit.getScheduler().scheduleSyncRepeatingTask(ac, new MissionNotification(), 1, 12000);
 	}
 }

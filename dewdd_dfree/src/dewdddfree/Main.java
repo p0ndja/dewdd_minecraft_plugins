@@ -9,6 +9,8 @@ import java.util.logging.Logger;
 
 import org.bukkit.plugin.java.JavaPlugin;
 
+import dewddtran.tr;
+
 public class Main extends JavaPlugin {
 	Logger				log;
 	DigEventListener2	ax	= new DigEventListener2();
@@ -16,7 +18,7 @@ public class Main extends JavaPlugin {
 	@Override
 	public void onDisable() {
 		getServer().getPluginManager().disablePlugin(this);
-		dprint.r.printAll("ptdew&dewdd : unloaded dewdd dfree");
+		dprint.r.printAll("ptdew&dewdd : " +  tr.gettr("unloaded_plugin") + " dewdd dfree");
 	}
 
 	@Override
@@ -26,7 +28,7 @@ public class Main extends JavaPlugin {
 
 		ax.ac = this;
 		getServer().getPluginManager().registerEvents(ax, this);
-		dprint.r.printAll("ptdew&dewdd : loaded dewdd dfree");
+		dprint.r.printAll("ptdew&dewdd : " +  tr.gettr("unloaded_plugin")+ " loaded dewdd dfree");
 
 	}
 

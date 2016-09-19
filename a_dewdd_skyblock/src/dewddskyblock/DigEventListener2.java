@@ -136,7 +136,7 @@ public class DigEventListener2 implements Listener {
 
 			if (xy == false) {
 
-				CallNextMission no = new CallNextMission(curRSID);
+				CallNextMission no = new CallNextMission(curRSID,Missional.LV_0_COBBLESTONE_MACHINE);
 				Bukkit.getScheduler().scheduleSyncDelayedTask(ac, no,1);
 			}
 
@@ -166,7 +166,7 @@ public class DigEventListener2 implements Listener {
 				
 					//dprint.r.printAll("lv5 class nether");
 					
-				CallNextMission oo = new CallNextMission(curRSID);
+				CallNextMission oo = new CallNextMission(curRSID,Missional.LV_5_ZOMBIE_ATTACK_1);
 				Bukkit.getScheduler().scheduleSyncDelayedTask(ac, oo);
 				}
 
@@ -180,15 +180,16 @@ public class DigEventListener2 implements Listener {
 	class CallNextMission implements Runnable {
 
 		private int curRSID;
+		private Missional curMission;
 
-		public CallNextMission(int rsid) {
-
+		public CallNextMission(int rsid,Missional curMission) {
+			this.curMission = curMission;
 			this.curRSID = rsid;
 		}
 
 		@Override
 		public void run() {
-			dew.nextMission(curRSID);
+			dew.nextMission(curRSID,curMission);
 		}
 
 	}
@@ -217,13 +218,7 @@ public class DigEventListener2 implements Listener {
 				break;
 			case COBBLESTONE:
 				// dprint.r.printAll("0 autocut");
-				if (api_skyblock.rs[curRSID].mission == Missional.LV_0_COBBLESTONE_MACHINE) {
-
-					// dprint.r.printAll("0 alling nextMission");
-					CallNextMission ee = new CallNextMission(curRSID);
-					Bukkit.getScheduler().scheduleSyncDelayedTask(ac, ee);
-
-				}
+			
 
 				break;
 
@@ -258,7 +253,7 @@ public class DigEventListener2 implements Listener {
 					return;
 
 				switch (b.getType()) {
-				case WHEAT:
+				case WHEAT:case SEEDS:
 					b.breakNaturally();
 					b.setType(Material.WHEAT);
 					b.setData((byte) 0);
@@ -412,8 +407,13 @@ public class DigEventListener2 implements Listener {
 							// dprint.r.printAll("misionrepeat lv 5 = " + x +
 							// "," + y + "," + z);
 
+							cd.setType(Material.NETHERRACK);
+							cd.getRelative(BlockFace.UP).setType(Material.FIRE);
+								
+							
 							if (cd.getType() == Material.NETHERRACK) {
-								cd.getRelative(BlockFace.UP).setType(Material.FIRE);
+								
+								
 								player.getWorld().setTime(16000);
 
 								// search monster
@@ -426,6 +426,7 @@ public class DigEventListener2 implements Listener {
 								}
 
 							}
+						
 
 						}
 
@@ -534,10 +535,22 @@ public class DigEventListener2 implements Listener {
 
 				switch (api_skyblock.rs[getid].mission) {
 
-				case LV_1_BREAK_STONE:
+				case LV_0_COBBLESTONE_MACHINE:
 
 					// search nearest stone
 					Block bd = Bukkit.getWorld("world").getBlockAt(api_skyblock.rs[getid].x, api_skyblock.rs[getid].y,
+							api_skyblock.rs[getid].z);
+
+					if (block.getType() == Material.COBBLESTONE) {
+						CallNextMission bb = new CallNextMission(getid, Missional.LV_0_COBBLESTONE_MACHINE);
+						Bukkit.getScheduler().scheduleSyncDelayedTask(ac, bb, 1);
+					}
+					
+					break;
+				case LV_1_BREAK_STONE:
+
+					// search nearest stone
+					 bd = Bukkit.getWorld("world").getBlockAt(api_skyblock.rs[getid].x, api_skyblock.rs[getid].y,
 							api_skyblock.rs[getid].z);
 
 					LV1DestroyStone ee = new LV1DestroyStone(bd, getid);
@@ -653,7 +666,7 @@ public class DigEventListener2 implements Listener {
 
 						if (api_skyblock.rs[getid].tmpForCountingBone1 >= Constant.LV_2_USE_BONE_MEAL_AMOUNT) {
 
-							CallNextMission ee = new CallNextMission(getid);
+							CallNextMission ee = new CallNextMission(getid,Missional.LV_2_USE_BONE_MEAL);
 							Bukkit.getScheduler().scheduleSyncDelayedTask(ac, ee);
 						}
 					}
@@ -664,7 +677,7 @@ public class DigEventListener2 implements Listener {
 
 					if (block.getY() == 1) {
 
-						CallNextMission ee = new CallNextMission(getid);
+						CallNextMission ee = new CallNextMission(getid,Missional.LV_4_PLACE_Y1);
 						Bukkit.getScheduler().scheduleSyncDelayedTask(ac, ee);
 
 					}
@@ -1463,7 +1476,7 @@ public class DigEventListener2 implements Listener {
 								e.getItemDrop().getItemStack().setType(Material.CLAY);
 								e.getItemDrop().getItemStack().setAmount(10);
 
-								CallNextMission ee = new CallNextMission(getid);
+								CallNextMission ee = new CallNextMission(getid,Missional.LV_3_DROP_TOUCH);
 								Bukkit.getScheduler().scheduleSyncDelayedTask(ac, ee);
 								return;
 							}
@@ -1477,7 +1490,7 @@ public class DigEventListener2 implements Listener {
 								e.getItemDrop().getItemStack().setType(Material.LAPIS_ORE);
 								e.getItemDrop().getItemStack().setAmount(10);
 
-								CallNextMission ee = new CallNextMission(getid);
+								CallNextMission ee = new CallNextMission(getid,Missional.LV_6_DROP_WHEAT);
 								Bukkit.getScheduler().scheduleSyncDelayedTask(ac, ee);
 								return;
 							}
