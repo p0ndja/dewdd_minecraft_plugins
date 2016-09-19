@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.Random;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Chunk;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
@@ -35,47 +36,83 @@ public class api_skyblock {
 		private Block midBlockX0Z0;
 		private Player player;
 
+		private int curI = 0;
+		private RSData tmprs[];
+		private int curNewID = 0;
+
 		public AdjustProtect(Block midBlockX0Z0, Player player) {
 			this.midBlockX0Z0 = midBlockX0Z0;
 			this.player = player;
+
+		}
+
+		public AdjustProtect(Block midBlockX0Z0, Player player, int curI, RSData tmprs[], int curNewID) {
+			this.midBlockX0Z0 = midBlockX0Z0;
+			this.player = player;
+			this.curI = curI;
+			this.tmprs = tmprs;
+			this.curNewID = curNewID;
 		}
 
 		@Override
 		public void run() {
 
-			RSData tmprs[] = new RSData[Constant.rsBuffer];
-			int curID = 0;
+			if (curI == 0) {
+				tmprs = new RSData[Constant.rsBuffer];
+				curNewID = 0;
 
-			for (int i = 0; i < Constant.rsBuffer; i++) {
-				tmprs[i] = new RSData();
-				tmprs[i].p = new String[RSMaxPlayer];
-
-			}
-
-			for (int i = 0; i < rsMax; i++) {
-				Block bo = midBlockX0Z0.getWorld().getBlockAt(rs[i].x, rs[i].y, rs[i].z);
-
-				boolean thereBlock = checkIsThatAreBlockOrNot(bo, player);
-				if (thereBlock == true) {
-					// copy
-
-					tmprs[curID] = rs[i].copyIt();
-
-					curID++;
-
-					continue;
-				} else {
-					// delete protec
-					continue;
+				for (int i = 0; i < Constant.rsBuffer; i++) {
+					tmprs[i] = new RSData();
+					tmprs[i].p = new String[RSMaxPlayer];
 
 				}
 
 			}
 
+			while ( curI < rsMax) {
+				
+				Block bo = midBlockX0Z0.getWorld().getBlockAt(rs[curI].x, rs[curI].y, rs[curI].z);
+
+				boolean thereBlock = checkIsThatAreBlockOrNot(bo, player);
+				if (thereBlock == true) {
+					// copy
+
+					tmprs[curNewID] = rs[curI].copyIt();
+
+					curNewID++;
+					dprint.r.printAll("curI " + curI +  " /curNewID " + curNewID + " stil hastBlock");
+					
+					curI ++;
+				} else {
+					// delete protec
+					dprint.r.printAll("curI " + curI +  " /curNewID " + curNewID + " nope");
+					
+					curI++;
+
+				}
+				
+				for (Chunk chu : Bukkit.getWorld("world").getLoadedChunks()) {
+					if (chu == null) {
+						continue;
+					}
+					chu.unload(true);
+				}
+				
+				AdjustProtect abc = new AdjustProtect(bo, player, curI, tmprs, curNewID);
+				Bukkit.getScheduler().scheduleSyncDelayedTask(ac, abc,1);
+				
+				return;
+
+			}
+			
+			if (curI == rsMax) {
+
 			// copyBack
-			rsMax = curID;
-			for (int i = 0; i < curID; i++) {
+			rsMax = curNewID;
+			for (int i = 0; i < curNewID; i++) {
 				rs[i] = tmprs[i].copyIt();
+			}
+			
 			}
 
 			// player.sendMessage("thereBlock " + thereBlock);
@@ -87,9 +124,24 @@ public class api_skyblock {
 		private Block midBlockX0Z0;
 		private Player player;
 
+		private int curx = 0;
+		private int curz = 0;
+
 		public AdjustProtect2(Block midBlockX0Z0, Player player) {
 			this.midBlockX0Z0 = midBlockX0Z0;
 			this.player = player;
+
+			LXRXLZRZType ee = getPositionLXRXLZRZ();
+			this.curx = ee.lx;
+			this.curz = ee.lz;
+		}
+
+		public AdjustProtect2(Block midBlockX0Z0, Player player, int curx, int curz) {
+			this.midBlockX0Z0 = midBlockX0Z0;
+			this.player = player;
+			this.curx = curx;
+			this.curz = curz;
+
 		}
 
 		@Override
@@ -103,13 +155,16 @@ public class api_skyblock {
 
 			Block bb = null;
 
-			for (int tmpx = ee.lx; tmpx <= ee.rx; tmpx += 300) {
-				for (int tmpz = ee.lz; tmpz <= ee.rz; tmpz += 300) {
+			for (int tmpx = curx; tmpx <= ee.rx; tmpx += 300) {
+
+				for (int tmpz = curz; tmpz <= ee.rz; tmpz += 300) {
 
 					// check protect if there so skip
 					bb = midBlockX0Z0.getLocation().getWorld().getBlockAt(tmpx, 150, tmpz);
 					int checkid = getprotectid(bb);
 					if (checkid > -1) {
+						dprint.r.printC("searching no protect zone " + tmpx + ",150," + tmpz);
+
 						continue;
 					}
 
@@ -139,6 +194,24 @@ public class api_skyblock {
 						rsMax++;
 
 					}
+
+					tmpz += 300;
+					if (tmpz > ee.rz) {
+						tmpx += 300;
+						tmpz = ee.lz;
+					}
+
+					for (Chunk chu : Bukkit.getWorld("world").getLoadedChunks()) {
+						if (chu == null) {
+							continue;
+						}
+						chu.unload(true);
+					}
+
+					AdjustProtect2 abc = new AdjustProtect2(bb, player, tmpx, tmpz);
+
+					Bukkit.getScheduler().scheduleSyncDelayedTask(ac, abc, 1);
+					return;
 
 				}
 			}
@@ -953,7 +1026,7 @@ public class api_skyblock {
 
 		int search = 10;
 		for (int x = -search; x <= search; x++) {
-			for (int y = 0; y <= 256; y++) {
+			for (int y = 30; y <= 256; y++) {
 
 				for (int z = -search; z <= search; z++) {
 
