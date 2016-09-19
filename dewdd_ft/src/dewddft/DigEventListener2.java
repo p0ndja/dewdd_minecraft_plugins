@@ -440,15 +440,12 @@ public class DigEventListener2 implements Listener {
 				}
 			}
 
-			int ra = 0;
 
-			Material gg = null;
-			do {
-				ra = rnd.nextInt(1000);
-				gg = Material.getMaterial(ra);
-
-			}
-			while (gg == null);
+			int ranid  = 0;
+			//dprint.r.printAll("ft give item randid " + ranid + " , " + allBlockInGameMax);
+			ranid = rnd.nextInt(allBlockInGameMax);
+			
+				
 
 			if (pr.getInventory().firstEmpty() == -1) {
 				// recall
@@ -456,10 +453,14 @@ public class DigEventListener2 implements Listener {
 
 			}
 
-			ItemStack it = new ItemStack(gg.getId());
-			it.setAmount(1);
+			String bai[] = allBlockInGame[ranid].split(":");
+			ItemStack it = new ItemStack( Material.getMaterial( bai[0]));
+			it.getData().setData( Byte.parseByte(bai[1]));
+			ItemStack it2 = it.getData().toItemStack();
+			
+			it2.setAmount(1);
 
-			pr.getInventory().addItem(it);
+			pr.getInventory().addItem(it2);
 
 		}
 	}
@@ -650,6 +651,9 @@ public class DigEventListener2 implements Listener {
 	public JavaPlugin		ac			= null;
 	int						maxl		= 0;
 
+	public String[] allBlockInGame = new String[500];
+	public int allBlockInGameMax = 0;
+	
 	lastinv[]				inv			= new lastinv[30];
 
 	public static sell_type	sell[];
@@ -1126,6 +1130,53 @@ public class DigEventListener2 implements Listener {
 		}
 
 	}
+	
+	public void loadMissionBlockFile() {
+
+		String filena = folder_name + File.separator + "missionblock.txt";
+		File fff = new File(filena);
+
+		try {
+
+			allBlockInGame = new String[500];
+			allBlockInGameMax = 0;
+			
+			
+
+			fff.createNewFile();
+
+			dprint.r.printAll("loading mission file : " + filena);
+			// Open the file that is the first
+			// command line parameter
+			FileInputStream fstream = new FileInputStream(filena);
+			// Get the object of DataInputStream
+			DataInputStream in = new DataInputStream(fstream);
+			BufferedReader br = new BufferedReader(new InputStreamReader(in));
+			String strLine;
+			// Read File Line By Line
+
+			String m[];
+
+			while ((strLine = br.readLine()) != null) {
+
+				m = strLine.split("\\s+");
+				m = strLine.split(":");
+				// Print the content on the console
+
+				allBlockInGame[allBlockInGameMax] = m[0] + ":" + m[1];
+				// d.pl("...");
+				// rs[rsMax - 1].mission = 0;
+
+				allBlockInGameMax ++;
+			}
+
+			dprint.r.printAll(" Loaded " + filena);
+
+			in.close();
+		} catch (Exception e) {// Catch exception if any
+			dprint.r.printAll("Error load " + filena + e.getMessage());
+		}
+	}
 
 	public void loadinventoryfile() {
 		String filena2 = "ptdew_dewdd_ft_list.txt";
@@ -1241,6 +1292,7 @@ public class DigEventListener2 implements Listener {
 	public void reloadpl() {
 		loadinventoryfile();
 		loadselllist();
+		loadMissionBlockFile();
 		// clear all schude
 
 		Bukkit.getScheduler().cancelTasks(ac);

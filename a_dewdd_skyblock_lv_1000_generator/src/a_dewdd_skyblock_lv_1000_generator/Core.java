@@ -66,13 +66,15 @@ public class Core {
 			usedItRewardList[i] = false;
 		}
 
-		while (curChro < dnaSize) {
+	//	while (curChro < dnaSize) {
 			// d.pl("while " + curChro + " / " + dnaSize);
 
 			// ****************************************************
 
 			// deal with player sell price
-			if (tmpSell.size() < sell.size()) {
+			
+			
+			while (tmpSell.size() < sell.size()) {
 
 				double tmpReadChro = Math.abs(chromosome[curChro]);
 
@@ -90,7 +92,7 @@ public class Core {
 
 			// price shift <amount> shift <amount> shift <amount>
 
-			if (tmpAllShopUniqueDone < allBlockInGameAsList.size()) {
+			while (tmpAllShopUniqueDone < allBlockInGameAsList.size()) {
 				d.pl("tmpAllShop > " + curChro);
 
 				d.pl("tmpAllShop : " + tmpAllShopUniqueDone + " = " + (allBlockInGameAsList.size()));
@@ -221,7 +223,7 @@ public class Core {
 
 			
 
-			if (tmpLV.size() <= maxLV ) {
+			while (tmpLV.size() <= maxLV ) {
 				// d.pl("tmpLV " + tmpLV.size() + " , tmpReading " +
 				// tmpReading.size() + " , curChro " + curChro);
 
@@ -321,11 +323,8 @@ public class Core {
 				// curChro++;
 				continue;
 
-			} else {
-				d.pl("break as curChro = " + curChro);
-				break; // lv complete
-			}
-		} // while
+			} 
+	
 
 		d.pl("abc");
 	}
