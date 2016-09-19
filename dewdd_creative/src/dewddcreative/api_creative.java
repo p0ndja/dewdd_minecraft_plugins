@@ -123,7 +123,7 @@ public  class api_creative {
 			x = this.randomG.nextInt(max_b * 2) - max_b;
 			z = this.randomG.nextInt(max_b * 2) - max_b;
 			e = player.getLocation().getWorld().getBlockAt(x, 70, z);
-			cd = isprotectedarea(e);
+			cd = isProtectedArea(e);
 
 		} while (cd == false);
 
@@ -136,7 +136,7 @@ public  class api_creative {
 
 
 
-	public boolean isprotectedarea(Block block) {
+	public static boolean isProtectedArea(Block block) {
 
 		int zx = 5;
 		int zz = 5;

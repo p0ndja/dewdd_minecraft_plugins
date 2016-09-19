@@ -4781,22 +4781,42 @@ public class dewset extends dewset_interface {
 
 	public static boolean cando_all(Block block, Player player, String modeevent) {
 		boolean ar = cando_Main(block, player, modeevent);
+		
 		boolean sky = false;
 		boolean cre = false;
+		
+		boolean hasProtect = false;
+		
+		RSWorld rsWorld = getWorld(block.getWorld().getName());
+		hasProtect = getProtectid(block , rsWorld) > -1 ? true : false;
+		
 		
 		if (Bukkit.getPluginManager().getPlugin("dewddskyblock") == null) {
 			sky = true;
 		} else {
 			sky = api_skyblock.cando(block, player, modeevent);
+			
+			if (api_skyblock.getProtectid(block) > -1)  {
+				hasProtect = true;
+			}
 		}
 		
 		if (Bukkit.getPluginManager().getPlugin("dewddcreative") == null) {
 			cre = true;
 		} else {
 			cre = dewddcreative.api_creative.cando(block.getX(),block.getY(),block.getZ() ,player);
+			
+			if (dewddcreative.api_creative.isProtectedArea(block) == true) {
+				hasProtect = true;
+			}
+			
 		}
 
-		return (ar == true && sky == true && cre == true);
+		boolean allProtect = (ar == true && sky == true && cre == true);
+		boolean isDewset = (modeevent.equalsIgnoreCase("dewset") && hasProtect == true) ||
+				(!modeevent.equalsIgnoreCase("dewset"));
+		
+		return allProtect && isDewset;
 	}
 
 	/*public boolean cando_Main(Block block, Player player, String modeevent) {
