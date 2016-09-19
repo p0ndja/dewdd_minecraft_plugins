@@ -3,8 +3,17 @@ package li;
 import java.util.ArrayList;
 
 public class IDDataType {
-	int id;
-	byte data;
+	public int id;
+	public byte data;
+	
+	public IDDataType(int id , byte data) {
+		this.id = id;
+		this.data = data;
+	}
+	
+	public IDDataType() {
+		// TODO Auto-generated constructor stub
+	}
 	
 	
 	public static boolean  isThisItemOnTheList(ArrayList<IDDataType> item, int id , byte data) {

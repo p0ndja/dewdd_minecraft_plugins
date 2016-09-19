@@ -6,71 +6,50 @@ database: false
 depend: [dewset, dewddprint, dewddtran, dewddadmin]
 
 commands:
-  dewset:
+  set:
     description: dewset is replace everyblock
     usage: /<command>
     aliases: [ds]
-  dewfill:
-    description: dewfill is fill blocks at space
+  xet:
+    description: dewxet is replace everyblock
     usage: /<command>
-    aliases: [df]
-  dewsetwall:
+  wall:
     description: dewsetwall is replace blocks for build wall
     usage: /<command>
-    aliases: [dsw]
-  dewfillwall:
-    description: dewfillwall is fill blocks for wal
+  room:
+    description: set room is replace blocks for build room
     usage: /<command>
-    aliases: [dfw]
-  dewsetblock:
+  setblock:
     description: dewsetblock is replace blocks for build block
     usage: /<command>
-    aliases: [dsb]
-  dewfillblock:
-    description: dewfillblock is fill blocks for wal
+  da:
+    description: da is stack selected blocked to some direction
     usage: /<command>
-    aliases: [dfb]
-  dewa:
-    description: dewa is stack selected blocked to some direction
-    usage: /<command>
-    aliases: [da]
-  dewcopy:
+  copy:
     description: dewcopy is copy block to your position.. position will seem place at left click...(select 1)
     usage: /<command>
-    aliases: [dc]
-  dewdown:
+  down:
     description: dewdown is put the block on your hand under your feet
     usage: /<command>
     aliases: [dn]
-  dewsetlight:
+  setlight:
     description: dewsetlight is place torch in the area it's dark
     usage: /<command>
-    aliases: [dsl]
-  dewspreadcircle:
-    description: dewspreadcircle is spread blocks from your position.. to every direction..
+  spreadsphere:
+    description: sphere sphere is spread blocks from your position.. to every direction..
     usage: /<command>
-    aliases: [dsc]
-  dewspreadq:
-    description: dewspreadq is spread blocks from your position... only seem y (very fast)
+  spreadq:
+    description: spreadq is spread blocks from your position... only seem y (very fast)
     usage: /<command>
     aliases: [dsq]
-  dewbuyremove:
-    description: dewbuyremove for admin , remove all protect zone in selected blockb
+  setsphere:
+    description: set sphere
     usage: /<command>
-    aliases: [dbr]
-  dewwallcircle:
-    description: dewwallcircle is create circle (only wall)
+  wallsphere:
+    description: set sphere (only wall)
     usage: /<command>
-    aliases: [dwc]
-  dewfillcircle:
-    description: dewfillcircle is create circle (only wall)
-    usage: /<command>
-    aliases: [dfc]
-  dewsetcircle:
-    description: dewsetcircle is create circle (only wall)
-    usage: /<command>
-  dewfullcircle:
-    description: dewfullcircle fill mode
+  dewsety:
+    description: set y position y1 y2 such as /dewsety 1 255
     usage: /<command>
   loadmainfile:
     description: loadmainfile is force dewset reload world,signfile,deadposition files...
