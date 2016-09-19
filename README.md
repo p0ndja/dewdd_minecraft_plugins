@@ -1,2 +1,2 @@
-# dewdd_minecraft_plugins
+# mi
 all my minecraft plugins
