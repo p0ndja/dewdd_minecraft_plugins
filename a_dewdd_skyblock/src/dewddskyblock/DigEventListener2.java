@@ -311,7 +311,8 @@ public class DigEventListener2 implements Listener {
 			// dprint.r.printAll("start " + bd.size());
 
 			if (bd.size() == 0) {
-				bd.clear();
+				bd = null;
+				bd = new HashMap<String , Location>();
 				// dprint.r.printAll("run () bd.size = " + bd.size());
 
 				LXRXLZRZType ee = api_skyblock.getPositionLXRXLZRZ();

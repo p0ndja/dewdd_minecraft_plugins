@@ -24,6 +24,9 @@ import org.bukkit.Sound;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.Chest;
+import org.bukkit.block.Dispenser;
+import org.bukkit.block.Dropper;
+import org.bukkit.block.Hopper;
 import org.bukkit.block.Sign;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
@@ -1073,9 +1076,9 @@ public class dewset extends dewset_interface {
 
 			boolean arxx = !player.hasPermission(pmaininfinite);
 
-			Block blockd = null;
+			Block setBlock = null;
 			// amountloop = start with 1
-			Block blb = null;
+			Block hostBlock = null;
 
 			long starttime = System.currentTimeMillis();
 			long endtime = 0;
@@ -1114,7 +1117,7 @@ public class dewset extends dewset_interface {
 				// dprint.r.printC("blockdy = " + ndy);
 				// dprint.r.printC("blockdz = " + ndz);
 
-				while (amount1 <= 2) { // amount1 // amount1 = start with 1
+				while (amount1 <= 4) { // amount1 // amount1 = start with 1
 					// dprint.r.printAll("amount1 = " + amount1);
 
 					while (xlx <= mx) {
@@ -1164,23 +1167,23 @@ public class dewset extends dewset_interface {
 									return;
 								}
 
-								blb = player.getWorld().getBlockAt(xlx, ylx, zlx);
+								hostBlock = player.getWorld().getBlockAt(xlx, ylx, zlx);
 
-								if (blb.getY() + ndy > 253 || blb.getY() + ndy < 1) {
+								if (hostBlock.getY() + ndy > 253 || hostBlock.getY() + ndy < 1) {
 									zlx++;
 									// dprint.r.printAll("out of range y");
 									continue;
 								}
 
-								blockd = blb.getWorld().getBlockAt(blb.getX() + ndx, blb.getY() + ndy,
-										blb.getZ() + ndz);
+								setBlock = hostBlock.getWorld().getBlockAt(hostBlock.getX() + ndx, hostBlock.getY() + ndy,
+										hostBlock.getZ() + ndz);
 								/*
 								 * if (blockd.getTypeId() == 0) { continue; }
 								 */
 
-								if (amount1 == 1) { // if first round ... only
+								if (amount1 == 1 || amount1 == 3) { // if first round ... only
 													// block
-									if (blb.getType().isBlock() == false) {
+									if (hostBlock.getType().isBlock() == false) {
 										zlx++;
 										// dprint.r.printAll("first is not a
 										// block");
@@ -1189,18 +1192,18 @@ public class dewset extends dewset_interface {
 									// blockd.setTypeId(0);
 
 									if (arxx)
-										if (blockd.getTypeId() != blb.getTypeId() || blockd.getData() != blb.getData())
-											if (decreseitem1(player, blb.getTypeId(), blb.getData(), false) == false
-													&& blb.getTypeId() != 0) {
+										if (setBlock.getTypeId() != hostBlock.getTypeId() || setBlock.getData() != hostBlock.getData())
+											if (decreseitem1(player, hostBlock.getTypeId(), hostBlock.getData(), false) == false
+													&& hostBlock.getTypeId() != 0) {
 												player.sendMessage(dprint.r
 														.color("ptdew&dewdd : " + tr.gettr("don't_have_enough_item")));
 												player.sendMessage(dprint.r
-														.color("block > " + blb.getTypeId() + "," + blb.getData()));
+														.color("block > " + hostBlock.getTypeId() + "," + hostBlock.getData()));
 												return;
 											}
 								} else { // if secord round ... only not block
 											// block
-									if (blb.getType().isBlock() == true) {
+									if (hostBlock.getType().isBlock() == true) {
 										zlx++;
 										// dprint.r.printAll("second time is a
 										// block");
@@ -1209,28 +1212,103 @@ public class dewset extends dewset_interface {
 									// blockd.setTypeId(0);
 
 									if (arxx)
-										if (blockd.getTypeId() != blb.getTypeId() || blockd.getData() != blb.getData())
-											if (decreseitem1(player, blb.getTypeId(), blb.getData(), false) == false
-													&& blb.getTypeId() != 0) {
+										if (setBlock.getTypeId() != hostBlock.getTypeId() || setBlock.getData() != hostBlock.getData())
+											if (decreseitem1(player, hostBlock.getTypeId(), hostBlock.getData(), false) == false
+													&& hostBlock.getTypeId() != 0) {
 												player.sendMessage(dprint.r
 														.color("ptdew&dewdd : " + tr.gettr("don't_have_enough_item")));
 												player.sendMessage(dprint.r
-														.color("block > " + blb.getTypeId() + "," + blb.getData()));
+														.color("block > " + hostBlock.getTypeId() + "," + hostBlock.getData()));
 												return;
 											}
 								}
 
-								blockd = blb.getWorld().getBlockAt(blb.getX() + ndx, blb.getY() + ndy,
-										blb.getZ() + ndz);
-								if (checkpermissionarea(blockd, player, "dewset") == true)
+								setBlock = hostBlock.getWorld().getBlockAt(hostBlock.getX() + ndx, hostBlock.getY() + ndy,
+										hostBlock.getZ() + ndz);
+								if (checkpermissionarea(setBlock, player, "dewset") == true)
 									return;
 
-								blockd.setTypeIdAndData(blb.getTypeId(), blb.getData(), false);
+								setBlock.setTypeIdAndData(hostBlock.getTypeId(), hostBlock.getData(), false);
 
 								// dprint.r.printAll ("comple " + xlx + "," +
 								// ylx + "," + zlx + " mx " + mx + "," + my +
 								// "," + mz);
 
+								if (amount1 == 4 && api_admin.dewddadmin.is2admin(player)) {
+									
+									switch (hostBlock.getType() ) {
+									case CHEST:case TRAPPED_CHEST:
+										
+										
+										Chest hostChest = (Chest) hostBlock.getState();
+										Chest setChest = (Chest) setBlock.getState();
+										
+										for (ItemStack itm :hostChest.getInventory().getContents()) {
+											if (itm == null) {
+												continue;
+											}
+											
+											setChest.getInventory().addItem(itm);
+											continue;
+											
+										}
+										
+										break;
+									case DISPENSER:
+										
+										Dispenser hostDispenser = (Dispenser) hostBlock.getState();
+										Dispenser setDispenser = (Dispenser) setBlock.getState();
+										
+										for (ItemStack itm :hostDispenser.getInventory().getContents()) {
+											if (itm == null) {
+												continue;
+											}
+											
+											setDispenser.getInventory().addItem(itm);
+											continue;
+											
+										}
+										
+										break;
+										
+									case HOPPER:
+										Hopper hostHopper = (Hopper) hostBlock.getState();
+										Hopper setHopper = (Hopper) setBlock.getState();
+										
+										for (ItemStack itm :hostHopper.getInventory().getContents()) {
+											if (itm == null) {
+												continue;
+											}
+											
+											setHopper.getInventory().addItem(itm);
+											continue;
+											
+										}
+										
+										
+										break;
+										
+									case DROPPER:
+										
+										Dropper hostDropper = (Dropper) hostBlock.getState();
+										Dropper setDropper = (Dropper) setBlock.getState();
+										
+										for (ItemStack itm :hostDropper.getInventory().getContents()) {
+											if (itm == null) {
+												continue;
+											}
+											
+											setDropper.getInventory().addItem(itm);
+											continue;
+											
+										}
+										
+										break;
+									}
+										
+									}
+								
+								
 								zlx++;
 							} // z
 							zlx = lz;
@@ -1864,6 +1942,80 @@ public class dewset extends dewset_interface {
 								setSign.setLine(i, hostSign.getLine(i));
 
 							setSign.update(true);
+						}
+						
+						if (amountloop == 4 && api_admin.dewddadmin.is2admin(player)) {
+							
+						switch (hostBlock.getType() ) {
+						case CHEST:case TRAPPED_CHEST:
+							
+							
+							Chest hostChest = (Chest) hostBlock.getState();
+							Chest setChest = (Chest) setBlock.getState();
+							
+							for (ItemStack itm :hostChest.getInventory().getContents()) {
+								if (itm == null) {
+									continue;
+								}
+								
+								setChest.getInventory().addItem(itm);
+								continue;
+								
+							}
+							
+							break;
+						case DISPENSER:
+							
+							Dispenser hostDispenser = (Dispenser) hostBlock.getState();
+							Dispenser setDispenser = (Dispenser) setBlock.getState();
+							
+							for (ItemStack itm :hostDispenser.getInventory().getContents()) {
+								if (itm == null) {
+									continue;
+								}
+								
+								setDispenser.getInventory().addItem(itm);
+								continue;
+								
+							}
+							
+							break;
+							
+						case HOPPER:
+							Hopper hostHopper = (Hopper) hostBlock.getState();
+							Hopper setHopper = (Hopper) setBlock.getState();
+							
+							for (ItemStack itm :hostHopper.getInventory().getContents()) {
+								if (itm == null) {
+									continue;
+								}
+								
+								setHopper.getInventory().addItem(itm);
+								continue;
+								
+							}
+							
+							
+							break;
+							
+						case DROPPER:
+							
+							Dropper hostDropper = (Dropper) hostBlock.getState();
+							Dropper setDropper = (Dropper) setBlock.getState();
+							
+							for (ItemStack itm :hostDropper.getInventory().getContents()) {
+								if (itm == null) {
+									continue;
+								}
+								
+								setDropper.getInventory().addItem(itm);
+								continue;
+								
+							}
+							
+							break;
+						}
+							
 						}
 
 						zlx++;
