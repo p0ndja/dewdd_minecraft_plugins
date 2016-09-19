@@ -36,6 +36,7 @@ import com.earth2me.essentials.api.UserDoesNotExistException;
 
 import dewddtran.tr;
 
+
 public class DigEventListener2 implements Listener {
 	class chatc implements Runnable {
 		String message = "";

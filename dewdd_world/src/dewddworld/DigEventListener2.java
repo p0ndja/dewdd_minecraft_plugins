@@ -30,6 +30,7 @@ import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.event.server.ServerCommandEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -124,6 +125,45 @@ public class DigEventListener2 implements Listener {
 				in.close();
 			} catch (Exception e) {// Catch exception if any
 				dprint.r.printAll("Error load world file: " + e.getMessage());
+			}
+		}
+	}
+	
+	class unloadChunk implements Runnable {
+		
+		public unloadChunk() {
+		   Bukkit.getScheduler().scheduleSyncDelayedTask(ac, this, 60);
+		}
+
+		@Override
+		public void run() {
+			dprint.r.printA("ptdew&dewdd: unloading all chunk with no player");
+		
+			
+			for (World wx : Bukkit.getWorlds()) {
+					boolean worldHasPlayer = false;
+
+				for (Chunk cj : wx.getLoadedChunks()) {
+					worldHasPlayer = false;
+
+					for (Player pj : wx.getPlayers()) {
+						if (Math.pow((Math.pow(((cj.getX() * 16) - pj.getLocation().getBlockX()), 2))
+								+ (Math.pow(((cj.getZ() * 16) - pj.getLocation().getBlockZ()), 2)), 0.5)
+
+						<= 2000) {
+							worldHasPlayer = true;
+							break;
+						}
+
+					}
+
+					if (worldHasPlayer == false) {
+						cj.unload(true);
+						dprint.r.printA("ptdew&dewdd: unloaded chunk at (" + cj.getX() * 16 + ","
+								+ cj.getZ() * 16 + ")");
+					}
+
+				}
 			}
 		}
 	}
@@ -287,6 +327,33 @@ public class DigEventListener2 implements Listener {
 
 				return;
 			}
+			
+			
+			if (m[0].equalsIgnoreCase("unloadchunk") == true) {
+				unloadChunk uc = new unloadChunk();
+			
+				return;
+			}
+
+			if (m[0].equalsIgnoreCase("loadchunk") == true) {
+				dprint.r.printA("ptdew&dewdd: loading all chunk neary you");
+				World wx = player.getWorld();
+
+				for (int x = -200; x < 200; x += 16) {
+
+					for (int z = -200; z < 200; z += 16) {
+
+						wx.loadChunk((int) ((x + player.getLocation().getX()) / 16),
+								(int) ((z + player.getLocation().getZ()) / 16), true);
+						dprint.r.printA("ptdew&dewdd: loaded chunk at (" + (x + player.getLocation().getX()) + ","
+								+ (z + player.getLocation().getZ()) + ")");
+					}
+
+				}
+
+			
+				return;
+			}
 			// ****************************8
 
 		}
@@ -336,6 +403,7 @@ public class DigEventListener2 implements Listener {
 	@EventHandler
 	public void eventja(PlayerCommandPreprocessEvent event) {
 		runworld(event.getPlayer(), event.getMessage().substring(1));
+		
 	}
 
 	@EventHandler
@@ -477,35 +545,13 @@ public class DigEventListener2 implements Listener {
 
 	@EventHandler
 	public void eventja(PlayerQuitEvent event) {
-		if (Bukkit.getOnlinePlayers().size() > 1) {
-			return;
-		}
-
-		for (World wx : Bukkit.getWorlds()) {
-
-			boolean playernear = false;
-
-			for (Chunk cj : wx.getLoadedChunks()) {
-				playernear = false;
-
-				for (Player pj : wx.getPlayers()) {
-					if (Math.pow((Math.pow(((cj.getX() * 16) - pj.getLocation().getBlockX()), 2))
-							+ (Math.pow(((cj.getZ() * 16) - pj.getLocation().getBlockZ()), 2)), 0.5)
-
-					<= 100) {
-						playernear = true;
-						break;
-					}
-
-				}
-
-				if (playernear == false) {
-					cj.unload(true);
-					dprint.r.printA("ptdew&dewdd: unloaded chunk at (" + cj.getX() * 16 + "," + cj.getZ() * 16 + ")");
-				}
-
-			}
-		}
+		unloadChunk uc = new unloadChunk();
+	}
+	
+	
+	@EventHandler
+	public void eventja(PlayerTeleportEvent event) {
+		unloadChunk uc = new unloadChunk();
 	}
 
 	@EventHandler
