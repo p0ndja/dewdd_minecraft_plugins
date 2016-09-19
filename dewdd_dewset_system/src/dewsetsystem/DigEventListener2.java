@@ -930,6 +930,12 @@ public class DigEventListener2 implements Listener {
 		if (block == null) {
 			return;
 		}
+		
+		if (dew == null) {
+		dew = new dewset();
+		dewset.ac = DigEventListener2.this.ac;
+		}
+		
 		goodc1 = dew.cando_all(block, player, "right");
 
 		if (goodc1 == false) {
