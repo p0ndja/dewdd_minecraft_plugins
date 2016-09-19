@@ -56,7 +56,6 @@ public class DigEventListener2 implements Listener {
 
 				}
 
-				
 				dew = new dewset();
 				/*
 				 * while (dew == null) {
@@ -103,7 +102,7 @@ public class DigEventListener2 implements Listener {
 	String psetamount = "dewdd.dfree.setamount";
 
 	Random rnd = new Random();
-	
+
 	dewset dew = null;
 
 	public DigEventListener2() {
@@ -403,67 +402,64 @@ public class DigEventListener2 implements Listener {
 					return;
 				}
 
-				Enchantment ar = null;
-				;
-				if (isNumeric(m[1]) == true) {
-					
-					ar = Enchantment.getById(Integer.parseInt(m[1]));
-				}
-
-				
 				int thelv = Integer.parseInt(m[2]);
 				if (thelv > 100 || thelv < -100) {
 					player.sendMessage(" -100 < x < 100");
 					return;
 				}
-				
-				if (ar == null) {
 
-					int coc = 0;
+				int coc = 0;
 
+				for (org.bukkit.enchantments.Enchantment en : org.bukkit.enchantments.Enchantment.values()) {
+
+					if (en.getName().toLowerCase().indexOf(m[1].toLowerCase()) > -1) {
+
+						coc++;
+
+					}
+
+				}
+
+				if (coc == 1) {
 					for (org.bukkit.enchantments.Enchantment en : org.bukkit.enchantments.Enchantment.values()) {
 
 						if (en.getName().toLowerCase().indexOf(m[1].toLowerCase()) > -1) {
 
-							coc++;
+							player.sendMessage("starting enchant " + en.getName());
+							player.getItemInHand().addUnsafeEnchantment(en, thelv);
+							player.sendMessage("ptdew&dewdd: Enchanted '" + en.getName() + "'");
+							return;
 
 						}
-
 					}
+				} else {
 
-					if (coc == 1) {
-						for (org.bukkit.enchantments.Enchantment en : org.bukkit.enchantments.Enchantment.values()) {
+					for (org.bukkit.enchantments.Enchantment en : org.bukkit.enchantments.Enchantment.values()) {
 
-							if (en.getName().toLowerCase().indexOf(m[1].toLowerCase()) > -1) {
+						if (en.getName().equalsIgnoreCase(m[1])) {
 
-								player.sendMessage("starting enchant " + en.getName());
-								player.getItemInHand().addUnsafeEnchantment(en, thelv);
-								player.sendMessage("ptdew&dewdd: Enchanted '" + en.getName() + "'");
-								return;
+							player.sendMessage("starting enchant " + en.getName());
+							player.getItemInHand().addUnsafeEnchantment(en, thelv);
+							player.sendMessage("ptdew&dewdd: Enchanted '" + en.getName() + "'");
+							return;
 
-							}
-						}
-					} else {
-
-						for (org.bukkit.enchantments.Enchantment en : org.bukkit.enchantments.Enchantment.values()) {
-
-							if (en.getName().equalsIgnoreCase(m[1])) {
-
-								player.sendMessage("starting enchant " + en.getName());
-								player.getItemInHand().addUnsafeEnchantment(en, thelv);
-								player.sendMessage("ptdew&dewdd: Enchanted '" + en.getName() + "'");
-								return;
-
-							}
 						}
 					}
 				}
-			} // 3
 
-		}
+				if (m[1].equalsIgnoreCase("*")) {
+					for (org.bukkit.enchantments.Enchantment en : org.bukkit.enchantments.Enchantment.values()) {
+
+						player.sendMessage("starting enchant " + en.getName());
+						player.getItemInHand().addUnsafeEnchantment(en, thelv);
+						player.sendMessage("ptdew&dewdd: Enchanted '" + en.getName() + "'");
+
+					}
+				}
+			}
+		} // 3
 
 	}
-	
 
 	public boolean isunsortid(ItemStack impo) {
 
@@ -499,7 +495,6 @@ public class DigEventListener2 implements Listener {
 			this.block = block;
 			this.player = player;
 		}
-		
 
 		@Override
 		public void run() {
@@ -650,12 +645,12 @@ public class DigEventListener2 implements Listener {
 
 		}
 	}
-	
+
 	public void autosortchest2(Block block, Player player) {
 		autosortchest2_class ar = new autosortchest2_class(block, player);
 		Bukkit.getScheduler().scheduleSyncDelayedTask(ac, ar);
 	}
-	
+
 	public long sleeptime = 20;
 
 	class chestabsorb_c implements Runnable {
@@ -674,7 +669,7 @@ public class DigEventListener2 implements Listener {
 			int slotp = -1;
 
 			for (Player player : Bukkit.getOnlinePlayers()) {
-			
+
 				// search nearby box and sign ... ummm yes
 				block = player.getLocation().getBlock();
 
@@ -786,7 +781,6 @@ public class DigEventListener2 implements Listener {
 			} // player
 		}
 	}
-	
 
 	public Block chestnearsign(Block temp) {
 		int d5 = 1;
@@ -816,8 +810,6 @@ public class DigEventListener2 implements Listener {
 
 		return typebox;
 	}
-
-	
 
 	public Block protochest(Block block, int d4, String sorttype) {
 		Block temp = null;
@@ -859,6 +851,7 @@ public class DigEventListener2 implements Listener {
 		return typebox;
 
 	}
+
 	class chestabsorb_c2 implements Runnable {
 
 		private long lastsort2;
@@ -883,7 +876,7 @@ public class DigEventListener2 implements Listener {
 			Block block = null;
 
 			for (Player player : Bukkit.getOnlinePlayers()) {
-				
+
 				// search nearby box and sign ... ummm yes
 				block = player.getLocation().getBlock();
 
@@ -1124,7 +1117,7 @@ public class DigEventListener2 implements Listener {
 			} // player
 		}
 	}
-	
+
 	public void chestabsorb() {
 
 		new chestabsorb_c();
@@ -1134,8 +1127,7 @@ public class DigEventListener2 implements Listener {
 
 		new chestabsorb_c2();
 	}
-	
-	
+
 	@EventHandler
 	public void eventja(PlayerInteractEvent e) {
 		if (!tr.isrunworld(ac.getName(), e.getPlayer().getWorld().getName())) {
@@ -1244,7 +1236,7 @@ public class DigEventListener2 implements Listener {
 
 			if (sign.getLine(0).equalsIgnoreCase("[dewsortbox]") || sign.getLine(0).equalsIgnoreCase("[dewsorttype]")) {
 				// player.sendMessage("dewtobox run");
-			   chestabsorb2();
+				chestabsorb2();
 			}
 
 			// exchange
