@@ -53,6 +53,31 @@ class HybridOverride extends Hybrid {
 
 			}
 		}
+		
+		
+		// check that all level include all unique item
+		
+		boolean needSlotUsedIt [] = new boolean[Main.co.allBlockInGameAsList.size()];
+		
+		
+		for (int i = 0; i < tmpLV.size(); i++) {
+
+			d.pl("tmpLV ID " + i);
+
+			for (int j = 0; j < tmpLV.get(i).needSize; j++) {
+				d.pl("need slot " + j + " = " + tmpLV.get(i).needItem[j] + ":" + tmpLV.get(i).needData[j] + ":"
+						+ tmpLV.get(i).needAmount[j]);
+
+			}
+
+			for (int j = 0; j < tmpLV.get(i).rewardSize; j++) {
+				d.pl("reward slot " + j + " = " + tmpLV.get(i).rewardItem[j] + ":" + tmpLV.get(i).rewardData[j] + ":"
+						+ tmpLV.get(i).rewardAmount[j]);
+
+			}
+		}
+		
+		
 
 		// ...............................................
 		// simulating
@@ -116,7 +141,11 @@ class HybridOverride extends Hybrid {
 		
 		// grass , dirt
 		
+		
+		
+		
 		while ( ps.curSecond <= Core.MaxTickToCompleteAllLV) {
+		//	d.pl("curSecond " + ps.curSecond);
 			ps.letPlantAllThingAsItCan();
 			
 			// glow all plant

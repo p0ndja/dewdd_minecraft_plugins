@@ -480,6 +480,11 @@ public class Core {
 
 				// d.pl("...");
 				// rs[rsMax - 1].mission = 0;
+				
+				if (allBlockInGame.get(miss.theName + ":" + miss.data) != null) {
+					d.pl("loading not null");
+					
+				}
 				allBlockInGame.put(miss.theName + ":" + miss.data,miss);
 				allBlockInGameAsList.add(miss);
 			}
