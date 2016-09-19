@@ -53,6 +53,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.util.Vector;
 
+import api_skyblock.Constant;
 import api_skyblock.Missional;
 import api_skyblock.api_skyblock;
 import dewddtran.tr;
@@ -134,8 +135,7 @@ public class DigEventListener2 implements Listener {
 			// dprint.r.printAll("lv1breakALLSTONE " + xy);
 
 			if (xy == false) {
-				
-				
+
 				CallNextMission no = new CallNextMission(curRSID);
 				Bukkit.getScheduler().scheduleSyncDelayedTask(ac, no);
 			}
@@ -422,7 +422,7 @@ public class DigEventListener2 implements Listener {
 
 		// search
 
-		int se = api_skyblock.getplayerinslot(dew.flag_autocut, getid);
+		int se = api_skyblock.getplayerinslot(Constant.flag_autocut, getid);
 
 		if (se == -1)
 			return;
@@ -481,21 +481,36 @@ public class DigEventListener2 implements Listener {
 			if (gx > -1) {
 
 				// check mission
-				if (api_skyblock.rs[getid].mission == Missional.LV_2_USE_BONE_MEAL) { // bone
+				switch (api_skyblock.rs[getid].mission) {
+
+				case LV_2_USE_BONE_MEAL: // bone
 
 					if (player.getItemInHand().getType() == Material.INK_SACK) {
 						api_skyblock.rs[getid].tmpValue1++;
-						dew.printToAllPlayerOnRS(getid,
-								tr.gettr("bone_meal_use_counting_=") + api_skyblock.rs[getid].tmpValue1 + "/" + api_skyblock.LV_2_USE_BONE_MEAL_AMOUNT);
+						dew.printToAllPlayerOnRS(getid, tr.gettr("bone_meal_use_counting_=")
+								+ api_skyblock.rs[getid].tmpValue1 + "/" + Constant.LV_2_USE_BONE_MEAL_AMOUNT);
 
-						if (api_skyblock.rs[getid].tmpValue1 >= api_skyblock.LV_2_USE_BONE_MEAL_AMOUNT) {
+						if (api_skyblock.rs[getid].tmpValue1 >= Constant.LV_2_USE_BONE_MEAL_AMOUNT) {
 
 							CallNextMission ee = new CallNextMission(getid);
 							Bukkit.getScheduler().scheduleSyncDelayedTask(ac, ee);
 						}
 					}
 
-					// search nearest stone
+					break;
+				
+				case LV_4_Place_y1:
+					
+					if (block.getY() == 1) {
+						
+						CallNextMission ee = new CallNextMission(getid);
+						Bukkit.getScheduler().scheduleSyncDelayedTask(ac, ee);
+						
+					}
+					
+					break;
+					
+				// search nearest stone
 
 				}
 			}
@@ -597,7 +612,7 @@ public class DigEventListener2 implements Listener {
 			return;
 		}
 
-		if (api_skyblock.getplayerinslot(dew.flag_monster, getid) > -1) {
+		if (api_skyblock.getplayerinslot(Constant.flag_monster, getid) > -1) {
 			e.setCancelled(true);
 			return;
 		}
@@ -670,8 +685,8 @@ public class DigEventListener2 implements Listener {
 
 				int pvparea = api_skyblock.getprotectid(plvi.getLocation().getBlock());
 				if (pvparea >= 0) {
-					if (api_skyblock.getplayerinslot(dew.flag_pvp, pvparea) == -1
-							&& !plp.hasPermission(api_skyblock.poveride)
+					if (api_skyblock.getplayerinslot(Constant.flag_pvp, pvparea) == -1
+							&& !plp.hasPermission(Constant.poveride)
 							&& api_skyblock.getplayerinslot(plp.getName(), pvparea) == -1) {
 						e.setDamage((double) 0);
 						e.setCancelled(true);
@@ -690,7 +705,7 @@ public class DigEventListener2 implements Listener {
 
 				if (pvparea >= 0)
 					if (api_skyblock.getplayerinslot(plp.getName(), pvparea) == -1
-							&& !plp.hasPermission(api_skyblock.poveride)) {
+							&& !plp.hasPermission(Constant.poveride)) {
 
 						e.setDamage((double) 0);
 						e.setCancelled(true);
@@ -715,7 +730,7 @@ public class DigEventListener2 implements Listener {
 		// e.setCancelled(true);
 		int getid = api_skyblock.getprotectid(block);
 		if (getid > -1) {
-			if (api_skyblock.getplayerinslot(dew.flag_explode, getid) > -1)
+			if (api_skyblock.getplayerinslot(Constant.flag_explode, getid) > -1)
 				e.setCancelled(true);
 			return;
 		}
@@ -810,7 +825,7 @@ public class DigEventListener2 implements Listener {
 
 		// search
 
-		int se = api_skyblock.getplayerinslot(dew.flag_autoabsorb, getid);
+		int se = api_skyblock.getplayerinslot(Constant.flag_autoabsorb, getid);
 
 		if (se == -1)
 			return;
@@ -1059,7 +1074,7 @@ public class DigEventListener2 implements Listener {
 
 					}
 
-					player.sendMessage("lv = " + api_skyblock.rs[getid].mission);
+					player.sendMessage(dprint.r.color("LV = " + api_skyblock.rs[getid].mission.toID()));
 					dew.printToAllPlayerOnRS(getid, dew.getMissionHeader(dew.rs[getid].mission));
 				}
 
@@ -1075,7 +1090,7 @@ public class DigEventListener2 implements Listener {
 						boolean ch = api_skyblock.rs[getid].p[0].equalsIgnoreCase(player.getName());
 
 						if (ch == false)
-							if (player.hasPermission(api_skyblock.poveride) == false) {
+							if (player.hasPermission(Constant.poveride) == false) {
 								player.sendMessage(dprint.r.color(
 										tr.gettr("host_is") + api_skyblock.rs[getid].p[0] + tr.gettr("not_you!")));
 
@@ -1111,7 +1126,7 @@ public class DigEventListener2 implements Listener {
 						boolean ch = api_skyblock.rs[getid].p[0].equalsIgnoreCase(player.getName());
 
 						if (ch == false)
-							if (player.hasPermission(api_skyblock.poveride) == false) {
+							if (player.hasPermission(Constant.poveride) == false) {
 								player.sendMessage(dprint.r.color(
 										tr.gettr("host_is") + api_skyblock.rs[getid].p[0] + tr.gettr("not_you")));
 
@@ -1155,7 +1170,7 @@ public class DigEventListener2 implements Listener {
 						boolean ch = api_skyblock.rs[getid].p[0].equalsIgnoreCase(player.getName());
 
 						if (ch == false)
-							if (player.hasPermission(api_skyblock.poveride) == false) {
+							if (player.hasPermission(Constant.poveride) == false) {
 								player.sendMessage(dprint.r.color(
 										tr.gettr("host_is") + api_skyblock.rs[getid].p[0] + tr.gettr("not_you")));
 								return;
@@ -1202,8 +1217,8 @@ public class DigEventListener2 implements Listener {
 							player.sendMessage(dprint.r.color("Member " + i + " = " + api_skyblock.rs[getid].p[i]));
 				} else if (m[1].equalsIgnoreCase("new")) { // new
 
-					if (player.hasPermission(dew.pskyblock) == false) {
-						player.sendMessage(dprint.r.color(tr.gettr("you_don't_have_permission") + dew.pskyblock));
+					if (player.hasPermission(Constant.pskyblock) == false) {
+						player.sendMessage(dprint.r.color(tr.gettr("you_don't_have_permission") + Constant.pskyblock));
 						return;
 					}
 
@@ -1259,12 +1274,12 @@ public class DigEventListener2 implements Listener {
 
 				// check mission
 				if (api_skyblock.rs[getid].mission == Missional.LV_3_DROP_TOUCH) {
-					if (e.getItemDrop() != null ) {
+					if (e.getItemDrop() != null) {
 						if (e.getItemDrop().getItemStack().getType() == Material.TORCH) {
-							if (e.getItemDrop().getItemStack().getAmount() >= api_skyblock.LV_3_DROP_TOUCH_AMOUNT){
+							if (e.getItemDrop().getItemStack().getAmount() >= Constant.LV_3_DROP_TOUCH_AMOUNT) {
 								e.getItemDrop().getItemStack().setType(Material.CLAY);
 								e.getItemDrop().getItemStack().setAmount(10);
-								
+
 								CallNextMission ee = new CallNextMission(getid);
 								Bukkit.getScheduler().scheduleSyncDelayedTask(ac, ee);
 							}
@@ -1463,7 +1478,7 @@ public class DigEventListener2 implements Listener {
 
 						// search
 
-						int se = api_skyblock.getplayerinslot(dew.flag_autocut, getid);
+						int se = api_skyblock.getplayerinslot(Constant.flag_autocut, getid);
 
 						if (se == -1)
 							continue;
@@ -1495,8 +1510,8 @@ public class DigEventListener2 implements Listener {
 			int pvparea = api_skyblock.getprotectid(plvi.getLocation().getBlock());
 			if (pvparea >= 0)
 				if (api_skyblock.getplayerinslot(plvi.getName(), pvparea) == -1
-						&& !plvi.hasPermission(api_skyblock.poveride)
-						&& api_skyblock.getplayerinslot(dew.flag_pvp, pvparea) == -1) {
+						&& !plvi.hasPermission(Constant.poveride)
+						&& api_skyblock.getplayerinslot(Constant.flag_pvp, pvparea) == -1) {
 					Entity en = e.getProjectile();
 					en.getVelocity();
 					en.setVelocity(Vector.getRandom());

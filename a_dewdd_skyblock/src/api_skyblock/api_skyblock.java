@@ -17,7 +17,6 @@ import java.util.Random;
 import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
 import org.bukkit.Material;
-import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.Chest;
@@ -29,61 +28,6 @@ import dewddtran.tr;
 
 public class api_skyblock {
 
-	class CleanThisChunkTCRS implements Runnable {
-		private Chunk chunk = null;
-
-		public CleanThisChunkTCRS(Chunk chunk) {
-			this.chunk = chunk;
-		}
-
-		@Override
-		public void run() {
-			if (isrunworld(chunk.getWorld().getName()) == true) {
-				World world = chunk.getWorld();
-
-				dprint.r.printC("starting clean real skyblock 0 : " + (chunk.getX() * 16) + ",?," + (chunk.getZ() * 16)
-						+ " at " + chunk.getWorld().getName());
-
-				// dprint.r.printAll("cleaning Area : " + (chunk.getX() *16) +
-				// ",?," +
-				// (chunk.getZ() *16));
-
-				Block block = null;
-				// save near air list block
-
-				for (int y = 255; y >= 0; y--) {
-
-					// dprint.r.printC("cleaning... : " + (chunk.getX() *16) +
-					// "," + y + ","
-					// + (chunk.getZ() *16)
-					// +" > " + chunkdel_max);
-					// dprint.r.printA("cleaning... : " + (chunk.getX() *16) +
-					// "," + y + ","
-					// + (chunk.getZ() *16));
-
-					for (int x = ((chunk.getX() * 16)); x <= ((chunk.getX() * 16) + 16); x++) {
-
-						for (int z = ((chunk.getZ() * 16)); z <= ((chunk.getZ() * 16) + 16); z++) {
-
-							block = world.getBlockAt(x, y, z);
-
-							block.setType(Material.AIR);
-
-						} // if
-					}
-				}
-				// add to new chunk
-
-				dprint.r.printC("cleaned real skyblock 0 : " + (chunk.getX() * 16) + ",?," + (chunk.getZ() * 16)
-						+ " at " + chunk.getWorld().getName());
-
-				lastclean = System.currentTimeMillis();
-
-			}
-
-		}
-
-	}
 
 	class CreateSkyblockRS implements Runnable {
 
@@ -120,9 +64,9 @@ public class api_skyblock {
 				// random x y z this is not near old rs list
 				buildcomplete = true;
 
-				x = randomG.nextInt(20) * 300 * (randomG.nextInt(1) == 1 ? 1 : -1);
-				z = randomG.nextInt(20) * 300 * (randomG.nextInt(1) == 1 ? 1 : -1);
-				y = randomG.nextInt(200) + 50;
+				x = rnd.nextInt(20) * 300 * (rnd.nextInt(1) == 1 ? 1 : -1);
+				z = rnd.nextInt(20) * 300 * (rnd.nextInt(1) == 1 ? 1 : -1);
+				y = rnd.nextInt(200) + 50;
 
 				boolean checkrs = true;
 
@@ -159,8 +103,8 @@ public class api_skyblock {
 						rs[newid].p[lop] = "null";
 					}
 					rs[newid].p[0] = player.getName();
-					rs[newid].p[1] = flag_autocut;
-					rs[newid].p[2] = flag_autoabsorb;
+					rs[newid].p[1] = Constant.flag_autocut;
+					rs[newid].p[2] = Constant.flag_autoabsorb;
 					rs[newid].mission = Missional.LV_0_COBBLESTONE_MACHINE;
 					// clean target chunk and build island
 					Chunk chunk = null;
@@ -303,14 +247,7 @@ public class api_skyblock {
 		}
 	}
 
-	class cridata {
-		public int id;
-		public byte data;
-		public int targetamount;
-		public int nowamount;
-		public double percent;
-
-	}
+	
 
 	class MissionNotification implements Runnable {
 
@@ -343,38 +280,16 @@ public class api_skyblock {
 
 	}
 
-	public class rsdata {
-		public int x;
-		public int y;
-		public int z;
-
-		public Missional mission = Missional.LV_0_COBBLESTONE_MACHINE;
-		
-		public int tmpValue1 = 0;
-
-		public String p[] = null;
-		public int autoCutCount = 0;
-		public long autoCutLastTime = 0;
-
-	}
-
-	public static String poveride = "dewdd.skyblock.overide";
-
-	public static String flag_everyone = "<everyone>";
-
 	public static int RSMaxPlayer = 20;
 
-	public static rsdata rs[] = new rsdata[100];
+	public static RSData rs[] = new RSData[100];
 
 	public static int rsMax = 0;
 
 	public static JavaPlugin ac = null;
 	
-	public static int LV_2_USE_BONE_MEAL_AMOUNT = 45;
-	public static int LV_3_DROP_TOUCH_AMOUNT = 64;
-	
 	public static boolean cando(Block block, Player player, String mode) {
-		if ((player.hasPermission(poveride)) == true) {
+		if ((player.hasPermission(Constant.poveride)) == true) {
 			return true;
 		}
 
@@ -391,7 +306,7 @@ public class api_skyblock {
 
 		// found
 		int getslot = getplayerinslot(player.getName(), getid);
-		if (getplayerinslot(flag_everyone, getid) > -1 && mode.equalsIgnoreCase("right")) {
+		if (getplayerinslot(Constant.flag_everyone, getid) > -1 && mode.equalsIgnoreCase("right")) {
 
 			// player.sendMessage(dprint.r.color("this is not your skyblock ,
 			// host is "
@@ -459,47 +374,25 @@ public class api_skyblock {
 		return tr.isrunworld(ac.getName(), worldName);
 	}
 
-	long lastcri = 0; // last checkrateis don't allow to
 
 	// check if it is running
 	Random rnd = new Random();
 
-	int maxdelaycri = 60000;
+	
 	public int maxautocut = 5;
-	cridata cri[];
-	int crimax = 0;
+
 	public String lastmessage = "";
 
-	Block[] cs = null;
 
-	int csmax = 0;
 
-	int csnow = 0;
-
-	int csid = 0;
-
-	long lastshow = 0;
-
-	public String pskyblock = "dewdd.skyblock.skyblock";
-
-	public String flag_explode = "<!explode>";
-
-	public String flag_monster = "<!monster>";
-	public String flag_pvp = "<pvp>";
-	public String flag_autocut = "<autocut>";
-
-	public String flag_autoabsorb = "<autoabsorb>";
-	public String folder_name = "plugins" + File.separator + "dewdd_skyblock";
 	long lastcreate = 0;
 
 	long lastclean = 0;
 
-	public Random randomG = new Random();
 
 	int amount = 0; // recusive
 					// count
 
-	int mode2 = 1;
 
 	public api_skyblock() {
 		loadRSProtectFile();
@@ -508,16 +401,11 @@ public class api_skyblock {
 
 	public void applyReward(int rsID) {
 
-		// dprint.r.printAll("appyreward " + rsID + " mission " +
-		// rs[rsID].mission);
+
 		switch (rs[rsID].mission) {
 		case LV_0_COBBLESTONE_MACHINE: // get cobble stone
 
-			// dprint.r.printAll("nope");
 
-			// ItemStack itm = new ItemStack(Material.IRON_AXE , 1);
-
-			// giveItemToAllPlayerInRS(rsID, itm.getData().toItemStack(1));
 
 			Block bo = getBlockMiddleRS(rsID);
 			Block bo2 = searchSpaceCube(bo, 5, 5);
@@ -587,19 +475,6 @@ public class api_skyblock {
 			 bo = getBlockMiddleRS(rsID);
 			 bo2 = searchSpaceCube(bo, 5, 5);
 
-			for (int i = 0; i < 5; i++) {
-				for (int i2 = 0; i2 < 5; i2++) {
-					for (int i3 = 0; i3 < 5; i3++) {
-
-						Block bo3 = bo2.getRelative(i, i2, i3);
-						if (bo3.getType() != Material.AIR) {
-							dprint.r.printAll(tr.gettr("error while applyReward lv 0 block is != air"));
-							break;
-						}
-
-					}
-				}
-			}
 			
 			bo2.setType(Material.CHEST);
 			
@@ -675,13 +550,7 @@ public class api_skyblock {
 			break;
 			
 			
-		case LV_3_DROP_TOUCH: // get cobble stone
-
-			// dprint.r.printAll("nope");
-
-			// ItemStack itm = new ItemStack(Material.IRON_AXE , 1);
-
-			// giveItemToAllPlayerInRS(rsID, itm.getData().toItemStack(1));
+		case LV_3_DROP_TOUCH: 
 
 			 bo = getBlockMiddleRS(rsID);
 			 bo2 = searchSpaceCube(bo, 5, 5);
@@ -711,6 +580,69 @@ public class api_skyblock {
 			printToAllPlayerOnRS(rsID,tr.gettr("got_reward_lv_" + rs[rsID].mission));
 
 			break;
+			
+		case LV_4_Place_y1: 
+
+			 bo = getBlockMiddleRS(rsID);
+			 bo2 = searchSpaceCube(bo, 5, 5);
+
+			for (int i = 0; i < 5; i++) {
+				for (int i2 = 0; i2 < 5; i2++) {
+					for (int i3 = 0; i3 < 5; i3++) {
+
+						Block bo3 = bo2.getRelative(i, i2, i3);
+						if (bo3.getType() != Material.AIR) {
+							dprint.r.printAll(tr.gettr("error while applyReward lv 0 block is != air"));
+							break;
+						}
+
+						if (rnd.nextInt(100) > 91) {
+							bo3.setType(Material.GOLD_ORE);
+						}
+
+					}
+				}
+			}
+
+			
+			for (int i = 0; i < 5; i++) {
+				for (int i2 = 0; i2 < 5; i2++) {
+					for (int i3 = 0; i3 < 5; i3++) {
+
+						Block bo3 = bo2.getRelative(i, i2, i3);
+						if (bo3.getType() != Material.AIR) {
+							dprint.r.printAll(tr.gettr("error while applyReward lv 0 block is != air"));
+							break;
+						}
+
+						if (rnd.nextInt(100) > 90) {
+							bo3.setType(Material.COAL_ORE);
+						}
+
+					}
+				}
+			}
+			
+			
+			
+			
+			
+		
+			printToAllPlayerOnRS (rsID,tr.gettr("generated_small_island_at") 
+					+ " " + bo2.getX() + "," + bo2.getY() + "," + bo2.getZ());
+			
+			
+			// mon
+			bo2 = searchSpaceCube(bo, 5, 5);
+			
+			
+			
+			
+			
+			printToAllPlayerOnRS(rsID,tr.gettr("got_reward_lv_" + rs[rsID].mission));
+
+			break;
+			
 		default:
 
 			printToAllPlayerOnRS(rsID, tr.gettr("got_reward_lv_" + rs[rsID].mission));
@@ -838,17 +770,17 @@ public class api_skyblock {
 	public void loadRSProtectFile() {
 		String worldf = "ptdew_dewdd_rs_protect.txt";
 
-		File dir = new File(folder_name);
+		File dir = new File(Constant.folder_name);
 		dir.mkdir();
 
-		String filena = folder_name + File.separator + worldf;
+		String filena = Constant.folder_name + File.separator + worldf;
 		File fff = new File(filena);
 
 		try {
 
-			rs = new rsdata[1000];
+			rs = new RSData[1000];
 			for (int lop = 0; lop < 1000; lop++) {
-				rs[lop] = new rsdata();
+				rs[lop] = new RSData();
 			}
 			rsMax = 0;
 
@@ -928,12 +860,12 @@ public class api_skyblock {
 				continue;
 			}
 
-			player.sendMessage(message);
+			player.sendMessage(dprint.r.color( message));
 		}
 	}
 
 	public int random16() {
-		int g = randomG.nextInt(360);
+		int g = rnd.nextInt(360);
 		g -= 180;
 		g = g * 16;
 		return g;
@@ -943,10 +875,10 @@ public class api_skyblock {
 
 	public void saveRSProtectFile() {
 
-		File dir = new File(folder_name);
+		File dir = new File(Constant.folder_name);
 		dir.mkdir();
 
-		String filena = folder_name + File.separator + "ptdew_dewdd_rs_protect.txt";
+		String filena = Constant.folder_name + File.separator + "ptdew_dewdd_rs_protect.txt";
 		File fff = new File(filena);
 
 		FileWriter fwriter;
