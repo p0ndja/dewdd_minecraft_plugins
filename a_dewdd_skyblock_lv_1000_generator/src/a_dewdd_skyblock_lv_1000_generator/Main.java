@@ -72,8 +72,12 @@ public class Main {
 
 		hy.setChromosomeLength(Core.dnaSize);
 		hy.setPopulationSize(100);
-		hy.setRunCount(100000);
+		hy.setRunCount(1000000);
 
+		// set chromosome here
+
+		hy.loadAndSortTheBestFromRamdisk();
+		
 		hy.prepareToRunGA();
 
 		EventListenerOverride evn = new EventListenerOverride();

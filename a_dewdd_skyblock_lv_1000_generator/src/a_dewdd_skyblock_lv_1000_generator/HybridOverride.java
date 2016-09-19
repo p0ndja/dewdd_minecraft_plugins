@@ -1,14 +1,93 @@
 package a_dewdd_skyblock_lv_1000_generator;
 
+import java.io.BufferedReader;
+import java.io.DataInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.InputStreamReader;
 import java.util.LinkedList;
 import java.util.Random;
 
-import ga_optimization_api.Hybrid;
+
+import ga_optimization_api.Chromosome;
 import ga_optimization_api.HybridMultithreading;
 
 public class HybridOverride extends HybridMultithreading {
 
 	public static int maxUnUnique = 0;
+	
+	public Chromosome loadChroFile(File fi) {
+
+		String filena = fi.getAbsolutePath();
+		File fff = new File(filena);
+		
+		Chromosome ceo = new Chromosome();
+		ceo.dna = new double[Core.dnaSize];
+		ceo.lastBestFitness = Double.MAX_VALUE;
+
+		try {
+
+
+			fff.createNewFile();
+
+			d.pl("loading sellable file : " + filena);
+			// Open the file that is the first
+			// command line parameter
+			FileInputStream fstream = new FileInputStream(filena);
+			// Get the object of DataInputStream
+			DataInputStream in = new DataInputStream(fstream);
+			BufferedReader br = new BufferedReader(new InputStreamReader(in));
+			String strLine;
+			// Read File Line By Line
+
+			String m[];
+			
+			
+			int curDnaID = 0;
+			while ((strLine = br.readLine()) != null) {
+				
+				
+
+				m = strLine.split("\\s+");
+				m = strLine.split(":");
+				// Print the content on the console
+
+				
+				if (ceo.lastBestFitness == Double.MIN_VALUE) {
+					ceo.lastBestFitness = Double.parseDouble(m[0]);
+				}
+				else {
+				ceo.dna[curDnaID] = Double.parseDouble(m[0]);
+				curDnaID ++;
+				}
+			}
+
+			d.pl(" Loaded " + filena);
+
+			in.close();
+			
+		} catch (Exception e) {// Catch exception if any
+			d.pl("Error load " + filena + e.getMessage());
+		}
+		return ceo;
+	}
+	
+	public LinkedList<Chromosome> loadAndSortTheBestFromRamdisk() {
+		LinkedList<Chromosome> cho = new LinkedList<Chromosome>();
+		
+		File fie = new File(EventListenerOverride.folder_Name);
+		
+		
+		
+		for (File fi: fie.listFiles()) {
+			d.pl(fi.getAbsolutePath());
+			
+			// read 
+			
+		}
+		
+		return null;
+	}
 
 	@Override
 	public double fitness(double dna[]) {
