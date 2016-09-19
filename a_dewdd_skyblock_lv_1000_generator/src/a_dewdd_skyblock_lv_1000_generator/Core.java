@@ -14,9 +14,8 @@ public class Core {
 	LinkedList<SellableType> sell = new LinkedList<SellableType>();
 	LinkedList<MissionType> mission = new LinkedList<MissionType>();
 
-	public static int dnaSize = 1000;
+	public static int dnaSize = 4000;
 
-	public static int maxShop = 50;
 	public static int maxShopSize = 10;
 	public static int minShopSize = 3;
 	
@@ -29,22 +28,21 @@ public class Core {
 
 	// 415 unique item
 
-	public void dnaDecoder(double[] chromosome, int curChro, LinkedList<AllShop> tmpAllShop,
+
+	
+	public void dnaDecoder(double[] chromosome,  LinkedList<AllShop> tmpAllShop,
 			LinkedList<SellableType> tmpSell, LinkedList<MissionType> tmpMission, LinkedList<Double> tmpReading,
 			int tmpAllShopUniqueDone, int curMissionItemSwapPosition) {
 
-		if (curChro >= dnaSize) {
-			return;
-		}
-
+		int curChro = 0;
+       while ( curChro < dnaSize) {
 		// ****************************************************
 		// deal with player sell price
 		if (tmpSell.size() < sell.size()) {
 
 			if (chromosome[curChro] <= 0) {
 				curChro++;
-				dnaDecoder(chromosome, curChro, tmpAllShop, tmpSell, tmpMission, tmpReading, tmpAllShopUniqueDone,
-						curMissionItemSwapPosition);
+				continue;
 
 			} else {
 				SellableType x = sell.get(tmpSell.size()).copyIt();
@@ -52,9 +50,9 @@ public class Core {
 
 				tmpSell.add(x);
 
+				d.pl("chro sell = " + curChro);
 				curChro++;
-				dnaDecoder(chromosome, curChro, tmpAllShop, tmpSell, tmpMission, tmpReading, tmpAllShopUniqueDone,
-						curMissionItemSwapPosition);
+				continue;
 			}
 
 		}
@@ -69,9 +67,10 @@ public class Core {
 				tmpReading.size() <= (1 + maxShopSize*2)   
 				 && tmpReading.size()%2 == 1) {
 				
-				d.pl("size = " + tmpReading.size() + " .. "  + chromosome[curChro]);
-
+				
 				if (chromosome[curChro] <= 0) { // that mean do it now
+					d.pl("size = " + tmpReading.size() + " .. "  + curChro + "  unique " + tmpAllShopUniqueDone);
+
 					AllShop x = new AllShop();
 
 					x.PlayPrice = tmpReading.get(0) * ShopMaxCost;
@@ -93,22 +92,20 @@ public class Core {
 					tmpAllShop.add(x);
 					tmpReading.clear();
 					curChro++;
-					dnaDecoder(chromosome, curChro, tmpAllShop, tmpSell, tmpMission, tmpReading, tmpAllShopUniqueDone,
-							curMissionItemSwapPosition);
+					continue;
 					
 				}
 				else {
 					if (chromosome[curChro] <= 0) {
 						curChro++;
-						dnaDecoder(chromosome, curChro, tmpAllShop, tmpSell, tmpMission, tmpReading, tmpAllShopUniqueDone,
+						dnaDecoder(chromosome, tmpAllShop, tmpSell, tmpMission, tmpReading, tmpAllShopUniqueDone,
 								curMissionItemSwapPosition);
 					}
 					else {
 						tmpReading.add(chromosome[curChro]);
 						
 						curChro++;
-						dnaDecoder(chromosome, curChro, tmpAllShop, tmpSell, tmpMission, tmpReading, tmpAllShopUniqueDone,
-								curMissionItemSwapPosition);
+						continue;
 					}
 				}
 				
@@ -116,25 +113,29 @@ public class Core {
 
 			}
 			else { // add to tmpReading
+	
 				
-				
+			//	d.pl("chro length = " + chromosome.length + "   " + curChro);
 				if (chromosome[curChro] <= 0) {
 					curChro++;
-					dnaDecoder(chromosome, curChro, tmpAllShop, tmpSell, tmpMission, tmpReading, tmpAllShopUniqueDone,
-							curMissionItemSwapPosition);
+					continue;
 				}
 				else {
 					tmpReading.add(chromosome[curChro]);
 					
 					curChro++;
-					dnaDecoder(chromosome, curChro, tmpAllShop, tmpSell, tmpMission, tmpReading, tmpAllShopUniqueDone,
-							curMissionItemSwapPosition);
+					continue;
 				}
 				
 				
 			}
 
 		}
+		else {
+			break;
+		}
+		
+       }
 
 	}
 

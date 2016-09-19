@@ -73,7 +73,7 @@ public class main {
 		LinkedList<MissionType> tmpMission =  new LinkedList<MissionType>();
 		LinkedList<Double> tmpReading  = new LinkedList<Double>();
 		
-		co.dnaDecoder(hy.population.get(0).dna, 0,   tmpAllShop,
+		co.dnaDecoder(hy.population.get(0).dna,   tmpAllShop,
 				tmpSell,  tmpMission,  tmpReading,
 				0, 0);
 		
