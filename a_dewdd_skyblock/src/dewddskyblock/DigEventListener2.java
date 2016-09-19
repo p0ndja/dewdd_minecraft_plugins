@@ -70,6 +70,8 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.util.Vector;
 
+import com.sun.org.apache.xalan.internal.xsltc.dom.FilteredStepIterator;
+
 import api_skyblock.Constant;
 import api_skyblock.LV1000Type;
 import api_skyblock.LXRXLZRZType;
@@ -78,54 +80,65 @@ import dewddtran.tr;
 import net.minecraft.server.v1_8_R3.EntityPlayer;
 
 public class DigEventListener2 implements Listener {
-	
+
 	public static int randomInteger(int min, int max) {
-	    Random rand = new Random();
-	    int randomNum = min + (int)(Math.random() * ((max - min) + 1));
-	    return randomNum;
+		Random rand = new Random();
+		int randomNum = min + (int) (Math.random() * ((max - min) + 1));
+		return randomNum;
 	}
-	
 
 	class DeleteYBelow5 implements Runnable {
 		private Queue<Block> bd;
 		private World world;
 
-		public DeleteYBelow5(Queue<Block> bd,World world) {
+		public DeleteYBelow5(Queue<Block> bd, World world, int firstAdded) {
 			this.bd = bd;
 			this.world = world;
-			
-			if (bd.size() == 0 ) {
-				// random add
-				
-				LXRXLZRZType ee = api_skyblock.getPositionLXRXLZRZ();
-				
-				for (int i = 0; i < 10000 ; i ++ ) {
-					
-					int x = randomInteger(ee.lx, ee.rx);
-					int z = randomInteger(ee.lz, ee.rz);
-					
-					int y = randomInteger(0,40);
-					
-					
-					Block block = world.getBlockAt(x, y, z);
-					if (block.getType() != Material.AIR) {
-						bd.add(block);
-						dprint.r.printAll("deleteybelow5 > first add > " + 
-						block.getX() + "," + block.getY() + "," + block.getZ() + " size " + bd.size());
-						
-					}
-					
-				}
-			}
+
+			// random add
+
 		}
 
 		@Override
 		public void run() {
 
-			int search = 10;
+			int search = 20;
 
 			long startTime = System.currentTimeMillis();
 
+			if (bd.size() == 0) {
+				LXRXLZRZType ee = api_skyblock.getPositionLXRXLZRZ();
+
+				while( System.currentTimeMillis() - startTime  < 1000) {
+
+					int x = randomInteger(ee.lx, ee.rx);
+					int z = randomInteger(ee.lz, ee.rz);
+
+					int y = randomInteger(0, 40);
+
+					Block block = world.getBlockAt(x, y, z);
+					if (block.getType() != Material.AIR) {
+						bd.add(block);
+						dprint.r.printAll("deleteybelow5 > first add > " + block.getX() + "," + block.getY() + ","
+								+ block.getZ() + " size " + bd.size());
+
+					}
+
+				}
+
+				if (bd.size() == 0 &&  Bukkit.getOnlinePlayers().size() > 0) {
+					
+					dprint.r.printAll("recall ... " + bd.size() );
+					DeleteYBelow5 newRun = new DeleteYBelow5(bd, world, 0);
+					Bukkit.getScheduler().scheduleSyncDelayedTask(ac, newRun, 10L);
+					return;
+				}
+
+			}
+
+			startTime = System.currentTimeMillis();
+
+			int first = 0;
 			while (bd.size() > 0 && System.currentTimeMillis() - startTime < 1000) {
 				Block getStack = bd.poll();
 				if (getStack == null) {
@@ -136,11 +149,13 @@ public class DigEventListener2 implements Listener {
 					continue;
 				}
 
+				if (first == 0) {
+					dprint.r.printAll(
+							"deleteybelow5 > break > " + getStack.getX() + "," + getStack.getY() + "," + getStack.getZ()
+									+ getStack.getType().name() + ":" + getStack.getData() + " size " + bd.size());
+					first = 1;
+				}
 				getStack.breakNaturally();
-				dprint.r.printAll("deleteybelow5 > break > " + getStack.getX() + "," + getStack.getY() 
-				+ "," + getStack.getZ() + " size " + bd.size());
-				
-				
 
 				for (int x = -search; x <= search; x++)
 					for (int y = 0; y <= 40; y++)
@@ -157,12 +172,30 @@ public class DigEventListener2 implements Listener {
 
 						}
 
+				for (int x = -50; x <= 50; x++) {
+
+					Block bo = getStack.getRelative(x, 0, 0);
+					if (bo.getType() != Material.AIR) {
+						bd.add(bo);
+
+					}
+				}
+
+				for (int x = -50; x <= 50; x++) {
+
+					Block bo = getStack.getRelative(0, 0, x);
+					if (bo.getType() != Material.AIR) {
+						bd.add(bo);
+
+					}
+				}
+
 			}
 
-			if (bd.size() > 0) {
-				DeleteYBelow5 newRun = new DeleteYBelow5(bd,world);
+			if (bd.size() >= 0) {
+				DeleteYBelow5 newRun = new DeleteYBelow5(bd, world, 0);
 				Bukkit.getScheduler().scheduleSyncDelayedTask(ac, newRun, 10L);
-
+				return;
 			}
 
 		}
@@ -1328,18 +1361,16 @@ public class DigEventListener2 implements Listener {
 						return;
 					}
 					dew.adjustProtect(player.getLocation().getBlock(), player);
-				}
-				else if (m[1].equalsIgnoreCase("deleteybelow5")) {
+				} else if (m[1].equalsIgnoreCase("deleteybelow5")) {
 					if (player.hasPermission(Constant.poveride) == false) {
 						player.sendMessage(dprint.r.color(tr.gettr("you_dont_have_permission")));
 						return;
 					}
-					
+
 					Queue<Block> bd = new LinkedList<Block>();
-					
-					DeleteYBelow5 deleteYBelow5 = new DeleteYBelow5(bd,player.getWorld());
+
+					DeleteYBelow5 deleteYBelow5 = new DeleteYBelow5(bd, player.getWorld(), Integer.parseInt(m[2]));
 					Bukkit.getScheduler().scheduleSyncDelayedTask(ac, deleteYBelow5, 1);
-					
 
 				} else if (m[1].equalsIgnoreCase("adjustprotect2")) {
 					if (player.hasPermission(Constant.poveride) == false) {
