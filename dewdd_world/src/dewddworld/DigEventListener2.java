@@ -347,9 +347,9 @@ public class DigEventListener2 implements Listener {
 					}
 
 					if (worldHasPlayer == false) {
-						cj.unload(true);
-						dprint.r.printC("ptdew&dewdd: unloaded chunk at (" + cj.getX() * 16 + "," + cj.getZ() * 16 + ")"
-								+ " world " + cj.getWorld().getName());
+						cj.unload();
+					/*	dprint.r.printC("ptdew&dewdd: unloaded chunk at (" + cj.getX() * 16 + "," + cj.getZ() * 16 + ")"
+								+ " world " + cj.getWorld().getName());*/
 					}
 
 				}
@@ -383,7 +383,8 @@ public class DigEventListener2 implements Listener {
 		}
 		if (event.getMessage().equalsIgnoreCase("dewdd world") == true) {
 			player.sendMessage(
-					"ปลั๊กอิน world สามารถ  โหลดโลก ปิดโลกได้ตามใจชอบ   ปลั๊กอินเกิดขึ้นเพราะ เราอยากรวมแมพเก่าๆในเซิฟ skyblock");
+					"ปลั๊กอิน world สามารถ  โหลดโลก ปิดโลกได้ตามใจชอบ   ปลั๊กอินเกิดขึ้นเพราะ "
+					+ "เราอยากรวมแมพเก่าๆในเซิฟ skyblock");
 
 			event.setCancelled(true);
 		}

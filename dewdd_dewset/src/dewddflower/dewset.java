@@ -33,6 +33,7 @@ import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
+
 import com.earth2me.essentials.api.Economy;
 import com.earth2me.essentials.api.NoLoanPermittedException;
 import com.earth2me.essentials.api.UserDoesNotExistException;
@@ -41,6 +42,7 @@ import api_skyblock.Constant;
 import api_skyblock.api_skyblock;
 import dewddtran.tr;
 import li.Constant_Protect;
+import li.IDDataType;
 import li.LXRXLZRZType;
 
 public class dewset extends dewset_interface {
@@ -684,18 +686,16 @@ public class dewset extends dewset_interface {
 		private HashMap<String, Location> bd;
 		private World world;
 		private LXRXLZRZType ee;
-		private Material id;
-		private byte data = 0;
+		private ArrayList<IDDataType> item;
 		private int chunklimit = 0;
 		private int search = 10;
 
 		public DeleteRecursive_Thread(HashMap<String, Location> bd, World world, int firstAdded, LXRXLZRZType ee,
-				Material id, byte data, int chunklimit, int search) {
+				ArrayList<IDDataType> item, int chunklimit, int search) {
 			this.bd = bd;
 			this.world = world;
 			this.ee = ee;
-			this.id = id;
-			this.data = data;
+			this.item = item;
 			this.chunklimit = chunklimit;
 			this.search = search;
 
@@ -715,11 +715,6 @@ public class dewset extends dewset_interface {
 
 				}
 
-				if (player.isOp() == true) {
-
-					id = player.getItemInHand().getType();
-					// data = player.getItemInHand().getData().getData();
-				}
 
 				if (player.getItemInHand().getType() == Material.STICK) {
 					// bd = null;
@@ -742,11 +737,11 @@ public class dewset extends dewset_interface {
 					int x = li.useful.randomInteger(ee.lx, ee.rx);
 					int z = li.useful.randomInteger(ee.lz, ee.rz);
 
-					int y = li.useful.randomInteger(0, 40);
+					int y = li.useful.randomInteger(ee.ly, ee.rz);
 
 					Block block = world.getBlockAt(x, y, z);
-					if (block.getType() == id) {
-						if (block.getData() == data || data == -29) {
+					if (IDDataType.isThisItemOnTheList(item, block.getTypeId(), block.getData())) {
+							
 							blockdo++;
 
 							if (bd.get(tr.locationToString(block.getLocation())) == null) {
@@ -754,10 +749,11 @@ public class dewset extends dewset_interface {
 							}
 
 							dprint.r.printAdmin("delete Recursive > first add > " + block.getX() + "," + block.getY()
-									+ "," + block.getZ() + " size " + bd.size() + " , id data " + id + ":" + data);
+									+ "," + block.getZ() + " size " + bd.size() + " , id data " + 
+									block.getTypeId() + ":" + block.getData());
 
 						}
-					}
+					
 
 				}
 
@@ -783,9 +779,7 @@ public class dewset extends dewset_interface {
 								// bo.getData() + " > item "
 								// + id.name() + ":" + data);
 
-								if (bo.getType() == id) {
-
-									if (bo.getData() == data || data == -29) {
+								if (IDDataType.isThisItemOnTheList(item, bo.getTypeId(), bo.getData())){
 										// dprint.r.printAll(bo.getType().name()
 										// + " , " + id.name());
 										// dprint.r.printAll("near " +
@@ -804,7 +798,7 @@ public class dewset extends dewset_interface {
 										}
 
 									}
-								}
+								
 
 							}
 
@@ -820,7 +814,8 @@ public class dewset extends dewset_interface {
 					// (blockdo / (System.currentTimeMillis() - startTime +1))
 					// );
 
-					DeleteRecursive_Thread newRun = new DeleteRecursive_Thread(bd, world, 0, ee, id, data, chunklimit,
+					DeleteRecursive_Thread newRun = new DeleteRecursive_Thread(bd, world, 0,
+							ee, item, chunklimit,
 							search);
 					Bukkit.getScheduler().scheduleSyncDelayedTask(ac, newRun, sleeptime);
 
@@ -852,12 +847,8 @@ public class dewset extends dewset_interface {
 							break;
 						}
 
-						if (getStack.getType() == id) {
-							if (getStack.getData() == data || data == -29) {
-
-							} else {
-								break;
-							}
+						if (IDDataType.isThisItemOnTheList(item, getStack.getTypeId(), getStack.getData())) {
+							
 						} else {
 							break;
 						}
@@ -865,8 +856,9 @@ public class dewset extends dewset_interface {
 						if (first == 0) {
 							dprint.r.printAdmin("delete recursive > break > " + getStack.getX() + "," + getStack.getY()
 									+ "," + getStack.getZ() + " " + getStack.getType().name() + ":" + getStack.getData()
-									+ " size " + bd.size() + " " + getStack.getWorld().getName() + " > id data " + id
-									+ ":" + data + " blockdo " + blockdo + "/"
+									+ " size " + bd.size() + " " + getStack.getWorld().getName() +
+									" > id data " + getStack.getTypeId()
+									+ ":" + getStack.getData() + " blockdo " + blockdo + "/"
 									+ (System.currentTimeMillis() - startTime) + " avg = "
 									+ (blockdo / (System.currentTimeMillis() - startTime + 1)));
 							first = 1;
@@ -892,15 +884,14 @@ public class dewset extends dewset_interface {
 										break;
 									}
 
-									if (bo.getType() == id) {
-										if (bo.getData() == data || data == -29) {
+									if (IDDataType.isThisItemOnTheList(item, bo.getTypeId(), bo.getData())){
 											blockdo++;
 
 											if (bd.get(tr.locationToString(bo.getLocation())) == null) {
 												bd.put(tr.locationToString(bo.getLocation()), bo.getLocation());
 											}
 
-										}
+										
 									}
 
 								}
@@ -924,7 +915,7 @@ public class dewset extends dewset_interface {
 
 			}
 
-			DeleteRecursive_Thread newRun = new DeleteRecursive_Thread(bd, world, 0, ee, id, data, chunklimit, search);
+			DeleteRecursive_Thread newRun = new DeleteRecursive_Thread(bd, world, 0, ee, item, chunklimit, search);
 			Bukkit.getScheduler().scheduleSyncDelayedTask(ac, newRun, sleeptime);
 			dprint.r.printAdmin("recalling > " + bd.size() + " " + " avg = "
 					+ (int) ((double) blockdo / (System.currentTimeMillis() - startTime + 1)));
@@ -5028,17 +5019,12 @@ public class dewset extends dewset_interface {
 
 	// cut seem block
 
-	public boolean monfast = false;
-
-	public boolean moninvi = false;
-
-	public boolean monjump = true;
-
 	public Random randomG = new Random();
 
-	public int runtime = 1000;
-
-	public long sleeptime = 10L;
+	public int runtime = (int)tr.gettrint("dewset runtime as milisecond");
+	
+	
+	public long sleeptime = (int)tr.gettrint("dewset sleeptime as tick");
 
 	public Block selectblock[] = new Block[selectmax + 1];
 
@@ -5069,28 +5055,6 @@ public class dewset extends dewset_interface {
 		// }
 	}
 
-	// addfood withmoney
-	public void addfoodwithmoney(Player player) {
-		if (player.getName().equalsIgnoreCase("") == false)
-			return;
-
-		/*
-		 * while (player.getFoodLevel() < 20 &&
-		 * Economy.getMoney(player.getName()) > 1) {
-		 * 
-		 * Economy.setMoney(player.getName(), Economy.getMoney(player.getName())
-		 * - 1); player.setFoodLevel(player.getFoodLevel() + 1);
-		 * 
-		 * }
-		 */
-
-		while (player.getFoodLevel() < 20) {
-
-			player.setFoodLevel(player.getFoodLevel() + 1);
-
-		}
-
-	}
 
 	public void autosortchest2(Block block, Player player) {
 		autosortchest2_class ar = new autosortchest2_class(block, player);
@@ -5509,8 +5473,9 @@ public class dewset extends dewset_interface {
 	}
 
 	public void DeleteRecursive_mom(HashMap<String, Location> bd, World world, int firstAdded, LXRXLZRZType ee,
-			Material id, byte data, int chunklimit, int search) {
-		DeleteRecursive_Thread dr = new DeleteRecursive_Thread(bd, world, firstAdded, ee, id, data, chunklimit, search);
+			ArrayList<IDDataType> item, int chunklimit, int search) {
+		DeleteRecursive_Thread dr = new DeleteRecursive_Thread(bd, world, firstAdded,
+				ee, item, chunklimit, search);
 		Bukkit.getScheduler().scheduleSyncDelayedTask(ac, dr);
 
 	}

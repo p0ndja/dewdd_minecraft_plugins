@@ -5,6 +5,7 @@
  */
 package dewddmain;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Random;
 
@@ -69,6 +70,7 @@ import dewddflower.dewset;
 import dewddflower.dewset_interface;
 import dewddtran.tr;
 import li.Constant_Protect;
+import li.IDDataType;
 import li.LXRXLZRZType;
 import net.minecraft.server.v1_8_R3.EntityPlayer;
 
@@ -856,7 +858,12 @@ public class DigEventListener2 implements Listener {
 			if (message.equalsIgnoreCase("clearmon") == true) {
 
 				for (Entity ent : player.getWorld().getEntities()) {
-
+					
+					if (ent.getCustomName() == null) {
+						continue;
+					}
+					
+					
 					if (ent.getCustomName().equalsIgnoreCase("") == false) {
 						continue;
 					}
@@ -1005,33 +1012,9 @@ public class DigEventListener2 implements Listener {
 			// pt dew
 			if (api_admin.dewddadmin.is2admin(player.getPlayer()) == true) {
 
-				if (message.equalsIgnoreCase("moninvi") == true) {
-					dew.moninvi = !dew.moninvi;
-					dprint.r.printC("ptdew&dewdd : moninvi = " + Boolean.toString(dew.moninvi));
-					dprint.r.printA("ptdew&dewdd : moninvi = " + Boolean.toString(dew.moninvi));
-					dprint.r.printA(
-							"ptdew&dewdd : " + tr.gettr("Monster_Invisible_mode_is") + Boolean.toString(dew.moninvi));
-					return;
-				}
+			
 
-				if (message.equalsIgnoreCase("monjump") == true) {
-					dew.monjump = !dew.monjump;
-					dprint.r.printC("ptdew&dewdd : monjump = " + Boolean.toString(dew.monjump));
-					dprint.r.printA("ptdew&dewdd : monjump = " + Boolean.toString(dew.monjump));
-					dprint.r.printA(
-							"ptdew&dewdd : " + tr.gettr("Monster_jump_mode_is") + Boolean.toString(dew.monjump));
-					return;
-				}
-
-				if (message.equalsIgnoreCase("monfast") == true) {
-					dew.monfast = !dew.monfast;
-					dprint.r.printC("ptdew&dewdd : monfast = " + Boolean.toString(dew.monfast));
-					dprint.r.printA("ptdew&dewdd : monfast = " + Boolean.toString(dew.monfast));
-					dprint.r.printA(
-							"ptdew&dewdd : " + tr.gettr("Monster_fast_mode_is") + Boolean.toString(dew.monfast));
-
-					return;
-				}
+				
 
 				// dewpicturemap
 
@@ -1057,6 +1040,8 @@ public class DigEventListener2 implements Listener {
 	class chatz extends Thread {
 		String message = "";
 		Player player = null;
+		
+		
 
 		@Override
 		public void run() {
@@ -1064,6 +1049,12 @@ public class DigEventListener2 implements Listener {
 			if (!tr.isrunworld(ac.getName(), player.getWorld().getName())) {
 				return;
 			}
+			
+			dew.runtime = (int)tr.gettrint("dewset runtime as milisecond");
+			
+			
+			dew.sleeptime = (int)tr.gettrint("dewset sleeptime as tick");
+			
 
 			String[] m = message.split("\\s+");
 
@@ -1468,27 +1459,7 @@ public class DigEventListener2 implements Listener {
 					}
 			}
 
-			if (m[0].equalsIgnoreCase("moninvi") == true) {
-				dew.moninvi = !dew.moninvi;
-				dprint.r.printC("ptdew&dewdd : moninvi = " + Boolean.toString(dew.moninvi));
-				dprint.r.printA("ptdew&dewdd : moninvi = " + Boolean.toString(dew.moninvi));
-				return;
-			}
-			if (m[0].equalsIgnoreCase("monfast") == true) {
-				dew.monfast = !dew.monfast;
-				dprint.r.printC("ptdew&dewdd : monfast = " + Boolean.toString(dew.monfast));
-				dprint.r.printA("ptdew&dewdd : monfast = " + Boolean.toString(dew.monfast));
-
-				return;
-			}
-
-			if (m[0].equalsIgnoreCase("monjump") == true) {
-				dew.monjump = !dew.monjump;
-				dprint.r.printC("ptdew&dewdd : monjump = " + Boolean.toString(dew.monjump));
-				dprint.r.printA("ptdew&dewdd : monjump = " + Boolean.toString(dew.monjump));
-
-				return;
-			}
+		
 
 		}
 	}
@@ -1544,43 +1515,37 @@ public class DigEventListener2 implements Listener {
 
 		String m[] = event.getMessage().split(" ");
 		// deleterecursive x1 z1 x2 z2 id data
-		if (m.length == 9) {
-			if (m[0].equalsIgnoreCase("deleterecursive")) {
+		if (m[0].equalsIgnoreCase("deleterecursive")) {
+			
+			if (m.length == 1) {
+				event.getPlayer().sendMessage("deleterecursive x1 y1 z1 x2 y2 z2 blockToDelete maxChunk search");
+			}
+			else if (m.length == 10) {
+			
 
 				if (event.getPlayer().isOp() == true) {
 
 					int x1 = Integer.parseInt(m[1]);
-					int z1 = Integer.parseInt(m[2]);
+					int y1 = Integer.parseInt(m[2]);
+					int z1 = Integer.parseInt(m[3]);
 
-					int x2 = Integer.parseInt(m[3]);
-					int z2 = Integer.parseInt(m[4]);
+					int x2 = Integer.parseInt(m[4]);
+					int y2 = Integer.parseInt(m[5]);
+					int z2 = Integer.parseInt(m[6]);
 
-					LXRXLZRZType lll = new LXRXLZRZType(x1, 0, z1, x2, 255, z2);
+					LXRXLZRZType lll = new LXRXLZRZType(x1, y1, z1, x2, y2, z2);
 
-					Material id = event.getPlayer().getItemInHand().getType();
-					byte data = Byte.parseByte(m[6]);
+					
+					
+					ArrayList<IDDataType> item = IDDataType.longArgumentToListIDDataType(m[7]);
+					
 
-					if (x1 <= x2) {
-						lll.lx = x1;
-						lll.rx = x2;
-					} else {
-						lll.lx = x2;
-						lll.rx = x1;
-					}
 
-					if (z1 <= z2) {
-						lll.lz = z1;
-						lll.rz = z2;
-					} else {
-						lll.lz = z2;
-						lll.rz = z1;
-					}
-
-					int chunklimit = Integer.parseInt(m[7]);
-					int search = Integer.parseInt(m[8]);
+					int chunklimit = Integer.parseInt(m[8]);
+					int search = Integer.parseInt(m[9]);
 
 					HashMap<String, Location> bd = new HashMap<String, Location>();
-					dew.DeleteRecursive_mom(bd, event.getPlayer().getWorld(), 1000, lll, id, data, chunklimit, search);
+					dew.DeleteRecursive_mom(bd, event.getPlayer().getWorld(), 1000, lll, item, chunklimit, search);
 
 				}
 
@@ -1984,54 +1949,27 @@ public class DigEventListener2 implements Listener {
 
 		}
 
-		if (dew.randomG.nextInt(100) < 82)
+		if (dew.randomG.nextInt(100) < tr.gettrint("main_mon_duplicate_chance"))
 			if (laco.getBlock().getLightLevel() <= 8) {
 				event.getEntity().getWorld().spawnCreature(laco, event.getCreatureType());
 			}
-
-		if (dew.randomG.nextInt(100) > 80) {
-			event.getEntity().addPotionEffect(
-					PotionEffectType.INVISIBILITY.createEffect(dew.randomG.nextInt(3000), dew.randomG.nextInt(10)));
-		}
-		if (dew.randomG.nextInt(100) > 70) {
-			event.getEntity().addPotionEffect(
-					PotionEffectType.SPEED.createEffect(dew.randomG.nextInt(3000), dew.randomG.nextInt(10)));
-		}
-		if (dew.randomG.nextInt(100) > 60) {
-			event.getEntity().addPotionEffect(
-					PotionEffectType.FIRE_RESISTANCE.createEffect(dew.randomG.nextInt(3000), dew.randomG.nextInt(10)));
-		}
-
-		if (dew.randomG.nextInt(100) > 60) {
-			event.getEntity().addPotionEffect(
-					PotionEffectType.HEAL.createEffect(dew.randomG.nextInt(3000), dew.randomG.nextInt(10)));
+		
+		for (PotionEffectType pet : PotionEffectType.values()){
+			if (pet == null) {
+				continue;
+			}
+			double chance = tr.gettrint("main mon potion " + pet.getName() + "_chance");
+			if (dew.randomG.nextInt(100) < chance) {
+				event.getEntity().addPotionEffect(
+						pet.createEffect(dew.randomG.nextInt(3000), dew.randomG.nextInt(10)));
+				
+			}
 		}
 
-		if (dew.randomG.nextInt(100) > 56) {
-			event.getEntity().addPotionEffect(
-					PotionEffectType.SLOW.createEffect(dew.randomG.nextInt(3000), dew.randomG.nextInt(10)));
-		}
-		if (dew.randomG.nextInt(100) > 47) {
-			event.getEntity().addPotionEffect(
-					PotionEffectType.WATER_BREATHING.createEffect(dew.randomG.nextInt(3000), dew.randomG.nextInt(10)));
-		}
-
-		if (dew.randomG.nextInt(100) > 47) {
-			event.getEntity().addPotionEffect(PotionEffectType.DAMAGE_RESISTANCE.createEffect(dew.randomG.nextInt(3000),
-					dew.randomG.nextInt(10)));
-		}
-
-		if (dew.randomG.nextInt(100) > 34) {
-			event.getEntity().addPotionEffect(
-					PotionEffectType.HEALTH_BOOST.createEffect(dew.randomG.nextInt(3000), dew.randomG.nextInt(10)));
-		}
-
-		if (dew.randomG.nextInt(100) > 60) {
-			event.getEntity().addPotionEffect(
-					PotionEffectType.REGENERATION.createEffect(dew.randomG.nextInt(3000), dew.randomG.nextInt(10)));
-		}
+		
 	}
-
+	
+	
 	@EventHandler
 	public void eventja(EntityChangeBlockEvent event) {
 

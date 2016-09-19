@@ -95,7 +95,7 @@ public class api_skyblock {
 					if (chu == null) {
 						continue;
 					}
-					chu.unload(true);
+					chu.unload();
 				}
 
 				AdjustProtect abc = new AdjustProtect(bo, player, curI, tmprs, curNewID);
@@ -205,7 +205,7 @@ public class api_skyblock {
 						if (chu == null) {
 							continue;
 						}
-						chu.unload(true);
+						chu.unload();
 					}
 
 					AdjustProtect2 abc = new AdjustProtect2(bb, player, tmpx, tmpz);

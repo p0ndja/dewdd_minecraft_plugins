@@ -981,57 +981,7 @@ public class DigEventListener2 implements Listener {
 					return;
 				}
 
-				if (m[0].equalsIgnoreCase("unloadchunk") == true) {
-					dprint.r.printAll("ptdew&dewdd: unloading all chunk with no player");
-					for (World wx : Bukkit.getWorlds()) {
-
-						boolean playernear = false;
-
-						for (Chunk cj : wx.getLoadedChunks()) {
-							playernear = false;
-
-							for (Player pj : wx.getPlayers()) {
-								if (Math.pow((Math.pow(((cj.getX() * 16) - pj.getLocation().getBlockX()), 2))
-										+ (Math.pow(((cj.getZ() * 16) - pj.getLocation().getBlockZ()), 2)), 0.5)
-
-								<= 50) {
-									playernear = true;
-									break;
-								}
-
-							}
-
-							if (playernear == false) {
-								cj.unload(true);
-								dprint.r.printAll("ptdew&dewdd: unloaded chunk at (" + cj.getX() * 16 + ","
-										+ cj.getZ() * 16 + ")");
-							}
-
-						}
-					}
-					canc = true;
-					return;
-				}
-
-				if (m[0].equalsIgnoreCase("loadchunk") == true) {
-					dprint.r.printAll("ptdew&dewdd: loading all chunk neary you");
-					World wx = player.getWorld();
-
-					for (int x = -200; x < 200; x += 16) {
-
-						for (int z = -200; z < 200; z += 16) {
-
-							wx.loadChunk((int) ((x + player.getLocation().getX()) / 16),
-									(int) ((z + player.getLocation().getZ()) / 16), true);
-							dprint.r.printAll("ptdew&dewdd: loaded chunk at (" + (x + player.getLocation().getX()) + ","
-									+ (z + player.getLocation().getZ()) + ")");
-						}
-
-					}
-
-					canc = true;
-					return;
-				}
+			
 
 			} catch (UserDoesNotExistException | NoLoanPermittedException e) {
 				// TODO Auto-generated catch block
@@ -1225,37 +1175,6 @@ public class DigEventListener2 implements Listener {
 				return;
 			}
 
-			if (message.equalsIgnoreCase("unloadchunk") == true) {
-				dprint.r.printAll("ptdew&dewdd: unloading all chunk with no player");
-				for (World wx : Bukkit.getWorlds()) {
-
-					boolean playernear = false;
-
-					for (Chunk cj : wx.getLoadedChunks()) {
-						playernear = false;
-
-						for (Player pj : wx.getPlayers()) {
-							if (Math.pow((Math.pow((cj.getX() * 16 - pj.getLocation().getBlockX()), 2))
-									+ (Math.pow((cj.getZ() * 16 - pj.getLocation().getBlockZ()), 2)), 0.5)
-
-							<= 50) {
-								playernear = true;
-								break;
-							}
-
-						}
-
-						if (playernear == false) {
-							cj.unload(true);
-							dprint.r.printAll(
-									"ptdew&dewdd: unloaded chunk at (" + cj.getX() * 16 + "," + cj.getZ() * 16 + ")");
-						}
-
-					}
-				}
-
-				return;
-			}
 
 			if (message.equalsIgnoreCase("cleardrop") == true) {
 

@@ -3269,4 +3269,3 @@ public class DigEventListener2 implements Listener {
 	// PlayerRespawnEvent
 
 } // class
-
