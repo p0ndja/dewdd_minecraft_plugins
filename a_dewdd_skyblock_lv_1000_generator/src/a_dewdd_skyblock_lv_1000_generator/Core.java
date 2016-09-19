@@ -92,14 +92,16 @@ public class Core {
 			
 			
 
-			if (tmpAllShopUniqueDone <= allBlockInGameAsList.size() ) {
+			if (tmpAllShopUniqueDone < allBlockInGameAsList.size() ) {
 				d.pl("tmpAllShop > "  + curChro);
 				
 				d.pl("tmpAllShop : " + tmpAllShopUniqueDone + " = " + (allBlockInGameAsList.size() ));
 				
-					if ( allBlockInGameAsList.size() - minShopSize != tmpAllShopUniqueDone ) {
-						d.pl("last shop can't have item to fit minshopsize");
-						
+					if ( allBlockInGameAsList.size() - tmpAllShopUniqueDone  < minShopSize && 
+							 allBlockInGameAsList.size() - tmpAllShopUniqueDone  > 0) {
+						d.pl("last shop can't have item to fit minshopsize = " + minShopSize + " , " + tmpAllShopUniqueDone + "/" + allBlockInGameAsList.size());
+					
+						return ;
 					}
 				
 
@@ -175,8 +177,8 @@ public class Core {
 			} // mission
 
 			
-			d.pl("tmpAllShop " + tmpAllShop.size() + " , unique " + tmpAllShopUniqueDone);
-			 d.pl("done shop");
+			/*d.pl("tmpAllShop !@ " + tmpAllShop.size() + " , unique " + tmpAllShopUniqueDone);
+			 d.pl("done shop");*/
 			// ****************************************************
 			// ****************************************************
 
