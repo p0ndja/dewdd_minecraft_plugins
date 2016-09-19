@@ -8,10 +8,20 @@ import core_optimization_api.Chromosome;
 public class DecodeSubDNA implements Runnable {
 	private Redex	redex;
 	private int		curId	= 0;
+	
+	private AreaType areaType = null;
+	
+	private boolean isAreaTypeMode = false;
 
 	public DecodeSubDNA(Redex redex, int curId) {
 		this.redex = redex;
 		this.curId = curId;
+	}
+	
+	public DecodeSubDNA(Redex redex, AreaType areaType) {
+		this.redex = redex;
+		this.areaType = areaType;
+		this.isAreaTypeMode  = true;
 	}
 
 	@Override
@@ -23,13 +33,15 @@ public class DecodeSubDNA implements Runnable {
 		Block hostBlock = null;
 		Block setBlock = null;
 
+		if (this.isAreaTypeMode == false) {
 		if ((this.curId % 100) == 0) {
 			dprint.r.printAll("Decoding : curid " + this.curId);
 
 		}
+		}
 
 		// dprint.r.printAll("dnaList Length " + redex.dnaList.size());
-		AreaType at = this.redex.listEx.get(this.curId);
+		AreaType at = isAreaTypeMode == false ? this.redex.listEx.get(this.curId) : areaType;
 		at.isRunning = true;
 		Chromosome dna = this.redex.dnaList.get(this.curId);
 

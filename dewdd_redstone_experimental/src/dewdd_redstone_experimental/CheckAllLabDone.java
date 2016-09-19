@@ -29,8 +29,11 @@ public class CheckAllLabDone implements Runnable {
 		dprint.r.printAll("check All lab done true");
 
 		// add the best
+		
+		this.redex.hybrid.produceNextGen(1);
+		
 
-		double unsort[] = new double[Redex.maxPopulation];
+		/*double unsort[] = new double[Redex.maxPopulation];
 
 		// extract all fitness
 		for (int lop = 0; lop < Redex.maxPopulation; lop++) {
@@ -54,7 +57,7 @@ public class CheckAllLabDone implements Runnable {
 			
 			
 			
-		}
+		}*/
 		
 
 		// if everything die , produce next gen

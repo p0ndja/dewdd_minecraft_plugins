@@ -8,9 +8,18 @@ public class CleanSubArea implements Runnable {
 	private Redex	redex;
 	private int		curId	= 0;
 
+	private AreaType areaType = null;
+	private boolean isAreaTypeMode = false;
+	
 	public CleanSubArea(Redex redex, int curId) {
 		this.redex = redex;
 		this.curId = curId;
+	}
+	
+	public CleanSubArea(Redex redex, AreaType areaType) {
+		this.redex = redex;
+		this.areaType = areaType;
+		this.isAreaTypeMode = true;
 	}
 
 	@Override
@@ -20,11 +29,14 @@ public class CleanSubArea implements Runnable {
 		Block hostBlock = null;
 		Block setBlock = null;
 
+		if (this.isAreaTypeMode == false) {
 		if ((this.curId % 100) == 0) {
 			dprint.r.printAll("Cleaning : curid " + this.curId);
 		}
+		}
 
-		AreaType at = this.redex.listEx.get(this.curId);
+		AreaType at = isAreaTypeMode == false ? this.redex.listEx.get(this.curId) : areaType;
+		
 
 		// Clean Or Data
 		at.curTick = 0;
