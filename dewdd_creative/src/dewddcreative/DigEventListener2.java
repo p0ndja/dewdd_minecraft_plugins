@@ -33,178 +33,6 @@ import com.earth2me.essentials.api.NoLoanPermittedException;
 import com.earth2me.essentials.api.UserDoesNotExistException;
 
 import dewddtran.tr;
-import net.minecraft.server.v1_8_R3.DedicatedPlayerList;
-
-class Dewminecraft {
-	public String perdewremove = "dewdd.creative.dewremove";
-	public String perchangehost = "dewdd.creative.changehost";
-	public String perdoprotecty = "dewdd.creative.doprotecty";
-	public String perdounprotecty = "dewdd.creative.dounprotecty";
-	public String peroveride = "dewdd.creative.overide";
-
-	public int max_b = 2000;// 19900;
-	private Random randomG = new Random();
-
-	public JavaPlugin ac;
-
-	public boolean canbuild(int x, int y, int z, Player player) {
-		if (!tr.isrunworld(ac.getName(), player.getWorld().getName())) {
-			return true;
-		}
-
-		int zx = 5;
-		int zz = 5;
-
-		boolean foundza = false;
-
-		for (int gx = -max_b; gx <= max_b; gx += 100) {
-			for (int gz = -max_b; gz <= max_b; gz += 100) {
-				if (x >= gx && (x <= gx + 99)) {
-					if (z >= gz && (z <= gz + 99)) {
-						zx = gx;
-						zz = gz; // save
-						foundza = true;
-						break;
-					}
-				}
-			}
-
-			if (foundza == true) {
-				break;
-			}
-		}
-
-		if (zx == 5 && zz == 5) {
-			player.sendMessage("out of " + (max_b) + " area");
-			return false; // not protect
-		}
-
-		// check permission
-		// zx,254,zz
-		if (x == zx && z == zz) { // do anything at protect zone
-			if (y == 254 || y == 253) {
-
-				// changehost
-				if (player.hasPermission(perchangehost) == false) {
-					return false;
-				}
-			}
-		}
-
-		if (y == 254 || y == 253) { // y
-			if (player.getWorld().getBlockAt(zx, 254, zz).getTypeId() == 63) { // changehost
-				Sign sign = (Sign) player.getWorld().getBlockAt(zx, 254, zz).getState();
-				if (sign.getLine(1).equalsIgnoreCase(player.getName()) == false
-						&& player.hasPermission(perdoprotecty) == false) {
-					return false;
-				}
-			} else { // do any thing at protecty not protect
-				if (player.hasPermission(perdounprotecty) == false) {
-					return false;
-				}
-			}
-		}
-
-		for (int cx = zx; (cx <= zx + 99); cx++) { // loop sign
-			if (player.getWorld().getBlockAt(cx, 254, zz).getTypeId() == 63) { // found
-																				// sign
-				Sign sign = (Sign) player.getWorld().getBlockAt(cx, 254, zz).getState();
-				if (sign.getLine(0).equalsIgnoreCase(player.getName()) == true) {
-					return true;
-				}
-				if (sign.getLine(1).equalsIgnoreCase(player.getName()) == true) {
-					return true;
-				}
-				if (sign.getLine(2).equalsIgnoreCase(player.getName()) == true) {
-					return true;
-				}
-				if (sign.getLine(3).equalsIgnoreCase(player.getName()) == true) {
-					return true;
-				}
-				// in zone can do any thing
-				if (player.hasPermission(peroveride) == true) {
-					return true;
-				}
-			}
-
-		} // loop sign
-
-		return false;
-		// not found
-
-		// 0 , 0 to 100 , 100
-	}
-
-	public void gotofreezone(Player player) {
-
-		Block e = null;
-
-		int x;
-		int z;
-
-		boolean cd = false;
-
-		do {
-
-			x = this.randomG.nextInt(max_b * 2) - max_b;
-			z = this.randomG.nextInt(max_b * 2) - max_b;
-			e = player.getLocation().getWorld().getBlockAt(x, 70, z);
-			cd = isprotectedarea(e);
-
-		} while (cd == false);
-
-		dprint.r.printAll("ptdew&dewdd: " + player.getName() + tr.gettr("Creative Found freeZone at") + " (" + x + ",?,"
-				+ z + ")");
-		e.getChunk().load();
-		player.teleport(e.getLocation());
-
-	}
-
-	public boolean isadminname(String playername) {
-		return true;
-	}
-
-	public boolean isprotectedarea(Block block) {
-		if (block.getWorld().getName().equalsIgnoreCase("world_the_end") == true) {
-			return true;
-		}
-
-		int zx = 5;
-		int zz = 5;
-		int x = 0;
-		int z = 0;
-
-		boolean foundza = false;
-
-		for (int gx = -max_b; gx <= max_b; gx += 100) {
-			for (int gz = -max_b; gz <= max_b; gz += 100) {
-				if (x >= gx && (x <= gx + 99)) {
-					if (z >= gz && (z <= gz + 99)) {
-						zx = gx;
-						zz = gz; // save
-						foundza = true;
-						break;
-					}
-				}
-			}
-
-			if (foundza == true) {
-				break;
-			}
-		}
-
-		if (zx == 5 && zz == 5) {
-			return false; // not protect
-		}
-
-		if (block.getWorld().getBlockAt(zx, 254, zz).getTypeId() == 63) {
-			return true;
-		}
-
-		return false;
-	}
-
-}
 
 public class DigEventListener2 implements Listener {
 	class delay extends Thread {
@@ -220,7 +48,8 @@ public class DigEventListener2 implements Listener {
 
 			}
 
-			dew = new Dewminecraft();
+			dew = new api_creative();
+			dew.ac = ac;
 		}
 	}
 
@@ -317,9 +146,9 @@ public class DigEventListener2 implements Listener {
 
 					if (m[1].equalsIgnoreCase("remove") == true) {
 
-						if (player.hasPermission(dew.perdewremove) == false) {
+						if (player.hasPermission(api_creative.perdewremove) == false) {
 							player.sendMessage(
-									dprint.r.color(tr.gettr("you don't have permission " + dew.perdewremove)));
+									dprint.r.color(tr.gettr("you don't have permission " + api_creative.perdewremove)));
 							return;
 						}
 						int zx = 5;
@@ -328,8 +157,8 @@ public class DigEventListener2 implements Listener {
 						int z = (int) player.getLocation().getZ();
 						boolean foundza = false;
 
-						for (int gx = -dew.max_b; gx <= dew.max_b; gx += 100) {
-							for (int gz = -dew.max_b; gz <= dew.max_b; gz += 100) {
+						for (int gx = -api_creative.max_b; gx <= api_creative.max_b; gx += 100) {
+							for (int gz = -api_creative.max_b; gz <= api_creative.max_b; gz += 100) {
 								if (x >= gx && (x <= gx + 99)) {
 									if (z >= gz && (z <= gz + 99)) {
 										zx = gx;
@@ -346,7 +175,7 @@ public class DigEventListener2 implements Listener {
 
 						if (zx == 5 && zz == 5) {
 							dprint.r.printAll("ptdew&dewdd: Creative : " + player.getName() + "  can't remove area  "
-									+ -dew.max_b + " < x < " + dew.max_b);
+									+ -api_creative.max_b + " < x < " + api_creative.max_b);
 
 							return; // not protect
 						}
@@ -393,8 +222,8 @@ public class DigEventListener2 implements Listener {
 						int z = (int) player.getLocation().getZ();
 						boolean foundza = false;
 
-						for (int gx = -dew.max_b; gx <= dew.max_b; gx += 100) {
-							for (int gz = -dew.max_b; gz <= dew.max_b; gz += 100) {
+						for (int gx = -api_creative.max_b; gx <= api_creative.max_b; gx += 100) {
+							for (int gz = -api_creative.max_b; gz <= api_creative.max_b; gz += 100) {
 								if (x >= gx && (x <= gx + 99)) {
 									if (z >= gz && (z <= gz + 99)) {
 										zx = gx;
@@ -412,7 +241,7 @@ public class DigEventListener2 implements Listener {
 						if (zx == 5 && zz == 5) {
 							dprint.r.printAll(
 									"ptdew&dewdd: " + tr.gettr("Creative can't buy zone too for from this position ")
-											+ (-dew.max_b) + " < x < " + (dew.max_b));
+											+ (-api_creative.max_b) + " < x < " + (api_creative.max_b));
 							return; // not protect
 						}
 
@@ -525,7 +354,7 @@ public class DigEventListener2 implements Listener {
 
 	public JavaPlugin ac = null;
 
-	public Dewminecraft dew = null;
+	public api_creative dew = null;
 
 	public DigEventListener2() {
 
@@ -554,11 +383,11 @@ public class DigEventListener2 implements Listener {
 		runpro("/" + event.getMessage(), player);
 
 		if (event.getMessage().equalsIgnoreCase("pcreative") == true) {
-			player.sendMessage("changehost = " + Boolean.toString(player.hasPermission(dew.perchangehost)));
-			player.sendMessage("overide = " + Boolean.toString(player.hasPermission(dew.peroveride)));
-			player.sendMessage("doprotecty = " + Boolean.toString(player.hasPermission(dew.perdoprotecty)));
-			player.sendMessage("dounprotecty = " + Boolean.toString(player.hasPermission(dew.perdounprotecty)));
-			player.sendMessage("dewremove = " + Boolean.toString(player.hasPermission(dew.perdewremove)));
+			player.sendMessage("changehost = " + Boolean.toString(player.hasPermission(api_creative.perchangehost)));
+			player.sendMessage("overide = " + Boolean.toString(player.hasPermission(api_creative.peroveride)));
+			player.sendMessage("doprotecty = " + Boolean.toString(player.hasPermission(api_creative.perdoprotecty)));
+			player.sendMessage("dounprotecty = " + Boolean.toString(player.hasPermission(api_creative.perdounprotecty)));
+			player.sendMessage("dewremove = " + Boolean.toString(player.hasPermission(api_creative.perdewremove)));
 
 			return;
 		}

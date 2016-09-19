@@ -1484,7 +1484,7 @@ public class DigEventListener2 implements Listener {
 		}
 
 		boolean goodc1 = false;
-		goodc1 = dewset.cando(block, player, "delete");
+		goodc1 = dewset.cando_all(block, player, "delete");
 
 		// call check
 		if (goodc1 == false) {
@@ -1596,7 +1596,7 @@ public class DigEventListener2 implements Listener {
 			// check host block
 
 			boolean goodc1 = false;
-			goodc1 = dewset.cando(block, player, "damage");
+			goodc1 = dewset.cando_all(block, player, "damage");
 			if (goodc1 == false) { // don't have permission
 
 				event.setCancelled(true);
@@ -1705,7 +1705,7 @@ public class DigEventListener2 implements Listener {
 
 		boolean goodc1 = false;
 
-		goodc1 = dewset.cando(block, player, "build");
+		goodc1 = dewset.cando_all(block, player, "build");
 
 		if (goodc1 == false) {
 			event.setCancelled(true);
@@ -1900,7 +1900,7 @@ public class DigEventListener2 implements Listener {
 		if (event.getEntity().getType() == EntityType.PLAYER) {
 			Player pal = (Player) event.getEntity();
 
-			if (dewset.cando(event.getBlock(), pal, "changeBlock") == false) {
+			if (dewset.cando_all(event.getBlock(), pal, "changeBlock") == false) {
 				event.setCancelled(true);
 			}
 		}
@@ -1914,7 +1914,7 @@ public class DigEventListener2 implements Listener {
 
 		if (e.getEntity() instanceof EntityPlayer) {
 			Player br = (Player) e.getEntity();
-			if (dewset.cando(br.getLocation().getBlock(), br, "EntityDamageEvent") == false) {
+			if (dewset.cando_all(br.getLocation().getBlock(), br, "EntityDamageEvent") == false) {
 				// br.sendMessage("ptdew&dewdd : " +
 				// tr.gettr("don't_place_hanging_picture_not_yours"));
 
@@ -1959,7 +1959,7 @@ public class DigEventListener2 implements Listener {
 
 		if (event.getEntity().getType() == EntityType.PLAYER) {
 			Player prp = (Player) event.getEntity();
-			if (dewset.cando(event.getBlock(), prp, "EntityInteract") == false) {
+			if (dewset.cando_all(event.getBlock(), prp, "EntityInteract") == false) {
 				event.setCancelled(true);
 			}
 
@@ -1980,7 +1980,7 @@ public class DigEventListener2 implements Listener {
 		if (event.getRemover().getType() == EntityType.PLAYER) {
 			Player br = (Player) event.getRemover();
 
-			if (dewset.cando(event.getEntity().getLocation().getBlock(), br, "HangingBreakByEntity") == false) {
+			if (dewset.cando_all(event.getEntity().getLocation().getBlock(), br, "HangingBreakByEntity") == false) {
 				// br.sendMessage("ptdew&dewdd : " +
 				// tr.gettr("don't_break_hanging_picture_not_yours"));
 
@@ -2026,7 +2026,7 @@ public class DigEventListener2 implements Listener {
 				}
 
 				if (dist < 10000)
-					if (dewset.cando(event.getEntity().getLocation().getBlock(), pl, "break") == false) {
+					if (dewset.cando_all(event.getEntity().getLocation().getBlock(), pl, "break") == false) {
 						event.setCancelled(true);
 						return;
 					}
@@ -2043,7 +2043,7 @@ public class DigEventListener2 implements Listener {
 			return;
 
 		Player br = event.getPlayer();
-		if (dewset.cando(event.getPlayer().getLocation().getBlock(), br, "HangingPlaceEvent") == false) {
+		if (dewset.cando_all(event.getPlayer().getLocation().getBlock(), br, "HangingPlaceEvent") == false) {
 			// br.sendMessage("ptdew&dewdd : " +
 			// tr.gettr("don't_place_hanging_picture_not_yours"));
 
@@ -2192,7 +2192,7 @@ public class DigEventListener2 implements Listener {
 		if (!tr.isrunworld(ac.getName(), event.getPlayer().getWorld().getName()))
 			return;
 
-		if (dewset.cando(event.getBlockClicked(), event.getPlayer(), "build") == false) {
+		if (dewset.cando_all(event.getBlockClicked(), event.getPlayer(), "build") == false) {
 			event.setCancelled(true);
 		}
 	}
@@ -2202,7 +2202,7 @@ public class DigEventListener2 implements Listener {
 		if (!tr.isrunworld(ac.getName(), event.getPlayer().getWorld().getName()))
 			return;
 
-		if (dewset.cando(event.getBlockClicked(), event.getPlayer(), "build") == false) {
+		if (dewset.cando_all(event.getBlockClicked(), event.getPlayer(), "build") == false) {
 			event.setCancelled(true);
 		}
 	}
@@ -2355,7 +2355,7 @@ public class DigEventListener2 implements Listener {
 			return;
 
 		Player br = e.getPlayer();
-		if (dewset.cando(e.getPlayer().getLocation().getBlock(), br, "HangingPlaceEvent") == false) {
+		if (dewset.cando_all(e.getPlayer().getLocation().getBlock(), br, "HangingPlaceEvent") == false) {
 			// br.sendMessage("ptdew&dewdd : " +
 			// tr.gettr("don't_interact_not_your"));
 
@@ -2411,7 +2411,7 @@ public class DigEventListener2 implements Listener {
 		}
 
 		boolean goodc1 = false;
-		goodc1 = dewset.cando(block, player, "right");
+		goodc1 = dewset.cando_all(block, player, "right");
 
 		if (goodc1 == false) {
 			event.setCancelled(true);

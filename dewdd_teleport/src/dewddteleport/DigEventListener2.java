@@ -78,7 +78,7 @@ public class DigEventListener2 implements Listener {
 
 				for (int i = 0; i >= -3; i--) {
 					Block b = p.getLocation().getBlock().getRelative(0, i, 0);
-					if (dewset.cando(b, p, "build") == false) {
+					if (dewset.cando_all(b, p, "build") == false) {
 						p.sendMessage(dprint.r.color(tr.gettr("this zone is protected you can't build")));
 						return;
 					}

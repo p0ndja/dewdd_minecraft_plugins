@@ -37,7 +37,6 @@ import org.bukkit.plugin.java.JavaPlugin;
 import com.earth2me.essentials.api.Economy;
 import com.earth2me.essentials.api.NoLoanPermittedException;
 import com.earth2me.essentials.api.UserDoesNotExistException;
-import com.sun.xml.internal.bind.v2.model.core.ID;
 
 import api_skyblock.Constant;
 import api_skyblock.api_skyblock;
@@ -233,7 +232,7 @@ public class dewset extends dewset_interface {
 				 * if (checkpermissionarea(block)== false) { not protect area
 				 * continue; }
 				 */
-				if (cando(block, player, "build") == false) {
+				if (cando_all(block, player, "build") == false) {
 					// build
 					continue;
 				}
@@ -370,7 +369,7 @@ public class dewset extends dewset_interface {
 				 * if (checkpermissionarea(block)== false) { not protect area
 				 * continue; }
 				 */
-				if (cando(block, player, "build") == false) {
+				if (cando_all(block, player, "build") == false) {
 					// build
 					continue;
 				}
@@ -1251,7 +1250,7 @@ public class dewset extends dewset_interface {
 
 								setBlock = hostBlock.getWorld().getBlockAt(hostBlock.getX() + ndx,
 										hostBlock.getY() + ndy, hostBlock.getZ() + ndz);
-								if (cando(setBlock, player, "dewset") == false)
+								if (cando_all(setBlock, player, "dewset") == false)
 									return;
 
 								setBlock.setTypeIdAndData(hostBlock.getTypeId(), hostBlock.getData(), false);
@@ -1874,7 +1873,7 @@ public class dewset extends dewset_interface {
 						Block setBlock = playerLocation.getBlock().getRelative(hostBlock.getX() - selectx1,
 								hostBlock.getY() - selecty1, hostBlock.getZ() - selectz1);
 
-						if (cando(setBlock, player, "dewset") == false)
+						if (cando_all(setBlock, player, "dewset") == false)
 							return;
 
 						if (arxx)
@@ -2031,7 +2030,7 @@ public class dewset extends dewset_interface {
 			if (isprotectitemid(block.getType()) == true)
 				return;
 
-			if (cando(block, player, "dewset") == false) {
+			if (cando_all(block, player, "dewset") == false) {
 				player.sendMessage(dprint.r.color("ptdew&dewdd : dewdown " + tr.gettr("this_is_not_your_zone")));
 				return;
 			}
@@ -2363,7 +2362,7 @@ public class dewset extends dewset_interface {
 							}
 						}
 
-						if (cando(blb, player, "dewset") == false)
+						if (cando_all(blb, player, "dewset") == false)
 							return;
 
 						int randid = rnd.nextInt(item.size());
@@ -2604,7 +2603,7 @@ public class dewset extends dewset_interface {
 
 						} 
 
-						if (cando(blb, player, "dewset") == false)
+						if (cando_all(blb, player, "dewset") == false)
 							return;
 
 						// coner
@@ -2726,7 +2725,7 @@ public class dewset extends dewset_interface {
 					}
 				} 
 
-				if (cando(blb, player, "dewset") == false)
+				if (cando_all(blb, player, "dewset") == false)
 					return;
 
 				int ranslot = rnd.nextInt(item.size());
@@ -2847,7 +2846,7 @@ public class dewset extends dewset_interface {
 							continue;
 						}
 
-						if (cando(blb, player, "dewset") == false)
+						if (cando_all(blb, player, "dewset") == false)
 							return;
 
 						int randid = rnd.nextInt(item.size());
@@ -3114,7 +3113,7 @@ public class dewset extends dewset_interface {
 							}
 						} 
 
-						if (cando(blb, player, "dewset") == false)
+						if (cando_all(blb, player, "dewset") == false)
 							return;
 
 						int randid = rnd.nextInt(item.size());
@@ -3313,7 +3312,7 @@ public class dewset extends dewset_interface {
 							}
 						} 
 
-						if (cando(blb, player, "dewset") == false)
+						if (cando_all(blb, player, "dewset") == false)
 							return;
 
 						int randid = rnd.nextInt(item.size());
@@ -3517,7 +3516,7 @@ public class dewset extends dewset_interface {
 								}
 							} 
 
-							if (cando(blb, player, "dewset") == false) {
+							if (cando_all(blb, player, "dewset") == false) {
 								continue;
 							}
 
@@ -3640,7 +3639,7 @@ public class dewset extends dewset_interface {
 					}
 				} 
 
-				if (cando(blb, player, "dewset") == false) {
+				if (cando_all(blb, player, "dewset") == false) {
 					continue;
 				}
 
@@ -3800,7 +3799,7 @@ public class dewset extends dewset_interface {
 
 						// wallc
 
-						if (cando(blb, player, "dewset") == false)
+						if (cando_all(blb, player, "dewset") == false)
 							return;
 
 						int randid = rnd.nextInt(item.size());
@@ -3897,7 +3896,7 @@ public class dewset extends dewset_interface {
 
 				b = blockList.get(index);
 
-				if (cando(b, player, "right") == false) {
+				if (cando_all(b, player, "right") == false) {
 					continue;
 				}
 
@@ -4088,7 +4087,7 @@ public class dewset extends dewset_interface {
 			 * e1.printStackTrace(); }
 			 */
 
-			if (cando(block, player, "delete") == false)
+			if (cando_all(block, player, "delete") == false)
 				return;
 
 			if (isprotectitemid(block.getType()) == true)
@@ -4368,7 +4367,7 @@ public class dewset extends dewset_interface {
 
 	public static ArrayList<RSWorld> rsWorld = new ArrayList<RSWorld>();
 
-	public static boolean cando(Block block, Player player, String mode) {
+	public static boolean cando_Main(Block block, Player player, String mode) {
 		if ((player.hasPermission(Constant.poveride)) == true) {
 			return true;
 		}
@@ -4775,19 +4774,27 @@ public class dewset extends dewset_interface {
 
 	}
 
-	public boolean cando_all(Block block, Player player, String modeevent) {
+	public static boolean cando_all(Block block, Player player, String modeevent) {
 		boolean ar = cando_Main(block, player, modeevent);
 		boolean sky = false;
+		boolean cre = false;
+		
 		if (Bukkit.getPluginManager().getPlugin("dewddskyblock") == null) {
 			sky = true;
 		} else {
 			sky = api_skyblock.cando(block, player, modeevent);
 		}
+		
+		if (Bukkit.getPluginManager().getPlugin("dewddcreative") == null) {
+			cre = true;
+		} else {
+			cre = dewddcreative.api_creative.cando(block.getX(),block.getY(),block.getZ() ,player);
+		}
 
-		return (ar == false && sky == false);
+		return (ar == true && sky == true && cre == true);
 	}
 
-	public boolean cando_Main(Block block, Player player, String modeevent) {
+	/*public boolean cando_Main(Block block, Player player, String modeevent) {
 		RSWorld worldid = getWorld(block.getWorld().getName());
 
 		if (worldid == null)
@@ -4874,7 +4881,7 @@ public class dewset extends dewset_interface {
 			return true;
 		}
 
-	}
+	}*/
 
 	public boolean checkbetweenblock(int digx, int digy, int digz, int x1, int y1, int z1, int x2, int y2, int z2) {
 
@@ -5492,7 +5499,7 @@ public class dewset extends dewset_interface {
 			for (int yl = ly; yl <= my; yl++) {
 				for (int zl = lz; zl <= mz; zl++) {
 					Block blb = player.getWorld().getBlockAt(xl, yl, zl);
-					if (cando(blb, player, "buy") == false) {
+					if (cando_all(blb, player, "buy") == false) {
 						// dprint.r.printAll("...");
 						countall = -1;
 						return countall;
@@ -5966,7 +5973,7 @@ public class dewset extends dewset_interface {
 			if (api_admin.dewddadmin.is2vip(player) == false)
 				return;
 
-			if (cando(block, player, "delete") == false)
+			if (cando_all(block, player, "delete") == false)
 				return;
 
 			player.getItemInHand().setDurability((short) (player.getItemInHand().getDurability() + 1));
