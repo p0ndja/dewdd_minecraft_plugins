@@ -5,6 +5,7 @@
  */
 package dewddcreative;
 
+import java.util.LinkedList;
 import java.util.Random;
 
 import org.bukkit.Bukkit;
@@ -37,6 +38,7 @@ import com.earth2me.essentials.api.NoLoanPermittedException;
 import com.earth2me.essentials.api.UserDoesNotExistException;
 
 import dewddtran.tr;
+import li.LXRXLZRZType;
 
 public class DigEventListener2 implements Listener {
 	class delay extends Thread {
@@ -57,13 +59,62 @@ public class DigEventListener2 implements Listener {
 		}
 	}
 
-	class runproc implements Runnable {
+	public void recusiveSearchBlock(Block cur, Block start, LinkedList<Location> list) {
+		// add
+
+		Block tmp = null;
+		int searchSpace = 500;
+		int betweenSpace = 100;
+
+		for (int x = -searchSpace; x <= searchSpace; x += betweenSpace) {
+
+			for (int z = -searchSpace; z <= searchSpace; z += betweenSpace) {
+				// tmp = cur.getRelative(x, 0, z);
+				tmp = cur.getWorld().getBlockAt(cur.getX() + x, api_creative.signY, cur.getZ() + z);
+
+				// dprint.r.printAll("loca " +
+				// tr.locationToString(tmp.getLocation()));
+
+				double xxx = Math.abs(tmp.getX() - start.getX());
+				double zzz = Math.abs(tmp.getZ() - start.getZ());
+
+				double dis = (xxx * xxx) + (zzz * zzz);
+				dis = Math.pow(dis, 0.5);
+
+				if (tmp.getType() != Material.SIGN_POST) {
+					continue;
+				}
+
+				// open it
+
+				if (list.contains(tmp.getLocation())) {
+					continue;
+				}
+
+				list.add(tmp.getLocation());
+
+				// dprint.r.printAll("found block " +
+				// tr.locationToString(tmp.getLocation())
+				// + " size " + list.size());
+
+				// call recursive
+
+				this.recusiveSearchBlock(tmp, start, list);
+
+			} // chest
+		}
+
+	}
+
+	class RunPro_c implements Runnable {
 		String message = "";
 		Player player;
 
 		public void run() {
 			String m[] = message.split("\\s+");
 			if (m[0].equalsIgnoreCase("/cre") || m[0].equalsIgnoreCase("/creative")) {
+				Block block = player.getLocation().getBlock();
+				
 				if (m.length == 1) {
 					player.sendMessage(dprint.r.color("/cre buy"));
 					player.sendMessage(dprint.r.color("/cre freezone"));
@@ -71,7 +122,40 @@ public class DigEventListener2 implements Listener {
 
 					return;
 				} else if (m.length == 2 || m.length == 3) {
-					if (m[1].equalsIgnoreCase("freezone") == true) {
+					if (m[1].equalsIgnoreCase("position") == true) {
+						LinkedList <Location > list = new LinkedList<Location>();
+						
+						Block start = block.getWorld().getBlockAt(0,0,0);
+						
+						recusiveSearchBlock(start, start, list);
+						
+						LXRXLZRZType o  = new LXRXLZRZType(0, 0, 0, 0, 0, 0);
+						
+						for (int i = 0 ; i < list.size() ; i ++ ) {
+							Block tmp = list.get(i).getBlock();
+							
+							if (tmp.getX() > o.lx) {
+								o.lx = tmp.getX();
+							}
+							if (tmp.getX() < o.rx) {
+								o.rx = tmp.getX();
+							}
+							
+							if (tmp.getZ() > o.lz) {
+								o.lz = tmp.getZ();
+							}
+							if (tmp.getZ() < o.rz) {
+								o.rz = tmp.getZ();
+							}
+							
+							
+							dprint.r.printAll(i + " = " + tr.locationToString(tmp.getLocation()));
+						}
+						
+						dprint.r.printAll("left light " + o.lx  + "," + o.lz + " to " + o.rx + "," + o.rz);
+						
+
+					} else if (m[1].equalsIgnoreCase("freezone") == true) {
 						if (m.length == 2) {
 							dew.gotofreezone(player);
 							return;
@@ -87,7 +171,7 @@ public class DigEventListener2 implements Listener {
 
 								for (int x = -5000; x <= 5000; x += 100) {
 									for (int z = -5000; z <= 5000; z += 100) {
-										b = player.getWorld().getBlockAt(x, 254, z);
+										b = player.getWorld().getBlockAt(x, api_creative.signY, z);
 										if (b.getTypeId() == 63 || b.getTypeId() == 68) {
 											count++;
 											Sign sign = (Sign) b.getState();
@@ -112,7 +196,7 @@ public class DigEventListener2 implements Listener {
 
 								for (int x = -5000; x <= 5000; x += 100) {
 									for (int z = -5000; z <= 5000; z += 100) {
-										b = player.getWorld().getBlockAt(x, 254, z);
+										b = player.getWorld().getBlockAt(x, api_creative.signY, z);
 										if (b.getTypeId() == 63 || b.getTypeId() == 68) {
 											count++;
 
@@ -130,7 +214,7 @@ public class DigEventListener2 implements Listener {
 
 								for (int x = -5000; x <= 5000; x += 100) {
 									for (int z = -5000; z <= 5000; z += 100) {
-										b = player.getWorld().getBlockAt(x, 254, z);
+										b = player.getWorld().getBlockAt(x, api_creative.signY, z);
 										if (b.getTypeId() == 63 || b.getTypeId() == 68) {
 											count++;
 
@@ -249,7 +333,7 @@ public class DigEventListener2 implements Listener {
 							return; // not protect
 						}
 
-						if (player.getWorld().getBlockAt(zx, 254, zz).getTypeId() == 63) {
+						if (player.getWorld().getBlockAt(zx, api_creative.signY, zz).getTypeId() == 63) {
 							player.sendMessage("ptdew&dewdd: "
 									+ tr.gettr("Creative can't buy cuz that is somebody home sorry...  "));
 							return;
@@ -277,8 +361,8 @@ public class DigEventListener2 implements Listener {
 						player.getWorld().getBlockAt(zx, 252, zz).setTypeId(7);
 						player.getWorld().getBlockAt(zx, 253, zz).setTypeId(7);
 						player.getWorld().getBlockAt(zx + 1, 253, zz).setTypeId(7);
-						player.getWorld().getBlockAt(zx + 1, 254, zz).setTypeId(63);
-						Sign sign = (Sign) player.getWorld().getBlockAt(zx + 1, 254, zz).getState();
+						player.getWorld().getBlockAt(zx + 1, api_creative.signY, zz).setTypeId(63);
+						Sign sign = (Sign) player.getWorld().getBlockAt(zx + 1, api_creative.signY, zz).getState();
 						sign.setLine(0, "ป้ายที่เหลือติด");
 						sign.setLine(1, "ติดชื่อคนที่มี");
 						sign.setLine(2, "คนมีสิทธัในเขต");
@@ -287,18 +371,18 @@ public class DigEventListener2 implements Listener {
 						player.getWorld().getBlockAt(zx + 2, 253, zz).setTypeId(7);
 						player.getWorld().getBlockAt(zx + 3, 253, zz).setTypeId(7);
 
-						player.getWorld().getBlockAt(zx, 254, zz).setTypeId(63);
-						sign = (Sign) player.getWorld().getBlockAt(zx, 254, zz).getState();
+						player.getWorld().getBlockAt(zx, api_creative.signY, zz).setTypeId(63);
+						sign = (Sign) player.getWorld().getBlockAt(zx, api_creative.signY, zz).getState();
 						// check permission
-						// zx,254,zz
+						// zx,api_creative.signY,zz
 						dprint.r.printAll("buy area : (" + zx + "," + zz + ")");
 						player.getWorld().getBlockAt(zx, 253, zz).setTypeId(7);
-						player.getWorld().getBlockAt(zx, 254, zz).setTypeId(63);
-						sign = (Sign) player.getWorld().getBlockAt(zx, 254, zz).getState();
+						player.getWorld().getBlockAt(zx, api_creative.signY, zz).setTypeId(63);
+						sign = (Sign) player.getWorld().getBlockAt(zx, api_creative.signY, zz).getState();
 						sign.setLine(0, "[dewhome]");
 						sign.setLine(1, player.getName());
 						sign.update();
-						Block block = null;
+						Block b2 = null;
 
 						Random rnd = new Random();
 						int waid = 0;
@@ -314,25 +398,25 @@ public class DigEventListener2 implements Listener {
 						dprint.r.printAll("wallid = " + waid);
 
 						for (int dy = 251; dy >= 1; dy--) {
-							block = player.getWorld().getBlockAt(zx, dy, zz);
-							block.setTypeId(waid);
+							b2 = player.getWorld().getBlockAt(zx, dy, zz);
+							b2.setTypeId(waid);
 						}
 
 						for (int dx = zx; dx <= (zx + 99); dx++) {
 							for (int dz = zz; dz <= (zz + 99); dz++) {
-								for (int dy = 254; dy >= 1; dy--) {
-									block = player.getWorld().getBlockAt(dx, dy, dz);
-									if (block.getChunk().isLoaded() == false) {
-										block.getChunk().load();
+								for (int dy = api_creative.signY; dy >= 1; dy--) {
+									b2 = player.getWorld().getBlockAt(dx, dy, dz);
+									if (b2.getChunk().isLoaded() == false) {
+										b2.getChunk().load();
 									}
 
-									if (block.getTypeId() != 0 && dy != 253) {
+									if (b2.getTypeId() != 0 && dy != 253) {
 										if (dx == zx || dx == (zx + 99) || dz == zz || dz == (zz + 99) || dx == zz
 												|| dx == (zz + 99) || dz == zx || dz == (zx + 99)) {
 											if (dy >= 255) {
 												continue;
 											}
-											block.getRelative(0, 1, 0).setTypeId(waid);
+											b2.getRelative(0, 1, 0).setTypeId(waid);
 											break;
 										}
 									}
@@ -390,7 +474,8 @@ public class DigEventListener2 implements Listener {
 			player.sendMessage("changehost = " + Boolean.toString(player.hasPermission(api_creative.perchangehost)));
 			player.sendMessage("overide = " + Boolean.toString(player.hasPermission(api_creative.peroveride)));
 			player.sendMessage("doprotecty = " + Boolean.toString(player.hasPermission(api_creative.perdoprotecty)));
-			player.sendMessage("dounprotecty = " + Boolean.toString(player.hasPermission(api_creative.perdounprotecty)));
+			player.sendMessage(
+					"dounprotecty = " + Boolean.toString(player.hasPermission(api_creative.perdounprotecty)));
 			player.sendMessage("dewremove = " + Boolean.toString(player.hasPermission(api_creative.perdewremove)));
 
 			return;
@@ -425,23 +510,22 @@ public class DigEventListener2 implements Listener {
 	}
 
 	@EventHandler
-	public void eventja(EntityExplodeEvent event){
+	public void eventja(EntityExplodeEvent event) {
 		if (tr.isrunworld(ac.getName(), event.getLocation().getWorld().getName())) {
 			event.setCancelled(true);
 			return;
 		}
 	}
+
 	@EventHandler
 	public void eventja(BlockExplodeEvent event) {
 		if (tr.isrunworld(ac.getName(), event.getBlock().getWorld().getName())) {
 			event.setCancelled(true);
 			return;
 		}
-		
-		
-		
+
 	}
-	
+
 	@EventHandler
 	public void eventja(PlayerMoveEvent event) {
 		if (!tr.isrunworld(ac.getName(), event.getPlayer().getWorld().getName())) {
@@ -478,12 +562,13 @@ public class DigEventListener2 implements Listener {
 
 		}
 	}
-	
+
 	@EventHandler
 	public void eventja(InventoryOpenEvent event) {
 		if (tr.isrunworld(ac.getName(), event.getPlayer().getWorld().getName())) {
 			if (event.getInventory().getType() == InventoryType.ENDER_CHEST) {
-				event.getPlayer().sendMessage(dprint.r.color(tr.gettr("Creative Don't allow to open ender chest as this world")));
+				event.getPlayer().sendMessage(
+						dprint.r.color(tr.gettr("Creative Don't allow to open ender chest as this world")));
 				event.setCancelled(true);
 			}
 		}
@@ -491,15 +576,15 @@ public class DigEventListener2 implements Listener {
 
 	@EventHandler
 	public void eventja(PlayerTeleportEvent event) {
-	/*	if (!tr.isrunworld(ac.getName(), event.getPlayer().getWorld().getName())) {
-			return;
-		}
-*/
+		/*
+		 * if (!tr.isrunworld(ac.getName(),
+		 * event.getPlayer().getWorld().getName())) { return; }
+		 */
 		World fromWorld = event.getFrom().getWorld();
 		World toWorld = event.getTo().getWorld();
 		Player player = event.getPlayer();
 
-		if (tr.isrunworld(ac.getName(), fromWorld.getName())) { // creative to 
+		if (tr.isrunworld(ac.getName(), fromWorld.getName())) { // creative to
 
 			if (tr.isrunworld(ac.getName(), toWorld.getName()) == false) { // survival
 
@@ -518,8 +603,8 @@ public class DigEventListener2 implements Listener {
 					if (itm == null) {
 						continue;
 					}
-					
-					//player.sendMessage(itm.getType().name());
+
+					// player.sendMessage(itm.getType().name());
 					if (itm.getType() != Material.AIR) {
 						player.sendMessage(
 								dprint.r.color(tr.gettr("creative remove all item before warp to creative world")));
@@ -569,7 +654,7 @@ public class DigEventListener2 implements Listener {
 	}
 
 	public void runpro(String message, Player player) throws UserDoesNotExistException, NoLoanPermittedException {
-		runproc abc = new runproc();
+		RunPro_c abc = new RunPro_c();
 		abc.player = player;
 		abc.message = message;
 
@@ -577,7 +662,7 @@ public class DigEventListener2 implements Listener {
 		// dewremove
 
 	}
-	
+
 	@EventHandler
 	public void eventja(BlockBreakEvent e) {
 		if (!tr.isrunworld(ac.getName(), e.getPlayer().getWorld().getName())) {
@@ -592,7 +677,6 @@ public class DigEventListener2 implements Listener {
 			return;
 		}
 	}
-
 
 	@EventHandler
 	public void eventja(BlockPlaceEvent e) {

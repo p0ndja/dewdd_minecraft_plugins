@@ -16,6 +16,7 @@ public  class api_creative {
 	public static String perdounprotecty = "dewdd.creative.dounprotecty";
 	public static String peroveride = "dewdd.creative.overide";
 
+	public static int signY = 254;
 	public static int max_b = 2000;// 19900;
 	private Random randomG = new Random();
 
