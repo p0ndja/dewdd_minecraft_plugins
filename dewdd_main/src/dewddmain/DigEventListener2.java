@@ -1675,7 +1675,8 @@ public class DigEventListener2 implements Listener {
 			}
 
 			// call fixtool
-
+			
+			if (player.getItemInHand().getItemMeta().getDisplayName() != null ) {
 			String itName[] = player.getItemInHand().getItemMeta().getDisplayName().split(" ");
 			
 			//player.sendMessage("itName " + itName[0] + " " + itName[1]);
@@ -1690,14 +1691,18 @@ public class DigEventListener2 implements Listener {
 					
 					
 					//player.sendMessage("ptdew&dewdd : 55 runing..." + ig1 + ":" + ig2);
-					dew.item55delete(block, player, ig1, ig2, Integer.parseInt(itName[1]), Integer.parseInt(itName[2]));
+					dew.item55delete(block, player, ig1, ig2, Integer.parseInt(itName[1]), Integer.parseInt(itName[2]),20);
 					//player.sendMessage("ptdew&dewdd : 55 done...");
 				}
 				
 			}
+			
+			}
+			
 			dew.randomplaynote(player.getLocation());
 			
 		}
+		
 
 	}
 
@@ -1760,7 +1765,7 @@ public class DigEventListener2 implements Listener {
 				// player.getItemInHand().getTypeId());
 
 				
-
+				if (player.getItemInHand().getItemMeta().getDisplayName() != null) {
 				String itName[] = player.getItemInHand().getItemMeta().getDisplayName().split(" ");
 				
 				//player.sendMessage("itName " + itName[0] + " " + itName[1]);
@@ -1775,12 +1780,13 @@ public class DigEventListener2 implements Listener {
 						
 						
 						//player.sendMessage("ptdew&dewdd : 55 runing..." + ig1 + ":" + ig2);
-						dew.item55delete(block, player, ig1, ig2, Integer.parseInt(itName[1]), Integer.parseInt(itName[2]));
+						dew.item55delete(block, player, ig1, ig2, Integer.parseInt(itName[1]), Integer.parseInt(itName[2]),20);
 							//player.sendMessage("ptdew&dewdd : 55 done...");
 					}
 					
 				}
-
+				}
+				
 				if (player.getItemInHand().getTypeId() == Material.REDSTONE_TORCH_OFF.getId()
 						|| player.getItemInHand().getTypeId() == Material.REDSTONE_TORCH_ON.getId())
 					if (block.getTypeId() == 54) {

@@ -30,6 +30,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import api_skyblock.api_skyblock;
+import dewddtps.tps;
 import dewddtran.tr;
 
 public class dewset extends dewset_interface {
@@ -3556,15 +3557,17 @@ public class dewset extends dewset_interface {
 		private Player player = null;
 		private int maxRecursive = 0;
 		private int searchSpace = 1;
+		private long reTime = 0;
 
 		public item55deletec(Block block, Player player, int id, byte dat, int maxRecursive, 
-				int searchSpace) {
+				int searchSpace,long reTime) {
 			this.block = block;
 			this.player = player;
 			this.id = id;
 			this.dat = dat;
 			this.maxRecursive = maxRecursive;
 			this.searchSpace = searchSpace;
+			this.reTime = reTime;
 		}
 
 		@Override
@@ -3595,17 +3598,18 @@ public class dewset extends dewset_interface {
 			 * (UserDoesNotExistException | NoLoanPermittedException e) {
 			 * 
 			 * e.printStackTrace(); }
-			 */
+			 */if (amountRecursiveCount > maxRecursive) {
+			    return;
+			}
 
 
 			if (block.getTypeId() ==  id && block.getData() == dat) {
-			if (amountRecursiveCount > maxRecursive) {
-			    return;
-			}
+			
 			
 			block.breakNaturally();
 			amountRecursiveCount++;
 			}
+			
 			Block b2 = null;
 
 			for (int x = -searchSpace; x <= searchSpace; x++) {
@@ -3625,7 +3629,7 @@ public class dewset extends dewset_interface {
 
 							*/
 
-							item55delete(b2, player, id, dat, maxRecursive,searchSpace);
+							item55delete(b2, player, id, dat, maxRecursive,searchSpace,reTime + 40);
 
 						}
 					}
@@ -5385,13 +5389,43 @@ public class dewset extends dewset_interface {
 			return false;
 		}
 	}
+	
+	class delaylay55 implements Runnable {
+		private item55deletec ab ;
+		
+		public delaylay55(item55deletec ab) {
+			this.ab = ab;
+		}
 
-	public void item55delete(Block block, Player player, int id, byte dat, int maxRecursive, int searchSpace) {
-		item55deletec ab = new item55deletec(block, player, id, dat, maxRecursive,searchSpace);
+		@Override
+		public void run() {
+			
+			while (tps.getTPS() < 19) {
+				
+				try {
+					Thread.sleep(rnd.nextInt(1000));
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+			
+			Bukkit.getScheduler().scheduleSyncDelayedTask(ac, ab,  rnd.nextInt(100) );
+			
+		}
+	}
 
+	public void item55delete(Block block, Player player, int id, byte dat, int maxRecursive, int searchSpace, long reTime) {
+		item55deletec ab = new item55deletec(block, player, id, dat, maxRecursive,searchSpace ,  reTime);
+
+		//delaylay55 bb = new delaylay55(ab);
+			Bukkit.getScheduler().scheduleSyncDelayedTask(ac, ab );
+			
 		//amountRecursiveCount = 0;
-
-		Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(ac, ab, rnd.nextInt(20*30));
+		/*player.sendMessage(dprint.r.color("55 " + id + ":" + dat + 
+				" maxRecursive " + maxRecursive + ",searchSpace " + searchSpace + ", block "/
+				+ block.getX() + "," + block.getY() + "," + block.getZ()); */
+		//Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(ac, ab, rnd.nextInt(100) );
 	}
 
 	class chestabsorb_c implements Runnable {
