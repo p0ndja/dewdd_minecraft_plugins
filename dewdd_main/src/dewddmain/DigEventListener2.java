@@ -315,8 +315,7 @@ public class DigEventListener2 implements Listener {
 
 			if (message.equalsIgnoreCase("pmain") == true) {
 
-				player.sendMessage(dew.phideshowrun + " " + Boolean.toString(player.hasPermission(dew.phideshowrun)));
-
+			
 				player.sendMessage(dprint.r
 						.color(dew.pmaindelete + " " + Boolean.toString(player.hasPermission(dew.pmaindelete))));
 				player.sendMessage(dprint.r.color(dew.pmaindewbuychangehost + " "
@@ -346,15 +345,10 @@ public class DigEventListener2 implements Listener {
 
 			// ***********************
 
-			dew.hideshowrun(player);
+		
 
 			int idc = dew.getfreeselect(player);
-			if (dew.chatever[idc] == false) {
-				player.sendMessage("ptdew&dewdd :" + tr.gettr("please_drop_item_before_item"));
-
-				canc = true;
-				return;
-			}
+			
 
 			// cleardrop
 
@@ -379,15 +373,7 @@ public class DigEventListener2 implements Listener {
 				return;
 			}
 
-			if (message.equalsIgnoreCase("dewaxe") == true || message.equalsIgnoreCase("dew_axe") == true) {
-
-				dew.dewaxe[idc] = !dew.dewaxe[idc];
-				player.sendMessage("ptdew&dewdd : '" + player.getName() + "' dewaxe (super axe) = "
-						+ Boolean.toString(dew.dewaxe[idc]));
-				dprint.r.printC("ptdew&dewdd : '" + player.getName() + "' dewaxe (super axe) = "
-						+ Boolean.toString(dew.dewaxe[idc]));
-				canc = true;
-			}
+			
 
 			dew.linkurl(player, message);
 
@@ -736,25 +722,7 @@ public class DigEventListener2 implements Listener {
 							return;
 						}
 
-						int gotox = Integer.parseInt(m[2]);
-
-						if (dew.getworldid(player.getWorld().getName()) == -1) {
-							player.sendMessage("ptdew&dewdd : " + tr.gettr("this_world_don't_have_protect"));
-
-							return;
-						}
-
-						player.sendMessage("/fw goid '" + gotox + "'" + "/"
-								+ (dew.dewsignmax[dew.getworldid(player.getWorld().getName())] - 1));
-
-						if (gotox < -1 || gotox > dew.dewsignmax[dew.getworldid(player.getWorld().getName())] - 1) {
-							player.sendMessage("ptdew&dewdd : dewgo   -1 < ? < "
-									+ (dew.dewsignmax[dew.getworldid(player.getWorld().getName())] - 1));
-							return;
-						}
-
-						dew.teleportPlayerToProtectID(gotox, player);
-
+						dew.fw_goid(player, Integer.parseInt(m[2]));
 						return;
 					}
 
@@ -1095,48 +1063,10 @@ public class DigEventListener2 implements Listener {
 					return;
 				}
 
-				if (message.equalsIgnoreCase("ปิดกลางคืน") == true
-						|| message.equalsIgnoreCase("disable-night") == true) {
-					dew.allownight = false;
-					player.sendMessage("ptdew&dewdd : " + tr.gettr("disabled_time_night"));
-					return;
-				}
-				if (message.equalsIgnoreCase("เปิดกลางคืน") == true
-						|| message.equalsIgnoreCase("enable-night") == true) {
-					dew.allownight = true;
-					player.sendMessage("ptdew&dewdd : " + tr.gettr("enabled_time_night"));
-					return;
-				}
+				
 
 				// hide
-				if (message.equalsIgnoreCase("hide") == true && api_admin.dewddadmin.is2admin(player) == true) {
-
-					int gga = dew.getfreeselect(player);
-					dew.hidemode[gga] = true;
-
-					for (Player pp : Bukkit.getOnlinePlayers())
-						if (api_admin.dewddadmin.is2admin(pp) == true) {
-							pp.sendMessage("ptdew&dewdd : " + player.getName() + tr.gettr("admin_invisible_mode_on"));
-						}
-					dew.hideshowrun(player);
-
-					canc = true;
-					return;
-				}
-				// show
-				if (message.equalsIgnoreCase("show") == true && api_admin.dewddadmin.is2admin(player) == true) {
-
-					int gga = dew.getfreeselect(player);
-					dew.hidemode[gga] = false;
-					for (Player pp : Bukkit.getOnlinePlayers())
-						if (api_admin.dewddadmin.is2admin(pp) == true) {
-							pp.sendMessage("ptdew&dewdd : " + player.getName() + tr.gettr("admin_invisible_mode_off"));
-						}
-					dew.hideshowrun(player);
-
-					canc = true;
-					return;
-				}
+				
 
 				// getalldrop
 
@@ -1990,10 +1920,7 @@ public class DigEventListener2 implements Listener {
 		if (event.getCreatureType() == null)
 			return;
 
-		if (dew.allownight == false) {
-			event.setCancelled(true);
-			return;
-		}
+		
 
 		event.getEntity().addPotionEffect(
 				PotionEffectType.JUMP.createEffect(dew.randomG.nextInt(3000), dew.randomG.nextInt(10)));
@@ -2064,12 +1991,7 @@ public class DigEventListener2 implements Listener {
 
 		// dprint.r.printC("xyz="+
 		// event.getEntity().getLocation().toString());
-		if (dew.allownight == false) {
-			event.setCancelled(true);
-			event.getEntity().getWorld().setTime(6000);
-			return;
-		}
-
+		
 		/*
 		 * if (event.getEntity().getType() == EntityType.CREEPER) { if
 		 * (dew.randomG.nextInt(1000) < 40) {
@@ -2589,7 +2511,7 @@ public class DigEventListener2 implements Listener {
 		ar.start();
 
 		dprint.r.printC(event.getMessage());
-		dew.hideshowrun(event.getPlayer());
+		
 
 	}
 
@@ -2624,11 +2546,7 @@ public class DigEventListener2 implements Listener {
 		dew.randomplaynote(event.getPlayer().getLocation());
 
 		int idc = dew.getfreeselect(player);
-		if (dew.chatever[idc] == false) {
-			dew.chatever[idc] = true;
-			player.sendMessage("ptdew&dewdd : " + tr.gettr("ok_you_can_chat_now"));
-
-		}
+		
 
 		if (api_admin.dewddadmin.is2moderator(player) == true) {
 			player.getItemInHand().setType(Material.AIR);
@@ -2813,15 +2731,7 @@ public class DigEventListener2 implements Listener {
 		}
 
 		int idc = dew.getfreeselect(player);
-		dew.chatever[idc] = true;
-
-		int gga = dew.getfreeselect(player);
-		if (api_admin.dewddadmin.is2admin(player) == false) {
-			dew.hidemode[gga] = false;
-		} else {
-			dew.hidemode[gga] = true;
-		}
-		dew.hideshowrun(player);
+		
 
 		if (api_admin.dewddadmin.is2admin(player) == true) {
 			event.setJoinMessage("");
@@ -2934,17 +2844,11 @@ public class DigEventListener2 implements Listener {
 			return;
 
 		int idc = dew.getfreeselect(event.getPlayer());
-		dew.chatever[idc] = false;
+		
 
 		dew.saveworld();
 		Player player = event.getPlayer();
-		dew.hideshowrun(event.getPlayer());
-
-		if (api_admin.dewddadmin.is2admin(player) == true) {
-			event.setQuitMessage("");
-			int gga = dew.getfreeselect(event.getPlayer());
-			dew.hidemode[gga] = true;
-		}
+		
 
 		event.setQuitMessage("");
 		System.gc();
