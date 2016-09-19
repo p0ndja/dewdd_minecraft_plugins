@@ -133,7 +133,7 @@ if (m[0].equalsIgnoreCase("drop") == true) {
 			}
 
 			if (m[0].equalsIgnoreCase("dewfly") == true || m[0].equalsIgnoreCase("wing") == true
-					|| m[0].equalsIgnoreCase("i need fly") == true || m[0].equalsIgnoreCase("123") == true) {
+					|| m[0].equalsIgnoreCase("อยากบินได้") == true || m[0].equalsIgnoreCase("123") == true) {
 
 				if (player.getAllowFlight() == true) {
 					player.sendMessage(dprint.r.color("ptdew&dewdd : " + tr.gettr("already_in_fly_mode_not_work")));
@@ -219,6 +219,11 @@ if (m[0].equalsIgnoreCase("drop") == true) {
 					player.sendMessage(dprint.r.color(tr.gettr("error_ampi_must_be_integer")));
 					return;
 				}
+				
+				if (dura > 300) {
+					player.sendMessage(dprint.r.color(tr.gettr("error_dewsuper_dura_more_than_300")));
+					return;
+				}
 
 				mone = (int) (((pora * tr.gettrint("CONFIG_PORA_MULTIPLY"))
 						+ (dura * tr.gettrint("CONFIG_DURA_MULTIPLY"))) * tr.gettrint("CONFIG_DEWSUPER_MULTIPLY"));
@@ -297,6 +302,11 @@ if (m[0].equalsIgnoreCase("drop") == true) {
 					pora = Integer.parseInt(m[3]);
 				} catch (NumberFormatException e) {
 					player.sendMessage(dprint.r.color("error ampi  must be integer"));
+					return;
+				}
+				
+				if (dura > 300) {
+					player.sendMessage(dprint.r.color(tr.gettr("error_dewsuper_dura_more_than_300")));
 					return;
 				}
 
