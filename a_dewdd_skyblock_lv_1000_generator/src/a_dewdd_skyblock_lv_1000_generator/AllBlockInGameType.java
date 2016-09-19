@@ -20,4 +20,9 @@ public class AllBlockInGameType {
 		
 		return abc;
 	}
+	
+	public String getIDData() {
+		String abc = theName + ":" + data;
+		return abc;
+	}
 }

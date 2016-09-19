@@ -1,6 +1,7 @@
 package a_dewdd_skyblock_lv_1000_generator;
 
 import java.util.LinkedList;
+import java.util.Random;
 
 import ga_optimization_api.Hybrid;
 
@@ -262,39 +263,125 @@ class HybridOverride extends Hybrid {
 			SellableType se = Main.co.sellAsList.get(i);
 			SellableType seTmpSe = tmpSell.get(i);
 			
-			d.pl("sell " + se.allItemYouCanFind + " * " + seTmpSe.sellPerPrice + " index " + se.index);
 			
-			if (se.allItemYouCanFind > 0 ) {
+			
+			
 				double tmpMoney  = 0;
 				tmpMoney = se.allItemYouCanFind * seTmpSe.sellPerPrice;
+				d.pl("sell " + se.allItemYouCanFind + " * " + seTmpSe.sellPerPrice +
+						" = " + (tmpMoney)+
+						
+						" index " + se.index);
 				ps.money += tmpMoney;
-				continue;
 				
-			}
+				
 		}
 		
 		d.pl("all money you have " + ps.money);
 		
+		int curLVLoop = 0;
+		
 		boolean isGameDone = false;
-		while (isGameDone == false) {
+		
+		Random rnd = new Random();
+		
+		
+		while (curLVLoop < tmpLV.size()) {
+			LV1000Type curLV = tmpLV.get(curLVLoop);
 			
+			// bought = item  to finish lv
 			
+			boolean checkAreTherItemNotFill = false;
+			
+			while (checkAreTherItemNotFill == false) {
+				
+				// check are there item not fill
+				boolean notFill = false;
+				for (int j = 0 ; j < curLV.needSize ; j ++ ){
+					AllBlockInGameType itm = Main.co.allBlockInGameAsList.get(curLV.needIndex[j]);
+					
+					AllBlockInGameType myInv = ps.allMyInventory.get(itm.getIDData());
+					 notFill = notFillyet(itm, myInv, curLV.needAmount[j]);
+					 if (notFill == true) {
+						 break;
+					 }
+					
+				}
+				
+				
+				if (notFill == true) {
+					// random bought item
+					int ranbuy =  -1 ;
+					
+					do {
+						ranbuy = rnd.nextInt(curLV.needSize);
+						
+						AllBlockInGameType itm = Main.co.allBlockInGameAsList.get(curLV.needIndex[ranbuy]);
+						AllBlockInGameType myInv = ps.allMyInventory.get(itm.getIDData());
+						
+						boolean notFillRan = notFillyet(itm, myInv, curLV.needAmount[ranbuy]);
+						if (notFillRan == false){
+							ranbuy = -1;
+						}
+						
+					} while (ranbuy > -1);
+					
+					
+					// after got random not fill index  
+					// trying to buy it
+					
+					// check money
+					
+					// search item in shop
+					AllBlockInGameType itm = 
+							Main.co.allBlockInGameAsList.get(curLV.needIndex[ranbuy]);
+					
+					
+					for (int c = 0 ; c < tmpAllShop.size() ; c ++ ) {
+						AllShop ex = tmpAllShop.get(c);
+						
+						for (int c2 = 0 ; c2 < ex.size ; c2 ++ ) {
+							if (ex.item[c2].equalsIgnoreCase(itm.theName)) {
+								if (ex.data[c2] == itm.data) {
+									// buy this item
+									
+									if (ps.money >= ex.playPrice) {
+										// bet it xD (bet is bad thing it the world , even in my server)
+										
+										
+										
+									}
+									
+								}
+							}
+						}
+						
+					}
+					
+					
+					
+				}
+			}
 
 			ps.curSecond++;
 			
-			isGameDone = isGameDone(tmpAllShop,tmpSell, tmpLV);
+		
 		}
 		return 0;
 
 	}
 	
-	
-	public boolean isGameDone(LinkedList<AllShop> tmpAllShop ,
-	LinkedList<SellableType> tmpSell ,
-	LinkedList<LV1000Type> tmpLV ) {
-		
-		return false;
+	public boolean notFillyet(AllBlockInGameType itm , AllBlockInGameType myInv , int needAmount) {
+		boolean notFill = false;
+		 if (myInv.curAmount < needAmount) {
+			 notFill = true;
+			
+		 }
+		 
+		 return notFill;
 	}
+	
+	
 
 }
 
