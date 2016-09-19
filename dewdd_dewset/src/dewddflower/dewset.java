@@ -1759,15 +1759,13 @@ public class dewset extends dewset_interface {
 			 * err) { dprint.r.printAll("error economy while dewbuy " +
 			 * err.getCause().getMessage()); }
 			 */
-			
+
 			int worldid = getworldid(player.getLocation().getWorld().getName());
 
-			player.sendMessage(dprint.r.color("x" + "," + dewsignx1[worldid][getid]
-					+ "," + dewsigny1[worldid][getid] + ","
-					+ dewsignz1[worldid][getid] + " to "
+			player.sendMessage(dprint.r.color("x" + "," + dewsignx1[worldid][getid] + "," + dewsigny1[worldid][getid]
+					+ "," + dewsignz1[worldid][getid] + " to "
 
-					+ "," + dewsignx2[worldid][getid] + ","
-					+ dewsigny2[worldid][getid] + ","
+					+ "," + dewsignx2[worldid][getid] + "," + dewsigny2[worldid][getid] + ","
 					+ dewsignz2[worldid][getid]));
 
 			player.sendMessage(dprint.r.color(tr.gettr("dewbuy_before_add_sign_world") + dewworldlistmax
@@ -1778,30 +1776,21 @@ public class dewset extends dewset_interface {
 			player.sendMessage(dprint.r.color(tr.gettr("dewbuy_after_add_sign_world") + dewworldlistmax
 					+ tr.gettr("sign_max") + (dewsignmax[worldid] - 1)));
 
-			dewsignx1[worldid][dewsignmax[worldid]
-					- 1] = selectx1[getid];
-			dewsigny1[worldid][dewsignmax[worldid]
-					- 1] = selecty1[getid];
-			dewsignz1[worldid][dewsignmax[worldid]
-					- 1] = selectz1[getid];
+			dewsignx1[worldid][dewsignmax[worldid] - 1] = selectx1[getid];
+			dewsigny1[worldid][dewsignmax[worldid] - 1] = selecty1[getid];
+			dewsignz1[worldid][dewsignmax[worldid] - 1] = selectz1[getid];
 
-			dewsignx2[worldid][dewsignmax[worldid]
-					- 1] = selectx2[getid];
-			dewsigny2[worldid][dewsignmax[worldid]
-					- 1] = selecty2[getid];
-			dewsignz2[worldid][dewsignmax[worldid]
-					- 1] = selectz2[getid];
+			dewsignx2[worldid][dewsignmax[worldid] - 1] = selectx2[getid];
+			dewsigny2[worldid][dewsignmax[worldid] - 1] = selecty2[getid];
+			dewsignz2[worldid][dewsignmax[worldid] - 1] = selectz2[getid];
 
-			dewsignname[worldid][dewsignmax[worldid]
-					- 1][0] = player.getName();
+			dewsignname[worldid][dewsignmax[worldid] - 1][0] = player.getName();
 
 			for (int gggg = 1; gggg < dewsignnamemax; gggg++) {
-				dewsignname[worldid][dewsignmax[worldid]
-						- 1][gggg] = "null";
+				dewsignname[worldid][dewsignmax[worldid] - 1][gggg] = "null";
 			}
 
-			dewsignloop[worldid][dewsignmax[worldid]
-					- 1] = 0;
+			dewsignloop[worldid][dewsignmax[worldid] - 1] = 0;
 
 			savesignfile(-1, worldid);
 			loadsignfile();
@@ -1824,8 +1813,7 @@ public class dewset extends dewset_interface {
 
 		@Override
 		public void run() {
-			
-			
+
 			/*
 			 * if (player.hasPermission(pmaindewbuydelete) == false) {
 			 * player.sendMessage (dprint.r.color(
@@ -1839,16 +1827,15 @@ public class dewset extends dewset_interface {
 						dprint.r.color("ptdew&dewdd : " + tr.gettr("dewbuydelete_this_zone_don't_have_protection")));
 				return;
 			}
-			
+
 			if (player.hasPermission(pmaindewbuydelete) == false) {
 				player.sendMessage(dprint.r.color("ptdew&dewdd : " + tr.gettr("you_don't_have_permission")
 						+ tr.gettr("for") + pmaindewbuydelete));
 				return;
 			}
 
-			
 			int worldid = getworldid(player.getLocation().getWorld().getName());
-			
+
 			if (dewsignname[worldid][xyz][0].equalsIgnoreCase(player.getName()) == false
 					&& player.hasPermission(pmaindewbuydelete) == false) {
 				player.sendMessage(dprint.r.color(tr.gettr("dewbuydelete_this_is_not_your_zone")));
@@ -1864,8 +1851,6 @@ public class dewset extends dewset_interface {
 			dprint.r.printAll("ptdew&dewdd : " + player.getName() + " dewbuydelete " + tr.gettr(tr.gettr("done")));
 		}
 	}
-
-	
 
 	class dewbuyzone_c implements Runnable {
 		private Block block2;
@@ -1893,8 +1878,7 @@ public class dewset extends dewset_interface {
 
 			int worldid = getworldid(player.getLocation().getWorld().getName());
 			// String abab = dewsignname[homeid][18] ;
-			if (dewsignname[worldid][homeid][0]
-					.equalsIgnoreCase(Constant_Protect.flag_sell) == true) {
+			if (dewsignname[worldid][homeid][0].equalsIgnoreCase(Constant_Protect.flag_sell) == true) {
 				dprint.r.printAll("ptdew&dewdd : '" + player.getName() + "'" + tr.gettr("starting") + " dewbuyzone "
 						+ player.getItemInHand().getTypeId() + ":" + player.getItemInHand().getData());
 
@@ -2810,9 +2794,9 @@ public class dewset extends dewset_interface {
 			}
 
 			int getid2 = getfreeselect(player);
-			
+
 			int worldid = getworldid(block.getWorld().getName());
-			
+
 			selectx1[getid2] = dewsignx1[worldid][getid];
 			selectx2[getid2] = dewsignx2[worldid][getid];
 
@@ -5219,7 +5203,7 @@ public class dewset extends dewset_interface {
 	// Check Permission Area block
 	public boolean checkpermissionarea(Block block) {
 		int worldid = getworldid(block.getWorld().getName());
-		
+
 		if (worldid == -1)
 			return false;
 		if (dewsignmax[worldid] == 0)
@@ -5287,7 +5271,7 @@ public class dewset extends dewset_interface {
 
 	public int checkpermissionarea(Block block, boolean gethomeid) {
 		int worldid = getworldid(block.getWorld().getName());
-		
+
 		if (worldid == -1)
 			return -1;
 		if (dewsignmax[worldid] == 0)
@@ -5310,8 +5294,7 @@ public class dewset extends dewset_interface {
 				if (prioL == 1) {
 					// dprint.r.printAll("dewsignnow " + dewsignnow );
 
-					if (dewsignname[worldid][dewsignnow][0]
-							.equalsIgnoreCase(Constant_Protect.flag_everyone) == true) {
+					if (dewsignname[worldid][dewsignnow][0].equalsIgnoreCase(Constant_Protect.flag_everyone) == true) {
 						continue;
 					}
 				} else if (dewsignname[worldid][dewsignnow][0]
@@ -5390,7 +5373,7 @@ public class dewset extends dewset_interface {
 
 	public boolean checkpermissionarea(Block block, Player player, String modeevent, boolean test) {
 		int worldid = getworldid(block.getWorld().getName());
-		
+
 		if (worldid == -1)
 			if (api_admin.dewddadmin.is2moderator(player) == true)
 				return true;
@@ -5423,8 +5406,7 @@ public class dewset extends dewset_interface {
 			dewsignloop[worldid][dewsignnow]++;
 
 			if (modeevent.equalsIgnoreCase("right") == true) { // right everyone
-				che1 = havethisnameinthishome(worldid, dewsignnow,
-						Constant_Protect.flag_everyone);
+				che1 = havethisnameinthishome(worldid, dewsignnow, Constant_Protect.flag_everyone);
 
 				if (che1 == true) { // if" + tr.gettr("for") + "everyone
 					goodc1 = false;
@@ -5738,8 +5720,6 @@ public class dewset extends dewset_interface {
 		new dewbuydelete_c(player);
 	}
 
-	
-
 	public void dewbuyzone(Player player, Block block2) {
 
 		new dewbuyzone_c(player, block2);
@@ -5808,8 +5788,7 @@ public class dewset extends dewset_interface {
 
 		if (dewsignname[worldid][xyz][0].equalsIgnoreCase(player.getName()) == false
 				&& player.hasPermission(pmaindewbuymodifymember) == false) {
-			player.sendMessage(dprint.r.color(
-					tr.gettr("owner_is") + " ..." + dewsignname[worldid][xyz][0]));
+			player.sendMessage(dprint.r.color(tr.gettr("owner_is") + " ..." + dewsignname[worldid][xyz][0]));
 			return false;
 		}
 
@@ -5861,26 +5840,22 @@ public class dewset extends dewset_interface {
 		player.sendMessage(dprint.r.color(tr.gettr("can't_find_free_slot_for_add_this_player")));
 		return false;
 	}
-	
+
 	@Override
-	public boolean dewps_goid(Player player , int id) {
-		
+	public boolean dewps_goid(Player player, int id) {
+
 		int worldid = getworldid(player.getLocation().getWorld().getName());
 
 		if (id < -1 || id > dewsignmax[worldid] - 1) {
-			player.sendMessage(dprint.r.color("ptdew&dewdd : dewgo   -1 < ? < "
-					+ (dewsignmax[worldid] - 1)));
+			player.sendMessage(dprint.r.color("ptdew&dewdd : dewgo   -1 < ? < " + (dewsignmax[worldid] - 1)));
 			return false;
 		}
 
 		Location lox = player.getLocation();
-		player.sendMessage("goto : " + dewsignx1[worldid][id]
-				+ ",?," + dewsignz1[worldid][id] + " and "
-				+ dewsignx2[worldid][id] + ",?,"
-				+ dewsignz2[worldid][id]);
+		player.sendMessage("goto : " + dewsignx1[worldid][id] + ",?," + dewsignz1[worldid][id] + " and "
+				+ dewsignx2[worldid][id] + ",?," + dewsignz2[worldid][id]);
 
-		if (dewsigny1[worldid][id] >= dewsigny2[
-				worldid][id]) {
+		if (dewsigny1[worldid][id] >= dewsigny2[worldid][id]) {
 			lox.setX(dewsignx1[worldid][id]);
 			lox.setY(dewsigny1[worldid][id]);
 			lox.setZ(dewsignz1[worldid][id]);
@@ -5899,7 +5874,7 @@ public class dewset extends dewset_interface {
 
 	@Override
 	public boolean dewps_list(Player player) {
-		
+
 		Block block = player.getLocation().getBlock();
 
 		int xyz = checkpermissionarea(block, true);
@@ -5908,13 +5883,13 @@ public class dewset extends dewset_interface {
 			return false;
 		}
 
-		player.sendMessage(dprint.r.color("ptdew&dewdd : " + tr.gettr("tree_thiszoneprotectedby")));
-		int worldid = getworldid(block.getWorld().getName() + " id " + xyz);
-		
+		int worldid = getworldid(player.getWorld().getName());
+		player.sendMessage(dprint.r
+				.color("ptdew&dewdd : " + tr.gettr("tree_thiszoneprotectedby") + " worldID " + worldid + " id " + xyz));
+
 		for (int xxx = 0; xxx < dewsignnamemax; xxx++)
 			if (dewsignname[worldid][xyz][xxx].equalsIgnoreCase("null") == false) {
-				player.sendMessage(
-						dprint.r.color(xxx + " = " + dewsignname[worldid][xyz][xxx]));
+				player.sendMessage(dprint.r.color(xxx + " = " + dewsignname[worldid][xyz][xxx]));
 			}
 
 		return true;
@@ -5944,8 +5919,7 @@ public class dewset extends dewset_interface {
 
 		if (dewsignname[worldid][xyz][0].equalsIgnoreCase(player.getName()) == false
 				&& player.hasPermission(pmaindewbuymodifymember) == false) {
-			player.sendMessage(dprint.r.color(
-					tr.gettr("owner_is") + " ..." + dewsignname[worldid][xyz][0]));
+			player.sendMessage(dprint.r.color(tr.gettr("owner_is") + " ..." + dewsignname[worldid][xyz][0]));
 			return false;
 		}
 
@@ -5974,7 +5948,6 @@ public class dewset extends dewset_interface {
 
 		Bukkit.getScheduler().scheduleSyncDelayedTask(ac, aer);
 	}
-	
 
 	public void dewsetblock(Player player, int handid, byte handdata, boolean isfillmode) {
 
@@ -6287,15 +6260,12 @@ public class dewset extends dewset_interface {
 
 		return g;
 	}
-	
-	public ArrayList<Integer> getAllHomeIDThatHaveMyName(String playerName,int worldid) {
+
+	public ArrayList<Integer> getAllHomeIDThatHaveMyName(String playerName, int worldid) {
 		ArrayList<Integer> tmp = new ArrayList<Integer>();
-		
+
 		return null;
 	}
-	
-	
-	
 
 	public int getworldid(String wowo) {
 		for (int d = 0; d < dewworldlistmax; d++)
@@ -6817,27 +6787,20 @@ public class dewset extends dewset_interface {
 		return false;
 	}
 
-	
-	public void teleportPlayerToProtectID(int id , Player player) {
+	public void teleportPlayerToProtectID(int id, Player player) {
 		int worldid = getworldid(player.getWorld().getName());
-		
-		LXRXLZRZType ee = new LXRXLZRZType(
-				dewsignx1[worldid][id],
-				dewsigny1[worldid][id], 
-				dewsignz1[worldid][id], 
-				
-				dewsignx2[worldid][id],
-				dewsigny2[worldid][id], 
-				dewsignz2[worldid][id]);
+
+		LXRXLZRZType ee = new LXRXLZRZType(dewsignx1[worldid][id], dewsigny1[worldid][id], dewsignz1[worldid][id],
+
+				dewsignx2[worldid][id], dewsigny2[worldid][id], dewsignz2[worldid][id]);
 		int mid[] = ee.getmiddle();
-				
-		Location lox = player.getWorld().getBlockAt(mid[0],mid[1],mid[2]).getLocation();
-				
-				
+
+		Location lox = player.getWorld().getBlockAt(mid[0], mid[1], mid[2]).getLocation();
+
 		player.getWorld().loadChunk((int) lox.getX(), (int) lox.getZ());
 		player.teleport(lox);
 		player.sendMessage("ptdew&dewdd : " + tr.gettr("teleported_your_to_zone_id") + id);
-	
+
 	}
 	// randomplaynote
 
