@@ -154,7 +154,7 @@ public class HybridOverride extends HybridMultithreading {
 			for (int i = 0; i < tmpSell.size(); i++) {
 
 				if (printPls == true) {
-					AllBlockInGameType ec = Core.allBlockInGameAsList.get(tmpSell.get(i).index);
+					AllBlockInGameType ec = Core.allBlockInGameAsList[tmpSell.get(i).index];
 					d.pl("tmpSell : " + i + " = " + ec.theName + ":" + ec.data + ":" + tmpSell.get(i).timeToGet + ":"
 							+ tmpSell.get(i).sellPerPrice);
 
@@ -192,7 +192,7 @@ public class HybridOverride extends HybridMultithreading {
 					LV1000Type tmpsubLV = tmpLV.get(i);
 
 					if (printPls == true) {
-						AllBlockInGameType eco = Core.allBlockInGameAsList.get(tmpsubLV.needIndex[j]);
+						AllBlockInGameType eco = Core.allBlockInGameAsList[tmpsubLV.needIndex[j]];
 
 						d.pl("need slot " + j + " = " + eco.theName + ":" + eco.data + ":" + tmpsubLV.needAmount[j]);
 					}
@@ -203,7 +203,7 @@ public class HybridOverride extends HybridMultithreading {
 					LV1000Type tmpsubLV = tmpLV.get(i);
 
 					if (printPls == true) {
-						AllBlockInGameType eco = Core.allBlockInGameAsList.get(tmpsubLV.rewardIndex[j]);
+						AllBlockInGameType eco = Core.allBlockInGameAsList[tmpsubLV.rewardIndex[j]];
 
 						d.pl("reward slot " + j + " = " + eco.theName + ":" + eco.data + ":"
 								+ tmpLV.get(i).rewardAmount[j]);
@@ -214,13 +214,13 @@ public class HybridOverride extends HybridMultithreading {
 
 			// check that all level include all unique item
 
-			boolean needSlotUsedIt[] = new boolean[Core.allBlockInGameAsList.size()];
-			for (int i = 0; i < Core.allBlockInGameAsList.size(); i++) {
+			boolean needSlotUsedIt[] = new boolean[Core.allBlockInGameAsListSize];
+			for (int i = 0; i < Core.allBlockInGameAsListSize; i++) {
 				needSlotUsedIt[i] = false;
 			}
 
-			boolean rewardSlotUsedIt[] = new boolean[Core.allBlockInGameAsList.size()];
-			for (int i = 0; i < Core.allBlockInGameAsList.size(); i++) {
+			boolean rewardSlotUsedIt[] = new boolean[Core.allBlockInGameAsListSize];
+			for (int i = 0; i < Core.allBlockInGameAsListSize; i++) {
 				rewardSlotUsedIt[i] = false;
 			}
 
@@ -233,17 +233,17 @@ public class HybridOverride extends HybridMultithreading {
 				LV1000Type curLV = tmpLV.get(i);
 
 				for (int j = 0; j < curLV.needSize; j++) {
-					AllBlockInGameType need = Core.allBlockInGameAsList.get(curLV.needIndex[j]);
+					AllBlockInGameType need = Core.allBlockInGameAsList[curLV.needIndex[j]];
 
 					if (printPls == true) {
 
 						d.pl("need slot " + j + " = " + need.theName + ":" + need.data + ":" + curLV.needAmount[j]);
 					}
 
-					for (int k = 0; k < Core.allBlockInGameAsList.size(); k++) {
+					for (int k = 0; k < Core.allBlockInGameAsListSize; k++) {
 
-						if (Core.allBlockInGameAsList.get(k).data == need.data)
-							if (Core.allBlockInGameAsList.get(k).theName.equalsIgnoreCase(need.theName)) {
+						if (Core.allBlockInGameAsList[k].data == need.data)
+							if (Core.allBlockInGameAsList[k].theName.equalsIgnoreCase(need.theName)) {
 
 								if (needSlotUsedIt[k] == true) {
 									if (printPls == true) {
@@ -265,17 +265,17 @@ public class HybridOverride extends HybridMultithreading {
 				// duplicate = 0;
 
 				for (int j = 0; j < curLV.rewardSize; j++) {
-					AllBlockInGameType reward = Core.allBlockInGameAsList.get(curLV.rewardIndex[j]);
+					AllBlockInGameType reward = Core.allBlockInGameAsList[curLV.rewardIndex[j]];
 
 					if (printPls == true) {
 						d.pl("reward slot " + j + " = " + reward.theName + ":" + reward.data + ":"
 								+ curLV.rewardAmount[j]);
 					}
 
-					for (int k = 0; k < Core.allBlockInGameAsList.size(); k++) {
+					for (int k = 0; k < Core.allBlockInGameAsListSize; k++) {
 
-						if (Core.allBlockInGameAsList.get(k).data == reward.data)
-							if (Core.allBlockInGameAsList.get(k).theName.equalsIgnoreCase(reward.theName)) {
+						if (Core.allBlockInGameAsList[k].data == reward.data)
+							if (Core.allBlockInGameAsList[k].theName.equalsIgnoreCase(reward.theName)) {
 								if (rewardSlotUsedIt[k] == true) {
 									if (printPls == true) {
 										d.pl(" *** ** reward dupli " + reward.theName + ":" + reward.data);
@@ -294,7 +294,7 @@ public class HybridOverride extends HybridMultithreading {
 			}
 
 			int countTrue = 0;
-			for (int i = 0; i < Core.allBlockInGameAsList.size(); i++) {
+			for (int i = 0; i < Core.allBlockInGameAsListSize; i++) {
 				if (needSlotUsedIt[i] == true) {
 					countTrue++;
 				}
@@ -312,9 +312,9 @@ public class HybridOverride extends HybridMultithreading {
 					d.pl("maxUnique " + countTrue);
 			}
 
-			if (countTrue < Core.allBlockInGameAsList.size()) {
+			if (countTrue < Core.allBlockInGameAsListSize) {
 				d.pl(" >>> reward duplicate " + duplicate);
-				d.pl("countTrue < Max Unique Item " + countTrue + "/" + (Core.allBlockInGameAsList.size() * 2));
+				d.pl("countTrue < Max Unique Item " + countTrue + "/" + (Core.allBlockInGameAsListSize * 2));
 				return countTrue;
 				// break;
 			}
@@ -387,7 +387,7 @@ public class HybridOverride extends HybridMultithreading {
 				SellableType se = Core.sellAsList.get(i);
 				SellableType seTmpSe =  tmpSell.get(i);
 				
-				AllBlockInGameType seTmpSeBlock = Core.allBlockInGameAsList.get(  seTmpSe.index);
+				AllBlockInGameType seTmpSeBlock = Core.allBlockInGameAsList[  seTmpSe.index];
 
 				double tmpMoney = 0;
 				tmpMoney = se.allItemYouCanFind * seTmpSe.sellPerPrice;
@@ -425,7 +425,7 @@ public class HybridOverride extends HybridMultithreading {
 					notFill = false;
 
 					for (int j = 0; j < curLV.needSize; j++) {
-						AllBlockInGameType itm = Core.allBlockInGameAsList.get(curLV.needIndex[j]);
+						AllBlockInGameType itm = Core.allBlockInGameAsList[curLV.needIndex[j]];
 
 						AllBlockInGameType myInv = ps.allMyInventory.get(itm.getIDData());
 						notFill = notFillyet(itm, myInv, curLV.needAmount[j]);
@@ -444,7 +444,7 @@ public class HybridOverride extends HybridMultithreading {
 						do {
 							ranbuy = rnd.nextInt(curLV.needSize);
 
-							AllBlockInGameType itm = Core.allBlockInGameAsList.get(curLV.needIndex[ranbuy]);
+							AllBlockInGameType itm = Core.allBlockInGameAsList[curLV.needIndex[ranbuy]];
 							AllBlockInGameType myInv = ps.allMyInventory.get(itm.getIDData());
 
 							boolean notFillRan = notFillyet(itm, myInv, curLV.needAmount[ranbuy]);
@@ -463,7 +463,7 @@ public class HybridOverride extends HybridMultithreading {
 						// check money
 
 						// search item in shop
-						AllBlockInGameType itm = Core.allBlockInGameAsList.get(curLV.needIndex[ranbuy]);
+						AllBlockInGameType itm = Core.allBlockInGameAsList[curLV.needIndex[ranbuy]];
 
 						if (printPls == true)
 							d.pl("searching this item in shop " + itm.getIDData());
@@ -565,8 +565,8 @@ public class HybridOverride extends HybridMultithreading {
 
 			double fitAtTheEndItem = 0;
 
-			for (int i = 0; i < Core.allBlockInGameAsList.size(); i++) {
-				AllBlockInGameType eg = Core.allBlockInGameAsList.get(i);
+			for (int i = 0; i < Core.allBlockInGameAsListSize; i++) {
+				AllBlockInGameType eg = Core.allBlockInGameAsList[i];
 				AllBlockInGameType myeg = ps.allMyInventory.get(eg.getIDData());
 
 				if (eg.atTheEndNeed > 0) {
@@ -579,7 +579,7 @@ public class HybridOverride extends HybridMultithreading {
 
 			tmpFitness = fitCurLV + fitMoneyLeft + fitMaxMoney + fitAtTheEndItem;
 			tmpFitness = fitMoneyLeft + fitMaxMoney + fitAtTheEndItem;
-			tmpFitness =  fitCurLV   + fitAtTheEndItem + fitMaxMoney;
+			tmpFitness =  fitCurLV   + fitAtTheEndItem + fitMoneyLeft;
 
 			
 			d.pl("fitness " + tmpFitness + ", f curLV " + fitCurLV + " , f money left " + fitMoneyLeft

@@ -21,13 +21,13 @@ public class Core {
 	}
 
 	class ParameterRandomAmountItem {
-		// int [] index = new int[allBlockInGameAsList.size()];
+		// int [] index = new int[allBlockInGameAsListSize];
 		int[] amount;
 
 	}
 
 	class ParameterRandomUniqueItem {
-		// int [] index = new int[allBlockInGameAsList.size()];
+		// int [] index = new int[allBlockInGameAsListSize];
 		int[] index;
 	}
 
@@ -65,7 +65,7 @@ public class Core {
 	public static int maxShopSize = 10;
 
 	public static int minShopSize = 3;
-	public static int swapMultipy = 100;
+	public static int swapMultipy = 10;
 
 	public static double SellMaxCost = 100;
 
@@ -82,8 +82,10 @@ public class Core {
 
 	public static LinkedList<SellableType> sellAsList = new LinkedList<SellableType>();
 
-	public static LinkedList<AllBlockInGameType> allBlockInGameAsList = new LinkedList<AllBlockInGameType>();
-
+	public static AllBlockInGameType[] allBlockInGameAsList = new AllBlockInGameType[1000];
+	public static int allBlockInGameAsListSize = 0;
+	
+	
 	private int curChro = 0;
 
 	private double[] chromosome;
@@ -103,7 +105,7 @@ public class Core {
 
 		int cur = 0;
 		int curLV = 0;
-		while (cur < allBlockInGameAsList.size()) {
+		while (cur < allBlockInGameAsListSize) {
 			LV1000Type l = new LV1000Type();
 
 			l.needAmount = new int[amountUniqueItemPerLV.amount[curLV]];
@@ -117,8 +119,8 @@ public class Core {
 			 */
 
 			// add all item need it current level
-			for (int j = 0; j < amountUniqueItemPerLV.amount[curLV] && cur < allBlockInGameAsList.size(); j++) {
-				AllBlockInGameType eof = allBlockInGameAsList.get(rUnique.index[cur]);
+			for (int j = 0; j < amountUniqueItemPerLV.amount[curLV] && cur < allBlockInGameAsListSize; j++) {
+				AllBlockInGameType eof = allBlockInGameAsList[rUnique.index[cur]];
 
 				l.needIndex[j] = rUnique.index[cur];
 				l.needAmount[j] = (int) Math.round(decodeRandomGive01_() * eof.maxStack);
@@ -167,14 +169,14 @@ public class Core {
 			 * " cur chro " + curChro);
 			 */
 			for (int j = 0; j < amountReward; j++) {
-				double g = decodeRandomGive01_() * allBlockInGameAsList.size();
+				double g = decodeRandomGive01_() * allBlockInGameAsListSize;
 
 				int index = (int) (g);
-				if (index >= allBlockInGameAsList.size()) index = allBlockInGameAsList.size() - 1;
+				if (index >= allBlockInGameAsListSize) index = allBlockInGameAsListSize - 1;
 				
 
 				e.rewardIndex[j] = index;
-				e.rewardAmount[j] = (int) Math.round(decodeRandomGive01_() * allBlockInGameAsList.get(index).maxStack);
+				e.rewardAmount[j] = (int) Math.round(decodeRandomGive01_() * allBlockInGameAsList[index].maxStack);
 
 			}
 
@@ -280,7 +282,7 @@ public class Core {
 
 				curItemIndex++;
 				/*
-				 * if (curItemIndex == allBlockInGameAsList.size()) { break; }
+				 * if (curItemIndex == allBlockInGameAsListSize) { break; }
 				 */
 			}
 
@@ -296,7 +298,7 @@ public class Core {
 
 		// check item Lost Again
 		/*
-		 * for (int a = 0; a < Main.co.allBlockInGameAsList.size(); a++) {
+		 * for (int a = 0; a < Main.co.allBlockInGameAsListSize; a++) {
 		 * AllBlockInGameType edo = Main.co.allBlockInGameAsList.get(a); boolean
 		 * found = false; for (int i = 0; i < tmpType.outputAllShop.size(); i++)
 		 * { AllShop as = tmpType.outputAllShop.get(i); for (int j = 0; j <
@@ -340,14 +342,14 @@ public class Core {
 	}
 
 	public void decodeRandomSumAmount417ForAllShop(ParameterRandomAmountItem para) {
-		para.amount = new int[allBlockInGameAsList.size()];
+		para.amount = new int[allBlockInGameAsListSize];
 
-		for (int i = 0; i < allBlockInGameAsList.size(); i++) {
+		for (int i = 0; i < allBlockInGameAsListSize; i++) {
 			para.amount[i] = 0;
 		}
 
 		int countItem = 0;
-		while (countItem < allBlockInGameAsList.size()) {
+		while (countItem < allBlockInGameAsListSize) {
 			// d.pl("countItem , " + countItem + " , curChro " + curChro);
 
 			double max = (maxShopSize - minShopSize); // 1 / 7
@@ -366,12 +368,12 @@ public class Core {
 			countItem++;
 
 			// 417 > 417
-			if (countItem > allBlockInGameAsList.size()) {
-				int tmb = (countItem - allBlockInGameAsList.size());
+			if (countItem > allBlockInGameAsListSize) {
+				int tmb = (countItem - allBlockInGameAsListSize);
 
 				if (printpls) d.pl("decodeRandumSumAmount Shouldn't be here : " + tmb);
 
-				countItem = allBlockInGameAsList.size() - 1;
+				countItem = allBlockInGameAsListSize - 1;
 				para.amount[countItem] = tmb;
 
 			}
@@ -380,16 +382,16 @@ public class Core {
 	}
 
 	public void decodeRandomUniqueItem(ParameterRandomUniqueItem para) {
-		para.index = new int[allBlockInGameAsList.size()];
-		boolean tmpBoolean[] = new boolean[allBlockInGameAsList.size()];
+		para.index = new int[allBlockInGameAsListSize];
+		boolean tmpBoolean[] = new boolean[allBlockInGameAsListSize];
 
-		for (int i = 0; i < allBlockInGameAsList.size(); i++) {
+		for (int i = 0; i < allBlockInGameAsListSize; i++) {
 			para.index[i] = 0;
 			tmpBoolean[i] = false;
 		}
 
 		int countItem = 0;
-		while (countItem < allBlockInGameAsList.size()) {
+		while (countItem < allBlockInGameAsListSize) {
 			double tmpReadChro = decodeRandomGiveDouble_();
 
 			getNextUnuseMissionItem((int) (tmpReadChro * swapMultipy),
@@ -410,20 +412,20 @@ public class Core {
 
 		decodeRandomUniqueItem(para);
 
-		while (paraItemsInShop.outputAllItemInShop.size() < allBlockInGameAsList.size()) {
+		while (paraItemsInShop.outputAllItemInShop.size() < allBlockInGameAsListSize) {
 
 			AllBlockInGameType bo = new AllBlockInGameType();
 
 			int cur = para.index[paraItemsInShop.outputAllItemInShop.size()];
 
-			bo.theName = allBlockInGameAsList.get(cur).theName;
-			bo.data = allBlockInGameAsList.get(cur).data;
+			bo.theName = allBlockInGameAsList[cur].theName;
+			bo.data = allBlockInGameAsList[cur].data;
 
 			// ........
 
 			double rendomStack01 = decodeRandomGive01_();
 
-			bo.curAmount = (int) Math.round(rendomStack01 * allBlockInGameAsList.get(cur).maxStack);
+			bo.curAmount = (int) Math.round(rendomStack01 * allBlockInGameAsList[cur].maxStack);
 
 			if (bo.curAmount <= 0)
 				bo.curAmount = 1;
@@ -464,7 +466,7 @@ public class Core {
 	public void decodeTmpShopPriceAmountOfItemInShop(ParameterShopPriceAmountOfItemInShopType paraShopPrice) {
 
 		int countItem = 0;
-		while (countItem < allBlockInGameAsList.size()) {
+		while (countItem < allBlockInGameAsListSize) {
 
 			// price
 			double tmpReadChro = decodeRandomGiveDouble_();
@@ -484,8 +486,8 @@ public class Core {
 
 			countItem += paraShopPrice.amount[paraShopPrice.shopSlotMax];
 
-			if (countItem > allBlockInGameAsList.size()) {
-				int tmb = (countItem - allBlockInGameAsList.size());
+			if (countItem > allBlockInGameAsListSize) {
+				int tmb = (countItem - allBlockInGameAsListSize);
 				if (tmb < 0) {
 					d.pl("tmb : " + tmb);
 				}
@@ -523,8 +525,8 @@ public class Core {
 
 		tmp.outputAllItemInShop = tmpAllItemInShop;
 
-		boolean tmpBoolean[] = new boolean[allBlockInGameAsList.size()];
-		for (int i = 0; i < allBlockInGameAsList.size(); i++) {
+		boolean tmpBoolean[] = new boolean[allBlockInGameAsListSize];
+		for (int i = 0; i < allBlockInGameAsListSize; i++) {
 			tmpBoolean[i] = false;
 		}
 		tmp.tmpBoolean = tmpBoolean;
@@ -563,7 +565,7 @@ public class Core {
 		// ******************************************************************************************
 		// check item Lost Again
 		/*
-		 * for (int a = 0; a < Main.co.allBlockInGameAsList.size(); a++) {
+		 * for (int a = 0; a < Main.co.allBlockInGameAsListSize; a++) {
 		 * AllBlockInGameType edo = Main.co.allBlockInGameAsList.get(a); boolean
 		 * found = false; for (int i = 0; i < tmpAllShop.size(); i++) { AllShop
 		 * as = tmpAllShop.get(i); for (int j = 0; j < as.size; j++) { if
@@ -584,16 +586,16 @@ public class Core {
 
 		tmp4.outputLV = tmpLV;
 
-		boolean usedItShopList[] = new boolean[Core.allBlockInGameAsList.size()];
+		boolean usedItShopList[] = new boolean[Core.allBlockInGameAsListSize];
 
-		for (int i = 0; i < Core.allBlockInGameAsList.size(); i++) {
+		for (int i = 0; i < Core.allBlockInGameAsListSize; i++) {
 			usedItShopList[i] = false;
 		}
 
-		boolean usedItNeedList[] = new boolean[Core.allBlockInGameAsList.size()];
-		boolean usedItRewardList[] = new boolean[Core.allBlockInGameAsList.size()];
+		boolean usedItNeedList[] = new boolean[Core.allBlockInGameAsListSize];
+		boolean usedItRewardList[] = new boolean[Core.allBlockInGameAsListSize];
 
-		for (int i = 0; i < Core.allBlockInGameAsList.size(); i++) {
+		for (int i = 0; i < Core.allBlockInGameAsListSize; i++) {
 			usedItNeedList[i] = false;
 			usedItRewardList[i] = false;
 		}
@@ -602,7 +604,7 @@ public class Core {
 
 		// check item Lost Again
 		/*
-		 * for (int a = 0; a < Main.co.allBlockInGameAsList.size(); a++) {
+		 * for (int a = 0; a < Main.co.allBlockInGameAsListSize; a++) {
 		 * AllBlockInGameType edo = Main.co.allBlockInGameAsList.get(a); boolean
 		 * found = false; for (int i = 0; i < tmpAllShop.size(); i++) { AllShop
 		 * as = tmpAllShop.get(i); for (int j = 0; j < as.size; j++) { if
@@ -624,8 +626,8 @@ public class Core {
 
 	public int getIndexFromKeyAlBlockInGame(String abc) {
 		int index = -1;
-		for (int i = 0; i < allBlockInGameAsList.size(); i++) {
-			AllBlockInGameType e = allBlockInGameAsList.get(i);
+		for (int i = 0; i < allBlockInGameAsListSize; i++) {
+			AllBlockInGameType e = allBlockInGameAsList[i];
 
 			String eo = e.theName + ":" + e.data;
 			if (eo.equalsIgnoreCase(abc)) {
@@ -646,7 +648,7 @@ public class Core {
 
 			do {
 				curMissionItemSwapPosition++;
-				if (curMissionItemSwapPosition >= allBlockInGameAsList.size()) {
+				if (curMissionItemSwapPosition >= allBlockInGameAsListSize) {
 					curMissionItemSwapPosition = 0;
 				}
 
@@ -661,7 +663,7 @@ public class Core {
 				usedItList[curMissionItemSwapPosition] = true;
 				break;
 			} else if (iNeedBlock == 0) {
-				if (allBlockInGameAsList.get(curMissionItemSwapPosition).isBlock == true) {
+				if (allBlockInGameAsList[curMissionItemSwapPosition].isBlock == true) {
 					if (swapNextxTime > 0) {
 						swapNextxTime--;
 						continue;
@@ -672,7 +674,7 @@ public class Core {
 					break;
 				}
 			} else if (iNeedBlock == 1) {
-				if (allBlockInGameAsList.get(curMissionItemSwapPosition).isBlock == false) {
+				if (allBlockInGameAsList[curMissionItemSwapPosition].isBlock == false) {
 					if (swapNextxTime > 0) {
 						swapNextxTime--;
 						continue;
@@ -694,7 +696,7 @@ public class Core {
 
 		do {
 			curMissionItemSwapPosition++;
-			if (curMissionItemSwapPosition >= allBlockInGameAsList.size()) {
+			if (curMissionItemSwapPosition >= allBlockInGameAsListSize) {
 				curMissionItemSwapPosition = 0;
 			}
 
@@ -722,7 +724,7 @@ public class Core {
 		try {
 
 			allBlockInGame.clear();
-			allBlockInGameAsList.clear();
+			allBlockInGameAsListSize = 0;
 
 			fff.createNewFile();
 
@@ -765,7 +767,8 @@ public class Core {
 
 				}
 				allBlockInGame.put(miss.theName + ":" + miss.data, miss);
-				allBlockInGameAsList.add(miss);
+				allBlockInGameAsList[allBlockInGameAsListSize] = miss;
+				allBlockInGameAsListSize ++;
 			}
 
 			d.pl(" Loaded " + filena);

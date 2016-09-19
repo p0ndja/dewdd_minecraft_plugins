@@ -7,7 +7,7 @@ import ga_optimization_api.Chromosome;
 public class Main {
 
 	public static Core co;
-	public static int populationSize = 1000;
+	public static int populationSize = 100;
 	
 	public static void main(String[] args) {
 
@@ -40,11 +40,11 @@ public class Main {
 
 		for (int i = 0; i < Core.sellAsList.size(); i++) {
 			SellableType e = Core.sellAsList.get(i);
-			AllBlockInGameType e2 = Core.allBlockInGameAsList.get(e.index);
+			AllBlockInGameType e2 = Core.allBlockInGameAsList[e.index];
 			// search in
 			boolean foundx = false;
-			for (int j = 0; j < Core.allBlockInGameAsList.size(); j++) {
-				AllBlockInGameType f = Core.allBlockInGameAsList.get(j);
+			for (int j = 0; j < Core.allBlockInGameAsListSize; j++) {
+				AllBlockInGameType f = Core.allBlockInGameAsList[j];
 
 				if (e2.theName.equalsIgnoreCase(f.theName) && e2.data == f.data) {
 					foundx = true;
@@ -58,9 +58,9 @@ public class Main {
 			}
 		}
 
-		LinkedList<AllBlockInGameType> mis = Core.allBlockInGameAsList;
+		
 
-		d.pl("*** mission size = " + mis.size());
+		d.pl("*** mission size = " + Main.co.allBlockInGameAsListSize);
 
 		/*
 		 * for (int i = 0 ; i < mis.size() ; i++ ){ d.pl( mis.get(i).theName +

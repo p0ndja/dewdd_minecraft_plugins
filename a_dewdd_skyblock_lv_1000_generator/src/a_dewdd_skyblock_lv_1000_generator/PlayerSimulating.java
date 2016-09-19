@@ -19,7 +19,7 @@ public class PlayerSimulating {
 		allMyInventory.clear();
 
 		for (int i = 0; i < Core.allBlockInGame.size(); i++) {
-			AllBlockInGameType x = Core.allBlockInGameAsList.get(i).copyIt();
+			AllBlockInGameType x = Core.allBlockInGameAsList[i].copyIt();
 			x.curAmount = 0;
 
 			allMyInventory.put(x.theName + ":" + x.data, x);
