@@ -67,10 +67,9 @@ class Redex {
 		hybrid.setDnaLength(Redex.dnaLength);
 		hybrid.setPopulationSize(Redex.maxPopulation);
 		hybrid.prepareToRunGA();
-		
+
 		dnaList = hybrid.getPopulation();
 
-		
 		// load Start Area
 		start = new AreaType();
 		int stlx = (int) tr.gettrint("CONFIG_REDEX_START_LX");
@@ -144,7 +143,6 @@ class Redex {
 	}
 
 	public void DecodeAllArea() {
-	
 
 		dnaList = hybrid.getPopulation();
 
@@ -264,13 +262,51 @@ class DecodeSubDNA implements Runnable {
 			tmpb = tmpb % 4;
 			int tmpb2 = (int) tmpb;
 
+			byte pistonFace = 0; // piston face
+
 			Material setType = null;
 			switch (tmpb2) {
 			case 0:
+
+				if (startPoint + 4 >= Redex.dnaLength) {
+					return;
+				}
+
 				setType = Material.PISTON_BASE;
+
+			//dprint.r.printAll("piston grep " + Math.abs(dna.dna[startPoint + 4]));
+
+				int tmpFace = (int) Math.round(Math.abs(dna.dna[startPoint + 4]) * 6);
+				if (tmpFace < 0) {
+					tmpFace = 0;
+				}
+				if (tmpFace > 5) {
+					tmpFace = 5;
+				}
+				pistonFace = (byte) tmpFace;
+
+			//	dprint.r.printAll("piston face " + pistonFace);
+
 				break;
 			case 1:
+				if (startPoint + 4 >= Redex.dnaLength) {
+					return;
+				}
+
 				setType = Material.PISTON_STICKY_BASE;
+
+				//dprint.r.printAll("piston grep " + Math.abs(dna.dna[startPoint + 4]));
+
+				tmpFace = (int) Math.round(Math.abs(dna.dna[startPoint + 4]) * 6);
+				if (tmpFace < 0) {
+					tmpFace = 0;
+				}
+				if (tmpFace > 5) {
+					tmpFace = 5;
+				}
+				pistonFace = (byte) tmpFace;
+			//	dprint.r.printAll("piston face " + pistonFace);
+
 				break;
 			case 2:
 				setType = Material.SLIME_BLOCK;
@@ -289,9 +325,10 @@ class DecodeSubDNA implements Runnable {
 
 			if (b2.getType() == Material.AIR) {
 				b2.setType(setType);
+				b2.setData(pistonFace);
 
 			}
-			dprint.r.printAll(posx + "," + posy + "," + posz + " = " + setType.name());
+			dprint.r.printC(posx + "," + posy + "," + posz + " = " + setType.name());
 
 			startPoint += 4;
 		}
@@ -428,7 +465,7 @@ class CommandRuning implements Runnable {
 							Redex redex = new Redex(p.getWorld(), p);
 							DecodeSubDNA cc = new DecodeSubDNA(redex, Integer.parseInt(m[2]));
 							Bukkit.getScheduler().scheduleSyncDelayedTask(DigEventListener2.ac, cc);
-							
+
 						}
 					}
 
