@@ -5,13 +5,13 @@
  */
 package dewdd_redstone_experimental;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Random;
 
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.block.Block;
-import org.bukkit.command.defaults.ClearCommand;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -21,7 +21,9 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.world.ChunkUnloadEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import core_optimization_api.Chromosome;
 import dewddtran.tr;
+import ga_optimization_api.Hybrid;
 import li.LXRXLZRZType;
 
 class Redex {
@@ -138,8 +140,23 @@ class AreaType {
 	public long lastTimeBetter = 0;
 
 	public long score = 0;
+	
+	public Chromosome chro;
+	
 
 }
+
+class HybridRed extends Hybrid {
+	private ArrayList <Double> fitness = new ArrayList<Double >();
+	
+	
+	@Override
+	public double fitness(double[] dna) {
+		return fitness.get(index)
+				
+	}
+}
+
 
 class CleanAllArea implements Runnable {
 	private Redex redex;

@@ -928,6 +928,11 @@ public class DigEventListener2 implements Listener {
 					case DIAMOND_PICKAXE:
 					case DIAMOND_SPADE:
 					case DIAMOND_AXE:
+						
+						switch (block.getType()) {
+						case SPONGE: case BEDROCK : case MOB_SPAWNER:
+							return;
+						}
 
 						FasterBreak fb = new FasterBreak(block, player);
 						Thread thh = new Thread(fb);

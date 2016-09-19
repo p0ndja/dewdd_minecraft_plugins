@@ -1032,12 +1032,21 @@ public class DigEventListener2 implements Listener {
 		}
 
 		if (randomGenerator.nextInt(100) > 50) {
+			Player player = e.getPlayer();
+			if (player.getLocation().getY() >= 250) {
+				player.setHealth(0);
+				dprint.r.printAll(player.getName() +   tr.gettr("this player trying to above y 250 on invert world die !!"));
+				return;
+			}
 
 			if (isCleanedChunk(e.getPlayer().getLocation().getChunk()) == true) {
 				return;
 			}
 
-			Player player = e.getPlayer();
+			
+			
+			
+			
 			cleannearchunk(player);
 		}
 	}
