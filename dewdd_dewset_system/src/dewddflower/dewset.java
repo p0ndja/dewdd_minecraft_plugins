@@ -28,6 +28,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
 
+import api_skyblock.api_skyblock;
 import dewddtran.tr;
 import li.IDDataType;
 import net.coreprotect.CoreProtect;
@@ -2742,6 +2743,11 @@ public class dewset extends dewset_interface {
 							int randid = rnd.nextInt(item.size());
 							int id = item.get(randid).id;
 							byte data = item.get(randid).data;
+							
+							// do not allow to spread Air Block ( it's will be infinite loop)
+							if (id == 0) {
+								return;
+							}
 
 							if (blb.getTypeId() == id && blb.getData() == data) {
 								//zlx++;
@@ -2898,6 +2904,11 @@ public class dewset extends dewset_interface {
 				int randid = rnd.nextInt(item.size());
 				int id = item.get(randid).id;
 				byte data = item.get(randid).data;
+				
+				// do not allow to spread Air Block ( it's will be infinite loop)
+				if (id == 0) {
+					return;
+				}
 
 				if (blb.getTypeId() == id && blb.getData() == data) {
 				//	zlx++;
@@ -3318,8 +3329,17 @@ public class dewset extends dewset_interface {
 		}
 
 		boolean wg = wgapi.canBuild(player, block);
+		
+		boolean sky = false;
+		if (Bukkit.getPluginManager().getPlugin("dewddskyblock") == null) {
+			sky = true;
+		} else {
+			sky = api_skyblock.cando(block, player, modeevent);
+		}
+		
+		
 
-		return wg;
+		return wg && sky;
 	}
 
 	/*
