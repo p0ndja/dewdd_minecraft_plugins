@@ -417,9 +417,11 @@ public class DigEventListener2 implements Listener {
 
 					ga = rnd.nextInt();
 
-					pr = Bukkit.getOnlinePlayers().clone()[ga];
+				
 
 				}
+				
+					pr = Bukkit.getOnlinePlayers().clone()[ga];
 			}
 
 			int ranid = 0;
@@ -883,6 +885,9 @@ public class DigEventListener2 implements Listener {
 				
 				
 				int truely = curId + delta;
+				if (truely > allShop.size()) {
+					return;
+				}
 				//p.sendMessage("delta " + truely);
 				
 				// 
@@ -943,7 +948,7 @@ public class DigEventListener2 implements Listener {
 		Player p = e.getPlayer();
 
 		if (e.getMessage().equalsIgnoreCase("/dft shop")) {
-			p.sendMessage("here");
+			//p.sendMessage("here");
 			Inventory myInventory = Bukkit.createInventory(null, 54, "dew shop");
 			inventory.put(p, myInventory);
 			inventoryID.put(p, 0);

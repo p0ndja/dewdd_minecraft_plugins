@@ -161,7 +161,8 @@ public class DigEventListener2 implements Listener {
 			if (b == null)
 				return;
 
-			// dprint.r.printAll("autocut");
+		
+			
 
 			switch (b.getType()) {
 			case PUMPKIN:
@@ -201,13 +202,14 @@ public class DigEventListener2 implements Listener {
 			case SEEDS:
 			case CARROT:
 			case POTATO:
+			case CROPS:
 				if (b.getData() != 7)
 					return;
 
 				switch (b.getType()) {
-				case SEEDS:
+				case CROPS:
 					b.breakNaturally();
-					b.setType(Material.WHEAT);
+					b.setType(Material.CROPS);
 					b.setData((byte) 0);
 					break;
 				case CARROT:
