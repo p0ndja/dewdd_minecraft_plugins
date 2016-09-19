@@ -52,6 +52,11 @@ public class Constant {
 			break;
 			
 			
+		case LV_6_DROP_WHEAT:
+			aa = tr.gettr(header + mission);
+			break;
+			
+			
 		
 			
 	

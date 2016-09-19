@@ -75,8 +75,8 @@ public class api_skyblock {
 				// random x y z this is not near old rs list
 				buildcomplete = true;
 
-				x = rnd.nextInt(searchRadius) * 300 * (rnd.nextInt(1) == 1 ? 1 : -1);
-				z = rnd.nextInt(searchRadius) * 300 * (rnd.nextInt(1) == 1 ? 1 : -1);
+				x = rnd.nextInt(searchRadius) * 300 * (rnd.nextInt(2) == 1 ? 1 : -1);
+				z = rnd.nextInt(searchRadius) * 300 * (rnd.nextInt(2) == 1 ? 1 : -1);
 				y = rnd.nextInt(200) + 50;
 				
 				dprint.r.printAll("searching..." + x + "," + y + "," + z);
@@ -614,9 +614,16 @@ public class api_skyblock {
 
 			// add mon
 
+			int count = 0;
 			do {
 				bo2 = searchSpaceCube(bo, 5, 5);
-
+				count ++;
+				
+				if (count > 5000) {
+					dprint.r.printAll(tr.gettr("this_is_land_cannot_search_anyblock_for_applyReward_LV4" + " " + 
+				 rsID + " xyz = " + rs[rsID].x  +"," + rs[rsID].y + "," + rs[rsID].z));
+					break;
+				}
 			} while (bo2.getRelative(-1, 0, 0).getType() == Material.AIR);
 
 			for (int i = 0; i < 5; i++) {
@@ -709,29 +716,29 @@ public class api_skyblock {
 		case LV_6_DROP_WHEAT:
 
 			bo = getBlockMiddleRS(rsID);
-			bo2 = searchSpaceCube(bo, 5, 5);
+			//bo2 = searchSpaceCube(bo, 5, 5);
+			
+			
+			for (int i = -10; i < 10; i++) {
+				for (int i2 = 255; i2 <= 255; i2++) {
+					for (int i3 = -10; i3 < 10; i3++) {
 
-			for (int i = 0; i < 5; i++) {
-				for (int i2 = 0; i2 < 5; i2++) {
-					for (int i3 = 0; i3 < 5; i3++) {
-
-						 bo3 = bo2.getRelative(i, i2, i3);
+						 bo3 = bo.getWorld().getBlockAt(bo.getX() + i , i2 , bo.getZ() + i3);
+						 
 						if (bo3.getType() != Material.AIR) {
 							dprint.r.printAll(tr.gettr("error while applyReward lv 0 block is != air"));
 							break;
 						}
 
-						if (rnd.nextInt(3) > 90) {
+						
 							bo3.setType(Material.GRAVEL);
-						}
+						
 
 					}
 				}
 			}
 
-			printToAllPlayerOnRS(rsID,
-					tr.gettr("generated_small_island_at") + " " + bo2.getX() + "," + bo2.getY() + "," + bo2.getZ());
-
+			
 			printToAllPlayerOnRS(rsID, tr.gettr("got_reward_lv_" + rs[rsID].mission));
 
 			break;
