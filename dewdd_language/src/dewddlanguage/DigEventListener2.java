@@ -983,39 +983,9 @@ public class DigEventListener2 implements Listener {
 		event.setMessage(dew.engtothai(event.getMessage()));
 	}
 
-	@EventHandler
-	public void eventja(BlockBreakEvent event) {
-		Block block = event.getBlock();
+	
 
-		if ((block.getTypeId() == 63 || block.getTypeId() == 68)
-				&& (event.getPlayer().getItemInHand().getTypeId() == 323)) {
-			Sign sign = (Sign) block.getState();
-			sign.setLine(0, dew.engtothai(sign.getLine(0)));
-			sign.setLine(1, dew.engtothai(sign.getLine(1)));
-			sign.setLine(2, dew.engtothai(sign.getLine(2)));
-			sign.setLine(3, dew.engtothai(sign.getLine(3)));
-			sign.update(true);
-			event.setCancelled(true);
-		}
-
-	}
-
-	@EventHandler
-	public void eventja(BlockDamageEvent event) {
-		Block block = event.getBlock();
-
-		if ((block.getTypeId() == 63 || block.getTypeId() == 68)
-				&& (event.getPlayer().getItemInHand().getTypeId() == 323)) {
-			Sign sign = (Sign) block.getState();
-			sign.setLine(0, dew.engtothai(sign.getLine(0)));
-			sign.setLine(1, dew.engtothai(sign.getLine(1)));
-			sign.setLine(2, dew.engtothai(sign.getLine(2)));
-			sign.setLine(3, dew.engtothai(sign.getLine(3)));
-			sign.update(true);
-			event.setCancelled(true);
-		}
-
-	}
+	
 
 	@EventHandler
 	public void eventja(ServerCommandEvent event) {

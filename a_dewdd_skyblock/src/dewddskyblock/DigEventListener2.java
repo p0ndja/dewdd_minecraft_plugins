@@ -1577,7 +1577,7 @@ public class DigEventListener2 implements Listener {
 
 					}
 
-					if (nearname > 1) {
+					if (nearname >= 1) {
 						player.sendMessage(dprint.r.color(tr.gettr("list of sky protect name like your search name")));
 
 						for (int lop2 = 0; lop2 < api_skyblock.rsMax; lop2++) {
@@ -1699,7 +1699,7 @@ public class DigEventListener2 implements Listener {
 
 					}
 
-					if (nearname > 1) {
+					if (nearname >= 1) {
 						player.sendMessage(dprint.r.color(tr.gettr("list of sky protect name like your search name")));
 
 						for (int lop2 = 0; lop2 < api_skyblock.rsMax; lop2++) {
@@ -1717,7 +1717,8 @@ public class DigEventListener2 implements Listener {
 
 						return;
 					}
-					else if (nearname == 1) {
+
+					if (nearname == 1) {
 						for (int lop2 = 0; lop2 < api_skyblock.rsMax; lop2++) {
 							if (api_skyblock.getplayerinslot(player.getName(), lop2) == -1) {
 								continue;
@@ -1737,7 +1738,8 @@ public class DigEventListener2 implements Listener {
 						}
 
 					}
-					else if (nearname == 0 ){
+					
+					 if (nearname == 0 ){
 						player.sendMessage(dprint.r
 								.color(tr.gettr("you_have_more_than_1_home_so_choose_it") + " /skyblock home <name>"));
 

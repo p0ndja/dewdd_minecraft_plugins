@@ -92,8 +92,9 @@ public class DigEventListener2 implements Listener {
 
 		@Override
 		public void run() {
-			if (player.getWorld().getName().equalsIgnoreCase("skywar"))
+			if (!tr.isrunworld(ac.getName(), player.getWorld().getName())) {
 				return;
+			}
 
 			String[] m = message.split("\\s+");
 			m = message.split("\\s+");
@@ -200,7 +201,7 @@ public class DigEventListener2 implements Listener {
 
 				String goth = m[1];
 
-				for (Player gotb : Bukkit.getWorld("world").getPlayers())
+				for (Player gotb : Bukkit.getOnlinePlayers())
 					if (gotb.getName().toLowerCase().startsWith(goth) == true) {
 						Location lo1 = gotb.getLocation();
 						Location lo2 = lo1;
@@ -1077,8 +1078,10 @@ public class DigEventListener2 implements Listener {
 		@Override
 		public void run() {
 
-			if (player.getWorld().getName().equalsIgnoreCase("skywar"))
+			if (!tr.isrunworld(ac.getName(), player.getWorld().getName())) {
 				return;
+			}
+			
 			String[] m = message.split("\\s+");
 
 			String h[] = new String[50];
@@ -1471,7 +1474,7 @@ public class DigEventListener2 implements Listener {
 				// search player
 				String goth = m[1];
 
-				for (Player gotb : Bukkit.getWorld("world").getPlayers())
+				for (Player gotb : Bukkit.getOnlinePlayers())
 					if (gotb.getName().toLowerCase().startsWith(goth) == true) {
 						Location lo1 = gotb.getLocation();
 						Location lo2 = lo1;
@@ -1571,7 +1574,7 @@ public class DigEventListener2 implements Listener {
 					int x2 = Integer.parseInt(m[3]);
 					int z2 = Integer.parseInt(m[4]);
 					
-					int id = Integer.parseInt(m[5]);
+					Material id = event.getPlayer().getItemInHand().getType();
 					byte data = Byte.parseByte(m[6]);
 					
 					

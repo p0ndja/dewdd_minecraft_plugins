@@ -46,7 +46,7 @@ import li.LXRXLZRZType;
 public class dewset extends dewset_interface {
 	
 	public  void DeleteRecursive_mom (HashMap<String, Location> bd, World world, int firstAdded,LXRXLZRZType ee, 
-			int id ,byte data,int chunklimit,int search) {
+			Material id ,byte data,int chunklimit,int search) {
 		DeleteRecursive_Thread dr = new DeleteRecursive_Thread(bd, world, firstAdded, ee, id, data,chunklimit,search);
 		Bukkit.getScheduler().scheduleSyncDelayedTask(ac, dr);
 		
@@ -56,13 +56,13 @@ public class dewset extends dewset_interface {
 		private HashMap<String, Location> bd;
 		private World world;
 		private LXRXLZRZType ee;
-		private int id = 0;
+		private Material id ;
 		private byte data = 0;
 		private int chunklimit = 0;
 		private int search = 10;
 
 		public DeleteRecursive_Thread(HashMap<String, Location> bd, World world, int firstAdded,LXRXLZRZType ee, 
-				int id ,byte data,int chunklimit,int search) {
+				Material id ,byte data,int chunklimit,int search) {
 			this.bd = bd;
 			this.world = world;
 			this.ee = ee;
@@ -77,7 +77,11 @@ public class dewset extends dewset_interface {
 
 		@Override
 		public void run() {
-
+			long blockdo = 0;
+			
+			//dprint.r.printAll("nope.avi " + id.name());
+			
+			
 			
 			for(Player player : Bukkit.getOnlinePlayers()) {
 				if (player == null ) {
@@ -85,9 +89,15 @@ public class dewset extends dewset_interface {
 					
 				}
 				
+				if (player.isOp() == true) {
+					
+					id = player.getItemInHand().getType();
+					//data = player.getItemInHand().getData().getData();
+				}
+				
 				
 				if (player.getItemInHand().getType() == Material.STICK) {
-					bd = null;
+				//	bd = null;
 					return;
 				}
 			}
@@ -98,8 +108,8 @@ public class dewset extends dewset_interface {
 			// dprint.r.printAll("start " + bd.size());
 
 			if (bd.size() == 0) {
-				bd = null;
-				bd = new HashMap<String , Location>();
+			//	bd = null;
+			//	bd = new HashMap<String , Location>();
 				// dprint.r.printAll("run () bd.size = " + bd.size());
 
 				
@@ -115,9 +125,10 @@ public class dewset extends dewset_interface {
 					
 
 					Block block = world.getBlockAt(x, y, z);
-					if (block.getType().getId() == id ) {
+					if (block.getType() == id ) {
 						if (block.getData() == data || data == -29)
 						{
+							blockdo ++;
 						bd.put(tr.locationToString(block.getLocation()), block.getLocation());
 						dprint.r.printAll("delete Recursive > first add > " + block.getX() + "," + block.getY() + ","
 								+ block.getZ() + " size " + bd.size() + " , id data " + id  + ":"  + data);
@@ -126,6 +137,8 @@ public class dewset extends dewset_interface {
 					}
 
 				}
+				
+				
 				
 				
 				for(Player player : Bukkit.getOnlinePlayers()) {
@@ -139,21 +152,31 @@ public class dewset extends dewset_interface {
 					
 					for (int x = -search; x <= search; x++)
 						for (int y = -search; y <= search; y++) {
-							if (search < 0 ) continue;
-							if (search > 255) continue;
+						
 							
 							for (int z = -search; z <= search; z++) {
-								if (x == 0 && y == 0 && z == 0) {
-									continue;
-								}
+							
 
-								Block bo = player.getWorld().getBlockAt(getStack.getX() + x, y,
+								
+								Block bo = player.getWorld().getBlockAt(getStack.getX() + x, getStack.getY() + y,
 										getStack.getZ() + z);
-								if (bo.getType().getId() == id ) {
-									if (bo.getData() == data || data == -29)
+								
+							//	dprint.r.printAll("near " + tr.locationToString(bo.getLocation()) + " block id " + bo.getType().name() + ":" + bo.getData() + " > item " 
+								//+ id.name() + ":" + data);
+								
+								if (bo.getType() == id ) {
 									
+									if (bo.getData() == data || data == -29) {
+								//		dprint.r.printAll(bo.getType().name() + " , " + id.name());
+							//	dprint.r.printAll("near " + tr.locationToString(bo.getLocation()) + " block id " + bo.getType().name());
+								
+									blockdo ++;
 									bd.put(tr.locationToString(bo.getLocation()), bo.getLocation());
-
+							//	dprint.r.printAll("added " + bd.size() +   " " +  tr.locationToString(bo.getLocation()) +  " id " + bo.getType().name() + ":" + bo.getData());
+								
+								
+									
+									}
 								}
 
 							}
@@ -164,9 +187,13 @@ public class dewset extends dewset_interface {
 
 				if (bd.size() == 0) {
 
-					dprint.r.printAll("recall ... " + bd.size());
+					
+				//	dprint.r.printAll("recall ... " + bd.size()  + " ,  blockdo " + blockdo + "/" + 
+				//	(System.currentTimeMillis() - startTime) + " avg = " + (blockdo / (System.currentTimeMillis() - startTime +1)) );
+					
 					DeleteRecursive_Thread newRun = new DeleteRecursive_Thread(bd, world, 0,ee,id,data,chunklimit,search);
 					Bukkit.getScheduler().scheduleSyncDelayedTask(ac, newRun, sleeptime);
+					
 					return;
 				}
 
@@ -174,13 +201,16 @@ public class dewset extends dewset_interface {
 
 			startTime = System.currentTimeMillis();
 
+			//blockdo = 0;
+			
 			int first = 0;
 			while (bd.size() > 0 && System.currentTimeMillis() - startTime < 1000) {
 
 				for (int i = 0; i < 1000000 && System.currentTimeMillis() - startTime < 1000  ; i++) {
+					
 					String forDeleteLoc = "";
-					for (String locStr : bd.keySet()) {
-
+					for (String locStr : bd.keySet()){
+ 
 						Location loc = bd.get(locStr);
 						
 						// bd.remove(locStr);
@@ -192,21 +222,17 @@ public class dewset extends dewset_interface {
 							break;
 						}
 						
-						if (getStack == null) {
-							continue;
-						}
-
-						if (getStack.getType().getId() == id ) {
+						if (getStack.getType() == id ) {
 							if (getStack.getData() == data || data == -29)
 							{
 								
 							}
 							else {
-								continue;
+								break;
 							}
 						}
 						else {
-							continue;
+							break;
 						}
 						
 						
@@ -214,28 +240,33 @@ public class dewset extends dewset_interface {
 						if (first == 0) {
 							dprint.r.printAll("delete recursive > break > " + getStack.getX() + "," + getStack.getY() + ","
 									+ getStack.getZ() + " " + getStack.getType().name() + ":" + getStack.getData() + " size "
-									+ bd.size() + " " + getStack.getWorld().getName() +  " > id data " + id + ":" + data );
+									+ bd.size() + " " + getStack.getWorld().getName() +  " > id data " + id + ":" + data 
+									+ " blockdo " + blockdo + "/" + 
+									(System.currentTimeMillis() - startTime) + " avg = " + (blockdo / (System.currentTimeMillis() - startTime +1) ))
+							;
 							first = 1;
 						}
 
 					//	getStack.breakNaturally();
 						getStack.setType(Material.AIR);
+					//	dprint.r.printAll("break " + getStack.getType().name() + " " + tr.locationToString(getStack.getLocation()));
+						
+						
+						
+						blockdo ++;
 
 						for (int x = -search; x <= search; x++)
 							for (int y = -search; y <= search; y++) {
-								if (search < 0 ) continue;
-								if (search > 255) continue;
-								
-								for (int z = -search; z <= search; z++) {
-									if (x == 0 && y == 0 && z == 0) {
-										continue;
-									}
 
-									Block bo = getStack.getWorld().getBlockAt(getStack.getX() + x, y,
+
+								for (int z = -search; z <= search; z++) {
+									
+
+									Block bo = getStack.getWorld().getBlockAt(getStack.getX() + x, getStack.getY() + y,
 											getStack.getZ() + z);
-									if (bo.getType().getId() == id ) {
+									if (bo.getType() == id ) {
 										if (bo.getData() == data || data == -29)
-										
+										blockdo ++;
 										bd.put(tr.locationToString(bo.getLocation()), bo.getLocation());
 
 									}
@@ -244,39 +275,31 @@ public class dewset extends dewset_interface {
 								
 							}
 
-						for (int x = -50; x <= 50; x++) {
-
-							Block bo = getStack.getRelative(x, 0, 0);
-							if (bo.getType() != Material.AIR) {
-								bd.put(tr.locationToString(bo.getLocation()), bo.getLocation());
-
-							}
-						}
-
-						for (int x = -50; x <= 50; x++) {
-
-							Block bo = getStack.getRelative(0, 0, x);
-							if (bo.getType() != Material.AIR) {
-								bd.put(tr.locationToString(bo.getLocation()), bo.getLocation());
-
-							}
-						}
+						
 
 						break;
 					}
-
-					bd.remove(forDeleteLoc);
+					
+					if (forDeleteLoc.equalsIgnoreCase("")) {
+						
+						
+					}
+					else {
+						Block bee = bd.get(forDeleteLoc).getBlock();
+						//dprint.r.printAll("bd remove " +  tr.locationToString( bee.getLocation()  ) + " " + bee.getType().name() + ":" + bee.getData());
+						bd.remove(forDeleteLoc);
+					}
+					
 					
 
 				}
 
 			}
 
-			if (bd.size() >= 0) {
+	
 				DeleteRecursive_Thread newRun = new DeleteRecursive_Thread(bd, world, 0,ee,id,data,chunklimit,search);
 				Bukkit.getScheduler().scheduleSyncDelayedTask(ac, newRun, sleeptime);
-				return;
-			}
+				dprint.r.printAll("recalling > " +  " avg = " + (int)( (double)blockdo / (System.currentTimeMillis() - startTime +1) ));
 
 		}
 
@@ -4069,7 +4092,7 @@ public class dewset extends dewset_interface {
 			int ccc = 0;
 
 			if (bd.size() <= 0) {
-				bd.clear();
+				//bd.clear();
 				return;
 
 			}
@@ -4379,7 +4402,7 @@ public class dewset extends dewset_interface {
 				for (int x = 0 - dx; x <= 0 + dx; x++) {
 					for (int z = 0 - dx; z <= 0 + dx; z++) {
 						for (int y = 0 - dx; y <= 0 + dx; y++) {
-							blo = Bukkit.getWorld("world").getBlockAt(lo1).getRelative(x, y, z);
+							blo = player.getWorld().getBlockAt(lo1).getRelative(x, y, z);
 							if (d == 1) {
 								if (blo.getType().isBlock() == false) {
 									continue;
