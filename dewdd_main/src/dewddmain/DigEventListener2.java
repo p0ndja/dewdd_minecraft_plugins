@@ -319,24 +319,23 @@ public class DigEventListener2 implements Listener {
 
 			if (message.equalsIgnoreCase("pmain") == true) {
 
-				player.sendMessage("overide = " + Boolean.toString(player.hasPermission(dew.pmainoveride)));
-				player.sendMessage(
-						"dewbuy replace = " + Boolean.toString(player.hasPermission(dew.pmaindewbuyreplace)));
-				player.sendMessage(
-						"dewbuy notcount = " + Boolean.toString(player.hasPermission(dew.pmaindewbuynotcount)));
-
-				player.sendMessage(
-						"dew modify member = " + Boolean.toString(player.hasPermission(dew.pmaindewbuymodifymember)));
-
-				player.sendMessage(
-						"dewbuy changehost = " + Boolean.toString(player.hasPermission(dew.pmaindewbuydelete)));
-				player.sendMessage("dewbuy delete = " + Boolean.toString(player.hasPermission(dew.pmaindewbuydelete)));
-				player.sendMessage(
-						"dew modify member = " + Boolean.toString(player.hasPermission(dew.pmaindewbuymodifymember)));
-
-				player.sendMessage(
-						"dew dewset everywhere = " + Boolean.toString(player.hasPermission(dew.pmaindewseteverywhere)));
-
+				player.sendMessage(dew.phideshowrun + " " + Boolean.toString(player.hasPermission(dew.phideshowrun)));
+				
+				
+				player.sendMessage(dprint.r.color(dew.pmaindelete + " " + Boolean.toString(player.hasPermission(dew.pmaindelete))));
+				player.sendMessage(dprint.r.color(dew.pmaindewbuychangehost + " " + Boolean.toString(player.hasPermission(dew.pmaindewbuychangehost))));
+				player.sendMessage(dprint.r.color(dew.pmaindewbuydelete + " " + Boolean.toString(player.hasPermission(dew.pmaindewbuydelete))));
+				player.sendMessage(dprint.r.color(dew.pmaindewbuymodifymember + " " + Boolean.toString(player.hasPermission(dew.pmaindewbuymodifymember))));
+				player.sendMessage(dprint.r.color(dew.pmaindewbuynotcount + " " + Boolean.toString(player.hasPermission(dew.pmaindewbuynotcount))));
+				player.sendMessage(dprint.r.color(dew.pmaindewbuyreplace + " " + Boolean.toString(player.hasPermission(dew.pmaindewbuyreplace))));
+				player.sendMessage(dprint.r.color(dew.pmaindewseteverywhere + " " + Boolean.toString(player.hasPermission(dew.pmaindewseteverywhere))));
+				player.sendMessage(dprint.r.color(dew.pmaininfinite + " " + Boolean.toString(player.hasPermission(dew.pmaininfinite))));
+				player.sendMessage(dprint.r.color(dew.pmainoveride + " " + Boolean.toString(player.hasPermission(dew.pmainoveride))));
+				player.sendMessage(dprint.r.color(dew.pmainplaceblocknoprotect + " " + Boolean.toString(player.hasPermission(dew.pmainplaceblocknoprotect))));
+				player.sendMessage(dprint.r.color(dew.pmainalsocopyinventoryblockwhenyouusedewset + " " + Boolean.toString(player.hasPermission(dew.pmainalsocopyinventoryblockwhenyouusedewset))));
+				
+				
+				
 				return;
 
 			}

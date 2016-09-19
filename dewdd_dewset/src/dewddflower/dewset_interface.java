@@ -44,6 +44,8 @@ public abstract class dewset_interface extends dewsetdatabase {
 	public String pmainoveride = "dewdd.main.overide";
 
 	public String pmainplaceblocknoprotect = "dewdd.main.placeblock.noprotect";
+	
+	public String pmainalsocopyinventoryblockwhenyouusedewset = "dewdd.main.dewset.copyinventoryblocks";
 
 	public String flag_sign = "<sign>";
 

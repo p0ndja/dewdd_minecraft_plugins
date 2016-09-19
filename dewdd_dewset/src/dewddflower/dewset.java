@@ -1234,8 +1234,9 @@ public class dewset extends dewset_interface {
 								// ylx + "," + zlx + " mx " + mx + "," + my +
 								// "," + mz);
 
-								if (amount1 == 4 && api_admin.dewddadmin.is2admin(player)) {
+								if (amount1 == 3 &&  player.hasPermission(pmainalsocopyinventoryblockwhenyouusedewset)) {
 									
+
 									switch (hostBlock.getType() ) {
 									case CHEST:case TRAPPED_CHEST:
 										
@@ -1253,6 +1254,8 @@ public class dewset extends dewset_interface {
 											
 										}
 										
+										setChest.update(true);
+										
 										break;
 									case DISPENSER:
 										
@@ -1269,6 +1272,8 @@ public class dewset extends dewset_interface {
 											
 										}
 										
+										
+										setDispenser.update(true);
 										break;
 										
 									case HOPPER:
@@ -1285,6 +1290,7 @@ public class dewset extends dewset_interface {
 											
 										}
 										
+										setHopper.update(true);
 										
 										break;
 										
@@ -1302,6 +1308,8 @@ public class dewset extends dewset_interface {
 											continue;
 											
 										}
+										
+										setDropper.update(true);
 										
 										break;
 									}
@@ -1944,7 +1952,8 @@ public class dewset extends dewset_interface {
 							setSign.update(true);
 						}
 						
-						if (amountloop == 4 && api_admin.dewddadmin.is2admin(player)) {
+						if (amountloop == 3 && player.hasPermission(pmainalsocopyinventoryblockwhenyouusedewset)) {
+							
 							
 						switch (hostBlock.getType() ) {
 						case CHEST:case TRAPPED_CHEST:
@@ -1959,9 +1968,12 @@ public class dewset extends dewset_interface {
 								}
 								
 								setChest.getInventory().addItem(itm);
+								
 								continue;
 								
 							}
+							
+							setChest.update(true);
 							
 							break;
 						case DISPENSER:
@@ -1979,6 +1991,8 @@ public class dewset extends dewset_interface {
 								
 							}
 							
+							
+							setDispenser.update(true);
 							break;
 							
 						case HOPPER:
@@ -1995,6 +2009,7 @@ public class dewset extends dewset_interface {
 								
 							}
 							
+							setHopper.update(true);
 							
 							break;
 							
@@ -2012,6 +2027,8 @@ public class dewset extends dewset_interface {
 								continue;
 								
 							}
+							
+							setDropper.update(true);
 							
 							break;
 						}
