@@ -339,7 +339,12 @@ public class DigEventListener2 implements Listener {
 			} else if (give.equalsIgnoreCase("giveitem")) {
 
 				for (Player pr : Bukkit.getOnlinePlayers()) {
-
+					if (pr.isFlying()){
+						if (!pr.hasPermission("essentials.fly")) {
+							pr.kickPlayer(tr.gettr("kick_cuz can fly but not vip"));
+							continue;
+						}
+					}
 					// check that player have item name
 
 					boolean don = false;
