@@ -18,7 +18,7 @@ public class Main extends JavaPlugin {
 	@Override
 	public void onDisable() {
 		this.getServer().getPluginManager().disablePlugin(this);
-		dprint.r.printAll("ptdew&dewdd : " + tr.gettr("unloaded_plugin") + "  dewdd dewset System");
+		dprint.r.printAll("ptdew&dewdd : " + tr.gettr("unloaded_plugin") + "  dewdd gravity");
 	}
 
 	@Override
@@ -33,7 +33,7 @@ public class Main extends JavaPlugin {
 
 		this.getServer().getPluginManager().registerEvents(this.ax, this);
 
-		dprint.r.printAll("ptdew&dewdd : " + tr.gettr("loaded_plugin") + "  dewdd dewset System");
+		dprint.r.printAll("ptdew&dewdd : " + tr.gettr("loaded_plugin") + "  dewdd gravity");
 
 	}
 

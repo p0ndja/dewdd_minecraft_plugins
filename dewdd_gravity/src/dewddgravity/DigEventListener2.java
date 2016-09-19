@@ -6,20 +6,21 @@
 package dewddgravity;
 
 import java.util.LinkedList;
-import java.util.Map.Entry;
 import java.util.Random;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
+import org.bukkit.block.Chest;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
-import org.bukkit.event.block.BlockPhysicsEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import dewddtran.tr;
@@ -28,19 +29,15 @@ class Gravity implements Runnable {
 	public Boolean canc = false;
 
 	public static int r = 1;
-	public static int search = 3;
-	public static int stick = 4;
-	public static int rRoot = 10;
+	public static int stick = 5;
 
-	private Block block;
-	private Block middle;
+	private Block start;
 
 	private Player player = null;
 	private int curDelay = 40;
 
-	public Gravity(Block block, Player player, Block middle, int curDelay) {
-		this.block = block;
-		this.middle = middle;
+	public Gravity(Block start, Player player, int curDelay) {
+		this.start = start;
 		this.player = player;
 		this.curDelay = curDelay;
 		Random rnd = new Random();
@@ -52,72 +49,155 @@ class Gravity implements Runnable {
 
 	}
 
-	class RootType {
-		boolean foundRoot = false;
-		int amount = 0;
-
-	}
-
-	public void isThisBlockHasRoot(Block cur, Block start, RootType root) {
+	public boolean isThisBlockHasRoot(Block cur, Block start) {
 		Block b2 = null;
+		cur.setType(Material.STAINED_GLASS_PANE);
 
-		root.amount++;
+		Random rnd = new Random();
+		cur.setData((byte) rnd.nextInt(15));
 		/*
 		 * if (root.amount > 10) { root.amount -- ; return; }
 		 */
 
-		for (int y = -r; y <= -1 && cur.getY() + y >= 0; y++) {
-			for (int x = -r; x <= r; x++) {
-				for (int z = -r; z <= r; z++) {
-					if (root.foundRoot == true) {
-						return;
-					}
-					if (x == 0 && y == 0 && z == 0) {
-						continue;
-					}
+		for (int x = -r; x <= r; x++) {
 
-					b2 = cur.getRelative(x, y, z);
-					// b2.setType(Material.LOG);
+			for (int z = -r; z <= r; z++) {
 
-					double xxx = Math.abs(b2.getX() - start.getX());
-					double zzz = Math.abs(b2.getZ() - start.getZ());
+				/*
+				 * if (x == 0 && z == 0) { continue; }
+				 */
 
-					double dis = (xxx * xxx) + (zzz * xxx);
-					dis = Math.pow(dis, 0.5);
+				b2 = cur.getRelative(x, -1, z);
+				// b2.setType(Material.LOG);
 
-					if (dis > 5) {
-						continue;
-					}
+				double xxx = Math.abs(b2.getX() - start.getX());
+				double zzz = Math.abs(b2.getZ() - start.getZ());
 
-					/*
-					 * if (b2.getLocation().distance(start.getLocation()) > 5) {
-					 * continue; }
-					 */
+				double dis = (xxx * xxx) + (zzz * zzz);
+				dis = Math.pow(dis, 0.5);
 
-					if (b2.getType() == Material.AIR) {
-						continue;
-					}
+				/*
+				 * if (dis > stick) { continue; }
+				 */
 
-					/*
-					 * if (b2.getType().isSolid() == false) { continue; }
-					 */
-
-					if (b2.getType() != Material.AIR) {
-						if (b2.getY() > start.getY() - rRoot && b2.getY() > 0) {
-							// more research !
-
-							isThisBlockHasRoot(b2, start, root);
-						} else {
-							root.foundRoot = true;
-							return;
-						}
-					}
-
+				if (xxx > stick || zzz > stick) {
+					continue;
 				}
+
+				/*
+				 * if (Math.abs(b2.getY() - start.getY()) > stick) { continue; }
+				 */
+				/*
+				 * if (b2.getLocation().distance(start.getLocation()) > 5) {
+				 * continue; }
+				 */
+
+				/*
+				 * if (b2.getType().isSolid() == false) { continue; }
+				 */
+
+				// if (b2.getY() > start.getY() - rRoot && b2.getY() >
+				// 0) {
+				if (b2.getY() > 0) {
+					// more research !
+					if (Gravity.needBlock(b2) == false) {
+						continue;
+					}
+
+					return isThisBlockHasRoot(b2, start);
+
+				} else {
+
+					if (Gravity.needBlock(b2) == false) {
+						return false;
+					} else {
+						return true;
+					}
+				}
+
 			}
+
+		}
+		// }
+		return false;
+	}
+
+	public static boolean needBlock(Block block) {
+		switch (block.getType()) {
+		case STATIONARY_WATER:
+		case WATER:
+		case STATIONARY_LAVA:
+		case LAVA:
+		case AIR:
+	   //case STAINED_GLASS_PANE:
+			return false;
+		default:
+			return true;
 		}
 
-		root.amount--;
+	}
+
+	public void recusiveSearchBlock(Block cur, Block start, LinkedList<Block> list) {
+		// add
+
+		Block tmp = null;
+		int searchSpace = r;
+		for (int x = -searchSpace; x <= searchSpace; x++) {
+
+			for (int z = -searchSpace; z <= searchSpace; z++) {
+				tmp = cur.getRelative(x, 0, z);
+				// dprint.r.printAll("loca " +
+				// tr.locationToString(tmp.getLocation()));
+
+				double xxx = Math.abs(tmp.getX() - start.getX());
+				double zzz = Math.abs(tmp.getZ() - start.getZ());
+
+				double dis = (xxx * xxx) + (zzz * zzz);
+				dis = Math.pow(dis, 0.5);
+
+				/*
+				 * if (dis > stick) { continue; }
+				 */
+
+				if (xxx > stick || zzz > stick) {
+					continue;
+				}
+
+				if (Gravity.needBlock(tmp) == true) {
+					// open it
+
+					boolean searchChest = false;
+					for (int i = 0; i < list.size(); i++) {
+						Block inList = list.get(i);
+
+						if (tmp.getLocation().getBlockX() == inList.getX()) {
+							if (tmp.getLocation().getBlockY() == inList.getY()) {
+								if (tmp.getLocation().getBlockZ() == inList.getZ()) {
+									searchChest = true;
+									break;
+								}
+							}
+						}
+					}
+					if (searchChest == true) {
+						continue;
+					}
+
+					list.add(tmp);
+
+					// dprint.r.printAll("found block " +
+					// tr.locationToString(tmp.getLocation())
+					// + " size " + list.size());
+
+					// call recursive
+
+					recusiveSearchBlock(tmp, start, list);
+
+				} // chest
+			}
+
+		}
+
 	}
 
 	@Override
@@ -129,45 +209,90 @@ class Gravity implements Runnable {
 
 		Block b2 = null;
 
-		if (block.getY() == 0) {
+		if (start.getY() == 0) {
 			return;
 		}
-		if (block.getType() == Material.AIR) {
+		if (Gravity.needBlock(start) == false) {
 			return;
 		}
-		if (block.getRelative(0, -1, 0).getType() != Material.AIR) {
+		if (start.getRelative(0, -1, 0).getType() != Material.AIR) {
 			return;
 		}
 
-		RootType root = new RootType();
-		root.foundRoot = false;
+		LinkedList<Block> list = new LinkedList<Block>();
+		list.add(start);
 
-		for (int x = -stick; x <= stick; x++) {
-			for (int z = -stick; z <= stick; z++) {
-				if (root.foundRoot == true) {
-					return;
+		// dprint.r.printAll("start " +
+		// tr.locationToString(start.getLocation()));
+
+		recusiveSearchBlock(start, start, list);
+
+		int gx = 0;
+		if (gx == 0) {
+			/*
+			 * for (int l = 0 ; l < list.size() ; l ++) {
+			 * dprint.r.printAll(tr.locationToString( list.get(l).getLocation())
+			 * + " " + list.size()) ; } return;
+			 */
+		}
+
+		Random rnd = new Random();
+
+		for (int l = 0; l < list.size(); l++) {
+			Block cur = list.get(l);
+
+		}
+
+		boolean found = false;
+		for (int l = 0; l < list.size(); l++) {
+			Block cur = list.get(l);
+			// cur.setType(Material.LOG);
+			// cur.setData((byte) rnd.nextInt(4));
+			cur.setType(Material.STAINED_GLASS);
+			cur.setData((byte) rnd.nextInt(15));
+
+			for (int x = -r; x <= r; x++) {
+				for (int z = -r; z <= r; z++) {
+
+					b2 = cur.getRelative(x, -1, z);
+
+					if (Gravity.needBlock(b2) == false) {
+						continue;
+					}
+
+					found = isThisBlockHasRoot(b2, start);
+					if (found == true) {
+						break;
+					}
+
 				}
+				if (found == true) {
+					break;
+				}
+			}
 
-				b2 = block.getRelative(x, 0, z);
-				isThisBlockHasRoot(b2, block, root);
+			if (found == true) {
+				break;
 			}
 		}
 
-		if (root.foundRoot == false) {
-			Material mat = block.getType();
-			byte data = block.getData();
-			block.setTypeId(0, false);
-			block.getWorld().spawnFallingBlock(block.getLocation(), mat, data);
+		if (found == false) {
+			Material mat = start.getType();
+			byte data = start.getData();
+			start.setTypeId(0, true);
+			start.getWorld().spawnFallingBlock(start.getLocation(), mat, data);
 
 			int counter = 0;
 
-			for (int x = -search; x <= search; x++) {
-				for (int y = -search; y <= search; y++) {
-					for (int z = -search; z <= search; z++) {
-						counter++;
-						b2 = block.getRelative(x, y, z);
+			int tmpr = Gravity.r;
 
-						if (b2.getType() == Material.AIR) {
+			for (int x = -tmpr; x <= tmpr; x++) {
+				for (int y = -tmpr; y <= tmpr; y++) {
+					for (int z = -tmpr; z <= tmpr; z++) {
+						counter++;
+						b2 = start.getRelative(x, y, z);
+
+						if (Gravity.needBlock(b2) == false) {
 							continue;
 						}
 
@@ -200,15 +325,13 @@ class TheJobType {
 		 * if (blo.getType().isSolid() == false) { return; }
 		 */
 
-		if (blo.getType() == Material.AIR) {
+		if (Gravity.needBlock(blo) == false) {
 			return;
-
 		}
-		
 		// search
 		if (this.loc.contains(loc) == false) {
-		
-		this.loc.add(loc);
+
+			this.loc.add(loc);
 
 		}
 		// dprint.r.printAll("put new " + MainLoop.jobs.getSize());
@@ -218,7 +341,8 @@ class TheJobType {
 		boolean found = false;
 		Location tmp2 = null;
 
-		while (found == false && loc.size() >= 1) {
+		while (found == false && loc.size() > 0) {
+			// dprint.r.printAll("get()k size " + loc.size());
 
 			Location tmp = loc.get(0);
 			loc.remove(0);
@@ -227,7 +351,7 @@ class TheJobType {
 				continue;
 			}
 
-			if (tmp.getBlock().getType() == Material.AIR) {
+			if (Gravity.needBlock(tmp.getBlock()) == false) {
 				continue;
 			}
 
@@ -255,15 +379,30 @@ class MainLoop implements Runnable {
 	@Override
 	public void run() {
 		// always get Item from jobs
-	
-		
+
+		int done = 0;
+
+		while (done <= 100 && jobs.getSize() > 0) {
+			// dprint.r.printAll("done size " + done + " , " + jobs.getSize());
+
 			Location loc = jobs.get();
 
 			if (loc != null) {
+
 				Block blo = loc.getBlock();
-				Gravity noop = new Gravity(blo, null, blo, 1);
-				dprint.r.printAll("size " + jobs.getSize());
+				if (Gravity.needBlock(blo) == false) {
+					continue;
+				}
+
+				Gravity noop = new Gravity(blo, null, 1);
+				done++;
+
 			}
+		}
+
+		if (jobs.getSize() > 0) {
+			dprint.r.printC("size " + jobs.getSize());
+		}
 
 	}
 }
@@ -282,7 +421,7 @@ class Delay implements Runnable {
 		}
 
 		MainLoop mainLoop = new MainLoop();
-		Bukkit.getScheduler().scheduleSyncRepeatingTask(DigEventListener2.ac, mainLoop, 0, 1);
+		Bukkit.getScheduler().scheduleSyncRepeatingTask(DigEventListener2.ac, mainLoop, 0, 4);
 
 	}
 }
@@ -303,31 +442,27 @@ public class DigEventListener2 implements Listener {
 	// BlockPlaceEvent
 
 	@EventHandler
-	public void eventja(BlockPhysicsEvent e) {
+	public void eventja(PlayerInteractEvent e) {
 
-		Block block = e.getBlock();
-		Block b2 = null;
-
-		int r = Gravity.r;
-		int counter = 0;
-
-		for (int x = -r; x <= r; x++) {
-			for (int y = -r; y <= r; y++) {
-				for (int z = -r; z <= r; z++) {
-					counter++;
-					b2 = block.getRelative(x, y, z);
-					/*
-					 * if (b2.getType() == Material.AIR) { continue; }
-					 */
-					// Gravity noop = new Gravity(b2, null, block, counter *
-					// 25);
-					MainLoop.jobs.put(b2.getLocation());
-
-				}
-			}
-
-		}
-
+		/*
+		 * Block block = e.getPlayer().getLocation().getBlock(); Block b2 =
+		 * null;
+		 * 
+		 * int r = Gravity.r; int counter = 0;
+		 * 
+		 * for (int x = -r; x <= r; x++) { for (int y = -r; y <= r; y++) { for
+		 * (int z = -r; z <= r; z++) { counter++; b2 = block.getRelative(x, y,
+		 * z);
+		 * 
+		 * if (b2.getType() == Material.AIR) { continue; }
+		 * 
+		 * // Gravity noop = new Gravity(b2, null, block, counter * // 25);
+		 * MainLoop.jobs.put(b2.getLocation());
+		 * 
+		 * } }
+		 * 
+		 * }
+		 */
 	}
 
 	@EventHandler
@@ -339,7 +474,7 @@ public class DigEventListener2 implements Listener {
 		Block block = e.getBlock();
 		Block b2 = null;
 
-		int r = Gravity.search;
+		int r = Gravity.r;
 		int counter = 0;
 
 		for (int x = -r; x <= r; x++) {
@@ -380,7 +515,7 @@ public class DigEventListener2 implements Listener {
 		Block block = e.getBlock();
 		Block b2 = null;
 
-		int r = Gravity.search;
+		int r = Gravity.r;
 		int counter = 0;
 		for (int x = -r; x <= r; x++) {
 			for (int y = -r; y <= r; y++) {
