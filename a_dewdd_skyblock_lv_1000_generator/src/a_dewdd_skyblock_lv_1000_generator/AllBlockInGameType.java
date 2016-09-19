@@ -5,6 +5,7 @@ public class AllBlockInGameType {
 	public byte data;
 	public int maxStack;
 	public boolean isBlock = false;
+	
 	public int atTheEndNeed = 0;
 
 	public int curAmount = 0;

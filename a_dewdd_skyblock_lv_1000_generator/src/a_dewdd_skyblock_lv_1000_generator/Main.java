@@ -22,9 +22,13 @@ class HybridOverride extends Hybrid {
 
 		for (int i = 0; i < tmpSell.size(); i++) {
 
-			if (printPls == true)
-				d.pl("tmpSell : " + i + " = " + tmpSell.get(i).theName + ":" + tmpSell.get(i).data + ":"
+			if (printPls == true) {
+				AllBlockInGameType ec = Main.co.allBlockInGameAsList.get(tmpSell.get(i).index);
+				d.pl("tmpSell : " + i + " = " + ec.theName + ":" + ec.data + ":"
 						+ tmpSell.get(i).timeToGet + ":" + tmpSell.get(i).sellPerPrice);
+				
+				
+			}
 		}
 
 		// Shop
@@ -294,7 +298,7 @@ public class Main {
 
 		co = new Core();
 
-		co.loadSellableFile();
+		
 		/*
 		 * LinkedList<SellableType> sorted = co.sortSell(co.sell);
 		 * 
@@ -317,25 +321,26 @@ public class Main {
 
 		co.loadMissionBlockFile();
 		
-		
+		co.loadSellableFile();
 		// search the all block in game don't have block from sellable
 		
 		for (int i = 0 ; i < co.sellAsList.size() ; i ++ ) {
 			SellableType e = co.sellAsList.get(i);
-			
+			AllBlockInGameType e2 = co.allBlockInGameAsList.get(e.index);
 			// search in
 			boolean foundx = false;
 			for (int j = 0; j < co.allBlockInGameAsList.size() ; j ++ ) {
 				AllBlockInGameType f = co.allBlockInGameAsList.get(j);
 				
-				if (e.theName.equalsIgnoreCase(f.theName) && e.data == f.data) {
+				
+				if (e2.theName.equalsIgnoreCase(f.theName) && e2.data == f.data) {
 					foundx = true;
 					break;
 				}
 			}
 			
 			if (foundx == false ) {
-				d.pl("sellable not in the list " + e.theName + ":" + e.data);
+				d.pl("sellable not in the list " + e2.theName + ":" + e2.data);
 				
 			}
 		}

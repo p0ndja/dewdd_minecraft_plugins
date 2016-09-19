@@ -18,7 +18,6 @@ public class Core {
 	class ParameterLVType {
 		public LinkedList<LV1000Type> outputLV = new LinkedList<LV1000Type>();
 
-
 	}
 
 	class ParameterRandomAmountItem {
@@ -60,7 +59,6 @@ public class Core {
 	public static int maxRewardDiffBlockType = 10;
 
 	public static int minRewardDiffBlockType = 1;
-	
 
 	public static int maxShopSize = 10;
 
@@ -192,12 +190,10 @@ public class Core {
 
 		d.pl("converted tmpShop to AllShop ");
 	}
-	
-	
-	public void addNeedItemToLV(ParameterLVType paraLV ) {
+
+	public void addNeedItemToLV(ParameterLVType paraLV) {
 		ParameterRandomUniqueItem rUnique = new ParameterRandomUniqueItem();
 		decodeRandomUniqueItem(rUnique);
-
 
 		ParameterRandomAmountItem amountUniqueItemPerLV = new ParameterRandomAmountItem();
 		decodeRandomSumAmount417ForAllShop(amountUniqueItemPerLV);
@@ -205,7 +201,7 @@ public class Core {
 		// add need item
 
 		// loop all level
-		
+
 		int cur = 0;
 		int curLV = 0;
 		while (cur < allBlockInGameAsList.size()) {
@@ -216,10 +212,9 @@ public class Core {
 			l.needData = new byte[amountUniqueItemPerLV.amount[curLV]];
 			l.needSize = 0;
 
-			d.pl("decode lv need " + curLV +" = " +
-			amountUniqueItemPerLV.amount[curLV] + " cur chro " + curChro + " , cur " + cur);
-			
-			
+			d.pl("decode lv need " + curLV + " = " + amountUniqueItemPerLV.amount[curLV] + " cur chro " + curChro
+					+ " , cur " + cur);
+
 			// add all item need it current level
 			for (int j = 0; j < amountUniqueItemPerLV.amount[curLV] && cur < allBlockInGameAsList.size(); j++) {
 				AllBlockInGameType eof = allBlockInGameAsList.get(rUnique.index[cur]);
@@ -232,75 +227,68 @@ public class Core {
 				}
 
 				l.needSize++;
-				cur ++;
+				cur++;
 
 			}
-			
+
 			paraLV.outputLV.add(l);
-			curLV ++;
+			curLV++;
 		}
 	}
-	
-	public void addRewardItemToLV(ParameterLVType paraLV ) {
-		
+
+	public void addRewardItemToLV(ParameterLVType paraLV) {
+
 		// each lv
-		for ( int i = 0 ; i < paraLV.outputLV.size() ; i ++ ) {
+		for (int i = 0; i < paraLV.outputLV.size(); i++) {
 			LV1000Type e = paraLV.outputLV.get(i);
-			
+
 			int amountReward = 0;
-			double tmp01 =  decodeRandomGive01_();
-			
+			double tmp01 = decodeRandomGive01_();
+
 			// 10 - 1 = 9
-			double maxmin =(maxRewardDiffBlockType - minRewardDiffBlockType);
-			
-			amountReward =(int) ( Math.round(
-					(tmp01 * maxmin))+minRewardDiffBlockType );
-			
-			if (amountReward > maxRewardDiffBlockType) amountReward = maxRewardDiffBlockType;
-			if (amountReward < minRewardDiffBlockType) amountReward = minRewardDiffBlockType;
-			
+			double maxmin = (maxRewardDiffBlockType - minRewardDiffBlockType);
+
+			amountReward = (int) (Math.round((tmp01 * maxmin)) + minRewardDiffBlockType);
+
+			if (amountReward > maxRewardDiffBlockType)
+				amountReward = maxRewardDiffBlockType;
+			if (amountReward < minRewardDiffBlockType)
+				amountReward = minRewardDiffBlockType;
+
 			// after know amount
-			
-			
+
 			e.rewardSize = 0;
-			
+
 			e.rewardData = new byte[amountReward];
 			e.rewardAmount = new int[amountReward];
-			e.rewardItem = new String [amountReward];
-			
-			d.pl("decode lv reward " + i +" = " +
-					amountReward + " cur chro " + curChro);
-			
-			for (int j = 0 ; j < amountReward ; j ++ ) {
+			e.rewardItem = new String[amountReward];
+
+			d.pl("decode lv reward " + i + " = " + amountReward + " cur chro " + curChro);
+
+			for (int j = 0; j < amountReward; j++) {
 				double g = decodeRandomGive01_() * allBlockInGameAsList.size();
-				
-				int index =  (int) (g);
-				
+
+				int index = (int) (g);
+
 				e.rewardData[j] = allBlockInGameAsList.get(index).data;
 				e.rewardItem[j] = allBlockInGameAsList.get(index).theName;
 				e.rewardAmount[j] = (int) Math.round(decodeRandomGive01_() * allBlockInGameAsList.get(index).maxStack);
-				
-				
-				
+
 			}
-			
-			
+
 			e.rewardSize = amountReward;
-			
-			
+
 		}
 	}
 
 	public void decodeTmpLV(ParameterLVType paraLV) {
 
 		// random unique item
-		
+
 		addNeedItemToLV(paraLV);
-		
+
 		addRewardItemToLV(paraLV);
-		
-	
-		
+
 	}
 
 	public void decodeRandomSumAmount417ForAllShop(ParameterRandomAmountItem para) {
@@ -309,31 +297,32 @@ public class Core {
 		for (int i = 0; i < allBlockInGameAsList.size(); i++) {
 			para.amount[i] = 0;
 		}
-		
 
 		int countItem = 0;
 		while (countItem < allBlockInGameAsList.size()) {
 			d.pl("countItem , " + countItem + " , curChro " + curChro);
-			
+
 			double max = (maxShopSize - minShopSize); // 1 / 7
 
 			double tmpReadChro = decodeRandomGive01_(); // random
-			
-				double curAmount = Math.round(tmpReadChro * max) + minShopSize; // 3 - 7
-				
-				para.amount[countItem] = (int) curAmount;
-				if (para.amount[countItem] <= 0) {
-					para.amount[countItem] = 1;
-				}
 
-			countItem ++;
-			
+			double curAmount = Math.round(tmpReadChro * max) + minShopSize; // 3
+																			// -
+																			// 7
+
+			para.amount[countItem] = (int) curAmount;
+			if (para.amount[countItem] <= 0) {
+				para.amount[countItem] = 1;
+			}
+
+			countItem++;
+
 			// 417 > 417
 			if (countItem > allBlockInGameAsList.size()) {
 				int tmb = (countItem - allBlockInGameAsList.size());
-				
-					d.pl("decodeRandumSumAmount Shouldn't be here : " + tmb);
-				
+
+				d.pl("decodeRandumSumAmount Shouldn't be here : " + tmb);
+
 				countItem = allBlockInGameAsList.size() - 1;
 				para.amount[countItem] = tmb;
 
@@ -556,11 +545,10 @@ public class Core {
 			usedItRewardList[i] = false;
 		}
 
-
 		decodeTmpLV(tmp4);
 
 		d.pl("abc");
-		d.pl("end curChro " + curChro );
+		d.pl("end curChro " + curChro);
 	}
 
 	public void getNextBlockSwapMissionType(int swapNextxTime, int iNeedBlock, boolean usedItList[]) {
@@ -675,11 +663,10 @@ public class Core {
 				miss.data = Byte.parseByte(m[1]);
 				miss.maxStack = Integer.parseInt(m[2]);
 				miss.isBlock = Boolean.parseBoolean(m[3]);
-				
+
 				if (m.length == 5) {
 					miss.atTheEndNeed = Integer.parseInt(m[4]);
-				}
-				else {
+				} else {
 					miss.atTheEndNeed = 0;
 				}
 
@@ -733,14 +720,23 @@ public class Core {
 				// Print the content on the console
 
 				SellableType sb = new SellableType();
-				sb.theName = m[0];
-				sb.data = Byte.parseByte(m[1]);
-				sb.maxStack = Integer.parseInt(m[2]);
-				sb.timeToGet = convertStringToTime(m[3]);
-				// rs[rsMax - 1].mission = 0;
+				/*
+				 * sb.theName = m[0]; sb.data = Byte.parseByte(m[1]);
+				 * sb.maxStack = Integer.parseInt(m[2]);
+				 */
 
-				sellAsList.add(sb);
-				sell.put(sb.theName + ":" + sb.data, sb);
+				AllBlockInGameType eco = allBlockInGame.get(m[0] + ":" + m[1]);
+				if (eco == null) {
+					d.pl("load error ");
+				} else {
+					sb.index = getIndexFromKeyAlBlockInGame(m[0] + ":" + m[1]);
+					sb.timeToGet = convertStringToTime(m[3]);
+					// rs[rsMax - 1].mission = 0;
+
+					sellAsList.add(sb);
+					sell.put(eco.theName + ":" + eco.data, sb);
+				}
+
 			}
 
 			d.pl(" Loaded " + filena);
@@ -749,6 +745,21 @@ public class Core {
 		} catch (Exception e) {// Catch exception if any
 			d.pl("Error load " + filena + e.getMessage());
 		}
+	}
+
+	public int getIndexFromKeyAlBlockInGame(String abc) {
+		int index = -1;
+		for (int i = 0; i < allBlockInGameAsList.size(); i++) {
+			AllBlockInGameType e = allBlockInGameAsList.get(i);
+
+			String eo = e.theName + ":" + e.data;
+			if (eo.equalsIgnoreCase(abc)) {
+				index = i;
+				break;
+			}
+		}
+
+		return index;
 	}
 
 	public LinkedList<SellableType> sortSell(LinkedList<SellableType> sortPls) {
