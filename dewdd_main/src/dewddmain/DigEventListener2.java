@@ -2156,6 +2156,9 @@ public class DigEventListener2 implements Listener {
 	public void eventja(ItemDespawnEvent event) {
 		if (!tr.isrunworld(ac.getName(), event.getEntity().getWorld().getName()))
 			return;
+		
+		if (tr.isrunworld("dewddcreative", event.getEntity().getWorld().getName() ))
+			return;
 
 		if (event.getEntity().getItemStack().getTypeId() == 344)
 			return;

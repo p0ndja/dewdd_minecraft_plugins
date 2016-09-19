@@ -134,14 +134,9 @@ public  class api_creative {
 
 	}
 
-	public boolean isadminname(String playername) {
-		return true;
-	}
+
 
 	public boolean isprotectedarea(Block block) {
-		if (block.getWorld().getName().equalsIgnoreCase("world_the_end") == true) {
-			return true;
-		}
 
 		int zx = 5;
 		int zz = 5;
