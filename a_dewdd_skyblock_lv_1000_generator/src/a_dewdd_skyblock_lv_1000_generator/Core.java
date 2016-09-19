@@ -69,7 +69,7 @@ public class Core {
 
 	public static double SellMaxCost = 100;
 
-	public static double ShopMaxCost = 10000;
+	public static double ShopMaxCost = 1000;
 
 	public static double maxMoney = 100000;
 
@@ -170,6 +170,8 @@ public class Core {
 				double g = decodeRandomGive01_() * allBlockInGameAsList.size();
 
 				int index = (int) (g);
+				if (index >= allBlockInGameAsList.size()) index = allBlockInGameAsList.size() - 1;
+				
 
 				e.rewardIndex[j] = index;
 				e.rewardAmount[j] = (int) Math.round(decodeRandomGive01_() * allBlockInGameAsList.get(index).maxStack);
