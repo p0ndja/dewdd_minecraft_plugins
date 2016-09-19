@@ -60,11 +60,6 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.potion.PotionEffectType;
 
 import api_admin.dewddadmin;
-
-import com.earth2me.essentials.api.Economy;
-import com.earth2me.essentials.api.NoLoanPermittedException;
-import com.earth2me.essentials.api.UserDoesNotExistException;
-
 import dewddflower.dewset;
 import dewddtran.tr;
 
@@ -1702,7 +1697,7 @@ public class DigEventListener2 implements Listener {
 	// synchronized
 	@EventHandler
 	public void eventja(AsyncPlayerChatEvent event)
-			throws UserDoesNotExistException, NoLoanPermittedException {
+			 {
 
 		if (!tr.isrunworld(ac.getName(), event.getPlayer().getWorld().getName()))
 			return;
@@ -1984,8 +1979,7 @@ public class DigEventListener2 implements Listener {
 	}
 
 	@EventHandler
-	public void eventja(BlockDamageEvent event)
-			throws UserDoesNotExistException, NoLoanPermittedException {
+	public void eventja(BlockDamageEvent event){
 
 		if (!tr.isrunworld(ac.getName(), event.getPlayer().getWorld().getName()))
 			return;
@@ -2081,7 +2075,7 @@ public class DigEventListener2 implements Listener {
 	// BlockPlaceEvent
 	@EventHandler
 	public void eventja(BlockPlaceEvent event)
-			throws UserDoesNotExistException, NoLoanPermittedException {
+			 {
 
 		if (!tr.isrunworld(ac.getName(), event.getPlayer().getWorld().getName()))
 			return;
@@ -2921,7 +2915,7 @@ public class DigEventListener2 implements Listener {
 
 	@EventHandler
 	public void eventja(PlayerGameModeChangeEvent event)
-			throws UserDoesNotExistException, NoLoanPermittedException {
+			{
 
 		if (!tr.isrunworld(ac.getName(), event.getPlayer().getWorld().getName()))
 			return;
@@ -2931,8 +2925,8 @@ public class DigEventListener2 implements Listener {
 			if (player.hasPermission("essentials.gamemode") == false) {
 				event.setCancelled(true);
 				player.setGameMode(GameMode.SURVIVAL);
-				Economy.setMoney(player.getName(),
-						Economy.getMoney(player.getName()) - 500);
+			/*	Economy.setMoney(player.getName(),
+						Economy.getMoney(player.getName()) - 500);*/
 
 				dprint.r.printAll("ptdew&dewdd :" + player.getName()
 						+ tr.gettr("can_be_creative_mode_not_admin"));
@@ -3182,7 +3176,7 @@ public class DigEventListener2 implements Listener {
 
 	@EventHandler
 	public void eventja(PlayerJoinEvent event)
-			throws UserDoesNotExistException, NoLoanPermittedException {
+			 {
 		if (!tr.isrunworld(ac.getName(), event.getPlayer().getWorld().getName()))
 			return;
 
@@ -3278,7 +3272,7 @@ public class DigEventListener2 implements Listener {
 
 	@EventHandler
 	public void eventja(SignChangeEvent event)
-			throws UserDoesNotExistException, NoLoanPermittedException {
+			 {
 		if (!tr.isrunworld(ac.getName(), event.getPlayer().getWorld().getName()))
 			return;
 

@@ -31,11 +31,6 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import api_skyblock.api_skyblock;
-
-import com.earth2me.essentials.api.Economy;
-import com.earth2me.essentials.api.NoLoanPermittedException;
-import com.earth2me.essentials.api.UserDoesNotExistException;
-
 import dewddtran.tr;
 
 public class dewset extends dewset_interface {
@@ -1461,7 +1456,7 @@ public class dewset extends dewset_interface {
 						.color("countblock == -1 , but admin we change it to 1"));
 			}
 
-			double buymoneyp = countblock
+			/*double buymoneyp = countblock
 					* api_private.dewddprivate.buy1blockmoney;
 
 			player.sendMessage(dprint.r.color("ptdew&dewdd :" + tr.gettr("buy")
@@ -1499,7 +1494,9 @@ public class dewset extends dewset_interface {
 			catch (UserDoesNotExistException | NoLoanPermittedException err) {
 				dprint.r.printAll("error economy while dewbuy "
 						+ err.getCause().getMessage());
-			}
+			}*/
+			
+			
 			player.sendMessage(dprint.r
 					.color("x"
 							+ ","
@@ -1714,7 +1711,7 @@ public class dewset extends dewset_interface {
 				player.sendMessage(dprint.r.color("ptdew&dewdd : "
 						+ tr.gettr("dewbuyzone_thiszonepriceis") + mon));
 
-				try {
+				/*try {
 					if (Economy.getMoney(player.getName()) < mon) {
 						player.sendMessage(dprint.r.color("ptdew&dewdd : "
 								+ tr.gettr("don't_have_enough_money") + " for"
@@ -1733,7 +1730,7 @@ public class dewset extends dewset_interface {
 				catch (UserDoesNotExistException | NoLoanPermittedException e) {
 
 					e.printStackTrace();
-				}
+				}*/
 				for (int g = 0; g <= 19; g++) {
 					dewsignname[getworldid(player.getWorld().getName())][homeid][g] = "null";
 				}
@@ -3253,7 +3250,7 @@ public class dewset extends dewset_interface {
 					continue;
 				}
 
-				try {
+			/*	try {
 					if (Economy.getMoney(player.getName()) < api_private.dewddprivate.buy1blockmoney) {
 						player.sendMessage(dprint.r
 								.color("ptdew&dewdd : dewsetprivate "
@@ -3277,7 +3274,7 @@ public class dewset extends dewset_interface {
 				catch (UserDoesNotExistException | NoLoanPermittedException e) {
 
 					e.printStackTrace();
-				}
+				}*/
 
 			}
 
@@ -4440,26 +4437,26 @@ public class dewset extends dewset_interface {
 
 			if (dat != -29 && block.getData() != dat) return;
 
-			try {
+			/*try {
 				if (Economy.getMoney(player.getName()) < 100) return;
 			}
 			catch (UserDoesNotExistException e1) {
 
 				e1.printStackTrace();
-			}
+			}*/
 
 			if (amount3 > player.getItemInHand().getAmount() * 100) return;
 
 			if (checkpermissionarea(block, player, "delete") == true) return;
 			if (isprotectitemid(block.getTypeId()) == true) return;
 
-			try {
+		/*	try {
 				Economy.subtract(player.getName(), 10);
 			}
 			catch (UserDoesNotExistException | NoLoanPermittedException e) {
 
 				e.printStackTrace();
-			}
+			}*/
 
 			amount3++;
 
@@ -4473,14 +4470,14 @@ public class dewset extends dewset_interface {
 
 						if (amount2 > 100) return;
 						amount2++;
-						try {
+					/*	try {
 							item55delete(b2, player, id, dat);
 						}
 						catch (UserDoesNotExistException
 								| NoLoanPermittedException e) {
 
 							e.printStackTrace();
-						}
+						}*/
 						amount2--;
 					}
 				}
@@ -4924,24 +4921,25 @@ public class dewset extends dewset_interface {
 	public void addfoodwithmoney(Player player) {
 		if (player.getName().equalsIgnoreCase("") == false) return;
 
-		try {
-			while (player.getFoodLevel() < 20
+
+			/*while (player.getFoodLevel() < 20
 					&& Economy.getMoney(player.getName()) > 1) {
 
 				Economy.setMoney(player.getName(),
 						Economy.getMoney(player.getName()) - 1);
 				player.setFoodLevel(player.getFoodLevel() + 1);
 
+			}*/
+			
+				while (player.getFoodLevel() < 20
+					) {
+
+				
+				player.setFoodLevel(player.getFoodLevel() + 1);
+
 			}
-		}
-		catch (UserDoesNotExistException e) {
-			// Auto-generated catch block
-			e.printStackTrace();
-		}
-		catch (NoLoanPermittedException e) {
-			// Auto-generated catch block
-			e.printStackTrace();
-		}
+		
+		
 
 	}
 
@@ -6363,7 +6361,7 @@ public class dewset extends dewset_interface {
 	}
 
 	public void item55delete(Block block, Player player, int id, byte dat)
-			throws UserDoesNotExistException, NoLoanPermittedException {
+		{
 		item55deletec ab = new item55deletec(block, player, id, dat);
 
 		amount3 = 0;

@@ -13,7 +13,7 @@ import org.bukkit.entity.Player;
 public class dewddprivate {
 
 	public static int		signprotectr	= 2;
-	public static double	buy1blockmoney	= 0.1;	// 0.7;
+//	public static double	buy1blockmoney	= 0.1;	// 0.7;
 
 	public static boolean checkpermissionareasign(Block block) {
 

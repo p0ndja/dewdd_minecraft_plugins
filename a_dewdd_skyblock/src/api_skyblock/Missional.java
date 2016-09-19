@@ -35,6 +35,10 @@ public enum  Missional {
 		case 3:
 			a = Missional.LV_3_DROP_TOUCH;
 			break;
+		case 4:
+			a = Missional.LV_4_Place_y1;
+			break;
+		
 		
 		default:
 			a = Missional.LV_NULL;
@@ -48,7 +52,7 @@ public enum  Missional {
 	public static int getID(Missional m) {
 		int id = -1;
 		
-		int maxest = 4;
+		int maxest = 5;
 		
 		switch (m) {
 		case LV_0_COBBLESTONE_MACHINE:
@@ -64,10 +68,10 @@ public enum  Missional {
 			id = 3;
 			break;
 		case LV_4_Place_y1:
-			id =4;
+			id = 4;
 			break;
 		default:
-			id = maxest +1;
+			id = 5;
 			break;
 		}
 		

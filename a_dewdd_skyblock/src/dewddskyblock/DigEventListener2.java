@@ -1309,6 +1309,7 @@ public class DigEventListener2 implements Listener {
 
 								CallNextMission ee = new CallNextMission(getid);
 								Bukkit.getScheduler().scheduleSyncDelayedTask(ac, ee);
+								return;
 							}
 						}
 					}

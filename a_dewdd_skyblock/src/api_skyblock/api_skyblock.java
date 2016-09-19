@@ -630,7 +630,7 @@ public class api_skyblock {
 
 			bo.getWorld().getBlockAt(bo.getX(), 0, bo.getZ()).setType(Material.BEDROCK);
 
-			Block signAdder = bo.getWorld().getBlockAt(bo.getX(), 1, bo.getY());
+			Block signAdder = bo.getWorld().getBlockAt(bo.getX(), 1, bo.getZ());
 			signAdder.setType(Material.WALL_SIGN);
 
 			Sign sign = (Sign) signAdder.getState();
@@ -638,7 +638,7 @@ public class api_skyblock {
 			sign.setLine( 1, "" + bo3.getX());
 			sign.setLine( 2, "" + bo3.getY());
 			sign.setLine( 3, "" + bo3.getZ());
-			sign.update();
+			sign.update(true);
 			
 			
 
@@ -712,6 +712,9 @@ public class api_skyblock {
 		case LV_4_Place_y1:
 			aa = tr.gettr(header + mission);
 			break;
+			
+			
+			
 
 		default:
 			aa = tr.gettr(header + "default");
@@ -954,7 +957,7 @@ public class api_skyblock {
 			foundx = true;
 			for (int x3 = x2; x3 <= x2 + radiusCubeNeed; x3++) {
 				for (int y3 = y2; y3 <= y2 + radiusCubeNeed; y3++) {
-					for (int z3 = z2; z3 <= y2 + radiusCubeNeed; z3++) {
+					for (int z3 = z2; z3 <= z2 + radiusCubeNeed; z3++) {
 						Block bSpace = b.getWorld().getBlockAt(x3, y3, z3);
 						if (bSpace.getType() != Material.AIR) {
 							foundx = false;

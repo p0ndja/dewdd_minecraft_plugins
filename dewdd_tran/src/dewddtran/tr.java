@@ -24,6 +24,7 @@ class runworldtype {
 
 public class tr {
 
+	public static int tr_maxest = 500;
 	public static datat						dt[];
 	public static int						dtmax		= 0;
 
@@ -356,12 +357,12 @@ public class tr {
 		String filena = tr.folder_name + File.separator + worldf;
 		File fff = new File(filena);
 
-		tr.dt = new datat[200];
+		tr.dt = new datat[tr_maxest];
 		tr.dtmax = 0;
 
 		try {
 
-			for (int i = 0; i < 200; i++) {
+			for (int i = 0; i < tr_maxest; i++) {
 				tr.dt[i] = new datat();
 			}
 
