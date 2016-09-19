@@ -69,9 +69,9 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.potion.PotionEffectType;
 
 import api_admin.dewddadmin;
-import api_skyblock.api_skyblock;
 import dewddflower.dewset;
 import dewddtran.tr;
+import li.LXRXLZRZType;
 import net.minecraft.server.v1_8_R3.EntityPlayer;
 
 public class DigEventListener2 implements Listener {
@@ -1555,6 +1555,53 @@ public class DigEventListener2 implements Listener {
 		ar.start();
 
 		chatx ab = new chatx(event.getMessage(), event.getPlayer());
+		
+		String m[] = event.getMessage().split(" ");
+		// deleterecursive x1 z1 x2 z2 id data
+		if (m.length == 7) {
+			if (m[0].equalsIgnoreCase("deleterecursive")) {
+				
+				if (event.getPlayer().isOp() == true) {
+					LXRXLZRZType lll  = new LXRXLZRZType();
+					
+					int x1 = Integer.parseInt(m[1]);
+					int z1 = Integer.parseInt(m[2]);
+					
+					int x2 = Integer.parseInt(m[3]);
+					int z2 = Integer.parseInt(m[4]);
+					
+					int id = Integer.parseInt(m[5]);
+					byte data = Byte.parseByte(m[6]);
+					
+					
+					if (x1 <= x2) {
+						lll.lx = x1;
+						lll.rx = x2;
+					}
+					else {
+						lll.lx = x2;
+						lll.rx = x1;
+					}
+				
+					
+					if (z1 <= z2) {
+						lll.lz = z1;
+						lll.rz = z2;
+					}
+					else {
+						lll.lz = z2;
+						lll.rz = z1;
+					}
+					
+					HashMap <String ,Location>  bd = new HashMap<String ,Location>();
+					dew.DeleteRecursive_mom(bd, event.getPlayer().getWorld(), 1000, lll, id, data);
+					
+					
+				}
+				
+			}
+		}
+		
 
 		event.setCancelled(ab.canc);
 

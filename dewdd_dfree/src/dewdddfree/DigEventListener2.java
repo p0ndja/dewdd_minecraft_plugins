@@ -219,7 +219,7 @@ public class DigEventListener2 implements Listener {
 		}
 
 		Block block = e.getBlock();
-		if (block.getTypeId() == 23) {
+		if (block.getType() == Material.DROPPER || block.getType() == Material.DISPENSER) {
 
 			// [dfree]
 			// number
@@ -246,7 +246,7 @@ public class DigEventListener2 implements Listener {
 							int c = 1;
 							if (c == 1) {
 
-								switch (e.getItem().getTypeId()) {
+								/*switch (e.getItem().getTypeId()) {
 								case 8:
 								case 9:
 								case 10:
@@ -345,7 +345,7 @@ public class DigEventListener2 implements Listener {
 											+ block.getY() + "," + block.getZ() + ")" + e.getItem().getTypeId());
 									block.breakNaturally();
 									break;
-								}
+								}*/
 
 								Dispenser abc = (Dispenser) e.getBlock().getState();
 								ItemStack itee = e.getItem();

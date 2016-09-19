@@ -72,9 +72,9 @@ import org.bukkit.util.Vector;
 
 import api_skyblock.Constant;
 import api_skyblock.LV1000Type;
-import api_skyblock.LXRXLZRZType;
 import api_skyblock.api_skyblock;
 import dewddtran.tr;
+import li.LXRXLZRZType;
 import net.minecraft.server.v1_8_R3.EntityPlayer;
 
 public class DigEventListener2 implements Listener {
@@ -319,10 +319,10 @@ public class DigEventListener2 implements Listener {
 
 				while (System.currentTimeMillis() - startTime < 1000) {
 
-					int x = randomInteger(ee.lx, ee.rx);
-					int z = randomInteger(ee.lz, ee.rz);
+					int x = li.useful.randomInteger(ee.lx, ee.rx);
+					int z = li.useful.randomInteger(ee.lz, ee.rz);
 
-					int y = randomInteger(0, 40);
+					int y = li.useful.randomInteger(0, 40);
 
 					Block block = world.getBlockAt(x, y, z);
 					if (block.getType() != Material.AIR) {
@@ -600,11 +600,7 @@ public class DigEventListener2 implements Listener {
 		public int lastStandProtectID = -1;
 	}
 
-	public static int randomInteger(int min, int max) {
-		Random rand = new Random();
-		int randomNum = min + (int) (Math.random() * ((max - min) + 1));
-		return randomNum;
-	}
+	
 
 	public JavaPlugin ac = null;
 

@@ -1,4 +1,4 @@
-package api_skyblock;
+package li;
 
 public class LXRXLZRZType {
 	public int lx;

@@ -52,6 +52,7 @@ public class DigEventListener2 implements Listener {
 					player.sendMessage(dprint.r.color("vd = " + Bukkit.getViewDistance()));
 					return;
 				}
+				
 			}
 
 			if (player.isOp() == true) {

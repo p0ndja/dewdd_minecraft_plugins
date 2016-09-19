@@ -13,6 +13,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Queue;
 import java.util.Random;
@@ -39,8 +40,189 @@ import com.earth2me.essentials.api.UserDoesNotExistException;
 
 import api_skyblock.api_skyblock;
 import dewddtran.tr;
+import li.LXRXLZRZType;
 
 public class dewset extends dewset_interface {
+	
+	public  void DeleteRecursive_mom (HashMap<String, Location> bd, World world, int firstAdded,LXRXLZRZType ee, int id ,byte data) {
+		DeleteRecursive_Thread dr = new DeleteRecursive_Thread(bd, world, firstAdded, ee, id, data);
+		Bukkit.getScheduler().scheduleSyncDelayedTask(ac, dr,1);
+		
+	}
+	
+	class DeleteRecursive_Thread implements Runnable {
+		private HashMap<String, Location> bd;
+		private World world;
+		private LXRXLZRZType ee;
+		private int id = 0;
+		private byte data = 0;
+
+		public DeleteRecursive_Thread(HashMap<String, Location> bd, World world, int firstAdded,LXRXLZRZType ee, int id ,byte data) {
+			this.bd = bd;
+			this.world = world;
+			this.ee = ee;
+			this.id = id;
+			this.data = data;
+
+			// random add
+
+		}
+
+		@Override
+		public void run() {
+
+			if (Bukkit.getOnlinePlayers().size() != 1) {
+				return;
+			}
+
+			int search = 10;
+
+			long startTime = System.currentTimeMillis();
+
+			// dprint.r.printAll("start " + bd.size());
+
+			if (bd.size() == 0) {
+				bd = null;
+				bd = new HashMap<String , Location>();
+				// dprint.r.printAll("run () bd.size = " + bd.size());
+
+				
+
+				while (System.currentTimeMillis() - startTime < 1000) {
+
+					int x = li.useful.randomInteger(ee.lx, ee.rx);
+					int z = li.useful.randomInteger(ee.lz, ee.rz);
+
+					int y = li.useful.randomInteger(0, 40);
+
+					Block block = world.getBlockAt(x, y, z);
+					if (block.getType().getId() == id ) {
+						if (block.getData() == data || data == -29)
+						{
+						bd.put(tr.locationToString(block.getLocation()), block.getLocation());
+						dprint.r.printAll("delete Recursive > first add > " + block.getX() + "," + block.getY() + ","
+								+ block.getZ() + " size " + bd.size() + " , id data " + id  + ":"  + data);
+
+						}
+					}
+
+				}
+
+				if (bd.size() == 0) {
+
+					dprint.r.printAll("recall ... " + bd.size());
+					DeleteRecursive_Thread newRun = new DeleteRecursive_Thread(bd, world, 0,ee,id,data);
+					Bukkit.getScheduler().scheduleSyncDelayedTask(ac, newRun, 20L);
+					return;
+				}
+
+			}
+
+			startTime = System.currentTimeMillis();
+
+			int first = 0;
+			while (bd.size() > 0 && System.currentTimeMillis() - startTime < 1000) {
+
+				for (int i = 0; i < 1000000 && System.currentTimeMillis() - startTime < 1000; i++) {
+					String forDeleteLoc = "";
+					for (String locStr : bd.keySet()) {
+
+						Location loc = bd.get(locStr);
+						// bd.remove(locStr);
+						forDeleteLoc = locStr;
+
+						Block getStack = world.getBlockAt(loc);
+						if (getStack == null) {
+							continue;
+						}
+
+						if (getStack.getType().getId() == id ) {
+							if (getStack.getData() == data || data == -29)
+							{
+								
+							}
+							else {
+								continue;
+							}
+						}
+						else {
+							continue;
+						}
+						
+						
+						
+						if (first == 0) {
+							dprint.r.printAll("delete recursive > break > " + getStack.getX() + "," + getStack.getY() + ","
+									+ getStack.getZ() + getStack.getType().name() + ":" + getStack.getData() + " size "
+									+ bd.size() + " > id data " + id + ":" + data);
+							first = 1;
+						}
+
+						//getStack.breakNaturally();
+						getStack.setType(Material.AIR);
+
+						for (int x = -search; x <= search; x++)
+							for (int y = -search; y <= search; y++) {
+								if (search < 0 ) continue;
+								if (search > 255) continue;
+								
+								for (int z = -search; z <= search; z++) {
+									if (x == 0 && y == 0 && z == 0) {
+										continue;
+									}
+
+									Block bo = getStack.getWorld().getBlockAt(getStack.getX() + x, y,
+											getStack.getZ() + z);
+									if (bo.getType().getId() == id ) {
+										if (bo.getData() == data || data == -29)
+										
+										bd.put(tr.locationToString(bo.getLocation()), bo.getLocation());
+
+									}
+
+								}
+								
+							}
+
+						for (int x = -50; x <= 50; x++) {
+
+							Block bo = getStack.getRelative(x, 0, 0);
+							if (bo.getType() != Material.AIR) {
+								bd.put(tr.locationToString(bo.getLocation()), bo.getLocation());
+
+							}
+						}
+
+						for (int x = -50; x <= 50; x++) {
+
+							Block bo = getStack.getRelative(0, 0, x);
+							if (bo.getType() != Material.AIR) {
+								bd.put(tr.locationToString(bo.getLocation()), bo.getLocation());
+
+							}
+						}
+
+						break;
+					}
+
+					bd.remove(forDeleteLoc);
+
+				}
+
+			}
+
+			if (bd.size() >= 0) {
+				DeleteRecursive_Thread newRun = new DeleteRecursive_Thread(bd, world, 0,ee,id,data);
+				Bukkit.getScheduler().scheduleSyncDelayedTask(ac, newRun, 20L);
+				return;
+			}
+
+		}
+
+	}
+	
+	
+
 
 	class autosortchest2_class implements Runnable {
 		private Block block;
