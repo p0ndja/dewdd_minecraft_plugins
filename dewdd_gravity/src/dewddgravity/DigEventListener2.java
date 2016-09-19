@@ -84,8 +84,9 @@ class Gravity implements Runnable {
 					continue;
 				}
 
-				//if (b2.getY() > start.getY() - Gravity.stick && b2.getY() > 0) {
-					 if (b2.getY() > 0) {
+				// if (b2.getY() > start.getY() - Gravity.stick && b2.getY() >
+				// 0) {
+				if (b2.getY() > 0) {
 					// more research !
 
 					/*
@@ -370,13 +371,22 @@ class MainLoop implements Runnable {
 
 	}
 
+	long lostTime = 0;
+	
 	@Override
 	public void run() {
 		// always get Item from jobs
+		long maxTime = 50;
 
-		int done = 0;
+		long startTime = System.currentTimeMillis();
 
-		while (done <= 1 && jobs.getSize() > 0) {
+		
+		if (lostTime > maxTime) {
+			lostTime -= maxTime;
+			return;
+		}
+
+		while ( jobs.getSize() > 0) {
 			// dprint.r.printAll("done size " + done + " , " + jobs.getSize());
 
 			Location loc = jobs.get();
@@ -389,10 +399,18 @@ class MainLoop implements Runnable {
 				}
 
 				Gravity noop = new Gravity(blo, null, 1);
-				
-				
+
 			}
-done++;
+
+			long endTime = System.currentTimeMillis();
+			long curLost = endTime - startTime;
+			
+			if ( curLost > maxTime) {
+				 lostTime += curLost;
+				
+				break;
+			}
+			
 		}
 
 		if (jobs.getSize() > 0) {
