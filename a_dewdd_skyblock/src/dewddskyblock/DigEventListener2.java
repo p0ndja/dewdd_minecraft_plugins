@@ -5,9 +5,13 @@
  */
 package dewddskyblock;
 
+import java.io.BufferedReader;
+import java.io.DataInputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Random;
@@ -92,7 +96,7 @@ public class DigEventListener2 implements Listener {
 		for (int i = 0; i < api_skyblock.rsMax; i++) {
 			RSData rs = api_skyblock.rs[i];
 
-			if ( !(rs.x >= 0 && rs.x <= 6000 && rs.z >= 0 && rs.z <= 6000)) {
+			if (!(rs.x >= 0 && rs.x <= 6000 && rs.z >= 0 && rs.z <= 6000)) {
 				count++;
 				System.out.println((rs.x - 150) + "," + 0 + "," + (rs.z - 150) + " to " + (rs.x + 149) + "," + 0 + ","
 						+ (rs.z + 149) + " original " + rs.x + "," + rs.y + "," + rs.z + " " + count);
@@ -1282,7 +1286,7 @@ public class DigEventListener2 implements Listener {
 				for (int j = 0; j < lv.rewardSize; j++) {
 					ItemStack rewardIt = new ItemStack(lv.getMaterial(lv.rewardNameData[j]),
 
-							lv.rewardAmount[j], lv.getData(lv.rewardNameData[j]));
+					lv.rewardAmount[j], lv.getData(lv.rewardNameData[j]));
 
 					p.getWorld().dropItem(p.getLocation().getBlock().getRelative(0, 10, 0).getLocation(), rewardIt);
 				}
@@ -1447,6 +1451,21 @@ public class DigEventListener2 implements Listener {
 						return;
 					}
 					dew.adjustProtect(player.getLocation().getBlock(), player);
+				} else if (m[1].equalsIgnoreCase("smallIsland")) {
+					if (player.hasPermission(Constant.poveride) == false) {
+						player.sendMessage(dprint.r.color(tr.gettr("you_dont_have_permission")));
+						return;
+					}
+
+					long delay = 20;
+					for (int lop2 = 0; lop2 < api_skyblock.rsMax; lop2++) {
+						Block blo = player.getWorld().getBlockAt(api_skyblock.rs[lop2].x, api_skyblock.rs[lop2].y,
+								api_skyblock.rs[lop2].z);
+						
+						delay += 200;
+						dew.addSmallIslandNearThisBlock(blo,delay);
+					}
+
 				} else if (m[1].equalsIgnoreCase("deleteybelow5")) {
 					if (player.hasPermission(Constant.poveride) == false) {
 						player.sendMessage(dprint.r.color(tr.gettr("you_dont_have_permission")));
@@ -2562,7 +2581,7 @@ public class DigEventListener2 implements Listener {
 		// add
 
 		Block tmp = null;
-		int searchSpace = 2;
+		int searchSpace = 10;
 		for (int x = -searchSpace; x <= searchSpace; x++) {
 			for (int y = -searchSpace; y <= searchSpace; y++) {
 				for (int z = -searchSpace; z <= searchSpace; z++) {
@@ -2651,7 +2670,7 @@ public class DigEventListener2 implements Listener {
 
 			ItemStack itm = new ItemStack(lv.getMaterial(lv.needNameData[i]),
 
-					lv.needAmount[i], lv.getData(lv.needNameData[i]));
+			lv.needAmount[i], lv.getData(lv.needNameData[i]));
 
 			itm.addUnsafeEnchantment(Enchantment.DAMAGE_UNDEAD, 1);
 
@@ -2670,7 +2689,7 @@ public class DigEventListener2 implements Listener {
 
 			ItemStack itm = new ItemStack(lv.getMaterial(lv.rewardNameData[i]),
 
-					lv.rewardAmount[i], lv.getData(lv.rewardNameData[i]));
+			lv.rewardAmount[i], lv.getData(lv.rewardNameData[i]));
 
 			itm.addUnsafeEnchantment(Enchantment.DIG_SPEED, 1);
 

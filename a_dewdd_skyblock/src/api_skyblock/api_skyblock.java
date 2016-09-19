@@ -18,16 +18,19 @@ import java.util.Random;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
-import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.Chest;
 import org.bukkit.block.Sign;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import dewddskyblock.AllBlockInGameType;
 import dewddtran.tr;
 import li.Constant_Protect;
 import li.LXRXLZRZType;
@@ -387,6 +390,424 @@ startTime = System.currentTimeMillis();
 
 		}
 	}*/
+	
+	class SmallIslandType {
+		public HashMap<String, AllBlockInGameType> allBlockInGame;
+		public ArrayList<AllBlockInGameType> allBlockInGameAsList;
+	}
+
+	public  SmallIslandType loadMissionBlockFile() {
+
+		HashMap<String, AllBlockInGameType> allBlockInGame = new HashMap<String, AllBlockInGameType>();
+		ArrayList<AllBlockInGameType> allBlockInGameAsList = new ArrayList<AllBlockInGameType>();
+
+		String filena = Constant.folder_name + File.separator + Constant.rsGenerateListBlock_filename;
+
+		File fff = new File(filena);
+
+		try {
+
+			allBlockInGame.clear();
+
+			fff.createNewFile();
+
+			dprint.r.printAdmin("loading mission file : " + filena);
+			// Open the file that is the first
+			// command line parameter
+			FileInputStream fstream = new FileInputStream(filena);
+			// Get the object of DataInputStream
+			DataInputStream in = new DataInputStream(fstream);
+			BufferedReader br = new BufferedReader(new InputStreamReader(in));
+			String strLine;
+			// Read File Line By Line
+
+			String m[];
+
+			while ((strLine = br.readLine()) != null) {
+
+				m = strLine.split("\\s+");
+				m = strLine.split(":");
+				// Print the content on the console
+
+				AllBlockInGameType miss = new AllBlockInGameType();
+				miss.theName = m[0];
+				miss.data = Byte.parseByte(m[1]);
+
+				miss.maxStack = Integer.parseInt(m[2]);
+				miss.isBlock = Boolean.parseBoolean(m[3]);
+
+				if (m.length == 5) {
+					miss.limitSell = Integer.parseInt(m[4]);
+				} else {
+					miss.limitSell = 0;
+				}
+
+				// d.pl("...");
+				// rs[rsMax - 1].mission = 0;
+
+				if (allBlockInGame.get(miss.theName + ":" + miss.data) != null) {
+					dprint.r.printAdmin("loading not null");
+
+				}
+				allBlockInGame.put(miss.theName + ":" + miss.data, miss);
+				allBlockInGameAsList.add(miss);
+			}
+
+			dprint.r.printAdmin(" Loaded " + filena);
+
+			in.close();
+
+			SmallIslandType sit = new SmallIslandType();
+			sit.allBlockInGame = allBlockInGame;
+			sit.allBlockInGameAsList = allBlockInGameAsList;
+
+			return sit;
+		} catch (Exception e) {// Catch exception if any
+			dprint.r.printAdmin("Error load " + filena + e.getMessage());
+			return null;
+		}
+	}
+	
+	public  void addSmallIslandNearThisBlock(Block block, long delay) {
+		SmallIslandType sit = loadMissionBlockFile();
+		AddSmallIslandNearThisPosition aa = new AddSmallIslandNearThisPosition(block, sit, true);
+		Thread abc = new Thread(aa);
+		Bukkit.getScheduler().scheduleSyncDelayedTask(ac, abc, delay);
+
+	}
+
+	class AddSmallIslandNearThisPosition implements Runnable {
+		private SmallIslandType sit;
+		private Block block;
+
+		public AddSmallIslandNearThisPosition(Block block, SmallIslandType sit, boolean firstTime) {
+			this.sit = sit;
+			this.block = block;
+			if (firstTime == true) {
+
+				for (int i = 0; i < sit.allBlockInGameAsList.size(); i++) {
+					AllBlockInGameType a = sit.allBlockInGameAsList.get(i);
+
+					if (a.isBlock == true) {
+						a.curAmount = 64 * 5;
+					} else if (a.isBlock == false) {
+						a.curAmount = 64 * 10;
+					}
+
+				}
+
+				
+				
+				boolean foundChest = true;
+				do {
+					foundChest = false;
+					for (int i = 0; i < sit.allBlockInGameAsList.size(); i++) {
+						AllBlockInGameType a = sit.allBlockInGameAsList.get(i);
+						if (Material.getMaterial(a.theName) == Material.CHEST) {
+							sit.allBlockInGameAsList.remove(i);
+							foundChest = true;
+							break;
+						}
+
+						if (Material.getMaterial(a.theName) == Material.TRAPPED_CHEST) {
+							sit.allBlockInGameAsList.remove(i);
+							foundChest = true;
+							break;
+						}
+
+						
+					}
+
+				} while (foundChest == true);
+
+				// remove chest
+
+			}
+
+		}
+
+		@Override
+		public void run() {
+			
+			long start  = System.currentTimeMillis();
+
+			boolean isDone = true;
+
+			// check
+			for (int i = 0; i < sit.allBlockInGameAsList.size(); i++) {
+				AllBlockInGameType a = sit.allBlockInGameAsList.get(i);
+
+				if (a.isBlock == true) {
+					if (a.curAmount > 0) {
+						isDone = false;
+						break;
+					}
+
+				}
+			}
+
+			int maxCubeSize = 10;
+			int minCubeSize = 1;
+
+			if (isDone == false) {
+
+				// place untill all block done
+
+				// search space
+
+				boolean foundSpace = false;
+				int x1 = 0;
+				int y1 = 0;
+				int z1 = 0;
+
+				int curCubeSize = rnd.nextInt(maxCubeSize) + minCubeSize;
+
+				int tmpX = block.getX() + x1;
+				int tmpZ = block.getZ() + z1;
+				
+				int countFoundSpace = 0;
+				do {
+					foundSpace = true;
+					int maxRadi = 120;
+
+					int radi = rnd.nextInt(maxRadi )+minCubeSize;
+
+					x1 = rnd.nextInt(radi * 2 ) - radi;
+					z1 = rnd.nextInt(radi * 2) - radi;
+					y1 = rnd.nextInt(255 - 10) + 5;
+
+					tmpX = block.getX() + x1;
+					tmpZ = block.getZ() + z1;
+					
+					
+					if ( Math.abs(tmpX - block.getX()) <= 25 && 
+							Math.abs(tmpZ - block.getZ()) <= 25) {
+						foundSpace = false;
+						continue;
+					}
+
+					// check space
+					for (int x2 = tmpX - curCubeSize; x2 <= tmpX + curCubeSize; x2++) {
+						for (int z2 = tmpZ - curCubeSize; z2 <= tmpZ + curCubeSize; z2++) {
+							for (int y2 = y1 - curCubeSize; y2 <= y1 + curCubeSize; y2++) {
+								Block b2 = block.getWorld().getBlockAt(x2, y2, z2);
+								if (b2.getType() != Material.AIR) {
+									foundSpace = false;
+									break;
+								}
+
+							}
+						}
+					}
+					countFoundSpace ++;
+				} while (foundSpace == false && countFoundSpace < 10000);
+				
+				if (foundSpace == false) {
+					return;
+				}
+				// random Add Block
+				
+				int curSkip = rnd.nextInt(100);
+				for (int x2 = tmpX - curCubeSize; x2 <= tmpX + curCubeSize; x2++) {
+					for (int z2 = tmpZ - curCubeSize; z2 <= tmpZ + curCubeSize; z2++) {
+						for (int y2 = y1 - curCubeSize; y2 <= y1 + curCubeSize; y2++) {
+
+							if (rnd.nextInt() >= curSkip){
+								continue;
+							}
+							
+							Block b2 = block.getWorld().getBlockAt(x2, y2, z2);
+							// add random Block
+							int rand = 0;
+							AllBlockInGameType a = null;
+							int count = 0;
+							do {
+								rand = rnd.nextInt(sit.allBlockInGameAsList.size());
+
+								a = sit.allBlockInGameAsList.get(rand);
+								if (a.curAmount <= 0) {
+									sit.allBlockInGameAsList.remove(rand);
+								} else {
+									if (a.isBlock == true) {
+										break;
+									}
+								}
+								count ++;
+
+							} while (sit.allBlockInGameAsList.size() > 0 && count <= 1000);
+
+							if (a == null) {
+								break;
+							}
+
+							b2.setType(Material.getMaterial(a.theName));
+							b2.setData(a.data);
+							a.curAmount--;
+
+						}
+					}
+				}
+				
+				
+			/*	dprint.r.printAll("block is null " + (block == null));
+				dprint.r.printAll("block location is null " + (block.getLocation() == null));
+				
+				
+				dprint.r.printAll(
+						tr.gettr("skyblock_added_small_Island_at") + tr.locationToString(block.getLocation()));
+*/
+
+				// after create done 1 island
+				// thread sleep
+				
+				
+				// clear drop
+				
+				for (Entity en : block.getWorld().getEntities()) {
+					if (en == null) {
+						continue;
+					}
+					
+					if (en.getType() == EntityType.DROPPED_ITEM) {
+						Block b2 = block.getWorld().getBlockAt(tmpX, y1, tmpZ);
+						if (en.getLocation().distance(b2.getLocation())<= 20) {
+							en.remove();
+						}
+					}
+				}
+				
+				Block b2 = block.getWorld().getBlockAt(tmpX, y1, tmpZ);
+			//	dprint.r.printAll("added new small island at " + b2.getX() + "," + b2.getY()  + "," + b2.getZ());
+				
+				AddSmallIslandNearThisPosition theNew = new AddSmallIslandNearThisPosition(block, sit, false);
+				
+				Thread abc = new Thread(theNew);
+				
+				long end  = System.currentTimeMillis();
+				long diff = end  - start;
+				
+				Bukkit.getScheduler().scheduleSyncDelayedTask(ac, abc, diff/20);
+
+			} else if (isDone == true) {
+				
+				boolean isDone2 = true;
+				
+				do {
+				
+				// check
+				for (int i = 0; i < sit.allBlockInGameAsList.size(); i++) {
+					AllBlockInGameType a = sit.allBlockInGameAsList.get(i);
+
+					if (a.isBlock == false) {
+						if (a.curAmount > 0) {
+							isDone2 = false;
+							break;
+						}
+
+					}
+				}
+
+				
+				
+				//dprint.r.printAll("adding inventory");
+				
+				// time to add chest
+				boolean foundSpace = true;
+				int x1 = 0;
+				int z1 = 0;
+				int y1 = 0;
+
+				int tmpX = 0;
+				int tmpZ = 0;
+
+				do {
+					foundSpace = true;
+					int maxRadi = 120;
+
+					int radi = rnd.nextInt(maxRadi )+3;
+
+					x1 = rnd.nextInt(radi *2 ) - radi;
+					z1 = rnd.nextInt(radi * 2) - radi;
+					y1 = rnd.nextInt(255 - 10) + 5;
+
+					tmpX = block.getX() + x1;
+					tmpZ = block.getZ() + z1;
+
+					// check space
+
+					for (int xxx = -1; xxx <= 1; xxx++) {
+						Block b2 = block.getWorld().getBlockAt(tmpX + xxx, y1, tmpZ);
+						if (b2.getType() != Material.AIR) {
+							foundSpace = false;
+						}
+
+					}
+
+					for (int xxx = -1; xxx <= 1; xxx++) {
+						Block b2 = block.getWorld().getBlockAt(tmpX, y1, tmpZ + xxx);
+						if (b2.getType() != Material.AIR) {
+							foundSpace = false;
+						}
+
+					}
+
+				} while (foundSpace == false);
+				
+				Block b2 = block.getWorld().getBlockAt(tmpX , y1, tmpZ);
+				b2.setType(Material.CHEST);
+			//	b2.setData((byte)rnd.nextInt(4));
+				
+				Chest chest = (Chest)b2.getState();
+				Inventory inv = chest.getInventory();
+				int count = 0;
+				do {
+				
+				int rand = 0;
+				AllBlockInGameType a = null;
+				do {
+					if (sit.allBlockInGameAsList.size() > 0) {
+					rand = rnd.nextInt(sit.allBlockInGameAsList.size());
+					}
+					else {
+						chest.update();
+						return;
+					}
+					a = sit.allBlockInGameAsList.get(rand);
+					if (a.curAmount <= 0) {
+						sit.allBlockInGameAsList.remove(rand);
+					} else {
+						if (a.isBlock == false) {
+							break;
+						}
+					}
+
+				} while (sit.allBlockInGameAsList.size() > 0);
+				
+				ItemStack itm = new ItemStack(Material.getMaterial(a.theName),1);
+				itm.getData().setData((byte) a.data);
+				int tmpSize = rnd.nextInt(itm.getType().getMaxStackSize()+1)+1;
+				inv.addItem(itm.getData().toItemStack(tmpSize));
+				a.curAmount -= 64;
+				count ++ ;
+				
+				}while(inv.firstEmpty() > - 1 && count < 100);
+				
+				chest.update();
+			/*	dprint.r.printAll(
+						tr.gettr("skyblock_added_small_Island_at") + tr.locationToString(block.getLocation()));
+
+			*/
+				
+			} while (isDone2 == false);
+			 	
+			}
+
+			// if not
+
+			// create Island
+
+		}
+	}
 	
 	public Block gethFirstBlockHigh(Block block) {
 		for (int i = 255 ;  i >= 0 ; i --) {
@@ -839,6 +1260,9 @@ startTime = System.currentTimeMillis();
 					// save file
 					saveRSProtectFile();
 					buildcomplete = true;
+					
+					addSmallIslandNearThisBlock(block, 20);
+					
 				}
 
 			} // loop build complete
