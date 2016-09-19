@@ -21,6 +21,9 @@ import org.bukkit.block.Dispenser;
 import org.bukkit.block.Dropper;
 import org.bukkit.block.Hopper;
 import org.bukkit.block.Sign;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.EntityType;
+import org.bukkit.entity.ItemFrame;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
@@ -485,6 +488,56 @@ public class dewset extends dewset_interface {
 				Bukkit.getScheduler().scheduleSyncDelayedTask(dewset.ac, xgn2, dewset.this.sleeptime);
 				return;
 			}
+			
+			
+			for (Entity en : playerLocation.getWorld().getEntities()) {
+				if (en == null) {
+					continue;
+				}
+				
+				
+				
+				if (en.getType() == EntityType.ITEM_FRAME) {
+					dprint.r.printAll("item frame location " + tr.locationToString(en.getLocation())
+							);
+					
+					dprint.r.printAll("x " + lx + ","  + mx);
+					dprint.r.printAll("y " + ly + ","  + my);
+					dprint.r.printAll("z " + lz + ","  + mz);
+					
+					if (en.getLocation().getBlockX() >= lx && en.getLocation().getBlockX() <= mx) {
+						dprint.r.printAll("x in range");
+						if (en.getLocation().getBlockY() >= ly && en.getLocation().getBlockY() <= my) {
+							dprint.r.printAll("y in range");
+							if (en.getLocation().getBlockZ() >= lz && en.getLocation().getBlockZ() <= mz) {
+								dprint.r.printAll("z in range");
+								// copy to new one
+								
+								int tmpx =( en.getLocation().getBlockX() - selectx1) + playerLocation.getBlockX();
+								int tmpy =( en.getLocation().getBlockY() - selecty1) + playerLocation.getBlockY();
+								int tmpz =( en.getLocation().getBlockZ() - selectz1) + playerLocation.getBlockZ();
+								
+								Location loc2 = en.getLocation();
+								loc2.setX(tmpx);
+								loc2.setY(tmpy);
+								loc2.setZ(tmpz);
+								
+								
+								Entity newen = playerLocation.getWorld().spawnEntity(loc2, EntityType.ITEM_FRAME);
+								
+								ItemFrame item = (ItemFrame) newen;
+								ItemFrame sour = (ItemFrame) en;
+								item.setItem(sour.getItem());
+								
+								
+								dprint.r.printAll("copy item frame"  + loc2.getBlockX()  + "," + loc2.getBlockY() + "," + loc2.getBlockZ());
+								
+							}	
+						}
+					}
+				}
+			}
+			
 
 			dprint.r.printC("ptdew&dewdd : dewcopy " + tr.gettr("done") + " : " + this.player.getName());
 			this.player.sendMessage("ptdew&dewdd : dewcopy " + tr.gettr("done") + " : " + this.player.getName());

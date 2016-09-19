@@ -244,7 +244,7 @@ public class DigEventListener2 implements Listener {
 				}
 
 				if (dura > 100) {
-					player.sendMessage(dprint.r.color(tr.gettr("error_dewsuper_dura_more_than_300")));
+					player.sendMessage(dprint.r.color(tr.gettr("error_dewsuper_dura_more_than_100")));
 					return;
 				}
 
