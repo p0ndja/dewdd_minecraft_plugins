@@ -724,6 +724,7 @@ public class Core {
 				AllBlockInGameType eco = allBlockInGame.get(m[0] + ":" + m[1]);
 				if (eco == null) {
 					d.pl("load error ");
+					d.pl("allBlockInGame error " + m[0] + ":" + m[1]);
 				} else {
 					sb.index = getIndexFromKeyAlBlockInGame(m[0] + ":" + m[1]);
 					sb.timeToGet = convertStringToTime(m[3]);
