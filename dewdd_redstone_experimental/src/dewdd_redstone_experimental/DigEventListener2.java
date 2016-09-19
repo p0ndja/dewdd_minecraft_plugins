@@ -10,6 +10,7 @@ import java.util.LinkedList;
 import java.util.Random;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
@@ -17,6 +18,10 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
+import org.bukkit.event.block.BlockPistonEvent;
+import org.bukkit.event.block.BlockPistonExtendEvent;
+import org.bukkit.event.block.BlockPistonRetractEvent;
+import org.bukkit.event.block.BlockRedstoneEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.world.ChunkUnloadEvent;
@@ -37,15 +42,107 @@ class AreaType {
 	public long curTick = 0;
 	public long lastTimeBetter = 0;
 
-	public long score = 0;
+	public double score = 0;
 
 	public Chromosome chro;
+
+	public boolean isRunning = false;
 
 	public Block getBlocklxlylz() {
 		Block block = world.getBlockAt(loc.lx, loc.ly, loc.lz);
 		return block;
 	}
 
+}
+
+class FitnessAllArea implements Runnable {
+	private Redex redex;
+	private int curId = 0;
+
+	public FitnessAllArea(Redex redex, int curId) {
+		this.redex = redex;
+		this.curId = curId;
+	}
+
+	@Override
+	public void run() {
+
+		// re copying start pattern to them
+		Block hostBlock = null;
+		Block setBlock = null;
+
+		// dprint.r.printAll("CleanAllArea curid " + curId);
+
+		AreaType at = redex.listEx.get(curId);
+
+		FitnessSubArea sub = new FitnessSubArea(redex, curId);
+		sub.run();
+
+	}
+}
+
+class FitnessSubArea implements Runnable {
+	private Redex redex;
+	private int curId = 0;
+
+	public FitnessSubArea(Redex redex, int curId) {
+		this.redex = redex;
+		this.curId = curId;
+	}
+
+	@Override
+	public void run() {
+
+		// re copying start pattern to them
+		Block hostBlock = null;
+		Block setBlock = null;
+
+		dprint.r.printAll("Fitness curid " + curId);
+
+		AreaType at = redex.listEx.get(curId);
+
+		int countTrue = 0;
+		int countFalse = 0;
+
+		boolean clean1 = false;
+
+		for (int x = redex.start.loc.lx; x <= redex.start.loc.rx; x++) {
+
+			for (int y = redex.start.loc.ly; y <= redex.start.loc.ry; y++) {
+
+				for (int z = redex.start.loc.lz; z <= redex.start.loc.rz; z++) {
+					hostBlock = at.world.getBlockAt(x, y, z);
+
+					int gx = at.loc.lx + (x - redex.start.loc.lx);
+					int gy = at.loc.ly + (y);
+					int gz = at.loc.lz + (z - redex.start.loc.lz);
+
+					setBlock = at.world.getBlockAt(gx, gy, gz);
+
+					if (hostBlock.getType() == Material.AIR) {
+						continue;
+					}
+
+					if (hostBlock.getType() == setBlock.getType() && hostBlock.getData() == setBlock.getData()) {
+						countTrue++;
+						continue;
+					} else {
+						countFalse++;
+					}
+
+					/*
+					 * clean1 = true;
+					 * setBlock.setTypeIdAndData(hostBlock.getType().getId(),
+					 * hostBlock.getData(), true);
+					 */
+				}
+			}
+		}
+
+		double score = (countTrue * 100) / (countTrue + countFalse);
+		at.score = score;
+
+	}
 }
 
 class CleanAllArea implements Runnable {
@@ -100,7 +197,7 @@ class CleanSubArea implements Runnable {
 		dprint.r.printAll("Cleaning curid " + curId);
 
 		AreaType at = redex.listEx.get(curId);
-		
+
 		boolean clean1 = false;
 
 		for (int x = redex.start.loc.lx; x <= redex.start.loc.rx; x++) {
@@ -120,7 +217,7 @@ class CleanSubArea implements Runnable {
 						continue;
 					}
 
-					clean1  = true;
+					clean1 = true;
 					setBlock.setTypeIdAndData(hostBlock.getType().getId(), hostBlock.getData(), true);
 
 				}
@@ -128,11 +225,11 @@ class CleanSubArea implements Runnable {
 		}
 
 		// if still has to clean try again
-		if (clean1 == true ) {
+		if (clean1 == true) {
 			CleanSubArea sub2 = new CleanSubArea(redex, curId);
 			Bukkit.getScheduler().scheduleSyncDelayedTask(DigEventListener2.ac, sub2);
-			
-			 sub2 = new CleanSubArea(redex, curId);
+
+			sub2 = new CleanSubArea(redex, curId);
 			Bukkit.getScheduler().scheduleSyncDelayedTask(DigEventListener2.ac, sub2);
 		}
 	}
@@ -141,10 +238,12 @@ class CleanSubArea implements Runnable {
 class CommandRuning implements Runnable {
 	private String m[];
 	private Player p;
+	private Redex redex;
 
-	public CommandRuning(String m[], Player p) {
+	public CommandRuning(String m[], Player p, Redex redex) {
 		this.m = m;
 		this.p = p;
+		this.redex = redex;
 
 	}
 
@@ -161,20 +260,24 @@ class CommandRuning implements Runnable {
 					p.sendMessage("/redex decode");
 
 				} else if (m.length >= 2) {
+
+					// if (rene)
+					dprint.r.printAll("command run redex null == " + (redex == null ? "yes" : "no") + " ");
+
 					if (m[1].equalsIgnoreCase("start")) {
 
 						// start process
-						Redex redex = new Redex(p.getWorld(), p);
+						redex = new Redex(p.getWorld(), p);
 						redex.CleanAllArea();
 
 					} else if (m[1].equalsIgnoreCase("clean")) {
 						if (m.length == 2) {
 
 							// start process
-							Redex redex = new Redex(p.getWorld(), p);
+							redex = new Redex(p.getWorld(), p);
 							redex.CleanAllArea();
 						} else if (m.length == 3) {
-							Redex redex = new Redex(p.getWorld(), p);
+							redex = new Redex(p.getWorld(), p);
 							CleanSubArea cc = new CleanSubArea(redex, Integer.parseInt(m[2]));
 							Bukkit.getScheduler().scheduleSyncDelayedTask(DigEventListener2.ac, cc);
 						}
@@ -182,10 +285,10 @@ class CommandRuning implements Runnable {
 					} else if (m[1].equalsIgnoreCase("decode")) {
 						if (m.length == 2) {
 							// start process
-							Redex redex = new Redex(p.getWorld(), p);
+							redex = new Redex(p.getWorld(), p);
 							redex.DecodeAllArea();
 						} else if (m.length == 3) {
-							Redex redex = new Redex(p.getWorld(), p);
+							redex = new Redex(p.getWorld(), p);
 							DecodeSubDNA cc = new DecodeSubDNA(redex, Integer.parseInt(m[2]));
 							Bukkit.getScheduler().scheduleSyncDelayedTask(DigEventListener2.ac, cc);
 
@@ -256,6 +359,7 @@ class DecodeSubDNA implements Runnable {
 
 		dprint.r.printAll("dnaList Length " + redex.dnaList.size());
 		AreaType at = redex.listEx.get(curId);
+		at.isRunning = true;
 		Chromosome dna = redex.dnaList.get(curId);
 
 		int diffX = redex.output.loc.rx - redex.output.loc.lx;
@@ -302,7 +406,8 @@ class DecodeSubDNA implements Runnable {
 
 				setType = Material.PISTON_BASE;
 
-			//dprint.r.printAll("piston grep " + Math.abs(dna.dna[startPoint + 4]));
+				// dprint.r.printAll("piston grep " +
+				// Math.abs(dna.dna[startPoint + 4]));
 
 				int tmpFace = (int) Math.round(Math.abs(dna.dna[startPoint + 4]) * 6);
 				if (tmpFace < 0) {
@@ -313,7 +418,7 @@ class DecodeSubDNA implements Runnable {
 				}
 				pistonFace = (byte) tmpFace;
 
-			//	dprint.r.printAll("piston face " + pistonFace);
+				// dprint.r.printAll("piston face " + pistonFace);
 
 				break;
 			case 1:
@@ -323,7 +428,8 @@ class DecodeSubDNA implements Runnable {
 
 				setType = Material.PISTON_STICKY_BASE;
 
-				//dprint.r.printAll("piston grep " + Math.abs(dna.dna[startPoint + 4]));
+				// dprint.r.printAll("piston grep " +
+				// Math.abs(dna.dna[startPoint + 4]));
 
 				tmpFace = (int) Math.round(Math.abs(dna.dna[startPoint + 4]) * 6);
 				if (tmpFace < 0) {
@@ -333,7 +439,7 @@ class DecodeSubDNA implements Runnable {
 					tmpFace = 5;
 				}
 				pistonFace = (byte) tmpFace;
-			//	dprint.r.printAll("piston face " + pistonFace);
+				// dprint.r.printAll("piston face " + pistonFace);
 
 				break;
 			case 2:
@@ -370,6 +476,8 @@ public class DigEventListener2 implements Listener {
 
 	Random rnd = new Random();
 
+	Redex redex;
+
 	@EventHandler
 	public void eventja(ChunkUnloadEvent e) {
 		if (!isrunworld(e.getChunk().getWorld().getName())) {
@@ -387,9 +495,109 @@ public class DigEventListener2 implements Listener {
 		Player player = e.getPlayer();
 		String m[] = e.getMessage().split("\\s+");
 
-		CommandRuning newThread = new CommandRuning(m, player);
+		if (redex == null) {
+			redex = new Redex(player.getWorld(), player);
+		}
+		CommandRuning newThread = new CommandRuning(m, player, redex);
 		Bukkit.getScheduler().scheduleSyncDelayedTask(ac, newThread);
 
+	}
+
+	@EventHandler
+	public void eventja(BlockRedstoneEvent e) {
+		if (!isrunworld(e.getBlock().getWorld().getName())) {
+			return;
+		}
+	}
+
+	/*
+	 * @EventHandler public void eventja(BlockPistonEvent e) { if
+	 * (!isrunworld(e.getBlock().getWorld().getName())) { return; } }
+	 */
+
+	@EventHandler
+	public void eventja(BlockPistonExtendEvent e) {
+		if (!isrunworld(e.getBlock().getWorld().getName())) {
+			return;
+		}
+
+		Block b = e.getBlock();
+
+		// check 12 block
+
+		Block b2 = b;
+
+		int curid = redex.getIdOfThisLocation(b.getLocation());
+		if (curid == -1) {
+			return;
+		}
+
+		//dprint.r.printAll("curBlock " + tr.locationToString(b.getLocation()));
+
+		for (int lop = 0; lop < e.getBlocks().size(); lop++) {
+			b2 = e.getBlocks().get(lop);
+
+			if (b2.getType() == Material.AIR) {
+				continue;
+			}
+
+			int extendid = redex.getIdOfThisLocation(b2.getLocation());
+			//dprint.r.printAll(tr.locationToString(b2.getLocation()));
+			if (extendid != curid) {
+
+				//dprint.r.printAll("Block Piston Extend out of area " + curid + " out " + extendid);
+				// game Over
+
+				redex.listEx.get(curid).isRunning = false;
+				e.setCancelled(true);
+				return;
+			}
+
+			if (lop == e.getBlocks().size() - 1) {
+				b2 = b2.getRelative(e.getDirection());
+				extendid = redex.getIdOfThisLocation(b2.getLocation());
+				//dprint.r.printAll(tr.locationToString(b2.getLocation()));
+				if (extendid != curid) {
+
+					//dprint.r.printAll("Block Piston Extend out of area " + curid + " out " + extendid);
+					// game Over
+
+					redex.listEx.get(curid).isRunning = false;
+					e.setCancelled(true);
+
+					return;
+				}
+			}
+
+		}
+
+		/*
+		 * 
+		 * 
+		 * for (int lop = 0; lop <= 12; lop++) { b2 =
+		 * b2.getRelative(e.getDirection()); if (b2.getType() == Material.AIR) {
+		 * continue; }
+		 * 
+		 * int extendid = redex.getIdOfThisLocation(b2.getLocation());
+		 * dprint.r.printAll(tr.locationToString(b2.getLocation())); if
+		 * (extendid != curid) {
+		 * 
+		 * dprint.r.printAll("Block Piston Extend out of area " + curid +
+		 * " out " + extendid); // game Over
+		 * 
+		 * redex.listEx.get(curid).isRunning = false;
+		 * 
+		 * return; }
+		 * 
+		 * }
+		 */
+	}
+
+	@EventHandler
+	public void eventja(BlockPistonRetractEvent e) {
+		if (!isrunworld(e.getBlock().getWorld().getName())) {
+			return;
+		}
 	}
 
 	@EventHandler
@@ -513,6 +721,26 @@ class Redex {
 			listEx.add(newArea);
 		}
 
+	}
+
+	public int getIdOfThisLocation(Location loc) {
+		for (int lop = 0; lop < listEx.size(); lop++) {
+			AreaType at = listEx.get(lop);
+
+			if (at.world.getName().equalsIgnoreCase(loc.getWorld().getName())) {
+				if (loc.getBlockX() >= at.loc.lx && loc.getBlockX() <= at.loc.rx) {
+					if (loc.getBlockY() >= at.loc.ly && loc.getBlockY() <= at.loc.ry) {
+						if (loc.getBlockZ() >= at.loc.lz && loc.getBlockZ() <= at.loc.rz) {
+							return lop;
+						}
+					}
+
+				}
+			}
+
+		}
+
+		return -1;
 	}
 
 	public void CleanAllArea() {
