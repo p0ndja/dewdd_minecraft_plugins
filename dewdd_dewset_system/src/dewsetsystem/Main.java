@@ -17,21 +17,21 @@ public class Main extends JavaPlugin {
 
 	@Override
 	public void onDisable() {
-		getServer().getPluginManager().disablePlugin(this);
+		this.getServer().getPluginManager().disablePlugin(this);
 		dprint.r.printAll("ptdew&dewdd : " + tr.gettr("unloaded_plugin") + "  dewdd dewset System");
 	}
 
 	@Override
 	public void onEnable() {
 
-		log = getLogger();
+		this.log = this.getLogger();
 
-		ax.ac = this;
+		this.ax.ac = this;
 		// ax.dew = new Dewddminecraft();
 		// ax.dew.loadmainfile();
 		// ax.dew.ac = this;
 
-		getServer().getPluginManager().registerEvents(ax, this);
+		this.getServer().getPluginManager().registerEvents(this.ax, this);
 
 		dprint.r.printAll("ptdew&dewdd : " + tr.gettr("loaded_plugin") + "  dewdd dewset System");
 

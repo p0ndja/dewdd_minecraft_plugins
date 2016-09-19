@@ -5,8 +5,7 @@
  */
 package dewddflower;
 
-public abstract class dewset_interface  {
-
+public abstract class dewset_interface {
 
 	public static int selectmax = 100;
 
@@ -15,8 +14,5 @@ public abstract class dewset_interface  {
 	public static String pmaininfinite = "dewdd.main.dewset.infinite";
 
 	public static String pmainalsocopyinventoryblockwhenyouusedewset = "dewdd.main.dewset.copyinventoryblocks";
-
-
-	
 
 }
