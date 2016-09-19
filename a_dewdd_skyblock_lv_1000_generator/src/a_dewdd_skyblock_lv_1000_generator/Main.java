@@ -33,11 +33,11 @@ class HybridOverride extends Hybrid {
 			}
 
 			if (printPls == true) {
-				d.pl("PlayPrice " + " = " + tmpAllShop.get(i).PlayPrice);
+				d.pl("PlayPrice " + " = " + tmpAllShop.get(i).playPrice);
 			}
 			for (int j = 0; j < tmpAllShop.get(i).size; j++) {
 				if (printPls == true) {
-					d.pl("Slot " + " = " + tmpAllShop.get(i).Item[j] + ":" + tmpAllShop.get(i).data[j] + ":"
+					d.pl("Slot " + " = " + tmpAllShop.get(i).item[j] + ":" + tmpAllShop.get(i).data[j] + ":"
 							+ tmpAllShop.get(i).amount[j]);
 				}
 

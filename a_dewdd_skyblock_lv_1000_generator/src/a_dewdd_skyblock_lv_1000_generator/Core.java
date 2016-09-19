@@ -224,7 +224,7 @@ public class Core {
 		int countItem = 0;
 		while (countItem < allBlockInGameAsList.size()) {
 			d.pl("sperateShop > curChro " + tmpType.curChro);
-			d.pl("sperateShop : " + tmpType.shopSlotMax + " = " + (allBlockInGameAsList.size()));
+			d.pl("sperateShop : shopSlotMax = " + tmpType.shopSlotMax + ", " + countItem + " = " + (allBlockInGameAsList.size()));
 
 			double tmpReadChro = tmpType.chromosome[tmpType.curChro];
 			tmpReadChro = Math.abs(tmpReadChro);
@@ -259,6 +259,17 @@ public class Core {
 			tmpType.amount[tmpType.shopSlotMax] = (int)curAmount;
 			
 			countItem += tmpType.amount[tmpType.shopSlotMax];
+			
+			if (countItem > allBlockInGameAsList.size()) {
+				int tmb =(countItem -  allBlockInGameAsList.size() );
+				if (tmb < 0) {
+					d.pl("tmb : " + tmb);
+				}
+				
+				tmpType.amount[tmpType.shopSlotMax]  = tmb;
+				countItem = allBlockInGameAsList.size();
+				
+			}
 					
 
 			tmpType.shopSlotMax++;
@@ -340,6 +351,8 @@ public class Core {
 					tmpType.amount[tmpType.shopSlotMax-1] = 0;
 					tmpType.price[tmpType.shopSlotMax - 1] = 0;
 					tmpType.shopSlotMax --;
+					
+					
 					foundx = true;
 					break;
 					
@@ -361,6 +374,8 @@ public class Core {
 		int curItemIndex = 0;
 		
 		for (int i = 0 ; i < tmpType.shopSlotMax ; i ++ ) {
+			d.pl("convert tmp loop " + i + "/" + tmpType.shopSlotMax);
+			
 			AllShop ab = new AllShop();
 			
 			ab.playPrice = tmpType.price[i];
@@ -377,13 +392,16 @@ public class Core {
 				ab.amount[j] = abigt.curAmount;
 				
 				curItemIndex ++;
+				if (curItemIndex == allBlockInGameAsList.size() ) {
+					break;
+				}
 			}
 		
 			tmpType.tmpAllShop.add(ab);
 			
 		}
 		
-		
+		d.pl("converted tmpShop to AllShop ");
 	}
 
 	public void dnaDecoder(final double[] chromosome, LinkedList<AllShop> tmpAllShop, LinkedList<SellableType> tmpSell,
