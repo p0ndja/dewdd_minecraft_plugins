@@ -282,16 +282,17 @@ public class DigEventListener2 implements Listener {
 				}
 
 				dew = new dewset();
-			/*	while (dewddflower.Main.ds == null) {
-
-					i++;
-					Thread.sleep(1000);
-					System.out.println("dew ft waiting for create dewset sleeping dew +" + i);
-
-					// dew = dewddflower.Main.ds;
-
-				}*/
-				//dew = dewddflower.Main.ds;
+				/*
+				 * while (dewddflower.Main.ds == null) {
+				 * 
+				 * i++; Thread.sleep(1000); System.out.println(
+				 * "dew ft waiting for create dewset sleeping dew +" + i);
+				 * 
+				 * // dew = dewddflower.Main.ds;
+				 * 
+				 * }
+				 */
+				// dew = dewddflower.Main.ds;
 
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
@@ -339,12 +340,9 @@ public class DigEventListener2 implements Listener {
 				}
 				return;
 			} else if (give.equalsIgnoreCase("giveitem")) {
-				
+
 				for (Player pr : Bukkit.getOnlinePlayers()) {
-					
-		
-					
-					
+
 					// check that player have item name
 
 					boolean don = false;
@@ -411,7 +409,7 @@ public class DigEventListener2 implements Listener {
 			int ranid = 0;
 			// dprint.r.printAll("ft give item randid " + ranid + " , " +
 			// allBlockInGameMax);
-			ranid = rnd.nextInt(allBlockInGameMax);
+			ranid = rnd.nextInt(allBlockInGame.size());
 
 			if (pr.getInventory().firstEmpty() == -1) {
 				// recall
@@ -419,9 +417,10 @@ public class DigEventListener2 implements Listener {
 
 			}
 
-			String bai[] = allBlockInGame[ranid].split(":");
-			ItemStack it = new ItemStack(Material.getMaterial(bai[0]));
-			it.getData().setData(Byte.parseByte(bai[1]));
+			SellType ran = allBlockInGame.get(ranid);
+
+			ItemStack it = new ItemStack(Material.getMaterial(ran.name));
+			it.getData().setData(ran.data);
 			ItemStack it2 = it.getData().toItemStack();
 
 			it2.setAmount(1);
@@ -484,13 +483,18 @@ public class DigEventListener2 implements Listener {
 								}
 
 								en.setTarget(en2);
-							/*	dprint.r.printAll("mon kill " + en.getLocation().getBlockX() + ","
-										+ en.getLocation().getBlockY() + "," + en.getLocation().getBlockZ() + " to " +
-
-								en2.getLocation().getBlockX() + "," + en2.getLocation().getBlockY() + ","
-										+ en2.getLocation().getBlockZ()
-
-								);*/
+								/*
+								 * dprint.r.printAll("mon kill " +
+								 * en.getLocation().getBlockX() + "," +
+								 * en.getLocation().getBlockY() + "," +
+								 * en.getLocation().getBlockZ() + " to " +
+								 * 
+								 * en2.getLocation().getBlockX() + "," +
+								 * en2.getLocation().getBlockY() + "," +
+								 * en2.getLocation().getBlockZ()
+								 * 
+								 * );
+								 */
 
 								break;
 							}
@@ -549,13 +553,18 @@ public class DigEventListener2 implements Listener {
 
 							en.setTarget(en2);
 
-						/*	dprint.r.printAll("mon kill human" + en.getLocation().getBlockX() + ","
-									+ en.getLocation().getBlockY() + "," + en.getLocation().getBlockZ() + " to " +
-
-							en2.getLocation().getBlockX() + "," + en2.getLocation().getBlockY() + ","
-									+ en2.getLocation().getBlockZ()
-
-							);*/
+							/*
+							 * dprint.r.printAll("mon kill human" +
+							 * en.getLocation().getBlockX() + "," +
+							 * en.getLocation().getBlockY() + "," +
+							 * en.getLocation().getBlockZ() + " to " +
+							 * 
+							 * en2.getLocation().getBlockX() + "," +
+							 * en2.getLocation().getBlockY() + "," +
+							 * en2.getLocation().getBlockZ()
+							 * 
+							 * );
+							 */
 
 							break;
 
@@ -571,13 +580,6 @@ public class DigEventListener2 implements Listener {
 			new monkillhuman(sec, delay, rad);
 
 		}
-	}
-
-	class sell_type {
-
-		public String name;
-		public Byte data;
-		public double price;
 	}
 
 	class teleport_fish implements Runnable {
@@ -597,7 +599,7 @@ public class DigEventListener2 implements Listener {
 		}
 	}
 
-	public static sell_type sell[];
+	public static SellType sell[];
 
 	public static int sellmax;
 	public static ArrayList<AllShop> allShop = new ArrayList<AllShop>();
@@ -625,9 +627,7 @@ public class DigEventListener2 implements Listener {
 
 	int maxl = 0;
 
-	public String[] allBlockInGame = new String[500];
-
-	public int allBlockInGameMax = 0;
+	public ArrayList<SellType> allBlockInGame = new ArrayList<SellType>();
 
 	lastinv[] inv = new lastinv[30];
 
@@ -638,11 +638,8 @@ public class DigEventListener2 implements Listener {
 	String pautoshoot = "dewdd.ft.autoshoot";
 	String pusednick = "dewdd.ft.dnick";
 
-	
 	String pbleed = "dewdd.ft.bleed";
 	String pmonkill = "dewdd.ft.monkill";
-	
-	
 
 	public HashMap<Player, Inventory> inventory = new HashMap<Player, Inventory>();
 
@@ -870,6 +867,60 @@ public class DigEventListener2 implements Listener {
 	public void eventja(InventoryOpenEvent e) {
 
 	}
+	
+	public void randomShop() {
+		// let's random
+		allShop.clear();
+
+		int min = 3;
+		int max = 10;
+
+		for (int i = 0; i < 1000; i++) {
+			// random Item
+			AllShop newShop = new AllShop();
+
+			int maxSlot = rnd.nextInt(max) + min;
+			do {
+
+				int ranid = 0;
+
+				boolean found = false;
+
+				do {
+
+					found = true;
+					ranid = rnd.nextInt(allBlockInGame.size());
+					for (int j = 0; j < sellmax; j++) {
+						SellType allItemRand = allBlockInGame.get(ranid);
+
+						if (sell[j].name.equalsIgnoreCase(allItemRand.name)
+								&& sell[j].data == allItemRand.data) {
+							found = false;
+							break;
+
+						}
+					}
+				} while (found == false);
+
+				// random add to shop
+				SellType allItemRand = allBlockInGame.get(ranid);
+				newShop.item[newShop.size] = allItemRand.name;
+				newShop.data[newShop.size] = allItemRand.data;
+				newShop.amount[newShop.size] = rnd.nextInt(allItemRand.makStack);
+				if (newShop.amount[newShop.size] <= 0) {
+					newShop.amount[newShop.size] = 1;
+				}
+
+				newShop.size++;
+
+			} while (newShop.size <= maxSlot && newShop.size < 10);
+			
+			newShop.playPrice = 1000 + (rnd.nextInt(5000));
+			
+			allShop.add(newShop);
+	
+		}
+	}
 
 	@EventHandler
 	public void eventja(PlayerCommandPreprocessEvent e) {
@@ -882,6 +933,7 @@ public class DigEventListener2 implements Listener {
 
 		if (e.getMessage().equalsIgnoreCase("/dft shop") || e.getMessage().equalsIgnoreCase("/shop")) {
 			// p.sendMessage("here");
+			randomShop();
 			Inventory myInventory = Bukkit.createInventory(null, 54, "dew shop");
 			inventory.put(p, myInventory);
 			inventoryID.put(p, 0);
@@ -894,7 +946,7 @@ public class DigEventListener2 implements Listener {
 
 		if (m[0].equalsIgnoreCase("/dft")) {
 			if (m.length == 1) {
-				
+
 				p.sendMessage("/dft shop");
 				p.sendMessage("/dft list");
 				p.sendMessage("/dft bleed");
@@ -907,71 +959,129 @@ public class DigEventListener2 implements Listener {
 				p.sendMessage("/dft monkillhuman <second> <delaytick> <radius>");
 				return;
 			} else if (m.length > 1)
-				if (m[1].equalsIgnoreCase("monkillhuman")) {
-					if (m.length != 5) {
-						p.sendMessage("/sky monkillhuman <second> <delaytick> <radius>");
-						return;
+				if (m[1].equalsIgnoreCase("randomShop")) {
+					randomShop();
+
+				}
+			if (m[1].equalsIgnoreCase("monkillhuman")) {
+				if (m.length != 5) {
+					p.sendMessage("/sky monkillhuman <second> <delaytick> <radius>");
+					return;
+				}
+
+				if (!p.hasPermission(pmonkill)) {
+					p.sendMessage(tr.gettr("you_don't_have_permission") + pmonkill);
+					return;
+				}
+
+				int sec = Integer.parseInt(m[2]);
+				int tick = Integer.parseInt(m[3]);
+				int rad = Integer.parseInt(m[4]);
+
+				new monkillhuman(sec, tick, rad);
+			} else if (m[1].equalsIgnoreCase("monkill")) {
+				if (m.length != 5) {
+					p.sendMessage("/sky monkill <second> <delaytick> <radius>");
+					return;
+				}
+
+				if (!p.hasPermission(pmonkill)) {
+					p.sendMessage(tr.gettr("you_don't_have_permission") + pmonkill);
+					return;
+				}
+
+				int sec = Integer.parseInt(m[2]);
+				int tick = Integer.parseInt(m[3]);
+				int rad = Integer.parseInt(m[4]);
+
+				new monkill(sec, tick, rad);
+
+			} else if (m[1].equalsIgnoreCase("setname")) {
+				if (m.length != 3) {
+					p.sendMessage("/sky setname <name>");
+					return;
+				}
+
+				boolean pro = dew.cando_all(p.getLocation().getBlock(), p.getPlayer(), "build");
+				if (pro == false) {
+					p.sendMessage(tr.gettr("not_your_zone"));
+					return;
+				}
+
+				// search near npc
+
+				LivingEntity nearest = null;
+
+				for (Entity en2 : p.getWorld().getEntities()) {
+
+					if (en2 == null) {
+						continue;
 					}
 
-					if (!p.hasPermission(pmonkill)) {
-						p.sendMessage(tr.gettr("you_don't_have_permission") + pmonkill);
-						return;
+					if (!(en2 instanceof LivingEntity)) {
+						continue;
 					}
 
-					int sec = Integer.parseInt(m[2]);
-					int tick = Integer.parseInt(m[3]);
-					int rad = Integer.parseInt(m[4]);
-
-					new monkillhuman(sec, tick, rad);
-				} else if (m[1].equalsIgnoreCase("monkill")) {
-					if (m.length != 5) {
-						p.sendMessage("/sky monkill <second> <delaytick> <radius>");
-						return;
+					if (en2 instanceof Player) {
+						continue;
 					}
 
-					if (!p.hasPermission(pmonkill)) {
-						p.sendMessage(tr.gettr("you_don't_have_permission") + pmonkill);
-						return;
+					LivingEntity en = (LivingEntity) en2;
+
+					if (nearest == null) {
+						nearest = en;
+						continue;
 					}
 
-					int sec = Integer.parseInt(m[2]);
-					int tick = Integer.parseInt(m[3]);
-					int rad = Integer.parseInt(m[4]);
-
-					new monkill(sec, tick, rad);
-
-				} else if (m[1].equalsIgnoreCase("setname")) {
-					if (m.length != 3) {
-						p.sendMessage("/sky setname <name>");
-						return;
+					if (en.getLocation().distance(p.getLocation()) > 50) {
+						continue;
 					}
 
-					boolean pro = dew.cando_all(p.getLocation().getBlock(), p.getPlayer(), "build");
-					if (pro == false) {
-						p.sendMessage(tr.gettr("not_your_zone"));
-						return;
+					if (en.getLocation().distance(p.getLocation()) < nearest.getLocation().distance(p.getLocation())) {
+						nearest = en;
 					}
 
-					// search near npc
+				}
 
-					LivingEntity nearest = null;
+				if (nearest == null) {
+					p.sendMessage(tr.gettr("not_found_livingentity"));
+					return;
+				}
 
-					for (Entity en2 : p.getWorld().getEntities()) {
+				p.sendMessage(tr.gettr("seting_livingentity_name"));
+				LivingEntity vi = nearest;
+				vi.setCustomName(m[2]);
+				vi.setCustomNameVisible(true);
+				p.sendMessage(
+						tr.gettr("set_complete") + " " + vi.getType().getName() + " at " + vi.getLocation().getBlockX()
+								+ "," + vi.getLocation().getBlockY() + "," + vi.getLocation().getBlockZ());
 
-						if (en2 == null) {
-							continue;
-						}
+				// setname from trade
 
-						if (!(en2 instanceof LivingEntity)) {
-							continue;
-						}
+			}
 
-						if (en2 instanceof Player) {
-							continue;
-						}
+			else if (m[1].equalsIgnoreCase("setnpcname")) {
+				if (m.length != 3) {
+					p.sendMessage("/sky setnpcname <name>");
+					return;
+				}
 
-						LivingEntity en = (LivingEntity) en2;
+				boolean pro = dew.cando_all(p.getLocation().getBlock(), p.getPlayer(), "build");
+				if (pro == false) {
+					p.sendMessage(tr.gettr("not_your_zone"));
+					return;
+				}
 
+				// search near npc
+
+				Entity nearest = null;
+
+				for (Entity en : p.getWorld().getEntities()) {
+
+					if (en == null) {
+						continue;
+					}
+					if (en.getType() == EntityType.VILLAGER) {
 						if (nearest == null) {
 							nearest = en;
 							continue;
@@ -987,190 +1097,134 @@ public class DigEventListener2 implements Listener {
 						}
 
 					}
-
-					if (nearest == null) {
-						p.sendMessage(tr.gettr("not_found_livingentity"));
-						return;
-					}
-
-					p.sendMessage(tr.gettr("seting_livingentity_name"));
-					LivingEntity vi = nearest;
-					vi.setCustomName(m[2]);
-					vi.setCustomNameVisible(true);
-					p.sendMessage(tr.gettr("set_complete") + " " + vi.getType().getName() + " at "
-							+ vi.getLocation().getBlockX() + "," + vi.getLocation().getBlockY() + ","
-							+ vi.getLocation().getBlockZ());
-
-					// setname from trade
-
 				}
 
-				else if (m[1].equalsIgnoreCase("setnpcname")) {
-					if (m.length != 3) {
-						p.sendMessage("/sky setnpcname <name>");
-						return;
-					}
-
-					boolean pro = dew.cando_all(p.getLocation().getBlock(), p.getPlayer(), "build");
-					if (pro == false) {
-						p.sendMessage(tr.gettr("not_your_zone"));
-						return;
-					}
-
-					// search near npc
-
-					Entity nearest = null;
-
-					for (Entity en : p.getWorld().getEntities()) {
-
-						if (en == null) {
-							continue;
-						}
-						if (en.getType() == EntityType.VILLAGER) {
-							if (nearest == null) {
-								nearest = en;
-								continue;
-							}
-
-							if (en.getLocation().distance(p.getLocation()) > 50) {
-								continue;
-							}
-
-							if (en.getLocation().distance(p.getLocation()) < nearest.getLocation()
-									.distance(p.getLocation())) {
-								nearest = en;
-							}
-
-						}
-					}
-
-					if (nearest == null) {
-						p.sendMessage(tr.gettr("not_found_npc"));
-						return;
-					}
-
-					p.sendMessage(tr.gettr("seting_npc_name"));
-					Villager vi = (Villager) nearest;
-					vi.setCustomName(m[2]);
-					vi.setCustomNameVisible(true);
-					p.sendMessage(tr.gettr("set_complete"));
-
-					// setname from trade
-
+				if (nearest == null) {
+					p.sendMessage(tr.gettr("not_found_npc"));
+					return;
 				}
 
-				else if (m[1].equalsIgnoreCase("reload")) {
-					reloadPL();
-					p.sendMessage("reloaded");
-				} else if (m[1].equalsIgnoreCase("list")) {
-					// bubble sort
-					for (int i = 0; i < DigEventListener2.sellmax; i++) {
-						for (int j = 0; j < DigEventListener2.sellmax - 1 - i; j++) {
-							if (DigEventListener2.sell[j].price < DigEventListener2.sell[j + 1].price) {
+				p.sendMessage(tr.gettr("seting_npc_name"));
+				Villager vi = (Villager) nearest;
+				vi.setCustomName(m[2]);
+				vi.setCustomNameVisible(true);
+				p.sendMessage(tr.gettr("set_complete"));
 
-								String name = sell[j].name;
-								byte data = sell[j].data;
-								double pri = sell[j].price;
+				// setname from trade
 
-								sell[j].name = sell[j + 1].name;
-								sell[j].data = sell[j + 1].data;
-								sell[j].price = sell[j + 1].price;
+			}
 
-								sell[j + 1].name = name;
-								sell[j + 1].data = data;
-								sell[j + 1].price = pri;
+			else if (m[1].equalsIgnoreCase("reload")) {
+				reloadPL();
+				p.sendMessage("reloaded");
+			} else if (m[1].equalsIgnoreCase("list")) {
+				// bubble sort
+				for (int i = 0; i < DigEventListener2.sellmax; i++) {
+					for (int j = 0; j < DigEventListener2.sellmax - 1 - i; j++) {
+						if (DigEventListener2.sell[j].price < DigEventListener2.sell[j + 1].price) {
 
-							}
+							String name = sell[j].name;
+							byte data = sell[j].data;
+							double pri = sell[j].price;
+
+							sell[j].name = sell[j + 1].name;
+							sell[j].data = sell[j + 1].data;
+							sell[j].price = sell[j + 1].price;
+
+							sell[j + 1].name = name;
+							sell[j + 1].data = data;
+							sell[j + 1].price = pri;
+
 						}
-					}
-
-					for (int i = 0; i < DigEventListener2.sellmax; i++) {
-						p.sendMessage(dprint.r.color(DigEventListener2.sell[i].name + ":" + sell[i].data + " price "
-								+ DigEventListener2.sell[i].price));
-					}
-
-				} else if (m[1].equalsIgnoreCase("autoshoot")) {
-					if (!p.hasPermission(pautoshoot) || m.length != 5) {
-						p.sendMessage("/dft autoshoot <entitytype> <amount> <mode>  (only op!");
-						return;
-					}
-
-					EntityType ent = EntityType.fromName(m[2]);
-					if (ent == null) {
-						for (EntityType ent2 : EntityType.values()) {
-							p.sendMessage(ent2.getName());
-						}
-						return;
-					}
-
-					new autoshoot(Integer.parseInt(m[3]), ent, p, Integer.parseInt(m[4]));
-
-				} else if (m[1].equalsIgnoreCase("bleed")) {
-					if (!p.hasPermission(pbleed)) {
-						p.sendMessage("/dft bleed   (only op!");
-						return;
-					}
-
-					for (Entity en : p.getWorld().getEntities()) {
-						if (en == null) {
-							continue;
-						}
-
-						if (en.getType() == EntityType.PIG) {
-							Pig x = (Pig) en;
-							x.setBreed(true);
-
-							continue;
-						}
-
-						if (en.getType() == EntityType.COW) {
-							Cow x = (Cow) en;
-							x.setBreed(true);
-							continue;
-						}
-
-						if (en.getType() == EntityType.SHEEP) {
-							Sheep x = (Sheep) en;
-							x.setBreed(true);
-							continue;
-						}
-
-						if (en.getType() == EntityType.MUSHROOM_COW) {
-							MushroomCow x = (MushroomCow) en;
-							x.setBreed(true);
-							continue;
-						}
-
-						if (en.getType() == EntityType.CHICKEN) {
-							Chicken x = (Chicken) en;
-							x.setBreed(true);
-							continue;
-						}
-
-						if (en.getType() == EntityType.WOLF) {
-							Wolf x = (Wolf) en;
-
-							x.setBreed(true);
-							continue;
-						}
-
-						if (en.getType() == EntityType.VILLAGER) {
-							Villager x = (Villager) en;
-
-							x.setBreed(true);
-							continue;
-						}
-
 					}
 				}
+
+				for (int i = 0; i < DigEventListener2.sellmax; i++) {
+					p.sendMessage(dprint.r.color(DigEventListener2.sell[i].name + ":" + sell[i].data + " price "
+							+ DigEventListener2.sell[i].price));
+				}
+
+			} else if (m[1].equalsIgnoreCase("autoshoot")) {
+				if (!p.hasPermission(pautoshoot) || m.length != 5) {
+					p.sendMessage("/dft autoshoot <entitytype> <amount> <mode>  (only op!");
+					return;
+				}
+
+				EntityType ent = EntityType.fromName(m[2]);
+				if (ent == null) {
+					for (EntityType ent2 : EntityType.values()) {
+						p.sendMessage(ent2.getName());
+					}
+					return;
+				}
+
+				new autoshoot(Integer.parseInt(m[3]), ent, p, Integer.parseInt(m[4]));
+
+			} else if (m[1].equalsIgnoreCase("bleed")) {
+				if (!p.hasPermission(pbleed)) {
+					p.sendMessage("/dft bleed   (only op!");
+					return;
+				}
+
+				for (Entity en : p.getWorld().getEntities()) {
+					if (en == null) {
+						continue;
+					}
+
+					if (en.getType() == EntityType.PIG) {
+						Pig x = (Pig) en;
+						x.setBreed(true);
+
+						continue;
+					}
+
+					if (en.getType() == EntityType.COW) {
+						Cow x = (Cow) en;
+						x.setBreed(true);
+						continue;
+					}
+
+					if (en.getType() == EntityType.SHEEP) {
+						Sheep x = (Sheep) en;
+						x.setBreed(true);
+						continue;
+					}
+
+					if (en.getType() == EntityType.MUSHROOM_COW) {
+						MushroomCow x = (MushroomCow) en;
+						x.setBreed(true);
+						continue;
+					}
+
+					if (en.getType() == EntityType.CHICKEN) {
+						Chicken x = (Chicken) en;
+						x.setBreed(true);
+						continue;
+					}
+
+					if (en.getType() == EntityType.WOLF) {
+						Wolf x = (Wolf) en;
+
+						x.setBreed(true);
+						continue;
+					}
+
+					if (en.getType() == EntityType.VILLAGER) {
+						Villager x = (Villager) en;
+
+						x.setBreed(true);
+						continue;
+					}
+
+				}
+			}
 
 		} else if (m[0].equalsIgnoreCase("/dnick")) {
 			if (p.hasPermission(pusednick) == false) {
 				p.sendMessage(tr.gettr("you don't have permission") + pusednick);
 				return;
 			}
-			
-			
+
 			if (m.length != 3) {
 				p.sendMessage("/dnick <prefix,suffix> <name>");
 				return;
@@ -1182,8 +1236,7 @@ public class DigEventListener2 implements Listener {
 			}
 
 			p.sendMessage("sending..");
-			
-			
+
 			Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "manuaddv " + p.getName() + " " + m[1] + " " + m[2]);
 
 			Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "pex user " + p.getName() + " set " + m[1] + " " + m[2]);
@@ -1276,8 +1329,7 @@ public class DigEventListener2 implements Listener {
 
 		try {
 
-			allBlockInGame = new String[500];
-			allBlockInGameMax = 0;
+			allBlockInGame = new ArrayList<SellType>();
 
 			fff.createNewFile();
 
@@ -1299,11 +1351,17 @@ public class DigEventListener2 implements Listener {
 				m = strLine.split(":");
 				// Print the content on the console
 
-				allBlockInGame[allBlockInGameMax] = m[0] + ":" + m[1];
+				SellType nope = new SellType();
+				nope.name = m[0];
+				nope.data = Byte.parseByte(m[1]);
+				nope.makStack = Integer.parseInt(m[2]);
+
+				// allBlockInGame[allBlockInGameMax] = m[0] + ":" + m[1];
 				// d.pl("...");
 				// rs[rsMax - 1].mission = 0;
 
-				allBlockInGameMax++;
+				allBlockInGame.add(nope);
+				// allBlockInGameMax++;
 			}
 
 			dprint.r.printAll(" Loaded " + filena);
@@ -1326,9 +1384,9 @@ public class DigEventListener2 implements Listener {
 		try {
 
 			DigEventListener2.sellmax = 0;
-			DigEventListener2.sell = new sell_type[500];
+			DigEventListener2.sell = new SellType[500];
 			for (int i = 0; i < 500; i++) {
-				DigEventListener2.sell[i] = new sell_type();
+				DigEventListener2.sell[i] = new SellType();
 			}
 
 			fff.createNewFile();

@@ -41,7 +41,7 @@ class Dewminecraft {
 
 	ArrayList<String> autostr = new ArrayList<String>();
 	int autostrnow = -1;
-	int countmax = 100;
+	int countmax = 200;
 
 	public Dewminecraft() {
 		loadautomessagefile();

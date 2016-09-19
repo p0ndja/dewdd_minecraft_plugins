@@ -4237,26 +4237,6 @@ public class dewset extends dewset_interface {
 
 	// savesignfile
 
-	public void linkurl(Player player, String url) {
-		if ((url.endsWith("?fb") == true) || (url.endsWith("?facebook") == true)) {
-			dprint.r.printA("ptdew&dewdd : my facebook > https://www.facebook.com/dewddminecraft");
-		}
-
-		if ((url.endsWith("?e-mail") == true) || (url.endsWith("?mail") == true)) {
-			dprint.r.printA("ptdew&dewdd : my e-mail > dewtx29@gmail.com");
-		}
-
-		if ((url.endsWith("?youtube") == true) || (url.endsWith("?video") == true)) {
-			dprint.r.printA("ptdew&dewdd : my youtube > http://www.youtube.com/ptdew");
-			dprint.r.printA("ptdew&dewdd : my youtube 2 > http://www.youtube.com/ptdew2");
-		}
-
-		if ((url.endsWith("?plugin") == true) || (url.endsWith("?pl") == true)) {
-			dprint.r.printA(
-					"ptdew&dewdd : my plugin > http://www.youtube.com/playlist?list=PLlM9Jjda8OZeMEuUtVxyXu2XF62rqzt2j");
-		}
-
-	}
 
 	public Block protochest(Block block, int d4, String sorttype) {
 		Block temp = null;

@@ -1216,9 +1216,7 @@ public class DigEventListener2 implements Listener {
 
 			Sign sign = (Sign) block.getState();
 
-			if (sign.getLine(0) != null) {
-				dew.linkurl(player, sign.getLine(0));
-			}
+			
 
 			if (sign.getLine(0).equalsIgnoreCase("dewtobox")) {
 				sign.setLine(0, "[dewtobox]");
