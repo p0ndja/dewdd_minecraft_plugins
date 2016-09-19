@@ -112,7 +112,7 @@ public class DigEventListener2 implements Listener {
 			if (m[0].equalsIgnoreCase("showsignlist")) {
 				if (m.length == 1) {
 					// load protect id
-					int xyz = dew.checkpermissionarea(block, true);
+					int xyz = dew.getProtectid(block);
 					if (xyz == -1) {
 						player.sendMessage(tr.gettr("this_zone_don't_have_protect"));
 						return;
@@ -664,7 +664,7 @@ public class DigEventListener2 implements Listener {
 					}
 
 					if (m[1].equalsIgnoreCase("add") == true) {
-						dew.dewps_add(message, player);
+						dew.fw_add(message, player);
 						return;
 					}
 
@@ -672,12 +672,12 @@ public class DigEventListener2 implements Listener {
 
 					// "dewadd="
 					if (m[1].equalsIgnoreCase("remove") == true) {
-						dew.dewps_remove(message, player);
+						dew.fw_remove(message, player);
 						return;
 					}
 
 					if (m[1].equalsIgnoreCase("list") == true) {
-						dew.dewps_list(player);
+						dew.fw_list(player);
 						return;
 					}
 
@@ -708,7 +708,7 @@ public class DigEventListener2 implements Listener {
 
 						String nameToAdd = m[2];
 
-						int xyz = dew.checkpermissionarea(player.getLocation().getBlock(), true);
+						int xyz = dew.getProtectid(player.getLocation().getBlock());
 
 						dprint.r.printC("ptdew&dewdd : /fw owner <name> = '" + nameToAdd + "'");
 						System.out.println("ptdew&dewdd : /fw owner " + tr.gettr("home_id") + " id = '" + xyz + "'");
@@ -813,7 +813,7 @@ public class DigEventListener2 implements Listener {
 						player.sendMessage("homeslot = " + homeslot);
 
 						String nameToAdd = m[3];
-						int xyz = dew.checkpermissionarea(player.getLocation().getBlock(), true);
+						int xyz = dew.getProtectid(player.getLocation().getBlock());
 
 						// id of home
 
@@ -2010,15 +2010,15 @@ public class DigEventListener2 implements Listener {
 			return;
 
 		if (dew.checkpermissionarea(event.getEntity().getLocation().getBlock()) == true)
-			if (dew.checkpermissionarea(event.getEntity().getLocation().getBlock(), true) != -1)
+			if (dew.getProtectid(event.getEntity().getLocation().getBlock()) != -1)
 				if (dew.havethisnameinthishome(dew.getworldid(event.getEntity().getWorld().getName()),
-						dew.checkpermissionarea(event.getEntity().getLocation().getBlock(), true),
+						dew.getProtectid(event.getEntity().getLocation().getBlock()),
 						Constant_Protect.flag_monster) == true) {
 					event.setCancelled(true);
 					return;
 				}
 
-		for (Player xo : Bukkit.getOnlinePlayers()) {
+		/*for (Player xo : Bukkit.getOnlinePlayers()) {
 			if (xo.getInventory().getHelmet() == null) {
 				continue;
 			}
@@ -2048,11 +2048,11 @@ public class DigEventListener2 implements Listener {
 
 				bd = event.getEntity().getWorld().getBlockAt(loc.getBlockX(), loc.getBlockY(), loc.getBlockZ())
 						.getRelative(0, (int) loc.getY(), 3);
-				if (counthigh <= 8 && bd.getLightLevel() <= 7) {
+				if (counthigh <= 8 && bd.getLightLevel() <= 7 && rnd.nextInt() > 20) {
 					event.getEntity().teleport(loc);
 				}
 			}
-		}
+		}*/
 
 		// dew.randomplaynote(event.getEntity().getLocation());
 
@@ -2091,6 +2091,12 @@ public class DigEventListener2 implements Listener {
 			return;
 
 		if (abc.getType() == EntityType.PIG)
+			return;
+		if (abc.getType() == EntityType.WITHER)
+			return;
+		if (abc.getType() == EntityType.ENDER_DRAGON)
+			return;
+		if (abc.getType() == EntityType.SILVERFISH)
 			return;
 
 		Location laco = event.getEntity().getLocation();
@@ -2220,7 +2226,7 @@ public class DigEventListener2 implements Listener {
 		Block block = event.getLocation().getBlock();
 		// event.setCancelled(true);
 
-		int hasProtect = dew.checkpermissionarea(block, true);
+		int hasProtect = dew.getProtectid(block);
 		if (hasProtect == -1) {
 			return;
 		}
@@ -2293,7 +2299,7 @@ public class DigEventListener2 implements Listener {
 			}
 		} else {
 
-			int homeid = dew.checkpermissionarea(event.getEntity().getLocation().getBlock(), true);
+			int homeid = dew.getProtectid(event.getEntity().getLocation().getBlock());
 			if (homeid > -1) {
 				// check near player
 
@@ -2691,7 +2697,7 @@ public class DigEventListener2 implements Listener {
 
 		Block block = event.getClickedBlock();
 		if (player.getItemInHand().getType() == Material.SAPLING && act == Action.LEFT_CLICK_BLOCK) {
-			dew.dewps_list(player);
+			dew.fw_list(player);
 			event.setCancelled(true);
 
 			return;
@@ -2845,7 +2851,7 @@ public class DigEventListener2 implements Listener {
 
 			} else {
 
-				int curStandID = dew.checkpermissionarea(p.getLocation().getBlock(), true);
+				int curStandID = dew.getProtectid(p.getLocation().getBlock());
 				int curWorldID = dew.getworldid(p.getLocation().getWorld().getName());
 
 				if (curStandID == -1) { // no protect

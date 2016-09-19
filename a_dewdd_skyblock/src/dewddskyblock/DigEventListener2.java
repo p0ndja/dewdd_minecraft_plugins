@@ -446,7 +446,7 @@ public class DigEventListener2 implements Listener {
 		@Override
 		public void run() {
 
-			int getid = api_skyblock.getprotectid(block);
+			int getid = api_skyblock.getProtectid(block);
 			if (getid == -1) {
 				player.sendMessage(dprint.r.color(tr.gettr("this_zone_don't_have_any_protect")));
 				return;
@@ -682,7 +682,7 @@ public class DigEventListener2 implements Listener {
 			return;
 		}
 
-		int getid = api_skyblock.getprotectid(player.getLocation().getBlock());
+		int getid = api_skyblock.getProtectid(player.getLocation().getBlock());
 
 		if (getid > -1) {
 			// have protect
@@ -718,7 +718,7 @@ public class DigEventListener2 implements Listener {
 			return;
 
 		Block ac = event.getBlock();
-		int getid = api_skyblock.getprotectid(event.getBlock().getLocation().getBlock());
+		int getid = api_skyblock.getProtectid(event.getBlock().getLocation().getBlock());
 		
 		if (getid > -1 || event.getBlock().getTypeId() == 35) {
 
@@ -750,7 +750,7 @@ public class DigEventListener2 implements Listener {
 
 		Block b = e.getBlock();
 
-		int getid = api_skyblock.getprotectid(b);
+		int getid = api_skyblock.getProtectid(b);
 		if (getid == -1)
 			return;
 
@@ -805,7 +805,7 @@ public class DigEventListener2 implements Listener {
 			return;
 		}
 
-		int getid = api_skyblock.getprotectid(player.getLocation().getBlock());
+		int getid = api_skyblock.getProtectid(player.getLocation().getBlock());
 
 		if (getid > -1) {
 			// have protect
@@ -865,7 +865,7 @@ public class DigEventListener2 implements Listener {
 		// is run world and at rs world
 		Block block = chunk.getWorld().getBlockAt(chunk.getX() * 16, 50, chunk.getZ() * 16);
 
-		int getid = api_skyblock.getprotectid(block);
+		int getid = api_skyblock.getProtectid(block);
 		if (getid == -1)
 			return;
 
@@ -927,7 +927,7 @@ public class DigEventListener2 implements Listener {
 		if (e.getCreatureType() == CreatureType.WOLF)
 			return;
 
-		int getid = api_skyblock.getprotectid(e.getLocation().getBlock());
+		int getid = api_skyblock.getProtectid(e.getLocation().getBlock());
 		if (getid == -1) {
 			e.setCancelled(true);
 			return;
@@ -952,7 +952,7 @@ public class DigEventListener2 implements Listener {
 			return;
 		}
 
-		if (e.getEntity().getType() == EntityType.ENDERMAN && api_skyblock.getprotectid(e.getBlock()) > -1) {
+		if (e.getEntity().getType() == EntityType.ENDERMAN && api_skyblock.getProtectid(e.getBlock()) > -1) {
 			e.setCancelled(true);
 			return;
 		}
@@ -1007,7 +1007,7 @@ public class DigEventListener2 implements Listener {
 				 * event.setCancelled(true); return; }
 				 */
 
-				int pvparea = api_skyblock.getprotectid(plvi.getLocation().getBlock());
+				int pvparea = api_skyblock.getProtectid(plvi.getLocation().getBlock());
 				if (pvparea >= 0) {
 					if (api_skyblock.getplayerinslot(Constant_Protect.flag_pvp, pvparea) == -1
 							&& !plp.hasPermission(Constant.poveride)
@@ -1025,7 +1025,7 @@ public class DigEventListener2 implements Listener {
 					|| e.getEntity().getType() == EntityType.SNOWMAN || e.getEntity().getType() == EntityType.SQUID
 					|| e.getEntity().getType() == EntityType.PIG || e.getEntity().getType() == EntityType.WOLF) {
 
-				int pvparea = api_skyblock.getprotectid(e.getEntity().getLocation().getBlock());
+				int pvparea = api_skyblock.getProtectid(e.getEntity().getLocation().getBlock());
 
 				if (pvparea >= 0)
 					if (api_skyblock.getplayerinslot(plp.getName(), pvparea) == -1
@@ -1068,7 +1068,7 @@ public class DigEventListener2 implements Listener {
 
 		Block block = e.getLocation().getBlock();
 		// e.setCancelled(true);
-		int getid = api_skyblock.getprotectid(block);
+		int getid = api_skyblock.getProtectid(block);
 		if (getid > -1) {
 			if (api_skyblock.getplayerinslot(Constant_Protect.flag_explode, getid) > -1)
 				e.setCancelled(true);
@@ -1134,7 +1134,7 @@ public class DigEventListener2 implements Listener {
 		}
 
 		if (e.getCause() == RemoveCause.EXPLOSION == true)
-			if (api_skyblock.getprotectid(e.getEntity().getLocation().getBlock()) > -1) {
+			if (api_skyblock.getProtectid(e.getEntity().getLocation().getBlock()) > -1) {
 				e.setCancelled(true);
 				return;
 			}
@@ -1187,7 +1187,7 @@ public class DigEventListener2 implements Listener {
 
 			Player p = (Player) e.getPlayer();
 
-			int idx = api_skyblock.getprotectid(p.getLocation().getBlock());
+			int idx = api_skyblock.getProtectid(p.getLocation().getBlock());
 
 			LV1000Type lv = api_skyblock.lv1000.get(api_skyblock.rs[idx].mission);
 
@@ -1281,7 +1281,7 @@ public class DigEventListener2 implements Listener {
 		if (api_skyblock.isrunworld(b.getWorld().getName()) == false)
 			return;
 
-		int getid = api_skyblock.getprotectid(b);
+		int getid = api_skyblock.getProtectid(b);
 		if (getid == -1)
 			return;
 
@@ -1454,7 +1454,7 @@ public class DigEventListener2 implements Listener {
 				} else if (m[1].equalsIgnoreCase("buyhere")) {
 					// for buy these zone
 
-					int getid = api_skyblock.getprotectid(player.getLocation().getBlock());
+					int getid = api_skyblock.getProtectid(player.getLocation().getBlock());
 					if (getid > -1) {
 						player.sendMessage(dprint.r.color(tr.gettr("this_zone_someone_bought_it")));
 						return;
@@ -1520,7 +1520,7 @@ public class DigEventListener2 implements Listener {
 						return;
 					}
 
-					int getid = api_skyblock.getprotectid(player.getLocation().getBlock());
+					int getid = api_skyblock.getProtectid(player.getLocation().getBlock());
 
 					if (getid == -1) {
 						player.sendMessage(dprint.r.color(tr.gettr("this_zone_don't_have_protect")));
@@ -1545,7 +1545,7 @@ public class DigEventListener2 implements Listener {
 						return;
 					}
 
-					int getid = api_skyblock.getprotectid(player.getLocation().getBlock());
+					int getid = api_skyblock.getProtectid(player.getLocation().getBlock());
 
 					if (getid == -1) {
 						player.sendMessage(dprint.r.color(tr.gettr("this_zone_don't_have_protect")));
@@ -1781,7 +1781,7 @@ public class DigEventListener2 implements Listener {
 
 				else if (m[1].equalsIgnoreCase("c")) {
 
-					int getid = api_skyblock.getprotectid(player.getLocation().getBlock());
+					int getid = api_skyblock.getProtectid(player.getLocation().getBlock());
 
 					if (getid == -1) {
 						player.sendMessage(dprint.r.color(tr.gettr("this_zone_don't_have_protect")));
@@ -1812,7 +1812,7 @@ public class DigEventListener2 implements Listener {
 
 				else if (m[1].equalsIgnoreCase("owner")) {
 
-					int getid = api_skyblock.getprotectid(player.getLocation().getBlock());
+					int getid = api_skyblock.getProtectid(player.getLocation().getBlock());
 
 					if (getid == -1) {
 						player.sendMessage(dprint.r.color(tr.gettr("this_zone_don't_have_protect")));
@@ -1864,7 +1864,7 @@ public class DigEventListener2 implements Listener {
 						return;
 					}
 
-					int getid = api_skyblock.getprotectid(player.getLocation().getBlock());
+					int getid = api_skyblock.getProtectid(player.getLocation().getBlock());
 
 					if (getid == -1) {
 						player.sendMessage(dprint.r.color(tr.gettr("this_zone_don't_have_any_protect")));
@@ -1901,7 +1901,7 @@ public class DigEventListener2 implements Listener {
 
 				} else if (m[1].equalsIgnoreCase("add")) {
 
-					int getid = api_skyblock.getprotectid(player.getLocation().getBlock());
+					int getid = api_skyblock.getProtectid(player.getLocation().getBlock());
 
 					if (getid == -1) {
 						player.sendMessage(dprint.r.color(tr.gettr("this_zone_don't_have_any_protect")));
@@ -1945,7 +1945,7 @@ public class DigEventListener2 implements Listener {
 
 				} else if (m[1].equalsIgnoreCase("remove")) {
 
-					int getid = api_skyblock.getprotectid(player.getLocation().getBlock());
+					int getid = api_skyblock.getProtectid(player.getLocation().getBlock());
 
 					if (getid == -1) {
 						player.sendMessage(dprint.r.color(tr.gettr("this_zone_don't_have_protect")));
@@ -1990,7 +1990,7 @@ public class DigEventListener2 implements Listener {
 					return;
 				} else if (m[1].equalsIgnoreCase("list")) {
 
-					int getid = api_skyblock.getprotectid(player.getLocation().getBlock());
+					int getid = api_skyblock.getProtectid(player.getLocation().getBlock());
 
 					if (getid == -1) {
 						player.sendMessage(dprint.r.color(tr.gettr("this_zone_don't_have_any_protect")));
@@ -2043,7 +2043,7 @@ public class DigEventListener2 implements Listener {
 
 					// check item on player
 
-					int getido = api_skyblock.getprotectid(player.getLocation().getBlock());
+					int getido = api_skyblock.getProtectid(player.getLocation().getBlock());
 					if (getido == -1) {
 						player.sendMessage(
 								dprint.r.color(tr.gettr("this_zone_don't_have_any_protect_so_can't_delete")));
@@ -2100,7 +2100,7 @@ public class DigEventListener2 implements Listener {
 		}
 
 		Player player = e.getPlayer();
-		int getid = api_skyblock.getprotectid(player.getLocation().getBlock());
+		int getid = api_skyblock.getProtectid(player.getLocation().getBlock());
 
 		if (getid > -1) {
 			// have protect
@@ -2147,7 +2147,7 @@ public class DigEventListener2 implements Listener {
 			return;
 		}
 
-		int getid = api_skyblock.getprotectid(player.getLocation().getBlock());
+		int getid = api_skyblock.getProtectid(player.getLocation().getBlock());
 
 		if (getid > -1) {
 			// have protect
@@ -2360,7 +2360,7 @@ public class DigEventListener2 implements Listener {
 
 			} else {
 
-				int curStand = api_skyblock.getprotectid(p.getLocation().getBlock());
+				int curStand = api_skyblock.getProtectid(p.getLocation().getBlock());
 				if (curStand == -1) { // no protect
 					if (i.lastStandProtectID != -1) { // has protect
 
@@ -2437,7 +2437,7 @@ public class DigEventListener2 implements Listener {
 		if (block.getTypeId() == 8 || block.getTypeId() == 9 || block.getTypeId() == 10 || block.getTypeId() == 11) {
 			// get protect
 
-			int getpro = api_skyblock.getprotectid(block);
+			int getpro = api_skyblock.getProtectid(block);
 			if (getpro == -1)
 				e.setCancelled(true);
 		}
@@ -2449,7 +2449,7 @@ public class DigEventListener2 implements Listener {
 					for (int z1 = -1; z1 <= 1; z1++) {
 						block3 = block2.getRelative(x1, y1, z1);
 
-						int getid = api_skyblock.getprotectid(block3);
+						int getid = api_skyblock.getProtectid(block3);
 						if (getid == -1)
 							continue;
 
@@ -2484,7 +2484,7 @@ public class DigEventListener2 implements Listener {
 
 		if (plvii instanceof Player) {
 			Player plvi = (Player) plvii;
-			int pvparea = api_skyblock.getprotectid(plvi.getLocation().getBlock());
+			int pvparea = api_skyblock.getProtectid(plvi.getLocation().getBlock());
 			if (pvparea >= 0)
 				if (api_skyblock.getplayerinslot(plvi.getName(), pvparea) == -1
 						&& !plvi.hasPermission(Constant.poveride)
@@ -2585,7 +2585,7 @@ public class DigEventListener2 implements Listener {
 	}
 
 	public void updateLVInventory(Inventory inv, Player player) {
-		int idx = api_skyblock.getprotectid(player.getLocation().getBlock());
+		int idx = api_skyblock.getProtectid(player.getLocation().getBlock());
 		int id = api_skyblock.getplayerinslot(player.getName(), idx);
 
 		if (id == -1) {
