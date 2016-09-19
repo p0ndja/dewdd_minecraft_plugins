@@ -19,12 +19,17 @@ public class Core {
 	class TmpLVType {
 		public LinkedList<LV1000Type> tmpLV = new LinkedList<LV1000Type>();
 		public int curChro;
-		public int tmpUsedItNeedUniqueCount;
+		
 		public double[] chromosome;
 		public int curMissionItemSwapPosition;
+		
+		public int tmpUsedItNeedUniqueCount;
 		public boolean[] usedItNeedList;
 		public boolean[] usedItRewardList;
 		public int tmpUsedItRewardUniqueCount;
+		
+		public TmpTmpShopPriceToAllShopType tt ;
+		
 
 	}
 
@@ -128,7 +133,7 @@ public class Core {
 			for (int i = 0; i < maxItemForCompleteMission && tmpType.curChro < dnaSize
 					&& tmpType.tmpUsedItNeedUniqueCount < allBlockInGameAsList.size(); i++) {
 				double tmpReadChro = tmpType.chromosome[tmpType.curChro];
-				if (i < minItemForCompleteMission) {
+				if (i < minItemForCompleteMission) { 
 					tmpReadChro = Math.abs(tmpReadChro);
 				}
 
