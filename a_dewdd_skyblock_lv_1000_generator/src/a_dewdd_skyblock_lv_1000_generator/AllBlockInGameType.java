@@ -5,7 +5,7 @@ public class AllBlockInGameType {
 	public byte data;
 	public int maxStack;
 	public boolean isBlock = false;
-	
+
 	public int atTheEndNeed = 0;
 
 	public int curAmount = 0;
@@ -17,10 +17,10 @@ public class AllBlockInGameType {
 		abc.maxStack = this.maxStack;
 		abc.isBlock = this.isBlock;
 		abc.atTheEndNeed = this.atTheEndNeed;
-		
+
 		return abc;
 	}
-	
+
 	public String getIDData() {
 		String abc = theName + ":" + data;
 		return abc;

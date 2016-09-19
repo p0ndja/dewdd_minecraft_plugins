@@ -15,11 +15,12 @@ public class HybridOverride extends Hybrid {
 		LinkedList<SellableType> tmpSell = new LinkedList<SellableType>();
 		LinkedList<LV1000Type> tmpLV = new LinkedList<LV1000Type>();
 
-		Main.co.dnaDecoder(dna, tmpAllShop, tmpSell, tmpLV);
+		Core code = new Core();
+		code.dnaDecoder(dna, tmpAllShop, tmpSell, tmpLV);
 
 		// check item
-		for (int a = 0; a < Main.co.allBlockInGameAsList.size(); a++) {
-			AllBlockInGameType edo = Main.co.allBlockInGameAsList.get(a);
+		for (int a = 0; a < Core.allBlockInGameAsList.size(); a++) {
+			AllBlockInGameType edo = Core.allBlockInGameAsList.get(a);
 			boolean found = false;
 			for (int i = 0; i < tmpAllShop.size(); i++) {
 				AllShop as = tmpAllShop.get(i);
@@ -30,18 +31,16 @@ public class HybridOverride extends Hybrid {
 							break;
 						}
 					}
-					
+
 				}
-				
-				
-				
+
 			}
-if (found == false) {
-					d.pl("a " + a + " , " + edo.getIDData());
-					Exception exp = new Exception("error item lost");
-					exp.printStackTrace();
-					System.exit(0);
-				}
+			if (found == false) {
+				d.pl("a " + a + " , " + edo.getIDData());
+				Exception exp = new Exception("error item lost");
+				exp.printStackTrace();
+				System.exit(0);
+			}
 		}
 
 		boolean printPls = false;
@@ -49,7 +48,7 @@ if (found == false) {
 		for (int i = 0; i < tmpSell.size(); i++) {
 
 			if (printPls == true) {
-				AllBlockInGameType ec = Main.co.allBlockInGameAsList.get(tmpSell.get(i).index);
+				AllBlockInGameType ec = Core.allBlockInGameAsList.get(tmpSell.get(i).index);
 				d.pl("tmpSell : " + i + " = " + ec.theName + ":" + ec.data + ":" + tmpSell.get(i).timeToGet + ":"
 						+ tmpSell.get(i).sellPerPrice);
 
@@ -87,7 +86,7 @@ if (found == false) {
 				LV1000Type tmpsubLV = tmpLV.get(i);
 
 				if (printPls == true) {
-					AllBlockInGameType eco = Main.co.allBlockInGameAsList.get(tmpsubLV.needIndex[j]);
+					AllBlockInGameType eco = Core.allBlockInGameAsList.get(tmpsubLV.needIndex[j]);
 
 					d.pl("need slot " + j + " = " + eco.theName + ":" + eco.data + ":" + tmpsubLV.needAmount[j]);
 				}
@@ -98,7 +97,7 @@ if (found == false) {
 				LV1000Type tmpsubLV = tmpLV.get(i);
 
 				if (printPls == true) {
-					AllBlockInGameType eco = Main.co.allBlockInGameAsList.get(tmpsubLV.rewardIndex[j]);
+					AllBlockInGameType eco = Core.allBlockInGameAsList.get(tmpsubLV.rewardIndex[j]);
 
 					d.pl("reward slot " + j + " = " + eco.theName + ":" + eco.data + ":"
 							+ tmpLV.get(i).rewardAmount[j]);
@@ -109,13 +108,13 @@ if (found == false) {
 
 		// check that all level include all unique item
 
-		boolean needSlotUsedIt[] = new boolean[Main.co.allBlockInGameAsList.size()];
-		for (int i = 0; i < Main.co.allBlockInGameAsList.size(); i++) {
+		boolean needSlotUsedIt[] = new boolean[Core.allBlockInGameAsList.size()];
+		for (int i = 0; i < Core.allBlockInGameAsList.size(); i++) {
 			needSlotUsedIt[i] = false;
 		}
 
-		boolean rewardSlotUsedIt[] = new boolean[Main.co.allBlockInGameAsList.size()];
-		for (int i = 0; i < Main.co.allBlockInGameAsList.size(); i++) {
+		boolean rewardSlotUsedIt[] = new boolean[Core.allBlockInGameAsList.size()];
+		for (int i = 0; i < Core.allBlockInGameAsList.size(); i++) {
 			rewardSlotUsedIt[i] = false;
 		}
 
@@ -128,17 +127,17 @@ if (found == false) {
 			LV1000Type curLV = tmpLV.get(i);
 
 			for (int j = 0; j < curLV.needSize; j++) {
-				AllBlockInGameType need = Main.co.allBlockInGameAsList.get(curLV.needIndex[j]);
+				AllBlockInGameType need = Core.allBlockInGameAsList.get(curLV.needIndex[j]);
 
 				if (printPls == true) {
 
 					d.pl("need slot " + j + " = " + need.theName + ":" + need.data + ":" + curLV.needAmount[j]);
 				}
 
-				for (int k = 0; k < Main.co.allBlockInGameAsList.size(); k++) {
+				for (int k = 0; k < Core.allBlockInGameAsList.size(); k++) {
 
-					if (Main.co.allBlockInGameAsList.get(k).data == need.data)
-						if (Main.co.allBlockInGameAsList.get(k).theName.equalsIgnoreCase(need.theName)) {
+					if (Core.allBlockInGameAsList.get(k).data == need.data)
+						if (Core.allBlockInGameAsList.get(k).theName.equalsIgnoreCase(need.theName)) {
 
 							if (needSlotUsedIt[k] == true) {
 								if (printPls == true) {
@@ -160,16 +159,16 @@ if (found == false) {
 			// duplicate = 0;
 
 			for (int j = 0; j < curLV.rewardSize; j++) {
-				AllBlockInGameType reward = Main.co.allBlockInGameAsList.get(curLV.rewardIndex[j]);
+				AllBlockInGameType reward = Core.allBlockInGameAsList.get(curLV.rewardIndex[j]);
 
 				if (printPls == true) {
 					d.pl("reward slot " + j + " = " + reward.theName + ":" + reward.data + ":" + curLV.rewardAmount[j]);
 				}
 
-				for (int k = 0; k < Main.co.allBlockInGameAsList.size(); k++) {
+				for (int k = 0; k < Core.allBlockInGameAsList.size(); k++) {
 
-					if (Main.co.allBlockInGameAsList.get(k).data == reward.data)
-						if (Main.co.allBlockInGameAsList.get(k).theName.equalsIgnoreCase(reward.theName)) {
+					if (Core.allBlockInGameAsList.get(k).data == reward.data)
+						if (Core.allBlockInGameAsList.get(k).theName.equalsIgnoreCase(reward.theName)) {
 							if (rewardSlotUsedIt[k] == true) {
 								if (printPls == true) {
 									d.pl(" *** ** reward dupli " + reward.theName + ":" + reward.data);
@@ -188,7 +187,7 @@ if (found == false) {
 		}
 
 		int countTrue = 0;
-		for (int i = 0; i < Main.co.allBlockInGameAsList.size(); i++) {
+		for (int i = 0; i < Core.allBlockInGameAsList.size(); i++) {
 			if (needSlotUsedIt[i] == true) {
 				countTrue++;
 			}
@@ -205,9 +204,9 @@ if (found == false) {
 			d.pl("maxUnique " + countTrue);
 		}
 
-		if (countTrue < Main.co.allBlockInGameAsList.size()) {
+		if (countTrue < Core.allBlockInGameAsList.size()) {
 			d.pl(" >>> reward duplicate " + duplicate);
-			d.pl("countTrue < Max Unique Item " + countTrue + "/" + (Main.co.allBlockInGameAsList.size() * 2));
+			d.pl("countTrue < Max Unique Item " + countTrue + "/" + (Core.allBlockInGameAsList.size() * 2));
 			return countTrue;
 			// break;
 		}
@@ -276,8 +275,8 @@ if (found == false) {
 
 		// get all money
 		ps.money = 0;
-		for (int i = 0; i < Main.co.sellAsList.size(); i++) {
-			SellableType se = Main.co.sellAsList.get(i);
+		for (int i = 0; i < Core.sellAsList.size(); i++) {
+			SellableType se = Core.sellAsList.get(i);
 			SellableType seTmpSe = tmpSell.get(i);
 
 			double tmpMoney = 0;
@@ -312,7 +311,7 @@ if (found == false) {
 				notFill = false;
 
 				for (int j = 0; j < curLV.needSize; j++) {
-					AllBlockInGameType itm = Main.co.allBlockInGameAsList.get(curLV.needIndex[j]);
+					AllBlockInGameType itm = Core.allBlockInGameAsList.get(curLV.needIndex[j]);
 
 					AllBlockInGameType myInv = ps.allMyInventory.get(itm.getIDData());
 					notFill = notFillyet(itm, myInv, curLV.needAmount[j]);
@@ -331,7 +330,7 @@ if (found == false) {
 					do {
 						ranbuy = rnd.nextInt(curLV.needSize);
 
-						AllBlockInGameType itm = Main.co.allBlockInGameAsList.get(curLV.needIndex[ranbuy]);
+						AllBlockInGameType itm = Core.allBlockInGameAsList.get(curLV.needIndex[ranbuy]);
 						AllBlockInGameType myInv = ps.allMyInventory.get(itm.getIDData());
 
 						boolean notFillRan = notFillyet(itm, myInv, curLV.needAmount[ranbuy]);
@@ -349,7 +348,7 @@ if (found == false) {
 					// check money
 
 					// search item in shop
-					AllBlockInGameType itm = Main.co.allBlockInGameAsList.get(curLV.needIndex[ranbuy]);
+					AllBlockInGameType itm = Core.allBlockInGameAsList.get(curLV.needIndex[ranbuy]);
 
 					d.pl("searching this item in shop " + itm.getIDData());
 
@@ -398,10 +397,8 @@ if (found == false) {
 							}
 						}
 
-						
-
 					} // loop all shop
-					
+
 					d.pl("foundInShop " + foundInShop);
 					if (foundInShop == false) {
 						// print all item in shop
@@ -443,12 +440,12 @@ if (found == false) {
 
 		double fitCurLV = curLVLoop * 100;
 		double fitMoneyLeft = -Math.abs(ps.money);
-		double fitMaxMoney = -Math.abs(psMaxMoney - Main.co.maxMoney);
+		double fitMaxMoney = -Math.abs(psMaxMoney - Core.maxMoney);
 
 		double fitAtTheEndItem = 0;
 
-		for (int i = 0; i < Main.co.allBlockInGameAsList.size(); i++) {
-			AllBlockInGameType eg = Main.co.allBlockInGameAsList.get(i);
+		for (int i = 0; i < Core.allBlockInGameAsList.size(); i++) {
+			AllBlockInGameType eg = Core.allBlockInGameAsList.get(i);
 			AllBlockInGameType myeg = ps.allMyInventory.get(eg.getIDData());
 
 			if (eg.atTheEndNeed > 0) {

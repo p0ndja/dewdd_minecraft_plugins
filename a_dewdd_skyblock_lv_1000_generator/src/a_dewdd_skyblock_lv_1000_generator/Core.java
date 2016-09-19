@@ -72,190 +72,26 @@ public class Core {
 	public static double maxMoney = 100000;
 
 	public static int maxLV = 100;
-	private int curChro = 0;
+	public static HashMap<String, SellableType> sell = new HashMap<String, SellableType>();
 
 	// 415 unique item
+
+	public static HashMap<String, AllBlockInGameType> allBlockInGame = new HashMap<String, AllBlockInGameType>();
+
+	public static LinkedList<SellableType> sellAsList = new LinkedList<SellableType>();
+
+	public static LinkedList<AllBlockInGameType> allBlockInGameAsList = new LinkedList<AllBlockInGameType>();
+
+	private int curChro = 0;
 
 	private double[] chromosome;
 
 	private int curMissionItemSwapPosition;
 
-	HashMap<String, SellableType> sell = new HashMap<String, SellableType>();
-
-	HashMap<String, AllBlockInGameType> allBlockInGame = new HashMap<String, AllBlockInGameType>();
-
-	LinkedList<SellableType> sellAsList = new LinkedList<SellableType>();
-
-	LinkedList<AllBlockInGameType> allBlockInGameAsList = new LinkedList<AllBlockInGameType>();
-
-	public double convertStringToTime(String abc) {
-		String m[] = abc.split(" ");
-
-		double cd = Double.parseDouble(m[0]);
-
-		if (m[1].equalsIgnoreCase("h")) {
-			cd = cd * 60 * 60;
-
-		} else if (m[1].equalsIgnoreCase("m")) {
-			cd = cd * 60;
-
-		} else if (m[1].equalsIgnoreCase("s")) {
-			cd = cd * 1;
-
-		}
-
-		return cd;
-
-	}
-
-	public String convertTimeToString(double abc) {
-		String letter = "";
-		double ceo = 0;
-
-		if (abc >= 60 * 60) {
-			letter = "h";
-			ceo = abc / 60 / 60;
-
-		} else if (abc >= 60) {
-			letter = "m";
-
-			ceo = abc / 60;
-		} else if (abc >= 0) {
-			letter = "s";
-
-			ceo = abc / 60;
-		}
-
-		return ceo + " " + letter;
-
-	}
-
-	public void convertTmpShopPriceAmountOfItemInShopToAllShopType(ParameterShopPriceToAllShopType tmpType) {
-		tmpType.outputAllShop.clear();
-		
-		// count before convert
-		int tmpCount = 0;
-		for (int i = 0; i < tmpType.shopSlotMax; i++) {
-			for (int j = 0 ; j < tmpType.amount[i] ; j ++ ) { 
-				tmpCount ++ ;
-			}
-			
-		}
-		
-		d.pl("before convert tmpCount = " + tmpCount);
-
-		// check is the last shop ( have enough item >= minshop)
-
-		if (tmpType.amount[tmpType.shopSlotMax - 1] < minShopSize) {
-
-			for (int i = 0; i < tmpType.shopSlotMax - 1; i++) {
-				if (tmpType.amount[i] < maxShopSize) {
-					tmpType.amount[i]++;
-					tmpType.amount[tmpType.shopSlotMax - 1] --;
-					tmpType.price[tmpType.shopSlotMax - 1] = 0;
-					
-
-					if (tmpType.amount[tmpType.shopSlotMax - 1] == 0) {
-
-						break;
-
-					}
-
-				}
-			}
-			
-			
-			 tmpType.shopSlotMax--;
-
-		}
-		
-		 tmpCount = 0;
-			for (int i = 0; i < tmpType.shopSlotMax; i++) {
-				for (int j = 0 ; j < tmpType.amount[i] ; j ++ ) { 
-					tmpCount ++ ;
-				}
-				
-			}
-			
-			d.pl("shift last shop  tmpCount = " + tmpCount);
-
-
-		// to time convert to All Shop
-
-		int curItemIndex = 0;
-
-		for (int i = 0; i < tmpType.shopSlotMax; i++) {
-			// d.pl("convert tmp loop " + i + "/" + tmpType.shopSlotMax);
-
-			AllShop ab = new AllShop();
-
-			ab.playPrice = tmpType.price[i];
-			ab.size = tmpType.amount[i];
-
-			ab.item = new String[ab.size];
-			ab.data = new byte[ab.size];
-			ab.amount = new int[ab.size];
-
-			for (int j = 0; j < tmpType.amount[i]; j++) {
-				AllBlockInGameType abigt = tmpType.inputAllItemInShop.get(curItemIndex);
-				ab.item[j] = abigt.theName;
-				ab.data[j] = abigt.data;
-				ab.amount[j] = abigt.curAmount;
-
-				
-
-				curItemIndex++;
-				/*
-				 * if (curItemIndex == allBlockInGameAsList.size()) { break; }
-				 */
-			}
-
-			// curItemIndex += tmpType.amount[i];
-
-			tmpType.outputAllShop.add(ab);
-
-		}
-
-		// check that all item in shop has all item in game
-
-		d.pl("curItemIndex " + curItemIndex);
-
-		
-		// check item Lost Again
-		for (int a = 0; a < Main.co.allBlockInGameAsList.size(); a++) {
-			AllBlockInGameType edo = Main.co.allBlockInGameAsList.get(a);
-			boolean found = false;
-			for (int i = 0; i < tmpType.outputAllShop.size(); i++) {
-				AllShop as = tmpType.outputAllShop.get(i);
-				for (int j = 0; j < as.size; j++) {
-					if (as.item[j].equalsIgnoreCase(edo.theName)) {
-						if (as.data[j] == edo.data) {
-							found = true;
-							break;
-						}
-					}
-					
-				}
-				
-				
-				
-			}
-if (found == false) {
-					d.pl("a " + a + " , " + edo.getIDData());
-					Exception exp = new Exception("error item lost");
-					exp.printStackTrace();
-					System.exit(0);
-				}
-		}
-		
-		d.pl("converted tmpShop to AllShop ");
-	}
-
 	public void addNeedItemToLV(ParameterLVType paraLV) {
 		ParameterRandomUniqueItem rUnique = new ParameterRandomUniqueItem();
 		decodeRandomUniqueItem(rUnique);
 
-		
 		ParameterRandomAmountItem amountUniqueItemPerLV = new ParameterRandomAmountItem();
 		decodeRandomSumAmount417ForAllShop(amountUniqueItemPerLV);
 
@@ -272,8 +108,11 @@ if (found == false) {
 			l.needIndex = new int[amountUniqueItemPerLV.amount[curLV]];
 			l.needSize = 0;
 
-		/*	d.pl("decode lv need " + curLV + " = " + amountUniqueItemPerLV.amount[curLV] + " cur chro " + curChro
-					+ " , cur " + cur);*/
+			/*
+			 * d.pl("decode lv need " + curLV + " = " +
+			 * amountUniqueItemPerLV.amount[curLV] + " cur chro " + curChro +
+			 * " , cur " + cur);
+			 */
 
 			// add all item need it current level
 			for (int j = 0; j < amountUniqueItemPerLV.amount[curLV] && cur < allBlockInGameAsList.size(); j++) {
@@ -321,8 +160,10 @@ if (found == false) {
 			e.rewardAmount = new int[amountReward];
 			e.rewardIndex = new int[amountReward];
 
-		/*	d.pl("decode lv reward " + i + " = " + amountReward + " cur chro " + curChro);
-*/
+			/*
+			 * d.pl("decode lv reward " + i + " = " + amountReward +
+			 * " cur chro " + curChro);
+			 */
 			for (int j = 0; j < amountReward; j++) {
 				double g = decodeRandomGive01_() * allBlockInGameAsList.size();
 
@@ -338,14 +179,176 @@ if (found == false) {
 		}
 	}
 
-	public void decodeTmpLV(ParameterLVType paraLV) {
+	public double convertStringToTime(String abc) {
+		String m[] = abc.split(" ");
 
-		// random unique item
+		double cd = Double.parseDouble(m[0]);
 
-		addNeedItemToLV(paraLV);
+		if (m[1].equalsIgnoreCase("h")) {
+			cd = cd * 60 * 60;
 
-		addRewardItemToLV(paraLV);
+		} else if (m[1].equalsIgnoreCase("m")) {
+			cd = cd * 60;
 
+		} else if (m[1].equalsIgnoreCase("s")) {
+			cd = cd * 1;
+
+		}
+
+		return cd;
+
+	}
+
+	public String convertTimeToString(double abc) {
+		String letter = "";
+		double ceo = 0;
+
+		if (abc >= 60 * 60) {
+			letter = "h";
+			ceo = abc / 60 / 60;
+
+		} else if (abc >= 60) {
+			letter = "m";
+
+			ceo = abc / 60;
+		} else if (abc >= 0) {
+			letter = "s";
+
+			ceo = abc / 60;
+		}
+
+		return ceo + " " + letter;
+
+	}
+
+	public void convertTmpShopPriceAmountOfItemInShopToAllShopType(ParameterShopPriceToAllShopType tmpType) {
+		tmpType.outputAllShop.clear();
+
+		// count before convert
+		int tmpCount = 0;
+		for (int i = 0; i < tmpType.shopSlotMax; i++) {
+			for (int j = 0; j < tmpType.amount[i]; j++) {
+				tmpCount++;
+			}
+
+		}
+
+		d.pl("before convert tmpCount = " + tmpCount);
+
+		// check is the last shop ( have enough item >= minshop)
+
+		if (tmpType.amount[tmpType.shopSlotMax - 1] < minShopSize) {
+
+			for (int i = 0; i < tmpType.shopSlotMax - 1; i++) {
+				if (tmpType.amount[i] < maxShopSize) {
+					tmpType.amount[i]++;
+					tmpType.amount[tmpType.shopSlotMax - 1]--;
+					tmpType.price[tmpType.shopSlotMax - 1] = 0;
+
+					if (tmpType.amount[tmpType.shopSlotMax - 1] == 0) {
+
+						break;
+
+					}
+
+				}
+			}
+
+			tmpType.shopSlotMax--;
+
+		}
+
+		tmpCount = 0;
+		for (int i = 0; i < tmpType.shopSlotMax; i++) {
+			for (int j = 0; j < tmpType.amount[i]; j++) {
+				tmpCount++;
+			}
+
+		}
+
+		d.pl("shift last shop  tmpCount = " + tmpCount);
+
+		// to time convert to All Shop
+
+		int curItemIndex = 0;
+
+		for (int i = 0; i < tmpType.shopSlotMax; i++) {
+			// d.pl("convert tmp loop " + i + "/" + tmpType.shopSlotMax);
+
+			AllShop ab = new AllShop();
+
+			ab.playPrice = tmpType.price[i];
+			ab.size = tmpType.amount[i];
+
+			ab.item = new String[ab.size];
+			ab.data = new byte[ab.size];
+			ab.amount = new int[ab.size];
+
+			for (int j = 0; j < tmpType.amount[i]; j++) {
+				AllBlockInGameType abigt = tmpType.inputAllItemInShop.get(curItemIndex);
+				ab.item[j] = abigt.theName;
+				ab.data[j] = abigt.data;
+				ab.amount[j] = abigt.curAmount;
+
+				curItemIndex++;
+				/*
+				 * if (curItemIndex == allBlockInGameAsList.size()) { break; }
+				 */
+			}
+
+			// curItemIndex += tmpType.amount[i];
+
+			tmpType.outputAllShop.add(ab);
+
+		}
+
+		// check that all item in shop has all item in game
+
+		d.pl("curItemIndex " + curItemIndex);
+
+		// check item Lost Again
+		/*
+		 * for (int a = 0; a < Main.co.allBlockInGameAsList.size(); a++) {
+		 * AllBlockInGameType edo = Main.co.allBlockInGameAsList.get(a); boolean
+		 * found = false; for (int i = 0; i < tmpType.outputAllShop.size(); i++)
+		 * { AllShop as = tmpType.outputAllShop.get(i); for (int j = 0; j <
+		 * as.size; j++) { if (as.item[j].equalsIgnoreCase(edo.theName)) { if
+		 * (as.data[j] == edo.data) { found = true; break; } }
+		 * 
+		 * }
+		 * 
+		 * 
+		 * 
+		 * } if (found == false) { d.pl("a " + a + " , " + edo.getIDData());
+		 * Exception exp = new Exception("error item lost");
+		 * exp.printStackTrace(); System.exit(0); } }
+		 */
+
+		d.pl("converted tmpShop to AllShop ");
+	}
+
+	public double decodeRandomGive01_() {
+		double tmpReadChro = 0;
+		tmpReadChro = decodeRandomGiveDouble_();
+
+		if (tmpReadChro < 0) {
+			tmpReadChro = 0;
+		}
+
+		if (tmpReadChro > 1) {
+			tmpReadChro = 1;
+		}
+
+		return tmpReadChro;
+
+	}
+
+	public double decodeRandomGiveDouble_() {
+		double tmpReadChro = 0;
+		tmpReadChro = Math.abs(chromosome[curChro]);
+		curChro++;
+
+		return tmpReadChro;
 	}
 
 	public void decodeRandomSumAmount417ForAllShop(ParameterRandomAmountItem para) {
@@ -357,7 +360,7 @@ if (found == false) {
 
 		int countItem = 0;
 		while (countItem < allBlockInGameAsList.size()) {
-			//d.pl("countItem , " + countItem + " , curChro " + curChro);
+			// d.pl("countItem , " + countItem + " , curChro " + curChro);
 
 			double max = (maxShopSize - minShopSize); // 1 / 7
 
@@ -388,30 +391,6 @@ if (found == false) {
 
 	}
 
-	public double decodeRandomGiveDouble_() {
-		double tmpReadChro = 0;
-		tmpReadChro = Math.abs(chromosome[curChro]);
-		curChro++;
-
-		return tmpReadChro;
-	}
-
-	public double decodeRandomGive01_() {
-		double tmpReadChro = 0;
-		tmpReadChro = decodeRandomGiveDouble_();
-
-		if (tmpReadChro < 0) {
-			tmpReadChro = 0;
-		}
-
-		if (tmpReadChro > 1) {
-			tmpReadChro = 1;
-		}
-
-		return tmpReadChro;
-
-	}
-
 	public void decodeRandomUniqueItem(ParameterRandomUniqueItem para) {
 		para.index = new int[allBlockInGameAsList.size()];
 		boolean tmpBoolean[] = new boolean[allBlockInGameAsList.size()];
@@ -436,6 +415,62 @@ if (found == false) {
 			continue;
 		}
 
+	}
+
+	public void decodeTmpAllItemInShop(ParameterAllItemInShopType paraItemsInShop) {
+		ParameterRandomUniqueItem para = new ParameterRandomUniqueItem();
+
+		decodeRandomUniqueItem(para);
+
+		while (paraItemsInShop.outputAllItemInShop.size() < allBlockInGameAsList.size()) {
+
+			AllBlockInGameType bo = new AllBlockInGameType();
+
+			int cur = para.index[paraItemsInShop.outputAllItemInShop.size()];
+
+			bo.theName = allBlockInGameAsList.get(cur).theName;
+			bo.data = allBlockInGameAsList.get(cur).data;
+
+			// ........
+
+			double rendomStack01 = decodeRandomGive01_();
+
+			bo.curAmount = (int) Math.round(rendomStack01 * allBlockInGameAsList.get(cur).maxStack);
+
+			if (bo.curAmount <= 0)
+				bo.curAmount = 1;
+
+			paraItemsInShop.outputAllItemInShop.add(bo);
+
+		}
+
+	}
+
+	public void decodeTmpLV(ParameterLVType paraLV) {
+
+		// random unique item
+
+		addNeedItemToLV(paraLV);
+
+		addRewardItemToLV(paraLV);
+
+	}
+
+	public int decodeTmpSell(LinkedList<SellableType> tmpSell) {
+		while (tmpSell.size() < sell.size()) {
+
+			double tmpReadChro = decodeRandomGiveDouble_();
+
+			SellableType x = sellAsList.get(tmpSell.size()).copyIt();
+
+			x.sellPerPrice = tmpReadChro * SellMaxCost;
+			tmpSell.add(x);
+
+			continue;
+
+		}
+
+		return curChro;
 	}
 
 	public void decodeTmpShopPriceAmountOfItemInShop(ParameterShopPriceAmountOfItemInShopType paraShopPrice) {
@@ -475,70 +510,21 @@ if (found == false) {
 			paraShopPrice.shopSlotMax++;
 
 		} // mission
-		
-		
-		
+
 		// count all item again
 		int cou = 0;
-		for (int i = 0 ; i < paraShopPrice.shopSlotMax ; i ++ ) {
-			
-			for (int j = 0 ; j < paraShopPrice.amount[i] ; j ++ ) {
-				cou ++;
+		for (int i = 0; i < paraShopPrice.shopSlotMax; i++) {
+
+			for (int j = 0; j < paraShopPrice.amount[i]; j++) {
+				cou++;
 			}
-			
+
 		}
 
 		d.pl("count paraShopPrice amount [] + + +  = " + cou + " / " + allBlockInGameAsList.size());
 		if (cou < allBlockInGameAsList.size()) {
 			d.pl("error ");
 		}
-	}
-
-	public void decodeTmpAllItemInShop(ParameterAllItemInShopType paraItemsInShop) {
-		ParameterRandomUniqueItem para = new ParameterRandomUniqueItem();
-
-		decodeRandomUniqueItem(para);
-
-		while (paraItemsInShop.outputAllItemInShop.size() < allBlockInGameAsList.size()) {
-
-			AllBlockInGameType bo = new AllBlockInGameType();
-
-			int cur = para.index[paraItemsInShop.outputAllItemInShop.size()];
-
-			bo.theName = allBlockInGameAsList.get(cur).theName;
-			bo.data = allBlockInGameAsList.get(cur).data;
-
-			
-			// ........
-
-			double rendomStack01 = decodeRandomGive01_();
-
-			bo.curAmount = (int) Math.round(rendomStack01 * allBlockInGameAsList.get(cur).maxStack);
-
-			if (bo.curAmount <= 0)
-				bo.curAmount = 1;
-
-			paraItemsInShop.outputAllItemInShop.add(bo);
-
-		}
-
-	}
-
-	public int decodeTmpSell(LinkedList<SellableType> tmpSell) {
-		while (tmpSell.size() < sell.size()) {
-
-			double tmpReadChro = decodeRandomGiveDouble_();
-
-			SellableType x = sellAsList.get(tmpSell.size()).copyIt();
-
-			x.sellPerPrice = tmpReadChro * SellMaxCost;
-			tmpSell.add(x);
-
-			continue;
-
-		}
-
-		return curChro;
 	}
 
 	public void dnaDecoder(double[] chromosome, LinkedList<AllShop> tmpAllShop, LinkedList<SellableType> tmpSell,
@@ -600,83 +586,79 @@ if (found == false) {
 
 		// ******************************************************************************************
 		// check item Lost Again
-		for (int a = 0; a < Main.co.allBlockInGameAsList.size(); a++) {
-			AllBlockInGameType edo = Main.co.allBlockInGameAsList.get(a);
-			boolean found = false;
-			for (int i = 0; i < tmpAllShop.size(); i++) {
-				AllShop as = tmpAllShop.get(i);
-				for (int j = 0; j < as.size; j++) {
-					if (as.item[j].equalsIgnoreCase(edo.theName)) {
-						if (as.data[j] == edo.data) {
-							found = true;
-							break;
-						}
-					}
-					
-				}
-				
-				
-				
-			}
-if (found == false) {
-					d.pl("a " + a + " , " + edo.getIDData());
-					Exception exp = new Exception("error item lost");
-					exp.printStackTrace();
-					System.exit(0);
-				}
-		}
+		/*
+		 * for (int a = 0; a < Main.co.allBlockInGameAsList.size(); a++) {
+		 * AllBlockInGameType edo = Main.co.allBlockInGameAsList.get(a); boolean
+		 * found = false; for (int i = 0; i < tmpAllShop.size(); i++) { AllShop
+		 * as = tmpAllShop.get(i); for (int j = 0; j < as.size; j++) { if
+		 * (as.item[j].equalsIgnoreCase(edo.theName)) { if (as.data[j] ==
+		 * edo.data) { found = true; break; } }
+		 * 
+		 * }
+		 * 
+		 * 
+		 * 
+		 * } if (found == false) { d.pl("a " + a + " , " + edo.getIDData());
+		 * Exception exp = new Exception("error item lost");
+		 * exp.printStackTrace(); System.exit(0); } }
+		 */
 		// decode level
 
 		ParameterLVType tmp4 = new ParameterLVType();
 
 		tmp4.outputLV = tmpLV;
 
-		boolean usedItShopList[] = new boolean[Main.co.allBlockInGameAsList.size()];
+		boolean usedItShopList[] = new boolean[Core.allBlockInGameAsList.size()];
 
-		for (int i = 0; i < Main.co.allBlockInGameAsList.size(); i++) {
+		for (int i = 0; i < Core.allBlockInGameAsList.size(); i++) {
 			usedItShopList[i] = false;
 		}
 
-		boolean usedItNeedList[] = new boolean[Main.co.allBlockInGameAsList.size()];
-		boolean usedItRewardList[] = new boolean[Main.co.allBlockInGameAsList.size()];
+		boolean usedItNeedList[] = new boolean[Core.allBlockInGameAsList.size()];
+		boolean usedItRewardList[] = new boolean[Core.allBlockInGameAsList.size()];
 
-		for (int i = 0; i < Main.co.allBlockInGameAsList.size(); i++) {
+		for (int i = 0; i < Core.allBlockInGameAsList.size(); i++) {
 			usedItNeedList[i] = false;
 			usedItRewardList[i] = false;
 		}
 
 		decodeTmpLV(tmp4);
-		
-		
+
 		// check item Lost Again
-		for (int a = 0; a < Main.co.allBlockInGameAsList.size(); a++) {
-			AllBlockInGameType edo = Main.co.allBlockInGameAsList.get(a);
-			boolean found = false;
-			for (int i = 0; i < tmpAllShop.size(); i++) {
-				AllShop as = tmpAllShop.get(i);
-				for (int j = 0; j < as.size; j++) {
-					if (as.item[j].equalsIgnoreCase(edo.theName)) {
-						if (as.data[j] == edo.data) {
-							found = true;
-							break;
-						}
-					}
-					
-				}
-				
-				
-				
-			}
-if (found == false) {
-					d.pl("a " + a + " , " + edo.getIDData());
-					Exception exp = new Exception("error item lost");
-					exp.printStackTrace();
-					System.exit(0);
-				}
-		}
+		/*
+		 * for (int a = 0; a < Main.co.allBlockInGameAsList.size(); a++) {
+		 * AllBlockInGameType edo = Main.co.allBlockInGameAsList.get(a); boolean
+		 * found = false; for (int i = 0; i < tmpAllShop.size(); i++) { AllShop
+		 * as = tmpAllShop.get(i); for (int j = 0; j < as.size; j++) { if
+		 * (as.item[j].equalsIgnoreCase(edo.theName)) { if (as.data[j] ==
+		 * edo.data) { found = true; break; } }
+		 * 
+		 * }
+		 * 
+		 * 
+		 * 
+		 * } if (found == false) { d.pl("a " + a + " , " + edo.getIDData());
+		 * Exception exp = new Exception("error item lost");
+		 * exp.printStackTrace(); System.exit(0); } }
+		 */
 
 		d.pl("abc");
 		d.pl("end curChro " + curChro);
+	}
+
+	public int getIndexFromKeyAlBlockInGame(String abc) {
+		int index = -1;
+		for (int i = 0; i < allBlockInGameAsList.size(); i++) {
+			AllBlockInGameType e = allBlockInGameAsList.get(i);
+
+			String eo = e.theName + ":" + e.data;
+			if (eo.equalsIgnoreCase(abc)) {
+				index = i;
+				break;
+			}
+		}
+
+		return index;
 	}
 
 	public void getNextBlockSwapMissionType(int swapNextxTime, int iNeedBlock, boolean usedItList[]) {
@@ -790,8 +772,6 @@ if (found == false) {
 				miss.theName = m[0];
 				miss.data = Byte.parseByte(m[1]);
 
-				
-
 				miss.maxStack = Integer.parseInt(m[2]);
 				miss.isBlock = Boolean.parseBoolean(m[3]);
 
@@ -883,21 +863,6 @@ if (found == false) {
 		} catch (Exception e) {// Catch exception if any
 			d.pl("Error load " + filena + e.getMessage());
 		}
-	}
-
-	public int getIndexFromKeyAlBlockInGame(String abc) {
-		int index = -1;
-		for (int i = 0; i < allBlockInGameAsList.size(); i++) {
-			AllBlockInGameType e = allBlockInGameAsList.get(i);
-
-			String eo = e.theName + ":" + e.data;
-			if (eo.equalsIgnoreCase(abc)) {
-				index = i;
-				break;
-			}
-		}
-
-		return index;
 	}
 
 	public LinkedList<SellableType> sortSell(LinkedList<SellableType> sortPls) {
