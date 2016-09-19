@@ -232,8 +232,6 @@ public class api_skyblock {
 				rs[i] = tmprs[i].copyIt();
 			}
 			
-			
-
 			//player.sendMessage("thereBlock " + thereBlock);
 			
 		}
