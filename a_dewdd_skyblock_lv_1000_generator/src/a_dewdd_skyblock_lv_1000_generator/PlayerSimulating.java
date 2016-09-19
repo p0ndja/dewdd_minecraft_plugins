@@ -10,10 +10,65 @@ public class PlayerSimulating {
 	
 	public HashMap<String , Farm> farmMap = new HashMap<String , Farm>();
 	
-	public HashMap<String , Animal> animalMap = new HashMap<String , Animal>();
+	public HashMap<Byte , Animal> animalMap = new HashMap<Byte , Animal>(); // egg id : animal
 	
 	
 	public PlayerSimulating() {
+		
+		
+		// setup farmMap
+		String tmpAdd [] = new String [11];
+		tmpAdd[0] = "SEEDS";
+		tmpAdd[1] = "RED_MUSHROOM";
+		tmpAdd[2] = "BROWN_MUSHROOM";
+		tmpAdd[3] = "CACTUS";
+		tmpAdd[4] = "SUGAR_CANE";
+		tmpAdd[5] = "PUMPKIN";
+		tmpAdd[6] = "POTATO";
+		tmpAdd[7] = "WHEAT";
+		tmpAdd[8] = "CARROT_ITEM";
+		tmpAdd[9] = "MELON";
+		tmpAdd[10] = "NETHER_STALK";
+
+		for (int i = 0; i < tmpAdd.length ; i ++) {
+			Farm x = new Farm();
+			x.itemId = tmpAdd[i];
+			x.countTick = 0;
+			x.amount = 0;
+			
+			farmMap.put(tmpAdd[i], x);
+		}
+		
+		// setup animalMap
+
+		byte tmpAdd2 [] = new byte [5];
+		tmpAdd2[0] = 99 ; // pig
+		tmpAdd2[1] = 91 ; // sheep
+		tmpAdd2[2] = 92 ; // cow
+		tmpAdd2[3] = 93 ; // chicken
+		tmpAdd2[4] = 96 ; // cow mush room
+		
+		
+		for (int i = 0 ; i < tmpAdd2.length ; i ++ ){
+			Animal x  = new Animal ();
+			x.itemId = "MONSTER_EGG";
+			x.data = tmpAdd2[i];
+			x.countTick = 0;
+			
+			animalMap.put(x.data, x);
+		}
+		
+		
+		// setup allMyInventory
+		
+		allMyInventory.clear();
+		
+		for (int i = 0 ; i < Main.co.allBlockInGame.size() ; i++ ){
+			AllBlockInGameType x = Main.co.allBlockInGame.get(i).copyIt();
+			allMyInventory.put(x.theName + ":" + x.data, x);
+			
+		}
+		
 		
 	}
 	

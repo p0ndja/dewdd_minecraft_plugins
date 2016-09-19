@@ -7,7 +7,6 @@ import java.util.LinkedList;
 import ga_optimization_api.Hybrid;
 
 class HybridOverride extends Hybrid{
-	public Core co; 
 	
 	
 	
@@ -18,7 +17,7 @@ class HybridOverride extends Hybrid{
 		LinkedList<LV1000Type> tmpLV =  new LinkedList<LV1000Type>();
 		LinkedList<Double> tmpReading  = new LinkedList<Double>();
 		
-		co.dnaDecoder(dna,   tmpAllShop,
+		Main.co.dnaDecoder(dna,   tmpAllShop,
 				tmpSell,  tmpLV,  tmpReading,
 				0, 0);
 		
@@ -66,6 +65,9 @@ class HybridOverride extends Hybrid{
 		// simulating
 		
 		
+		PlayerSimulating ps = new PlayerSimulating();
+		
+		
 		
 		
 		return 0;
@@ -74,15 +76,15 @@ class HybridOverride extends Hybrid{
 	
 }
 
-public class main {
+public class Main {
 	
-	
+	public static Core co ;
 
 	public static void main(String[] args) {
 		
 	
+		 co = new Core();
 		
-		Core co = new Core();
 		co.loadSellableFile();
 		LinkedList<SellableType> sorted = co.sortSell(co.sell);
 		
@@ -103,7 +105,7 @@ public class main {
 		d.pl("");
 		
 		co.loadMissionBlockFile();
-		LinkedList<AllBlockInGameType>  mis = co.mission;
+		LinkedList<AllBlockInGameType>  mis = co.allBlockInGame;
 		
 		d.pl("*** mission size = " + mis.size());
 		
@@ -119,7 +121,7 @@ public class main {
 		
 		
 		HybridOverride hy = new HybridOverride();
-		hy.co = co;
+		
 		
 		hy.setChromosomeLength(Core.dnaSize);
 		hy.setFitnessStop(100);

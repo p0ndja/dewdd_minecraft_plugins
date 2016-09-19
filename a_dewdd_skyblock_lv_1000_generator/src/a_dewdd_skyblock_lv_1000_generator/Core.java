@@ -12,7 +12,7 @@ public class Core {
 	public static String missionPath = File.separator + "ramdisk" + File.separator + "missionblock.txt";
 
 	LinkedList<SellableType> sell = new LinkedList<SellableType>();
-	LinkedList<AllBlockInGameType> mission = new LinkedList<AllBlockInGameType>();
+	LinkedList<AllBlockInGameType> allBlockInGame = new LinkedList<AllBlockInGameType>();
 
 	public static int dnaSize = 4000;
 
@@ -69,7 +69,7 @@ public class Core {
 
 			// price shift <amount> shift <amount> shift <amount>
 
-			if (tmpAllShopUniqueDone < mission.size()) {
+			if (tmpAllShopUniqueDone < allBlockInGame.size()) {
 
 				if (tmpReading.size() >= (1 + (minShopSize * 2)) && tmpReading.size() <= (1 + maxShopSize * 2)
 						&& tmpReading.size() % 2 == 1) {
@@ -86,10 +86,10 @@ public class Core {
 									(int) (tmpReading.get(i).doubleValue() * swapMultipy), curMissionItemSwapPosition);
 							curMissionItemSwapPosition = itemSlot;
 
-							x.Item[x.size] = mission.get(itemSlot).theName;
-							x.data[x.size] = mission.get(itemSlot).data;
+							x.Item[x.size] = allBlockInGame.get(itemSlot).theName;
+							x.data[x.size] = allBlockInGame.get(itemSlot).data;
 							x.amount[x.size] = (int) (tmpReading.get(i + 1).doubleValue()
-									* mission.get(itemSlot).maxStack);
+									* allBlockInGame.get(itemSlot).maxStack);
 							i++;
 
 							tmpAllShopUniqueDone++;
@@ -158,13 +158,13 @@ public class Core {
 							
 							
 							int tmpAmount =(int) (tmpReading.get(i).doubleValue()
-									* mission.get(itemSlot).maxStack);
+									* allBlockInGame.get(itemSlot).maxStack);
 							if (tmpAmount <= 0) {
 								tmpAmount = 1;
 							}
 
-							x.needItem[x.needSize] = mission.get(itemSlot).theName;
-							x.needData[x.needSize] = mission.get(itemSlot).data;
+							x.needItem[x.needSize] = allBlockInGame.get(itemSlot).theName;
+							x.needData[x.needSize] = allBlockInGame.get(itemSlot).data;
 							x.needAmount[x.needSize] = tmpAmount ;
 						
 
@@ -190,8 +190,8 @@ public class Core {
 							curMissionItemSwapPosition = itemSlot;
 
 							
-							x.rewardItem[x.rewardSize] = mission.get(itemSlot).theName;
-							x.rewardData[x.rewardSize] = mission.get(itemSlot).data;
+							x.rewardItem[x.rewardSize] = allBlockInGame.get(itemSlot).theName;
+							x.rewardData[x.rewardSize] = allBlockInGame.get(itemSlot).data;
 							
 							double tmpAmount = Math.abs(chromosome[curChro]);
 							curChro ++;
@@ -199,7 +199,7 @@ public class Core {
 							if (tmpAmount > 1) {
 								tmpAmount = 1;
 							}
-							double tmpAmountInt = tmpAmount * mission.get(itemSlot).maxStack;
+							double tmpAmountInt = tmpAmount * allBlockInGame.get(itemSlot).maxStack;
 							if ((int)tmpAmountInt < 0) {
 								tmpAmountInt = 1;
 							}
@@ -227,8 +227,8 @@ public class Core {
 							curMissionItemSwapPosition = itemSlot;
 
 							
-							x.rewardItem[x.rewardSize] = mission.get(itemSlot).theName;
-							x.rewardData[x.rewardSize] = mission.get(itemSlot).data;
+							x.rewardItem[x.rewardSize] = allBlockInGame.get(itemSlot).theName;
+							x.rewardData[x.rewardSize] = allBlockInGame.get(itemSlot).data;
 							
 							double tmpAmount = Math.abs(chromosome[curChro]);
 							curChro ++;
@@ -236,7 +236,7 @@ public class Core {
 							if (tmpAmount > 1) {
 								tmpAmount = 1;
 							}
-							double tmpAmountInt = tmpAmount * mission.get(itemSlot).maxStack;
+							double tmpAmountInt = tmpAmount * allBlockInGame.get(itemSlot).maxStack;
 							if ((int)tmpAmountInt < 0) {
 								tmpAmountInt = 1;
 							}
@@ -294,7 +294,7 @@ public class Core {
 
 		do {
 			looping++;
-			if (looping >= mission.size()) {
+			if (looping >= allBlockInGame.size()) {
 				looping = 0;
 			}
 			
@@ -307,7 +307,7 @@ public class Core {
 				break;
 			}
 			else if (iNeedBlock == 0) {
-				if (mission.get(looping).isBlock == true) {
+				if (allBlockInGame.get(looping).isBlock == true) {
 				if (swapNextxTime > 0) {
 					swapNextxTime--;
 					continue;
@@ -317,7 +317,7 @@ public class Core {
 				}
 			}
 			else if (iNeedBlock == 1) {
-				if (mission.get(looping).isBlock == false) {
+				if (allBlockInGame.get(looping).isBlock == false) {
 				if (swapNextxTime > 0) {
 					swapNextxTime--;
 					continue;
@@ -340,10 +340,10 @@ public class Core {
 
 		do {
 			looping++;
-			if (looping >= mission.size()) {
+			if (looping >= allBlockInGame.size()) {
 				looping = 0;
 			}
-			if (mission.get(looping).useIt == false) {
+			if (allBlockInGame.get(looping).useIt == false) {
 				if (swapNextxTime > 0) {
 					swapNextxTime--;
 					continue;
@@ -437,7 +437,7 @@ public class Core {
 
 		try {
 
-			mission.clear();
+			allBlockInGame.clear();
 
 			fff.createNewFile();
 
@@ -467,7 +467,7 @@ public class Core {
 
 				// d.pl("...");
 				// rs[rsMax - 1].mission = 0;
-				mission.add(miss);
+				allBlockInGame.add(miss);
 			}
 
 			d.pl(" Loaded " + filena);
