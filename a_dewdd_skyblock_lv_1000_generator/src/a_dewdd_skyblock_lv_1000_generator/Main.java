@@ -367,6 +367,10 @@ class HybridOverride extends Hybrid {
 										String itName = ex.item[betid] + ":" + ex.data[betid];
 										
 										AllBlockInGameType ff = ps.allMyInventory.get(itName);
+										if (ff == null) {
+											d.pl("ff == null");
+										}
+										
 										ff.curAmount += ex.amount[c2];
 										
 									break;
@@ -429,7 +433,8 @@ class HybridOverride extends Hybrid {
 		}
 		
 		fitness = fitCurLV + fitMoneyLeft + fitMaxMoney + fitAtTheEndItem;
-		d.pl("fitness");
+		d.pl("fitness " + fitness + ", f curLV " + fitCurLV + " , f money left " + fitMoneyLeft + " ,f Max money "
+				 + fitMaxMoney + " , fit at the end " + fitAtTheEndItem);
 		
 		
 		return fitness;

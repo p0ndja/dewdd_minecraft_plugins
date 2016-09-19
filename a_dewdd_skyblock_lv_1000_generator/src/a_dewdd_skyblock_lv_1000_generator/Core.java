@@ -136,26 +136,25 @@ public class Core {
 		// check is the last shop ( have enough item >= minshop)
 
 		if (tmpType.amount[tmpType.shopSlotMax - 1] < minShopSize) {
-			boolean foundx = false;
+			
 			for (int i = 0; i < tmpType.shopSlotMax - 1; i++) {
 				if (tmpType.amount[i] < maxShopSize) {
 					tmpType.amount[i]++;
 					tmpType.amount[tmpType.shopSlotMax - 1] = 0;
 					tmpType.price[tmpType.shopSlotMax - 1] = 0;
 					tmpType.shopSlotMax--;
+					
+					if (tmpType.shopSlotMax == 0) {
 
-					foundx = true;
-					break;
+					
+						break;
+					
+					}
 
 				}
 			}
 
-			if (foundx = true) {
-				d.pl("shift yet, convert shopPrice to AllShop found last shopSlot have not enough item it last slot");
-
-			} else {
-				d.pl("weird things happends , can't shift last shopAmount,shopPrice  to another slot");
-			}
+			
 
 		}
 
@@ -181,11 +180,13 @@ public class Core {
 				ab.data[j] = abigt.data;
 				ab.amount[j] = abigt.curAmount;
 
-				curItemIndex++;
+				//curItemIndex++;
 				if (curItemIndex == allBlockInGameAsList.size()) {
 					break;
 				}
 			}
+			
+			curItemIndex += tmpType.amount[i];
 
 			tmpType.outputAllShop.add(ab);
 
@@ -409,8 +410,8 @@ public class Core {
 					d.pl("tmb : " + tmb);
 				}
 
-				paraShopPrice.amount[paraShopPrice.shopSlotMax] = tmb;
-				countItem = allBlockInGameAsList.size();
+				paraShopPrice.amount[paraShopPrice.shopSlotMax] -= tmb;
+				countItem -= tmb;
 
 			}
 
