@@ -1874,8 +1874,8 @@ public class DigEventListener2 implements Listener {
 						dew.redtorchchest(block, player);
 					}
 
-				if (player.getItemInHand().getTypeId() == 50) {
-					dew.dewsetlaround(player, 50, (byte) 0);
+				if (player.getItemInHand().getType() == Material.TORCH) {
+					dew.dewsetLightAround(player, Material.TORCH, (byte) 0);
 				}
 
 				// free break
@@ -2008,6 +2008,10 @@ public class DigEventListener2 implements Listener {
 			return;
 		if (event.getCreatureType() == CreatureType.SQUID)
 			return;
+		if (event.getCreatureType() == CreatureType.RABBIT)
+			return;
+
+		
 
 		if (dew.checkpermissionarea(event.getEntity().getLocation().getBlock()) == true)
 			if (dew.getProtectid(event.getEntity().getLocation().getBlock()) != -1)
@@ -2833,6 +2837,8 @@ public class DigEventListener2 implements Listener {
 	public void eventja(PlayerMoveEvent e) {
 		if (!tr.isrunworld(ac.getName(), e.getPlayer().getWorld().getName()))
 			return;
+	
+		//e.getPlayer().getVelocity()
 
 		if (rnd.nextInt(100) > 75) {
 

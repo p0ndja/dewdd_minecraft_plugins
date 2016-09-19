@@ -926,6 +926,9 @@ public class DigEventListener2 implements Listener {
 
 		if (e.getCreatureType() == CreatureType.WOLF)
 			return;
+		
+		if (e.getCreatureType() == CreatureType.RABBIT)
+			return;
 
 		int getid = api_skyblock.getProtectid(e.getLocation().getBlock());
 		if (getid == -1) {

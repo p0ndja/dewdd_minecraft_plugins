@@ -3270,13 +3270,13 @@ public class dewset extends dewset_interface {
 		}
 	}
 
-	class dewsetl_mom implements Runnable {
+	class dewsetLight_mom implements Runnable {
 
 		private byte handdata;
 		private int handid;
 		private Player player = null;
 
-		public dewsetl_mom(Player player, int handid, byte handdata) {
+		public dewsetLight_mom(Player player, int handid, byte handdata) {
 			this.player = player;
 			this.handid = handid;
 			this.handdata = handdata;
@@ -5958,15 +5958,15 @@ public class dewset extends dewset_interface {
 
 	public void dewsetl(Player player, int handid, byte handdata) {
 
-		dewsetl_mom aer = new dewsetl_mom(player, handid, handdata);
+		dewsetLight_mom aer = new dewsetLight_mom(player, handid, handdata);
 		Bukkit.getScheduler().scheduleSyncDelayedTask(ac, aer);
 
 	}
 
-	public void dewsetlaround(Player player, int handid, byte handdata) {
+	public void dewsetLightAround(Player player, int handid, byte handdata) {
 		dewselectcube(player, 3);
 
-		dewsetl_mom aer = new dewsetl_mom(player, handid, handdata);
+		dewsetLight_mom aer = new dewsetLight_mom(player, handid, handdata);
 		Bukkit.getScheduler().scheduleSyncDelayedTask(ac, aer);
 
 	}
