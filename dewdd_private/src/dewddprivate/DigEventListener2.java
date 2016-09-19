@@ -20,12 +20,15 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
+import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.block.SignChangeEvent;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import api_private.DewddPrivate;
 import dewddtran.tr;
 
 public class DigEventListener2 implements Listener {
@@ -289,6 +292,8 @@ public class DigEventListener2 implements Listener {
 	Random randomG = new Random();
 
 	JavaPlugin ac = null;
+	
+	DewddPrivate pri = new DewddPrivate();
 
 	String psetlineeveryone = "dewdd.private.setline.everysign";
 
@@ -327,45 +332,33 @@ public class DigEventListener2 implements Listener {
 
 	}
 
-	/*@EventHandler
-	public void eventja(BlockBreakEvent event) {
-		if (!tr.isrunworld(ac.getName(), event.getPlayer().getWorld().getName())) {
-			return;
-		}
-		// player.addPotionEffect(PotionEffectType.INCREASE_DAMAGE.createEffect(200,
-		// dew.randomGenerator.nextInt(100)),false);
+	/*
+	 * @EventHandler public void eventja(BlockBreakEvent event) { if
+	 * (!tr.isrunworld(ac.getName(), event.getPlayer().getWorld().getName())) {
+	 * return; } //
+	 * player.addPotionEffect(PotionEffectType.INCREASE_DAMAGE.createEffect(200,
+	 * // dew.randomGenerator.nextInt(100)),false);
+	 * 
+	 * Block block = event.getBlock(); Player player = event.getPlayer(); //
+	 * check host block boolean goodc1 = false; goodc1 =
+	 * api_private.dewddprivate.checkpermissionareasign(block, player);
+	 * 
+	 * // call check if (goodc1 == true) { event.setCancelled(true); } }
+	 */
 
-		Block block = event.getBlock();
-		Player player = event.getPlayer();
-		// check host block
-		boolean goodc1 = false;
-		goodc1 = api_private.dewddprivate.checkpermissionareasign(block, player);
-
-		// call check
-		if (goodc1 == true) {
-			event.setCancelled(true);
-		}
-	}*/
-
-	/*@EventHandler
-	public void eventja(BlockPlaceEvent event) {
-		if (!tr.isrunworld(ac.getName(), event.getPlayer().getWorld().getName())) {
-			return;
-		}
-		// player.addPotionEffect(PotionEffectType.INCREASE_DAMAGE.createEffect(200,
-		// dew.randomGenerator.nextInt(100)),false);
-
-		Block block = event.getBlock();
-		Player player = event.getPlayer();
-		// check host block
-		boolean goodc1 = false;
-		goodc1 = api_private.dewddprivate.checkpermissionareasign(block, player);
-
-		// call check
-		if (goodc1 == true) {
-			event.setCancelled(true);
-		}
-	}*/
+	/*
+	 * @EventHandler public void eventja(BlockPlaceEvent event) { if
+	 * (!tr.isrunworld(ac.getName(), event.getPlayer().getWorld().getName())) {
+	 * return; } //
+	 * player.addPotionEffect(PotionEffectType.INCREASE_DAMAGE.createEffect(200,
+	 * // dew.randomGenerator.nextInt(100)),false);
+	 * 
+	 * Block block = event.getBlock(); Player player = event.getPlayer(); //
+	 * check host block boolean goodc1 = false; goodc1 =
+	 * api_private.dewddprivate.checkpermissionareasign(block, player);
+	 * 
+	 * // call check if (goodc1 == true) { event.setCancelled(true); } }
+	 */
 
 	@EventHandler
 	public void eventja(PlayerCommandPreprocessEvent event) {
@@ -380,39 +373,43 @@ public class DigEventListener2 implements Listener {
 	}
 
 	@EventHandler
-	public void eventja(PlayerInteractEvent event) {
-		if (!tr.isrunworld(ac.getName(), event.getPlayer().getWorld().getName())) {
+	public void eventja(PlayerInteractEvent e) {
+		if (!tr.isrunworld(ac.getName(), e.getPlayer().getWorld().getName())) {
 			return;
 		}
-		
-		
 
 		Action act;
-		act = event.getAction();
+		act = e.getAction();
 
 		if (((act == Action.RIGHT_CLICK_BLOCK || act == Action.LEFT_CLICK_BLOCK) == false)) {
 			return;
 		}
 
-		Player player = event.getPlayer();
+		Player player = e.getPlayer();
 
-		Block block = event.getClickedBlock();
+		Block block = e.getClickedBlock();
 		// c = event.getClickedBlock();
+		
+		if (DewddPrivate.hasProtect(block)) {
+		if (!DewddPrivate.cando(block, player)) {
+			e.setCancelled(true);
+		}
+		}
 
 		if (block.getTypeId() == 27 || block.getTypeId() == 66) {
 			return;
 		}
-		/*boolean goodc1 = false;
-		goodc1 = api_private.dewddprivate.checkpermissionareasign(block, player);
-
-		// call check
-		if (goodc1 == true) {
-
-			event.setCancelled(true);
-		}*/
+		/*
+		 * boolean goodc1 = false; goodc1 =
+		 * api_private.dewddprivate.checkpermissionareasign(block, player);
+		 * 
+		 * // call check if (goodc1 == true) {
+		 * 
+		 * event.setCancelled(true); }
+		 */
 
 		int getid = getfreeselect(player.getName());
-		nn.lastblock[getid] = event.getClickedBlock();
+		nn.lastblock[getid] = e.getClickedBlock();
 
 		if (!(nn.lastblock[getid].getTypeId() == 63 || nn.lastblock[getid].getTypeId() == 68)) {
 			return;
@@ -420,7 +417,7 @@ public class DigEventListener2 implements Listener {
 
 		Sign s = (Sign) nn.lastblock[getid].getState();
 		if (s.getLine(0).endsWith("[dewdd]") == true || s.getLine(0).endsWith("[private]") == true) {
-			
+
 			s.setLine(0, dprint.r.color("[dewdd]"));
 			s.update();
 
@@ -433,12 +430,44 @@ public class DigEventListener2 implements Listener {
 			}
 
 		}
-		
-		if (s.getLine(0).endsWith("[dewdd]") == true || s.getLine(0).endsWith("[private]") == true) {
-			
-			 nn.lastblock[getid].breakNaturally();
-		}
 
+		/*if (s.getLine(0).endsWith("[dewdd]") == true || s.getLine(0).endsWith("[private]") == true) {
+
+			nn.lastblock[getid].breakNaturally();
+		}*/
+
+	}
+
+	@EventHandler
+	public void eventja(BlockBreakEvent e) {
+		if (!tr.isrunworld(ac.getName(), e.getPlayer().getWorld().getName())) {
+			return;
+		}
+		Block block = e.getBlock();
+		Player player = e.getPlayer();
+
+		if (DewddPrivate.hasProtect(block)) {
+			if (!DewddPrivate.cando(block, player)) {
+				e.setCancelled(true);
+			}
+			}
+		
+		
+	}
+
+	@EventHandler
+	public void eventja(BlockPlaceEvent e) {
+		if (!tr.isrunworld(ac.getName(), e.getPlayer().getWorld().getName())) {
+			return;
+		}
+		Block block = e.getBlock();
+		Player player = e.getPlayer();
+
+		if (DewddPrivate.hasProtect(block)) {
+			if (!DewddPrivate.cando(block, player)) {
+				e.setCancelled(true);
+			}
+			}
 	}
 
 	@EventHandler
@@ -450,11 +479,13 @@ public class DigEventListener2 implements Listener {
 
 		Player player = event.getPlayer();
 
-		/*if (event.getLine(0).equalsIgnoreCase("") == true && event.getLine(1).equalsIgnoreCase("") == true
-				&& event.getLine(2).equalsIgnoreCase("") == true && event.getLine(3).equalsIgnoreCase("") == true) {
-			event.setLine(0, dprint.r.color("[dewdd]"));
-			event.setLine(1, player.getName());
-		}*/
+		/*
+		 * if (event.getLine(0).equalsIgnoreCase("") == true &&
+		 * event.getLine(1).equalsIgnoreCase("") == true &&
+		 * event.getLine(2).equalsIgnoreCase("") == true &&
+		 * event.getLine(3).equalsIgnoreCase("") == true) { event.setLine(0,
+		 * dprint.r.color("[dewdd]")); event.setLine(1, player.getName()); }
+		 */
 
 		if (event.getLine(0).toLowerCase().endsWith("[dewdd]") == true
 				|| event.getLine(0).toLowerCase().endsWith("[private]") == true
@@ -465,11 +496,13 @@ public class DigEventListener2 implements Listener {
 			if (event.getLine(1).equalsIgnoreCase(player.getName()) == false
 					&& event.getLine(2).equalsIgnoreCase(player.getName()) == false
 					&& event.getLine(3).equalsIgnoreCase(player.getName()) == false) {
-				player.sendMessage("ptdew&dewdd: ป้ายนี้ไม่มีชื่อของคุณอยู่เลย");
+			/*	player.sendMessage("ptdew&dewdd: ป้ายนี้ไม่มีชื่อของคุณอยู่เลย");
 				event.setLine(0, "<dewdd>");
 				event.setLine(1, "ใส่ชื่อตัวเอง");
 				event.setLine(2, "???");
-				event.setLine(3, "กล่องของใครเอ่ย?");
+				event.setLine(3, "กล่องของใครเอ่ย?");*/
+				event.setLine(1, player.getName());
+				
 				return;
 			}
 
