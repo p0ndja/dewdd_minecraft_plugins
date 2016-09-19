@@ -35,32 +35,33 @@ import org.bukkit.plugin.java.JavaPlugin;
 import dewddtran.tr;
 
 public class DigEventListener2 implements Listener {
-	class LastInv {
+	class Position {
+		public int x;
+		public int y;
+		public int z;
+		public String worldName;
+	}
+
+	class DewInv {
 		public Inventory inv;
 		public String playerName;
 		public int now;
-		public int x[];
-		public int y[];
-		public int z[];
-		public String wn[];
+		public ArrayList<Position> position = new ArrayList<Position>();
 	}
 
-	int msize = 1000;
 	int goslot = 1;
 	int backslot = 0;
 
 	int picback = Material.LEATHER.getId();
 	int picgo = Material.LEVER.getId();
 
-	public int maxch = 10;
 
 	public JavaPlugin ac = null;
-	ArrayList<LastInv> inv = new ArrayList<LastInv>();
+	ArrayList<DewInv> inv = new ArrayList<DewInv>();
 
 	public String folder_name = "plugins" + File.separator + "dewdd_inv";
 
 	public DigEventListener2() {
-
 
 	}
 
@@ -76,6 +77,7 @@ public class DigEventListener2 implements Listener {
 		// printall("name " + e.getInventory().getName());
 
 		int getid = getid(p.getName());
+		DewInv tmp = inv.get(getid);
 
 		boolean fou = true;
 
@@ -108,17 +110,17 @@ public class DigEventListener2 implements Listener {
 		}
 
 		if (fou == true) {
-			// p.sendMessage("ptdew_inv " + inv.get(getid).now);
+			// p.sendMessage("ptdew_inv " + tmp.now);
 
 			if (e.getSlot() == goslot && e.getCurrentItem().getTypeId() == picgo) {
 				e.setCancelled(true);
-				inv.get(getid).now++;
-				if (inv.get(getid).now >= maxch) {
-					inv.get(getid).now = 0;
+				tmp.now++;
+				if (tmp.now >= tmp.position.size()) {
+					tmp.now = 0;
 				}
 
-				Block b3 = Bukkit.getWorld(inv.get(getid).wn[inv.get(getid).now]).getBlockAt(inv.get(getid).x[inv.get(getid).now],
-						inv.get(getid).y[inv.get(getid).now], inv.get(getid).z[inv.get(getid).now]);
+				Position posi = tmp.position.get(tmp.now);
+				Block b3 = Bukkit.getWorld(posi.worldName).getBlockAt(posi.x, posi.y, posi.z);
 
 				/*
 				 * if (dewset.checkpermissionarea(b3, p, "right") == true) {
@@ -128,9 +130,10 @@ public class DigEventListener2 implements Listener {
 				 */
 
 				if (b3.getTypeId() != 54) {
-					p.sendMessage("can't open this chest " + inv.get(getid).now + " location at "
-							+ inv.get(getid).x[inv.get(getid).now] + "," + inv.get(getid).y[inv.get(getid).now] + ","
-							+ inv.get(getid).z[inv.get(getid).now] + " at " + inv.get(getid).wn[inv.get(getid).now]);
+					p.sendMessage("can't open this chest " + tmp.now + " location at " + posi.x + "," + posi.y + ","
+							+ posi.z + " at " + posi.worldName);
+					
+					tmp.position.remove(tmp.now);
 					return;
 				}
 
@@ -145,13 +148,13 @@ public class DigEventListener2 implements Listener {
 			else if (e.getSlot() == backslot && e.getCurrentItem().getTypeId() == picback) {
 				e.setCancelled(true);
 
-				inv.get(getid).now--;
-				if (inv.get(getid).now < 0) {
-					inv.get(getid).now = maxch - 1;
+				tmp.now--;
+				if (tmp.now < 0) {
+					tmp.now = tmp.position.size() - 1;
 				}
 
-				Block b3 = Bukkit.getWorld(inv.get(getid).wn[inv.get(getid).now]).getBlockAt(inv.get(getid).x[inv.get(getid).now],
-						inv.get(getid).y[inv.get(getid).now], inv.get(getid).z[inv.get(getid).now]);
+				Position posi = tmp.position.get(tmp.now);
+				Block b3 = Bukkit.getWorld(posi.worldName).getBlockAt(posi.x, posi.y, posi.z);
 
 				/*
 				 * if (dewset.checkpermissionarea(b3, p, "right") == true) {
@@ -161,9 +164,8 @@ public class DigEventListener2 implements Listener {
 				 */
 
 				if (b3.getTypeId() != 54) {
-					p.sendMessage("can't open this chest " + inv.get(getid).now + " location at "
-							+ inv.get(getid).x[inv.get(getid).now] + "," + inv.get(getid).y[inv.get(getid).now] + ","
-							+ inv.get(getid).z[inv.get(getid).now] + " at " + inv.get(getid).wn[inv.get(getid).now]);
+					p.sendMessage("can't open this chest " + tmp.now + " location at " + posi.x + "," + posi.y + ","
+							+ posi.z + " at " + posi.worldName);
 					return;
 				}
 
@@ -193,6 +195,7 @@ public class DigEventListener2 implements Listener {
 		inv.get(getid).inv = e.getInventory();
 
 		Player p = (Player) e.getPlayer();
+		
 
 		// go
 		boolean fou = true;
@@ -278,9 +281,9 @@ public class DigEventListener2 implements Listener {
 
 		String m[] = e.getMessage().split("\\s+");
 		Player p = e.getPlayer();
-		
+
 		int getid = getid(p.getName());
-		LastInv tmp = inv.get(getid);
+		DewInv tmp = inv.get(getid);
 
 		if (m[0].equalsIgnoreCase("/dinvl")) {
 			if (tmp.inv == null) {
@@ -301,29 +304,31 @@ public class DigEventListener2 implements Listener {
 		}
 
 		if (m[0].equalsIgnoreCase("/dinv")) {
-			
+
 			p.sendMessage("/dinv <set||open> <0-10> )");
 			if (m.length == 1) {
 				// show all chest
 				Block b3 = null;
-				for (int l1 = 0; l1 < maxch; l1++) {
-					if (tmp.wn[l1] == null) {
-						tmp.wn[l1] = "world";
+
+				for (int l1 = 0; l1 < tmp.position.size(); l1++) {
+					Position posi = tmp.position.get(l1);
+
+					if (posi.worldName == null) {
+						posi.worldName = "world";
 					}
 
-					if (tmp.wn[l1].equalsIgnoreCase("")) {
+					if (posi.worldName.equalsIgnoreCase("")) {
 						continue;
 					}
 
-					b3 = Bukkit.getWorld(tmp.wn[l1]).getBlockAt(tmp.x[l1], tmp.y[l1],
-							tmp.z[l1]);
+					b3 = Bukkit.getWorld(posi.worldName).getBlockAt(posi.x, posi.y, posi.z);
 
 					if (b3.getTypeId() != 54) {
 						continue;
 					}
 
-					p.sendMessage("inv_" + l1 + " at " + tmp.x[l1] + "," + tmp.y[l1] + ","
-							+ tmp.z[l1] + " at " + tmp.wn[l1]);
+					p.sendMessage(
+							"inv_" + l1 + " at " + posi.x + "," + posi.y + "," + posi.z + " at " + posi.worldName);
 
 				}
 
@@ -341,6 +346,19 @@ public class DigEventListener2 implements Listener {
 					return;
 				}
 
+				if (tmp.position.size() == n3) {
+					tmp.position.add(new Position());
+					p.sendMessage("added New Slot " + n3);
+				}
+				
+				if (n3 >= tmp.position.size() ) {
+					p.sendMessage("Inventory Saved Slot range = 0 to " + (tmp.position.size()-1));
+					return;
+				}
+				
+				Position posi = tmp.position.get(n3);
+				
+
 				if (mode == true) { // set
 					Block b3 = p.getLocation().getBlock().getRelative(0, 0, 0);
 					p.sendMessage(b3.getTypeId() + "");
@@ -352,19 +370,18 @@ public class DigEventListener2 implements Listener {
 
 					// printall ("set");
 
-					tmp.x[n3] = b3.getX();
-					tmp.y[n3] = b3.getY();
-					tmp.z[n3] = b3.getZ();
-					tmp.wn[n3] = b3.getWorld().getName();
+					posi.x = b3.getX();
+					posi.y = b3.getY();
+					posi.z = b3.getZ();
+					posi.worldName = b3.getWorld().getName();
 
-					p.sendMessage("saved chest " + n3 + " location at " + tmp.x[n3] + "," + tmp.y[n3]
-							+ "," + tmp.z[n3] + " at " + tmp.wn[n3]);
+					p.sendMessage("saved chest " + n3 + " location at " + posi.x + "," + posi.y + "," + posi.z + " at "
+							+ posi.worldName);
 					saveinventoryfile(p.getName());
 
 				} else { // mode open
 
-					Block b3 = Bukkit.getWorld(tmp.wn[n3]).getBlockAt(tmp.x[n3], tmp.y[n3],
-							tmp.z[n3]);
+					Block b3 = Bukkit.getWorld(posi.worldName).getBlockAt(posi.x, posi.y, posi.z);
 
 					// check permission
 
@@ -376,8 +393,10 @@ public class DigEventListener2 implements Listener {
 					 */
 
 					if (b3.getTypeId() != 54) {
-						p.sendMessage("can't open this chest " + n3 + " location at " + tmp.x[n3] + ","
-								+ tmp.y[n3] + "," + tmp.z[n3] + " at " + tmp.wn[n3]);
+						p.sendMessage("can't open this chest " + n3 + " location at " + posi.x + "," + posi.y + ","
+								+ posi.z + " at " + posi.worldName);
+						
+						tmp.position.remove(n3);
 
 						return;
 					}
@@ -389,8 +408,8 @@ public class DigEventListener2 implements Listener {
 					/*
 					 * Inventory xr = Bukkit.createInventory
 					 * (xrch.getInventory().getHolder(),
-					 * xrch.getInventory().getSize(), "ptdew_inv " +
-					 * tmp.now); Bukkit.
+					 * xrch.getInventory().getSize(), "ptdew_inv " + tmp.now);
+					 * Bukkit.
 					 */
 					Inventory xr = xrch.getInventory();
 
@@ -468,18 +487,18 @@ public class DigEventListener2 implements Listener {
 	public int getid(String n) {
 
 		for (int i = 0; i < inv.size(); i++) {
-			LastInv tmp = inv.get(i);
+			DewInv tmp = inv.get(i);
 
 			if (n.equalsIgnoreCase(tmp.playerName)) {
 				return i;
 			}
 		}
-		
-		LastInv newer = new LastInv();
+
+		DewInv newer = new DewInv();
 		newer.playerName = n;
 		inv.add(newer);
 
-		return inv.size()-1;
+		return inv.size() - 1;
 	}
 
 	public void loadinventoryfile(String pname) {
@@ -503,24 +522,22 @@ public class DigEventListener2 implements Listener {
 			// * save
 			String m[];
 			int getid = getid(pname);
-			inv.get(getid).now = -1;
-			for (int l1 = 0; l1 < maxch; l1++) {
-				inv.get(getid).x[l1] = 0;
-				inv.get(getid).y[l1] = 0;
-				inv.get(getid).z[l1] = 0;
-				inv.get(getid).wn[l1] = "world";
-
-			}
-
-			int count = 0;
+			
+			DewInv tmp = inv.get(getid);
+			tmp.now = -1;
+			
 			while ((strLine = br.readLine()) != null) {
 
 				m = strLine.split("\\s+");
-				count++;
-				inv.get(getid).x[count - 1] = Integer.parseInt(m[0]);
-				inv.get(getid).y[count - 1] = Integer.parseInt(m[1]);
-				inv.get(getid).z[count - 1] = Integer.parseInt(m[2]);
-				inv.get(getid).wn[count - 1] = (m[3]);
+				
+				Position posi = new Position();
+				
+				posi.x = Integer.parseInt(m[0]);
+				posi.y= Integer.parseInt(m[1]);
+				posi.z = Integer.parseInt(m[2]);
+				posi.worldName = (m[3]);
+				
+				tmp.position.add(posi);
 
 			}
 
@@ -555,10 +572,13 @@ public class DigEventListener2 implements Listener {
 			fwriter = new FileWriter(fff);
 
 			int getid = getid(pname);
+			DewInv tmp = inv.get(getid);
 
-			for (int l1 = 0; l1 < maxch; l1++) {
-				String wr = inv.get(getid).x[l1] + " " + inv.get(getid).y[l1] + " " + inv.get(getid).z[l1] + " "
-						+ inv.get(getid).wn[l1];
+			for (int l1 = 0; l1 < tmp.position.size(); l1++) {
+				Position posi =  tmp.position.get(l1);
+				
+				String wr = posi.x + " " + posi.y + " " + posi.z + " "
+						+ posi.worldName;
 
 				fwriter.write(wr + System.getProperty("line.separator"));
 
