@@ -230,7 +230,7 @@ public class dewset extends dewset_interface {
 				 * if (checkpermissionarea(block)== false) { not protect area
 				 * continue; }
 				 */
-				if (checkpermissionarea(block, player, "build") == true) {
+				if (cando(block, player, "build") == true) {
 					// build
 					continue;
 				}
@@ -367,7 +367,7 @@ public class dewset extends dewset_interface {
 				 * if (checkpermissionarea(block)== false) { not protect area
 				 * continue; }
 				 */
-				if (checkpermissionarea(block, player, "build") == true) {
+				if (cando(block, player, "build") == true) {
 					// build
 					continue;
 				}
@@ -687,7 +687,7 @@ public class dewset extends dewset_interface {
 				if (api_admin.dewddadmin.is2admin(player123) == false)
 					return;
 
-				if (checkpermissionarea(block123) == true)
+				if (getProtectid(block123) > -1)
 					return;
 
 				int seemblockid = block123.getTypeId();
@@ -715,7 +715,7 @@ public class dewset extends dewset_interface {
 							Block blockt1 = world.getBlockAt(gx, gy, gz);
 
 							if (blockt1.getTypeId() == seemblockid) {
-								if (checkpermissionarea(block123) == true) {
+								if (getProtectid(block123) > -1) {
 									continue;
 								}
 
@@ -816,7 +816,7 @@ public class dewset extends dewset_interface {
 					return;
 			}
 
-			if (checkpermissionarea(block123, player123, "delete") == true)
+			if (cando(block123, player123, "delete") == true)
 				return;
 
 			switch (player123.getItemInHand().getTypeId()) {
@@ -1226,6 +1226,8 @@ public class dewset extends dewset_interface {
 					}
 				}
 			}
+			
+			
 
 			if (blockdx == 0 && blockdy == 0 && blockdz == 0) {
 				player.sendMessage(dprint.r.color(tr.gettr("dewa_diamondsword_null_mean_upper")));
@@ -1485,7 +1487,7 @@ public class dewset extends dewset_interface {
 
 								setBlock = hostBlock.getWorld().getBlockAt(hostBlock.getX() + ndx,
 										hostBlock.getY() + ndy, hostBlock.getZ() + ndz);
-								if (checkpermissionarea(setBlock, player, "dewset") == true)
+								if (cando(setBlock, player, "dewset") == true)
 									return;
 
 								setBlock.setTypeIdAndData(hostBlock.getTypeId(), hostBlock.getData(), false);
@@ -1636,7 +1638,7 @@ public class dewset extends dewset_interface {
 				if (blb.getTypeId() != handid || blb.getData() != handdata) {
 					continue;
 				}
-				if (checkpermissionarea(blb, player, "dewset") == true)
+				if (cando(blb, player, "dewset") == true)
 					return;
 
 				/*
@@ -2130,7 +2132,7 @@ public class dewset extends dewset_interface {
 						Block setBlock = playerLocation.getBlock().getRelative(hostBlock.getX() - selectx1,
 								hostBlock.getY() - selecty1, hostBlock.getZ() - selectz1);
 
-						if (checkpermissionarea(setBlock, player, "dewset") == true)
+						if (cando(setBlock, player, "dewset") == true)
 							return;
 
 						if (arxx)
@@ -2308,10 +2310,10 @@ public class dewset extends dewset_interface {
 				if (blb.getTypeId() != handid || blb.getData() != handdata) {
 					continue;
 				}
-				if (checkpermissionarea(blb, player, "dewset") == true)
+				if (cando(blb, player, "dewset") == true)
 					return;
 
-				if (checkpermissionarea(blb) == false) {
+				if (getProtectid(blb) == -1) {
 					continue;
 				}
 
@@ -2374,7 +2376,7 @@ public class dewset extends dewset_interface {
 					+ player.getItemInHand().getTypeId() + ":" + player.getItemInHand().getData());
 
 			for (Block blb : getselectblock(getid, player)) {
-				if (checkpermissionarea(blb, player, "dewset") == true)
+				if (cando(blb, player, "dewset") == true)
 					return;
 
 				/*
@@ -2430,7 +2432,7 @@ public class dewset extends dewset_interface {
 			if (isprotectitemid(block.getType()) == true)
 				return;
 
-			if (checkpermissionarea(block, player, "dewset") == true) {
+			if (cando(block, player, "dewset") == true) {
 				player.sendMessage(dprint.r.color("ptdew&dewdd : dewdown " + tr.gettr("this_is_not_your_zone")));
 				return;
 			}
@@ -2605,7 +2607,7 @@ public class dewset extends dewset_interface {
 							zlx++;
 							continue;
 						}
-						if (checkpermissionarea(blb, player, "dewset") == true)
+						if (cando(blb, player, "dewset") == true)
 							return;
 
 						if (arxx)
@@ -2713,7 +2715,7 @@ public class dewset extends dewset_interface {
 				if (blb.getTypeId() != 0) {
 					continue;
 				}
-				if (checkpermissionarea(blb, player, "dewset") == true)
+				if (cando(blb, player, "dewset") == true)
 					return;
 				if (decreseitem1(player, handid, handdata, true) == false) {
 					player.sendMessage(dprint.r.color("ptdew&dewdd : " + tr.gettr("don't_have_enough_item")));
@@ -3023,7 +3025,7 @@ public class dewset extends dewset_interface {
 								continue;
 							}
 
-						if (checkpermissionarea(blb, player, "dewset") == true)
+						if (cando(blb, player, "dewset") == true)
 							return;
 
 						if (blb.getTypeId() == e1 && blb.getData() == e2) {
@@ -3240,7 +3242,7 @@ public class dewset extends dewset_interface {
 								continue;
 							}
 
-						if (checkpermissionarea(blb, player, "dewset") == true)
+						if (cando(blb, player, "dewset") == true)
 							return;
 
 						// coner
@@ -3428,7 +3430,7 @@ public class dewset extends dewset_interface {
 							continue;
 						}
 
-						if (checkpermissionarea(blb, player, "dewset") == true)
+						if (cando(blb, player, "dewset") == true)
 							return;
 
 						if (arxx)
@@ -3489,7 +3491,7 @@ public class dewset extends dewset_interface {
 					continue;
 				}
 
-				if (checkpermissionarea(blb, player, "dewset") == true) {
+				if (cando(blb, player, "dewset") == true) {
 					continue;
 				}
 
@@ -3677,7 +3679,7 @@ public class dewset extends dewset_interface {
 								continue;
 							}
 
-						if (checkpermissionarea(blb, player, "dewset") == true)
+						if (cando(blb, player, "dewset") == true)
 							return;
 
 						if (arxx)
@@ -3859,7 +3861,7 @@ public class dewset extends dewset_interface {
 								continue;
 							}
 
-						if (checkpermissionarea(blb, player, "dewset") == true)
+						if (cando(blb, player, "dewset") == true)
 							return;
 
 						if (arxx)
@@ -3936,7 +3938,7 @@ public class dewset extends dewset_interface {
 							b2 = b3.getRelative(x, y, z);
 
 							if (b2.getTypeId() == 0) {
-								if (checkpermissionarea(b2, player, "dewset") == true) {
+								if (cando(b2, player, "dewset") == true) {
 									continue;
 								}
 								if (decreseitem1(player, handid, handdata, true) == false) {
@@ -4042,7 +4044,7 @@ public class dewset extends dewset_interface {
 				ne = false;
 
 				if (b3.getTypeId() == 0) {
-					if (checkpermissionarea(b3, player, "dewset") == true) {
+					if (cando(b3, player, "dewset") == true) {
 						continue;
 					}
 					if (decreseitem1(player, handid, handdata, true) == false) {
@@ -4292,7 +4294,7 @@ public class dewset extends dewset_interface {
 
 						// wallc
 
-						if (checkpermissionarea(blb, player, "dewset") == true)
+						if (cando(blb, player, "dewset") == true)
 							return;
 						if (decreseitem1(player, handid, handdata, true) == false) {
 							player.sendMessage(dprint.r.color("ptdew&dewdd : " + tr.gettr("don't_have_enough_item")));
@@ -4372,7 +4374,7 @@ public class dewset extends dewset_interface {
 
 				b = blockList.get(index);
 
-				if (checkpermissionarea(b, player, "right") == true) {
+				if (cando(b, player, "right") == true) {
 					continue;
 				}
 
@@ -4617,7 +4619,7 @@ public class dewset extends dewset_interface {
 			 * e1.printStackTrace(); }
 			 */
 
-			if (checkpermissionarea(block, player, "delete") == true)
+			if (cando(block, player, "delete") == true)
 				return;
 
 			if (isprotectitemid(block.getType()) == true)
@@ -5200,73 +5202,7 @@ public class dewset extends dewset_interface {
 	}
 
 	// Check Permission Area block
-	public boolean checkpermissionarea(Block block) {
-		int worldid = getworldid(block.getWorld().getName());
-
-		if (worldid == -1)
-			return false;
-		if (dewsignmax[worldid] == 0)
-			return false;
-
-		int digx = block.getX();
-		int digy = block.getY();
-		int digz = block.getZ();
-
-		boolean goodc1 = false;
-
-		goodc1 = false;
-
-		int dewsignnow = 0;
-
-		for (dewsignnow = 0; dewsignnow < dewsignmax[worldid]; dewsignnow++) { // for
-
-			// x 2 type
-			// x1 <= x2
-
-			// check is this block on protect zone or not
-			int x1m = 0;
-			int x1l = 0;
-			if (dewsignx1[worldid][dewsignnow] >= dewsignx2[worldid][dewsignnow]) {
-				x1m = dewsignx1[worldid][dewsignnow];
-				x1l = dewsignx2[worldid][dewsignnow];
-			} else {
-				x1l = dewsignx1[worldid][dewsignnow];
-				x1m = dewsignx2[worldid][dewsignnow];
-			}
-
-			int y1m = 0;
-			int y1l = 0;
-			if (dewsigny1[worldid][dewsignnow] >= dewsigny2[worldid][dewsignnow]) {
-				y1m = dewsigny1[worldid][dewsignnow];
-				y1l = dewsigny2[worldid][dewsignnow];
-			} else {
-				y1l = dewsigny1[worldid][dewsignnow];
-				y1m = dewsigny2[worldid][dewsignnow];
-
-			}
-
-			int z1m = 0;
-			int z1l = 0;
-			if (dewsignz1[worldid][dewsignnow] >= dewsignz2[worldid][dewsignnow]) {
-				z1m = dewsignz1[worldid][dewsignnow];
-				z1l = dewsignz2[worldid][dewsignnow];
-			} else {
-				z1l = dewsignz1[worldid][dewsignnow];
-				z1m = dewsignz2[worldid][dewsignnow];
-
-			}
-
-			boolean ee = digx >= x1l && digx <= x1m && digy >= y1l && digy <= y1m && digz >= z1l && digz <= z1m;
-
-			goodc1 = ee;
-
-			if (goodc1 == true)
-				return true;
-
-		}
-		return false;
-
-	}
+	
 
 	public int getProtectid(Block block) {
 		int worldid = getworldid(block.getWorld().getName());
@@ -5356,8 +5292,8 @@ public class dewset extends dewset_interface {
 
 	}
 
-	public boolean checkpermissionarea(Block block, Player player, String modeevent) {
-		boolean ar = checkpermissionarea(block, player, modeevent, true);
+	public boolean cando(Block block, Player player, String modeevent) {
+		boolean ar = cando_Main(block, player, modeevent);
 		boolean sky = false;
 		if (Bukkit.getPluginManager().getPlugin("dewddskyblock") == null) {
 			sky = true;
@@ -5370,7 +5306,7 @@ public class dewset extends dewset_interface {
 		return !(ar == false && sky == true && pri == false);
 	}
 
-	public boolean checkpermissionarea(Block block, Player player, String modeevent, boolean test) {
+	private boolean cando_Main(Block block, Player player, String modeevent) {
 		int worldid = getworldid(block.getWorld().getName());
 
 		if (worldid == -1)
@@ -6239,7 +6175,7 @@ public class dewset extends dewset_interface {
 			for (int yl = ly; yl <= my; yl++) {
 				for (int zl = lz; zl <= mz; zl++) {
 					Block blb = player.getWorld().getBlockAt(xl, yl, zl);
-					if (checkpermissionarea(blb, player, "buy") == true) {
+					if (cando(blb, player, "buy") == true) {
 						// dprint.r.printAll("...");
 						countall = -1;
 						return countall;
@@ -7080,7 +7016,7 @@ public class dewset extends dewset_interface {
 			if (api_admin.dewddadmin.is2vip(player) == false)
 				return;
 
-			if (checkpermissionarea(block, player, "delete") == true)
+			if (cando(block, player, "delete") == true)
 				return;
 
 			player.getItemInHand().setDurability((short) (player.getItemInHand().getDurability() + 1));

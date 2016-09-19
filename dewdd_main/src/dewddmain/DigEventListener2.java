@@ -1697,6 +1697,8 @@ public class DigEventListener2 implements Listener {
 
 		Block block = event.getBlock();
 		Player player = event.getPlayer();
+		
+		
 		// check host block
 
 		if (player.getItemInHand().getType() == Material.MILK_BUCKET) {
@@ -1710,7 +1712,7 @@ public class DigEventListener2 implements Listener {
 		}
 
 		boolean goodc1 = false;
-		goodc1 = dew.checkpermissionarea(block, player, "delete");
+		goodc1 = dew.cando(block, player, "delete");
 
 		// call check
 		if (goodc1 == true) {
@@ -1786,7 +1788,7 @@ public class DigEventListener2 implements Listener {
 			return;
 
 		Block ac = event.getBlock();
-		if (dew.checkpermissionarea(event.getBlock()) == true || event.getBlock().getTypeId() == 35) {
+		if (dew.getProtectid(event.getBlock()) > -1 || event.getBlock().getTypeId() == 35) {
 
 			int d4 = 4;
 
@@ -1822,7 +1824,7 @@ public class DigEventListener2 implements Listener {
 			// check host block
 
 			boolean goodc1 = false;
-			goodc1 = dew.checkpermissionarea(block, player, "damage");
+			goodc1 = dew.cando(block, player, "damage");
 			if (goodc1 == true) { // don't have permission
 
 				event.setCancelled(true);
@@ -1875,7 +1877,7 @@ public class DigEventListener2 implements Listener {
 					}
 
 				if (player.getItemInHand().getType() == Material.TORCH) {
-					dew.dewsetLightAround(player, Material.TORCH, (byte) 0);
+					dew.dewsetLightAround(player, Material.TORCH.getId(), (byte) 0);
 				}
 
 				// free break
@@ -1926,7 +1928,7 @@ public class DigEventListener2 implements Listener {
 
 		boolean goodc1 = false;
 
-		goodc1 = dew.checkpermissionarea(block, player, "build");
+		goodc1 = dew.cando(block, player, "build");
 
 		if (goodc1 == true) {
 			event.setCancelled(true);
@@ -2013,7 +2015,7 @@ public class DigEventListener2 implements Listener {
 
 		
 
-		if (dew.checkpermissionarea(event.getEntity().getLocation().getBlock()) == true)
+		if (dew.getProtectid(event.getEntity().getLocation().getBlock()) > -1)
 			if (dew.getProtectid(event.getEntity().getLocation().getBlock()) != -1)
 				if (dew.havethisnameinthishome(dew.getworldid(event.getEntity().getWorld().getName()),
 						dew.getProtectid(event.getEntity().getLocation().getBlock()),
@@ -2184,7 +2186,8 @@ public class DigEventListener2 implements Listener {
 		if (!tr.isrunworld(ac.getName(), event.getEntity().getWorld().getName()))
 			return;
 
-		if (event.getEntity().getType() == EntityType.ENDERMAN && dew.checkpermissionarea(event.getBlock()) == true) {
+		if (event.getEntity().getType() == EntityType.ENDERMAN &&
+				dew.getProtectid(event.getBlock()) > -1) {
 			event.setCancelled(true);
 			return;
 		}
@@ -2192,7 +2195,7 @@ public class DigEventListener2 implements Listener {
 		if (event.getEntity().getType() == EntityType.PLAYER) {
 			Player pal = (Player) event.getEntity();
 
-			if (dew.checkpermissionarea(event.getBlock(), pal, "changeBlock") == true) {
+			if (dew.cando(event.getBlock(), pal, "changeBlock") == true) {
 				event.setCancelled(true);
 			}
 		}
@@ -2206,7 +2209,7 @@ public class DigEventListener2 implements Listener {
 
 		if (e.getEntity() instanceof EntityPlayer) {
 			Player br = (Player) e.getEntity();
-			if (dew.checkpermissionarea(br.getLocation().getBlock(), br, "EntityDamageEvent") == true) {
+			if (dew.cando(br.getLocation().getBlock(), br, "EntityDamageEvent") == true) {
 				// br.sendMessage("ptdew&dewdd : " +
 				// tr.gettr("don't_place_hanging_picture_not_yours"));
 
@@ -2252,7 +2255,7 @@ public class DigEventListener2 implements Listener {
 
 		if (event.getEntity().getType() == EntityType.PLAYER) {
 			Player prp = (Player) event.getEntity();
-			if (dew.checkpermissionarea(event.getBlock(), prp, "EntityInteract") == true) {
+			if (dew.cando(event.getBlock(), prp, "EntityInteract") == true) {
 				event.setCancelled(true);
 			}
 
@@ -2273,7 +2276,7 @@ public class DigEventListener2 implements Listener {
 		if (event.getRemover().getType() == EntityType.PLAYER) {
 			Player br = (Player) event.getRemover();
 
-			if (dew.checkpermissionarea(event.getEntity().getLocation().getBlock(), br,
+			if (dew.cando(event.getEntity().getLocation().getBlock(), br,
 					"HangingBreakByEntity") == true) {
 				// br.sendMessage("ptdew&dewdd : " +
 				// tr.gettr("don't_break_hanging_picture_not_yours"));
@@ -2292,12 +2295,12 @@ public class DigEventListener2 implements Listener {
 		if (!tr.isrunworld(ac.getName(), event.getEntity().getWorld().getName()))
 			return;
 
-		if (dew.checkpermissionarea(event.getEntity().getLocation().getBlock()) == true) {
+		if (dew.getProtectid(event.getEntity().getLocation().getBlock()) > -1) {
 			event.setCancelled(true);
 		}
 
 		if (event.getCause() == RemoveCause.EXPLOSION == true) {
-			if (dew.checkpermissionarea(event.getEntity().getLocation().getBlock()) == true) {
+			if (dew.getProtectid(event.getEntity().getLocation().getBlock()) > -1) {
 				event.setCancelled(true);
 				return;
 			}
@@ -2320,7 +2323,7 @@ public class DigEventListener2 implements Listener {
 				}
 
 				if (dist < 10000)
-					if (dew.checkpermissionarea(event.getEntity().getLocation().getBlock(), pl, "break") == true) {
+					if (dew.cando(event.getEntity().getLocation().getBlock(), pl, "break") == true) {
 						// pl.sendMessage(tr.gettr("don't_destroy_hanging_picture_not_yours"));
 						event.setCancelled(true);
 						return;
@@ -2350,7 +2353,7 @@ public class DigEventListener2 implements Listener {
 			return;
 
 		Player br = event.getPlayer();
-		if (dew.checkpermissionarea(event.getPlayer().getLocation().getBlock(), br, "HangingPlaceEvent") == true) {
+		if (dew.cando(event.getPlayer().getLocation().getBlock(), br, "HangingPlaceEvent") == true) {
 			// br.sendMessage("ptdew&dewdd : " +
 			// tr.gettr("don't_place_hanging_picture_not_yours"));
 
@@ -2499,7 +2502,7 @@ public class DigEventListener2 implements Listener {
 		if (!tr.isrunworld(ac.getName(), event.getPlayer().getWorld().getName()))
 			return;
 
-		if (dew.checkpermissionarea(event.getBlockClicked(), event.getPlayer(), "build") == true) {
+		if (dew.cando(event.getBlockClicked(), event.getPlayer(), "build") == true) {
 			event.setCancelled(true);
 		}
 	}
@@ -2509,7 +2512,7 @@ public class DigEventListener2 implements Listener {
 		if (!tr.isrunworld(ac.getName(), event.getPlayer().getWorld().getName()))
 			return;
 
-		if (dew.checkpermissionarea(event.getBlockClicked(), event.getPlayer(), "build") == true) {
+		if (dew.cando(event.getBlockClicked(), event.getPlayer(), "build") == true) {
 			event.setCancelled(true);
 		}
 	}
@@ -2668,7 +2671,7 @@ public class DigEventListener2 implements Listener {
 			return;
 
 		Player br = e.getPlayer();
-		if (dew.checkpermissionarea(e.getPlayer().getLocation().getBlock(), br, "HangingPlaceEvent") == true) {
+		if (dew.cando(e.getPlayer().getLocation().getBlock(), br, "HangingPlaceEvent") == true) {
 			// br.sendMessage("ptdew&dewdd : " +
 			// tr.gettr("don't_interact_not_your"));
 
@@ -2723,7 +2726,7 @@ public class DigEventListener2 implements Listener {
 		}
 
 		boolean goodc1 = false;
-		goodc1 = dew.checkpermissionarea(block, player, "right");
+		goodc1 = dew.cando(block, player, "right");
 
 		if (goodc1 == true) {
 			event.setCancelled(true);
@@ -2837,8 +2840,28 @@ public class DigEventListener2 implements Listener {
 	public void eventja(PlayerMoveEvent e) {
 		if (!tr.isrunworld(ac.getName(), e.getPlayer().getWorld().getName()))
 			return;
+		Player player = e.getPlayer();
+		
+		/*if (player.isOp() ) {
+			
+			
+			int xx =  player.getLocation().getDirection().getBlockX();
+			
+			int yy =  player.getLocation().getDirection().getBlockY();
+			int zz =  player.getLocation().getDirection().getBlockZ();
+			
+			player.getPlayer().sendMessage("velo " + xx + "," +
+			yy+ "," + 
+			zz);
+			
+			Block cd = player.getLocation().getBlock().getRelative(xx, yy, zz);
+			cd.setTypeId(4);
+			
+
+		}*/
+		
 	
-		//e.getPlayer().getVelocity()
+		//.getPlayer().sendMessage("velo " +  e.getPlayer().getVelocity());
 
 		if (rnd.nextInt(100) > 75) {
 
