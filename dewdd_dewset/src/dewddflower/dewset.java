@@ -5403,8 +5403,23 @@ public class dewset extends dewset_interface {
 
 	@Override
 	public boolean dewps_list(Player player) {
-		// TODO Auto-generated method stub
-		return false;
+		Block block = player.getLocation().getBlock();
+		
+		int xyz = checkpermissionarea(block, true);
+		if (xyz == -1) {
+			player.sendMessage(dprint.r.color("ptdew&dewdd : " + tr.gettr("tree_check_protect_and_not_found")));
+			return false;
+		}
+
+		player.sendMessage(dprint.r.color("ptdew&dewdd : " + tr.gettr("tree_thiszoneprotectedby")));
+
+		for (int xxx = 0; xxx < dewsignnamemax; xxx++)
+			if (dewsignname[getworldid(block.getWorld().getName())][xyz][xxx].equalsIgnoreCase("null") == false) {
+				player.sendMessage(
+						dprint.r.color(xxx + " = " + dewsignname[getworldid(block.getWorld().getName())][xyz][xxx]));
+			}
+
+		return true;
 	}
 
 	@Override
@@ -6648,23 +6663,7 @@ public class dewset extends dewset_interface {
 		Bukkit.getScheduler().scheduleSyncDelayedTask(ac, arr);
 	}
 
-	public void showwhohome(Block block, Player player) {
-		int xyz = checkpermissionarea(block, true);
-		if (xyz == -1) {
-			player.sendMessage(dprint.r.color("ptdew&dewdd : " + tr.gettr("tree_check_protect_and_not_found")));
-			return;
-		}
-
-		player.sendMessage(dprint.r.color("ptdew&dewdd : " + tr.gettr("tree_thiszoneprotectedby")));
-
-		for (int xxx = 0; xxx < dewsignnamemax; xxx++)
-			if (dewsignname[getworldid(block.getWorld().getName())][xyz][xxx].equalsIgnoreCase("null") == false) {
-				player.sendMessage(
-						dprint.r.color(xxx + " = " + dewsignname[getworldid(block.getWorld().getName())][xyz][xxx]));
-			}
-
-		return;
-	}
+	
 
 	public void soiladdseedrecusive(Block block, Player player, int seedid, boolean first) {
 

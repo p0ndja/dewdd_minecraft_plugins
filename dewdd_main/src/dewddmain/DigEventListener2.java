@@ -623,7 +623,7 @@ public class DigEventListener2 implements Listener {
 			}
 
 			if (strword1.equalsIgnoreCase("dewlist") == true) {
-				dew.showwhohome(player.getLocation().getBlock(), player);
+				dew.dewps_list( player);
 			}
 
 			// allow 1
@@ -2930,7 +2930,7 @@ public class DigEventListener2 implements Listener {
 
 		Block block = event.getClickedBlock();
 		if (player.getItemInHand().getTypeId() == 6 && act == Action.LEFT_CLICK_BLOCK) {
-			dew.showwhohome(block, player);
+			dew.dewps_list(player);
 			event.setCancelled(true);
 
 			return;
