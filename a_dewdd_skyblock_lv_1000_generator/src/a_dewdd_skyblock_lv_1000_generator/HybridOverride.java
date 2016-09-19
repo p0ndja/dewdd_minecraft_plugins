@@ -4,8 +4,9 @@ import java.util.LinkedList;
 import java.util.Random;
 
 import ga_optimization_api.Hybrid;
+import ga_optimization_api.HybridMultithreading;
 
-public class HybridOverride extends Hybrid {
+public class HybridOverride extends HybridMultithreading {
 
 	public static int maxUnUnique = 0;
 
