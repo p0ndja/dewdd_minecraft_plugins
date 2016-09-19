@@ -42,18 +42,22 @@ public class HybridOverride extends HybridMultithreading {
 			String m[];
 
 			int curDnaID = 0;
+			ceo.fitness = Double.MIN_VALUE;
 			while ((strLine = br.readLine()) != null) {
 
-				m = strLine.split("\\s+");
-				m = strLine.split(":");
+				
+			//	m = strLine.split(":");
 				// Print the content on the console
 
-			
-					ceo.fitness = Double.parseDouble(m[0].split(" ")[0]);
-			
-					ceo.dna[curDnaID] = Double.parseDouble(m[0]);
+				if (ceo.fitness == Double.MIN_VALUE) {
+					m = strLine.split("\\s+");
+					ceo.fitness = Double.parseDouble(m[0]);
+				}
+				else {
+					ceo.dna[curDnaID] = Double.parseDouble(strLine);
 					curDnaID++;
 				
+				}
 			}
 
 			d.pl(" Loaded " + filena);
@@ -135,7 +139,7 @@ public class HybridOverride extends HybridMultithreading {
 	public double fitness(double dna[]) {
 		double fitness = 0;
 
-		int avg = 2;
+		int avg = 3;
 		for (int avgloop = 1; avgloop <= avg; avgloop++) {
 
 			LinkedList<AllShop> tmpAllShop = new LinkedList<AllShop>();
@@ -557,7 +561,7 @@ public class HybridOverride extends HybridMultithreading {
 			double fitCurLV = (-Math.abs(tmpLV.size() - curLVLoop)) * 100;
 			double fitMoneyLeft = -Math.abs(1000-ps.money);
 			double fitMaxMoney = -Math.abs(psMaxMoney - Core.maxMoney);
-			fitMaxMoney = psMaxMoney;
+			//fitMaxMoney = psMaxMoney;
 
 			double fitAtTheEndItem = 0;
 
@@ -575,7 +579,7 @@ public class HybridOverride extends HybridMultithreading {
 
 			tmpFitness = fitCurLV + fitMoneyLeft + fitMaxMoney + fitAtTheEndItem;
 			tmpFitness = fitMoneyLeft + fitMaxMoney + fitAtTheEndItem;
-			tmpFitness =  fitCurLV + fitMoneyLeft  + (fitAtTheEndItem);
+			tmpFitness =  fitCurLV   + fitAtTheEndItem + fitMaxMoney;
 
 			
 			d.pl("fitness " + tmpFitness + ", f curLV " + fitCurLV + " , f money left " + fitMoneyLeft
