@@ -17,6 +17,8 @@ import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import dewddtran.tr;
+
 public class DigEventListener2 implements Listener {
 
 	class replacespawner implements Runnable {
@@ -65,37 +67,56 @@ public class DigEventListener2 implements Listener {
 	public String pseecommand = "dewdd.main.seecommand";
 
 	@EventHandler
-	public void eventja(BlockBreakEvent event) {
-		Block block = event.getBlock();
+	public void eventja(BlockBreakEvent e) {
+		if (!tr.isrunworld(ac.getName(), e.getPlayer().getWorld().getName())) {
+			return;
+		}
+
+		
+		Block block = e.getBlock();
 
 		replacespawner rs = new replacespawner(block);
 		Bukkit.getScheduler().scheduleSyncDelayedTask(ac, rs, 20);
 	}
 
 	@EventHandler
-	public void eventja(BlockPlaceEvent event) {
-		Block block = event.getBlock();
+	public void eventja(BlockPlaceEvent e) {
+		if (!tr.isrunworld(ac.getName(), e.getPlayer().getWorld().getName())) {
+			return;
+		}
+
+		
+		Block block = e.getBlock();
 
 		replacespawner rs = new replacespawner(block);
 		Bukkit.getScheduler().scheduleSyncDelayedTask(ac, rs, 20);
 	}
 
 	@EventHandler
-	public void eventja(CreatureSpawnEvent event) {
-		Block block = event.getLocation().getBlock();
+	public void eventja(CreatureSpawnEvent e) {
+		
+		if (!tr.isrunworld(ac.getName(), e.getEntity().getWorld().getName())) {
+			return;
+		}
+
+		Block block = e.getLocation().getBlock();
 
 		replacespawner rs = new replacespawner(block);
 		Bukkit.getScheduler().scheduleSyncDelayedTask(ac, rs, 20);
 	}
 
 	@EventHandler
-	public void eventja(PlayerCommandPreprocessEvent event) {
+	public void eventja(PlayerCommandPreprocessEvent e) {
+		if (!tr.isrunworld(ac.getName(), e.getPlayer().getWorld().getName())) {
+			return;
+		}
 
-		Player player = event.getPlayer();
 
-		if (event.getMessage().equalsIgnoreCase("/replacespawner") == true) {
+		Player player = e.getPlayer();
+
+		if (e.getMessage().equalsIgnoreCase("/replacespawner") == true) {
 			replacespawner = !replacespawner;
-			event.getPlayer().sendMessage("ptdew&dewdd : replacespawner = " + replacespawner);
+			e.getPlayer().sendMessage("ptdew&dewdd : replacespawner = " + replacespawner);
 			return;
 		}
 	}
