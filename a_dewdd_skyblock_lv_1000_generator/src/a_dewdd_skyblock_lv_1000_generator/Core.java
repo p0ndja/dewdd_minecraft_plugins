@@ -16,11 +16,19 @@ public class Core {
 
 	public static int dnaSize = 4000;
 
+	public static int maxItemForCompleteMission = 10;
+	public static int minItemForCompleteMission = 3;
+
+	public static int maxRewardDiffBlockType = 10;
+	public static int minRewardDiffBlockType = 1;
+	public static int maxRewardDiffItemType = 10;
+	public static int minRewardDiffItemType = 0;
+
 	public static int maxShopSize = 10;
 	public static int minShopSize = 3;
-	
+
 	public static int swapMultipy = 100;
-	
+
 	public static double SellMaxCost = 1000;
 	public static double ShopMaxCost = 10000;
 
@@ -28,140 +36,127 @@ public class Core {
 
 	// 415 unique item
 
-
-	
-	public void dnaDecoder(double[] chromosome,  LinkedList<AllShop> tmpAllShop,
-			LinkedList<SellableType> tmpSell, LinkedList<MissionType> tmpMission, LinkedList<Double> tmpReading,
-			int tmpAllShopUniqueDone, int curMissionItemSwapPosition) {
+	public void dnaDecoder(double[] chromosome, LinkedList<AllShop> tmpAllShop, LinkedList<SellableType> tmpSell,
+			LinkedList<LV1000Type> tmpMission, LinkedList<Double> tmpReading, int tmpAllShopUniqueDone,
+			int curMissionItemSwapPosition) {
 
 		int curChro = 0;
-       while ( curChro < dnaSize) {
-		// ****************************************************
-		// deal with player sell price
-		if (tmpSell.size() < sell.size()) {
+		while (curChro < dnaSize) {
+			// ****************************************************
+			// deal with player sell price
+			if (tmpSell.size() < sell.size()) {
 
-			if (chromosome[curChro] <= 0) {
-				curChro++;
-				continue;
-
-			} else {
-				SellableType x = sell.get(tmpSell.size()).copyIt();
-				x.sellPerPrice = chromosome[curChro] * SellMaxCost;
-
-				tmpSell.add(x);
-
-				d.pl("chro sell = " + curChro);
-				curChro++;
-				continue;
-			}
-
-		}
-
-		// ****************************************************
-
-		// price shift <amount> shift <amount> shift <amount>
-
-		if (tmpAllShopUniqueDone < mission.size()) {
-
-			if (tmpReading.size() >= (1 + (minShopSize*2)) && 
-				tmpReading.size() <= (1 + maxShopSize*2)   
-				 && tmpReading.size()%2 == 1) {
-				
-				
-				if (chromosome[curChro] <= 0) { // that mean do it now
-					d.pl("size = " + tmpReading.size() + " .. "  + curChro + "  unique " + tmpAllShopUniqueDone);
-
-					AllShop x = new AllShop();
-
-					x.PlayPrice = tmpReading.get(0) * ShopMaxCost;
-
-					for (int i = 1; i < tmpReading.size(); i++) {
-						int itemSlot = getNextUnuseMissionItem((int)(tmpReading.get(i).doubleValue()*swapMultipy), curMissionItemSwapPosition);
-						curMissionItemSwapPosition = itemSlot;
-						
-						x.Item[x.size] = mission.get(itemSlot).theName;
-						x.data[x.size] = mission.get(itemSlot).data;
-						x.amount[x.size] = (int)(tmpReading.get(i+1).doubleValue() * mission.get(itemSlot).maxStack);
-						i ++;
-						
-						tmpAllShopUniqueDone ++;
-						x.size ++;
-					}
-					
-					
-					tmpAllShop.add(x);
-					tmpReading.clear();
-					curChro++;
-					continue;
-					
-				}
-				else {
-					if (chromosome[curChro] <= 0) {
-						curChro++;
-						dnaDecoder(chromosome, tmpAllShop, tmpSell, tmpMission, tmpReading, tmpAllShopUniqueDone,
-								curMissionItemSwapPosition);
-					}
-					else {
-						tmpReading.add(chromosome[curChro]);
-						
-						curChro++;
-						continue;
-					}
-				}
-				
-				
-
-			}
-			else { // add to tmpReading
-	
-				
-			//	d.pl("chro length = " + chromosome.length + "   " + curChro);
 				if (chromosome[curChro] <= 0) {
 					curChro++;
 					continue;
-				}
-				else {
-					tmpReading.add(chromosome[curChro]);
-					
+
+				} else {
+					SellableType x = sell.get(tmpSell.size()).copyIt();
+					x.sellPerPrice = chromosome[curChro] * SellMaxCost;
+
+					tmpSell.add(x);
+
+					d.pl("chro sell = " + curChro);
 					curChro++;
 					continue;
 				}
-				
-				
+
 			}
 
-		}
-		else {
-			break;
-		}
-		
-       }
+			// ****************************************************
+
+			// price shift <amount> shift <amount> shift <amount>
+
+			if (tmpAllShopUniqueDone < mission.size()) {
+
+				if (tmpReading.size() >= (1 + (minShopSize * 2)) && tmpReading.size() <= (1 + maxShopSize * 2)
+						&& tmpReading.size() % 2 == 1) {
+
+					if (chromosome[curChro] <= 0) { // that mean do it now
+						d.pl("size = " + tmpReading.size() + " .. " + curChro + "  unique " + tmpAllShopUniqueDone);
+
+						AllShop x = new AllShop();
+
+						x.PlayPrice = tmpReading.get(0) * ShopMaxCost;
+
+						for (int i = 1; i < tmpReading.size(); i++) {
+							int itemSlot = getNextUnuseMissionItem(
+									(int) (tmpReading.get(i).doubleValue() * swapMultipy), curMissionItemSwapPosition);
+							curMissionItemSwapPosition = itemSlot;
+
+							x.Item[x.size] = mission.get(itemSlot).theName;
+							x.data[x.size] = mission.get(itemSlot).data;
+							x.amount[x.size] = (int) (tmpReading.get(i + 1).doubleValue()
+									* mission.get(itemSlot).maxStack);
+							i++;
+
+							tmpAllShopUniqueDone++;
+							x.size++;
+						}
+
+						tmpAllShop.add(x);
+						tmpReading.clear();
+						curChro++;
+						continue;
+
+					} else {
+						if (chromosome[curChro] <= 0) {
+							curChro++;
+							dnaDecoder(chromosome, tmpAllShop, tmpSell, tmpMission, tmpReading, tmpAllShopUniqueDone,
+									curMissionItemSwapPosition);
+						} else {
+							tmpReading.add(chromosome[curChro]);
+
+							curChro++;
+							continue;
+						}
+					}
+
+				} else { // add to tmpReading
+
+					// d.pl("chro length = " + chromosome.length + " " +
+					// curChro);
+					if (chromosome[curChro] <= 0) {
+						curChro++;
+						continue;
+					} else {
+						tmpReading.add(chromosome[curChro]);
+
+						curChro++;
+						continue;
+					}
+
+				}
+
+			} else {
+				break;
+			}
+
+		} // while
 
 	}
 
-	public int getNextUnuseMissionItem(int swapNextxTime,int curMissionItemSwapPosition ) {
-		
+	public int getNextUnuseMissionItem(int swapNextxTime, int curMissionItemSwapPosition) {
+
 		int looping = curMissionItemSwapPosition;
 		int returnId = -1;
-		
-		
+
 		do {
-		looping ++;
-		if (looping >= mission.size()) {
-			looping = 0;
-		}
-		if (mission.get(looping).useIt == false) {
-			if (swapNextxTime > 0) {
-				swapNextxTime --;
-				continue;
+			looping++;
+			if (looping >= mission.size()) {
+				looping = 0;
 			}
-			returnId = looping;
-			break;
-		}
-		
-		
+			if (mission.get(looping).useIt == false) {
+				if (swapNextxTime > 0) {
+					swapNextxTime--;
+					continue;
+				}
+				returnId = looping;
+				break;
+			}
+
 		} while (true);
-		
+
 		return returnId;
 	}
 

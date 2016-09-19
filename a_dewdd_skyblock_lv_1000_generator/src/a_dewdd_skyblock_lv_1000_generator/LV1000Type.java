@@ -3,15 +3,15 @@ package a_dewdd_skyblock_lv_1000_generator;
 public class LV1000Type {
 	public int lvmode = 0; // 0 - 5
 	
-	public String[] Item = new String[Core.maxShopSize];
-	public byte[] data = new byte[Core.maxShopSize];
-	public int[] amount = new int[Core.maxShopSize];
+	// to done
+	public String[] needItem = new String[Core.maxItemForCompleteMission];
+	public byte[] needData = new byte[Core.maxItemForCompleteMission];
+	public int[] needAmount = new int[Core.maxItemForCompleteMission];
 	
+	public String[] rewardItem = new String[Core.maxRewardDiffItemType + Core.maxRewardDiffBlockType];
+	public byte[] rewardData = new byte[Core.maxRewardDiffItemType + Core.maxRewardDiffBlockType];
+	public int[] rewardAmount = new int[Core.maxRewardDiffItemType + Core.maxRewardDiffBlockType];
 	
-	
-	public String blockNeed = ""; // grass:2:13 wood:Data:amount
-	public String priceList = ""; // bloc:2:13 typeId:Data:amount
-
 	
 	
 }

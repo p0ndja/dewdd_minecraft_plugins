@@ -70,7 +70,7 @@ public class main {
 		
 		LinkedList<AllShop> tmpAllShop = new LinkedList<AllShop>();
 		LinkedList<SellableType> tmpSell = new LinkedList<SellableType>();
-		LinkedList<MissionType> tmpMission =  new LinkedList<MissionType>();
+		LinkedList<LV1000Type> tmpMission =  new LinkedList<LV1000Type>();
 		LinkedList<Double> tmpReading  = new LinkedList<Double>();
 		
 		co.dnaDecoder(hy.population.get(0).dna,   tmpAllShop,
