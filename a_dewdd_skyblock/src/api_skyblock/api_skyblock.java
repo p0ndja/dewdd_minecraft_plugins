@@ -85,6 +85,98 @@ public class api_skyblock {
 		
 		return thereBlock;
 	}
+	
+	
+	class AdjustProtect2 implements Runnable {
+		private Block midBlockX0Z0;
+		private Player player;
+
+		public AdjustProtect2(Block midBlockX0Z0, Player player) {
+			this.midBlockX0Z0 = midBlockX0Z0;
+			this.player = player;
+		}
+
+		
+		public void run() {
+			
+			// search top left
+			
+			// search top left
+			
+			int lx = rs[0].x;
+			int rx = rs[0].x;
+			int lz = rs[0].z;
+			int rz = rs[0].z;
+			
+			for (int i = 0; i < rsMax ; i ++ ){
+				if (rs[i].x < lx) {
+					lx = rs[i].x;
+				}
+				
+				if( rs[i].x > rx ) {
+					rx = rs[i].x;
+				}
+				
+				if (rs[i].z < lz) {
+					lz = rs[i].z;
+				}
+				
+				if (rs[i].z > rz ) {
+					rz = rs[i].z;
+				}
+				
+			}
+			
+			Block bb = null;
+			
+			for (int tmpx = lx ; tmpx <= rx ; tmpx += 300) {
+			for (int tmpz = lz ; tmpz <= rz ; tmpz += 300) {
+				
+				// check protect  if there   so skip
+				bb = midBlockX0Z0.getLocation().getWorld().getBlockAt(tmpx, 150, tmpz);
+				int checkid = getprotectid(bb);
+				if (checkid > -1) {
+					continue;
+				}
+				
+				player.sendMessage(dprint.r.color("searching no protect zone " + tmpx + ",150," + tmpz));
+				
+				
+				boolean thereBlock = checkIsThatAreBlockOrNot(bb, player);
+				
+				if (thereBlock == true) {
+					// buy new protect
+					
+					rs[rsMax] = new RSData();
+					
+					rs[rsMax].x = tmpx ;
+					rs[rsMax].z = tmpz;
+					rs[rsMax].y = 150;
+					rs[rsMax].p = new String[RSMaxPlayer];
+					
+					for (int i = 0 ; i < RSMaxPlayer ; i ++ ) {
+						rs[rsMax].p[i] = "null";
+					}
+					
+					rs[rsMax].p[0] = getNewOwnerName();
+					
+					player.sendMessage(dprint.r.color("bought new protect " + tmpx + ",150," + tmpz 
+							+ " owner name " + rs[rsMax].p[0] ));
+					
+					rsMax ++ ;
+					
+					
+				}
+				
+			}
+			}
+			
+			
+			
+			
+		}
+	}
+	
 
 	class AdjustProtect implements Runnable {
 		private Block midBlockX0Z0;
@@ -185,7 +277,7 @@ public class api_skyblock {
 			while (buildcomplete == false) {
 				searchCount++;
 
-				if (searchCount > 50) {
+				if (searchCount > 1000) {
 					searchRadius += 1;
 				}
 
@@ -1193,6 +1285,14 @@ public class api_skyblock {
 	public void adjustProtect(Block block, Player player) {
 		
 		AdjustProtect abc = new AdjustProtect(block, player);
+		 Bukkit.getScheduler().scheduleSyncDelayedTask(ac, abc,1);
+		
+
+	}
+
+public void adjustProtect2(Block block, Player player) {
+		
+		AdjustProtect2 abc = new AdjustProtect2(block, player);
 		 Bukkit.getScheduler().scheduleSyncDelayedTask(ac, abc,1);
 		
 

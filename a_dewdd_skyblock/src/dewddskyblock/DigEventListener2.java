@@ -1087,10 +1087,20 @@ public class DigEventListener2 implements Listener {
 					}
 
 				} else if (m[1].equalsIgnoreCase("adjustprotect")) {
-					
+					if (player.hasPermission(Constant.poveride) == false) {
+						player.sendMessage(dprint.r.color(tr.gettr("you_dont_have_permission")));
+						return;
+					}
 					dew.adjustProtect(player.getLocation().getBlock(), player);
 				 
-				
+				}else if (m[1].equalsIgnoreCase("adjustprotect2")) {
+						if (player.hasPermission(Constant.poveride) == false) {
+							player.sendMessage(dprint.r.color(tr.gettr("you_dont_have_permission")));
+							return;
+						}
+						dew.adjustProtect2(player.getLocation().getBlock(), player);
+					 
+						
 				} else if (m[1].equalsIgnoreCase("buyhere")) {
 					// for buy these zone
 
