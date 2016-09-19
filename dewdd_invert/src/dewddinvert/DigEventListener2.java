@@ -10,6 +10,7 @@ import java.util.Random;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
@@ -19,6 +20,8 @@ import org.bukkit.block.Dispenser;
 import org.bukkit.block.Dropper;
 import org.bukkit.block.Furnace;
 import org.bukkit.block.Hopper;
+import org.bukkit.block.Sign;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -41,7 +44,7 @@ public class DigEventListener2 implements Listener {
 	 * class cleanthischunk extends Thread{ public Chunk chunk = null;
 	 * synchronized public void run() {
 	 */
-	public long lastClean = 0;
+	public long lastClean = System.currentTimeMillis();
 	public long MaxDelay = 10000;
 
 	public static boolean isRunWorld(String worldName) {
@@ -49,7 +52,7 @@ public class DigEventListener2 implements Listener {
 	}
 
 	public static Block getBlockOfChunk(Chunk chunk) {
-		Block block3 = chunk.getWorld().getBlockAt(chunk.getX() * 16, 253, chunk.getZ() * 16);
+		Block block3 = chunk.getWorld().getBlockAt(chunk.getX() * 16, 255, chunk.getZ() * 16);
 		return block3;
 	}
 
@@ -80,6 +83,16 @@ public class DigEventListener2 implements Listener {
 
 	}
 
+	class SignType {
+		public int x;
+		public int y;
+		public int z;
+		public String l0;
+		public String l1;
+		public String l2;
+		public String l3;
+	}
+
 	class CleanThisChunk_c implements Runnable {
 		Chunk chunk;
 
@@ -99,6 +112,7 @@ public class DigEventListener2 implements Listener {
 			// (chunk.getZ() *16) );
 			// printA("cleaning area... " + (chunk.getX() *16) + ",?," +
 			// (chunk.getZ() *16)+ " > " + chunkdel_max );
+			long startClean = System.currentTimeMillis();
 
 			Block block = null;
 			Block block2 = null;
@@ -123,6 +137,7 @@ public class DigEventListener2 implements Listener {
 
 			LinkedList<SpawnerBlockType> spawner = new LinkedList<SpawnerBlockType>();
 			LinkedList<ChestBlockType> chester = new LinkedList<ChestBlockType>();
+			LinkedList<SignType> signer = new LinkedList<SignType>();
 
 			/*
 			 * for (int i = 0 ; i < 16 ; i ++ ) { bdata[i] = new byte[256][];
@@ -266,8 +281,22 @@ public class DigEventListener2 implements Listener {
 
 							chester.add(cbt);
 							break;
+						case WALL_SIGN:
+						case SIGN_POST:
+
+							Sign sign = (Sign) block.getState();
+							SignType st = new SignType();
+							st.x = gx;
+							st.y = y;
+							st.z = gz;
+							st.l0 = sign.getLine(0);
+							st.l1 = sign.getLine(1);
+							st.l2 = sign.getLine(2);
+							st.l3 = sign.getLine(3);
+
+							signer.add(st);
+							break;
 						}
-						
 
 						block.setType(Material.AIR);
 					}
@@ -325,7 +354,7 @@ public class DigEventListener2 implements Listener {
 								}
 							}
 							break;
-							
+
 						case DISPENSER:
 							for (int lop = 0; lop < chester.size(); lop++) {
 								ChestBlockType tmp = chester.get(lop);
@@ -340,8 +369,7 @@ public class DigEventListener2 implements Listener {
 								}
 							}
 							break;
-							
-							
+
 						case DROPPER:
 							for (int lop = 0; lop < chester.size(); lop++) {
 								ChestBlockType tmp = chester.get(lop);
@@ -370,8 +398,7 @@ public class DigEventListener2 implements Listener {
 								}
 							}
 							break;
-							
-							
+
 						case HOPPER:
 							for (int lop = 0; lop < chester.size(); lop++) {
 								ChestBlockType tmp = chester.get(lop);
@@ -386,10 +413,25 @@ public class DigEventListener2 implements Listener {
 								}
 							}
 							break;
-							
-							
-							
-								
+
+						case SIGN_POST:
+						case WALL_SIGN:
+							for (int lop = 0; lop < signer.size(); lop++) {
+								SignType tmp = signer.get(lop);
+								if (tmp.x == gx && tmp.y == y && tmp.z == gz) {
+
+									Sign cc = (Sign) block.getState();
+
+									cc.setLine(0, tmp.l0);
+									cc.setLine(1, tmp.l1);
+									cc.setLine(2, tmp.l2);
+									cc.setLine(3, tmp.l3);
+
+									cc.update(true);
+								}
+							}
+							break;
+
 						}
 
 					}
@@ -397,8 +439,19 @@ public class DigEventListener2 implements Listener {
 
 			} // time
 
+			for (Entity en : chunk.getEntities()) {
+				if (en == null) {
+					continue;
+				}
+				// if (en.getType() == EntityType.item)
+
+				Location loc2 = en.getLocation();
+				loc2.setY(256 - en.getLocation().getY());
+				en.teleport(loc2);
+			}
+
 			// add to new chunk
-			block2 = world.getBlockAt(chunk.getX() * 16, 253, chunk.getZ() * 16);
+			block2 = world.getBlockAt(chunk.getX() * 16, 255, chunk.getZ() * 16);
 			block2.setTypeId(19);
 
 			/*
@@ -406,6 +459,7 @@ public class DigEventListener2 implements Listener {
 			 * == EntityType.DROPPED_ITEM){ en.remove(); } }
 			 */
 
+			// MaxDelay = System.currentTimeMillis() - startClean;
 			dprint.r.printC("invert cleaned Area : " + (chunk.getX() * 16) + ",?," + (chunk.getZ() * 16));
 			// printA("cleaned Area : " + (chunk.getX() *16) + ",?," +
 			// (chunk.getZ() *16)+ " > " + chunkdel_max );
@@ -572,7 +626,7 @@ public class DigEventListener2 implements Listener {
 			} // time
 
 			// add to new chunk
-			block2 = world.getBlockAt(chunk.getX() * 16, 253, chunk.getZ() * 16);
+			block2 = world.getBlockAt(chunk.getX() * 16, 255, chunk.getZ() * 16);
 			block2.setTypeId(19);
 
 			/*
@@ -706,10 +760,19 @@ public class DigEventListener2 implements Listener {
 			return;
 		}
 
-		if (isCleanedChunk(e.getBlock().getChunk()) == false) {
-			e.setCancelled(true);
+		int rad = 20;
 
+		for (int x = -rad; x <= rad; x += 16) {
+			for (int z = -rad; z <= rad; z += 16) {
+				Chunk chunk = e.getBlock().getRelative(x, 0, z).getChunk();
+				if (isCleanedChunk(chunk) == false) {
+					
+					e.setCancelled(true);
+					return;
+				}
+			}
 		}
+
 	}
 
 	@EventHandler
@@ -718,7 +781,7 @@ public class DigEventListener2 implements Listener {
 			return;
 		}
 
-		if (e.getBlock().getTypeId() == 19 && e.getBlock().getY() == 253) {
+		if (e.getBlock().getTypeId() == 19 && e.getBlock().getY() == 255) {
 			e.setCancelled(true);
 			return;
 		}
@@ -762,7 +825,7 @@ public class DigEventListener2 implements Listener {
 			return;
 		}
 
-		if (randomGenerator.nextInt(100) > 110) {
+		if (randomGenerator.nextInt(100) > 50) {
 
 			if (isCleanedChunk(e.getPlayer().getLocation().getChunk()) == true) {
 				return;
