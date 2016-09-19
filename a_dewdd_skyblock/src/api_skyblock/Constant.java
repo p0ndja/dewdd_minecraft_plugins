@@ -16,6 +16,10 @@ public class Constant {
 	public static String folder_name = "plugins" + File.separator + "dewdd_skyblock";
 	
 	
+	public static String rsProtect_filename = "ptdew_dewdd_rs_protect.txt";
+
+	public static String rsGenerateListBlock_filename = "ptdew_dewdd_rs_generatelistblock.txt";
+	
 	public static String poveride = "dewdd.skyblock.overide";
 	public static String presetlv = "dewdd.skyblock.resetlv";
 	
@@ -23,47 +27,16 @@ public class Constant {
 	public static int LV_2_USE_BONE_MEAL_AMOUNT = 45;
 	public static int LV_3_DROP_TOUCH_AMOUNT = 64;
 	public static int LV_6_DROP_WHEAT_AMOUNT = 64;
-	public static String getMissionHeader(Missional mission) {
+	
+	public static String getMissionHeader(int mission) {
 		String header = "skyblock_mission_header_";
 	
 		String aa = "";
-		switch (mission) {
-		case LV_0_BREAK_COBBLESTONE: // get cobble stone
+
 			aa = tr.gettr(header + mission);
 	
-			break;
-		case LV_1_BREAK_STONE:
-	
-			aa = tr.gettr(header + mission);
-			break;
-		case LV_2_USE_BONE_MEAL:
-			aa = tr.gettr(header + mission);
-			break;
-		case LV_3_DROP_TOUCH:
-			aa = tr.gettr(header + mission);
-			break;
-			
-		case LV_4_PLACE_Y1:
-			aa = tr.gettr(header + mission);
-			break;
-			
-		case LV_5_ZOMBIE_ATTACK_1:
-			aa = tr.gettr(header + mission);
-			break;
 			
 			
-		case LV_6_DROP_WHEAT:
-			aa = tr.gettr(header + mission);
-			break;
-			
-			
-		
-			
-	
-		default:
-			aa = tr.gettr(header + "default");
-			break;
-		}
 	
 		return aa;
 	}

@@ -36,6 +36,7 @@ public class api_skyblock {
 
 		public CreateSkyblockRS(Player player) {
 			this.player = player;
+			
 		}
 
 		@Override
@@ -119,7 +120,7 @@ public class api_skyblock {
 					rs[newid].p[0] = player.getName();
 					rs[newid].p[1] = Constant.flag_autocut;
 					rs[newid].p[2] = Constant.flag_autoabsorb;
-					rs[newid].mission = Missional.LV_0_BREAK_COBBLESTONE;
+					rs[newid].mission = 0;
 					player.getWorld().getBlockAt(x - 16, y, z - 16).getChunk().getX();
 					player.getWorld().getBlockAt(x - 16, y, z - 16).getChunk().getZ();
 
@@ -407,7 +408,7 @@ public class api_skyblock {
 	public void applyReward(int rsID) {
 
 		switch (rs[rsID].mission) {
-		case LV_0_BREAK_COBBLESTONE: // get cobble stone
+		case 0: // get cobble stone
 
 			Block bo = getBlockMiddleRS(rsID);
 			Block bo2 = searchSpaceCube(bo, 5, 5);
@@ -436,7 +437,7 @@ public class api_skyblock {
 			printToAllPlayerOnRS(rsID, tr.gettr("got_reward_lv_" + rs[rsID].mission));
 
 			break;
-		case LV_1_BREAK_STONE:
+		case 1:
 
 			bo = getBlockMiddleRS(rsID);
 			bo2 = searchSpaceCube(bo, 5, 5);
@@ -467,7 +468,7 @@ public class api_skyblock {
 			rs[rsID].tmpForCountingBone1 = 0;
 
 			break;
-		case LV_2_USE_BONE_MEAL:
+		case 2:
 
 			bo = getBlockMiddleRS(rsID);
 			bo2 = searchSpaceCube(bo, 5, 5);
@@ -539,7 +540,7 @@ public class api_skyblock {
 
 			break;
 
-		case LV_3_DROP_TOUCH:
+		case 3:
 
 			bo = getBlockMiddleRS(rsID);
 			bo2 = searchSpaceCube(bo, 5, 5);
@@ -569,7 +570,7 @@ public class api_skyblock {
 
 			break;
 
-		case LV_4_PLACE_Y1:
+		case 4:
 
 			bo = getBlockMiddleRS(rsID);
 			bo2 = searchSpaceCube(bo, 5, 5);
@@ -654,7 +655,7 @@ public class api_skyblock {
 			signAdder.setType(Material.SIGN_POST);
 
 			Sign sign = (Sign) signAdder.getState();
-			sign.setLine(0, "" + rs[rsID].mission.toID());
+			sign.setLine(0, "" + rs[rsID].mission);
 			sign.setLine(1, "" + bo3.getX());
 			sign.setLine(2, "" + bo3.getY());
 			sign.setLine(3, "" + bo3.getZ());
@@ -670,7 +671,7 @@ public class api_skyblock {
 
 			break;
 
-		case LV_5_ZOMBIE_ATTACK_1:
+		case 5:
 
 			bo = getBlockMiddleRS(rsID);
 			bo2 = searchSpaceCube(bo, 5, 5);
@@ -713,7 +714,7 @@ public class api_skyblock {
 
 			break;
 			
-		case LV_6_DROP_WHEAT:
+		case 6:
 
 			bo = getBlockMiddleRS(rsID);
 			//bo2 = searchSpaceCube(bo, 5, 5);
@@ -772,9 +773,9 @@ public class api_skyblock {
 		return b;
 	}
 
-	public String getFullMissionHeadAndCurLevel(Missional mission) {
+	public String getFullMissionHeadAndCurLevel(int mission) {
 		String header = Constant.getMissionHeader(mission);
-		String aa = tr.gettr("is_cur_level_mission_showing_") + " " + mission.toID() + " " + header;
+		String aa = tr.gettr("is_cur_level_mission_showing_") + " " + mission + " " + header;
 		return aa;
 	}
 
@@ -817,7 +818,7 @@ public class api_skyblock {
 	}
 
 	public void loadRSProtectFile() {
-		String worldf = "ptdew_dewdd_rs_protect.txt";
+		String worldf = Constant.rsProtect_filename;
 
 		File dir = new File(Constant.folder_name);
 		dir.mkdir();
@@ -868,7 +869,7 @@ public class api_skyblock {
 					int bb = (int) Double.parseDouble(m[23]);
 					
 				//	bb = 0;
-					rs[rsMax - 1].mission = Missional.idToMission(bb);
+					rs[rsMax - 1].mission = (bb);
 
 				}
 
@@ -884,7 +885,7 @@ public class api_skyblock {
 		}
 	}
 
-	public synchronized void nextMission(int rsID,Missional cur) {
+	public synchronized void nextMission(int rsID,int cur) {
 		printToAllPlayerOnRS(rsID, (Constant.getMissionHeader(rs[rsID].mission) + " " + tr.gettr("mission_complete")));
 
 		// dprint.r.printAll("0 calling apply reward");
@@ -895,9 +896,9 @@ public class api_skyblock {
 		dprint.r.printAdmin(tr.gettr("owner_of_island_name") + rs[rsID].p[0] + " " + tr.gettr("did_mission_complete")
 				+ " " + Constant.getMissionHeader(rs[rsID].mission));
 
-		int tmpID = Missional.getID(cur);
+		int tmpID = (cur);
 		tmpID++;
-		rs[rsID].mission = Missional.idToMission(tmpID);
+		rs[rsID].mission = (tmpID);
 
 		printToAllPlayerOnRS(rsID, (Constant.getMissionHeader(rs[rsID].mission) + " ..."));
 
@@ -944,7 +945,8 @@ public class api_skyblock {
 		File dir = new File(Constant.folder_name);
 		dir.mkdir();
 
-		String filena = Constant.folder_name + File.separator + "ptdew_dewdd_rs_protect.txt";
+		String filena = Constant.folder_name + File.separator + Constant.rsProtect_filename
+				;
 		File fff = new File(filena);
 
 		FileWriter fwriter;
@@ -969,7 +971,7 @@ public class api_skyblock {
 
 				}
 
-				wr = wr + " " + rs[y].mission.toID();
+				wr = wr + " " + rs[y].mission;
 
 				fwriter.write(wr + System.getProperty("line.separator"));
 

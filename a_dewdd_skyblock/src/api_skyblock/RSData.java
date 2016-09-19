@@ -5,7 +5,7 @@ public class RSData {
 	public int y;
 	public int z;
 
-	public Missional mission = Missional.LV_0_BREAK_COBBLESTONE;
+	public int mission = 0;
 	
 	public int tmpForCountingBone1 = 0;
 	public int tmpLongForRememberLastTime = 0; 
