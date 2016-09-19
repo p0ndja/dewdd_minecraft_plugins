@@ -1,0 +1,6 @@
+name: dewddforcespawn
+main: dewddforcespawn.Main
+version: 1
+author: dewtx29@gmail.com
+database: false
+depend: [dewddprint, dewddtran]
