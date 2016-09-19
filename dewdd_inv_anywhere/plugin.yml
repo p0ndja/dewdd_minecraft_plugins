@@ -9,6 +9,12 @@ commands:
     description: open last inventory
     usage: /<command>
   dinv:
-    description: open visual chest by ptdew
+    description: open visual chest by dewdd
+    usage: /<command>
+  dinvload:
+    description: load file
+    usage: /<command>
+  dinvsave:
+    description: save file
     usage: /<command>
     

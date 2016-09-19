@@ -16,6 +16,7 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.Chest;
@@ -23,10 +24,15 @@ import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.Action;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
+import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.player.PlayerInventoryEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerResourcePackStatusEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -51,10 +57,11 @@ public class DigEventListener2 implements Listener {
 
 	int goslot = 1;
 	int backslot = 0;
+	int menuslot = 17;
 
-	int picback = Material.LEATHER.getId();
-	int picgo = Material.LEVER.getId();
-
+	int picback = Material.LEAVES.getId();
+	int picgo = Material.LEAVES.getId();
+	int picmenu = Material.LEAVES.getId();
 
 	public JavaPlugin ac = null;
 	ArrayList<DewInv> inv = new ArrayList<DewInv>();
@@ -72,12 +79,69 @@ public class DigEventListener2 implements Listener {
 			return;
 		}
 
+		// dprint.r.printC("InvType " + e.getInventory().getType().name() + " ,
+		// slot " + e.getSlot());
+
 		Player p = (Player) e.getWhoClicked();
+		int getid = getid(p.getName());
+		DewInv tmp = inv.get(getid);
+
+		// dprint.r.printAll("clicked slot " + e.getSlot() + " , type " +
+		// e.getInventory().getType().name());
+		
+		
+
 		// printall("click " + e.getSlot() );
 		// printall("name " + e.getInventory().getName());
 
-		int getid = getid(p.getName());
-		DewInv tmp = inv.get(getid);
+		if (e.getInventory().getType() == InventoryType.CRAFTING) {
+			ItemStack it = new ItemStack(picmenu);
+			it.setAmount(1);
+			it.setTypeId(picmenu);
+			ItemMeta itx = it.getItemMeta();
+			itx.setDisplayName("DewInv");
+
+			it.setItemMeta(itx);
+
+			it.addUnsafeEnchantment(Enchantment.OXYGEN, 8);
+
+			// e.getInventory().setItem(menuslot, it);
+			e.getClickedInventory().setItem(menuslot, it);
+			// dprint.r.printC("player added " + menuslot);
+
+			if (e.getSlot() == menuslot) {
+				// dprint.r.printAll("seem");
+				// if
+				// (e.getCurrentItem().getItemMeta().getDisplayName().equalsIgnoreCase("DewInv")){
+				e.setCancelled(true);
+				if (tmp.now >= tmp.position.size()) {
+					tmp.now = tmp.position.size() - 1;
+				}
+
+				if (tmp.now < 0) {
+					tmp.now = 0;
+				}
+
+				Position posi = tmp.position.get(tmp.now);
+
+				try {
+
+					Chest chest = (Chest) Bukkit.getWorld(posi.worldName).getBlockAt(posi.x, posi.y, posi.z).getState();
+
+					p.openInventory(chest.getInventory());
+				} catch (Exception eee) {
+					p.sendMessage(eee.getMessage());
+					tmp.position.remove(tmp.now);
+					saveinventoryfile(p.getName());
+
+					return;
+
+				}
+				// }
+			}
+			return;
+
+		}
 
 		boolean fou = true;
 
@@ -120,6 +184,13 @@ public class DigEventListener2 implements Listener {
 				}
 
 				Position posi = tmp.position.get(tmp.now);
+				try {
+					Bukkit.getWorld(posi.worldName).getBlockAt(posi.x, posi.y, posi.z);
+				} catch (NullPointerException ee) {
+					tmp.position.remove(tmp.now);
+					saveinventoryfile(p.getName());
+					return;
+				}
 				Block b3 = Bukkit.getWorld(posi.worldName).getBlockAt(posi.x, posi.y, posi.z);
 
 				/*
@@ -132,9 +203,20 @@ public class DigEventListener2 implements Listener {
 				if (b3.getTypeId() != 54) {
 					p.sendMessage("can't open this chest " + tmp.now + " location at " + posi.x + "," + posi.y + ","
 							+ posi.z + " at " + posi.worldName);
-					
+
 					tmp.position.remove(tmp.now);
+					saveinventoryfile(p.getName());
 					return;
+				}
+				
+				
+				if (api_private.DewddPrivate.hasProtect(b3)) {
+					if (api_private.DewddPrivate.cando(b3, p)) {
+						addNewInventory(b3.getLocation(), inv.get(getid(p.getName())),
+								p.getName());
+
+					}
+
 				}
 
 				Chest xrch = (Chest) b3.getState();
@@ -166,6 +248,9 @@ public class DigEventListener2 implements Listener {
 				if (b3.getTypeId() != 54) {
 					p.sendMessage("can't open this chest " + tmp.now + " location at " + posi.x + "," + posi.y + ","
 							+ posi.z + " at " + posi.worldName);
+
+					tmp.position.remove(tmp.now);
+					saveinventoryfile(p.getName());
 					return;
 				}
 
@@ -182,20 +267,109 @@ public class DigEventListener2 implements Listener {
 
 	}
 
+	public void addNewInventory(Location loc, DewInv tmp, String playerName) {
+		// search
+
+		// loop all saved inventory
+
+		for (int j = 0; j < tmp.position.size(); j++) {
+			Position posi = tmp.position.get(j);
+			if (posi.x == loc.getBlockX() && posi.y == loc.getBlockY() && posi.z == loc.getBlockZ()
+					&& posi.worldName.equalsIgnoreCase(loc.getWorld().getName())) {
+				return;
+			}
+
+		}
+
+		Position newPosi = new Position();
+		newPosi.x = loc.getBlockX();
+		newPosi.y = loc.getBlockY();
+		newPosi.z = loc.getBlockZ();
+		newPosi.worldName = loc.getWorld().getName();
+
+		tmp.position.add(newPosi);
+		saveinventoryfile(playerName);
+
+	}
+
 	@EventHandler
 	public void eventja(InventoryOpenEvent e) {
 		if (!tr.isrunworld(ac.getName(), e.getPlayer().getWorld().getName())) {
 			return;
 		}
 
+		// dprint.r.printAll(e.getInventory().getType().name());
+
+		if (e.getInventory().getType() == InventoryType.CRAFTING) {
+			ItemStack it = new ItemStack(picmenu);
+			it.setAmount(1);
+			it.setTypeId(picmenu);
+			ItemMeta itx = it.getItemMeta();
+			itx.setDisplayName("DewInv");
+
+			it.setItemMeta(itx);
+
+			it.addUnsafeEnchantment(Enchantment.OXYGEN, 8);
+
+			e.getInventory().setItem(menuslot, it);
+			// dprint.r.printC("player added " + menuslot);
+			return;
+
+		}
+
+		if (e.getInventory().getType() != InventoryType.CHEST) {
+			return;
+		}
+
+		ItemStack it = new ItemStack(picgo);
+		it.setAmount(1);
+		it.setTypeId(picgo);
+		ItemMeta itx = it.getItemMeta();
+		itx.setDisplayName("next");
+
+		it.setItemMeta(itx);
+
+		it.addUnsafeEnchantment(Enchantment.OXYGEN, 8);
+
+		e.getInventory().setItem(goslot, it);
+
+		// ...........
+
+		it = new ItemStack(picback);
+		it.setAmount(1);
+		it.setTypeId(picback);
+		itx = it.getItemMeta();
+		itx.setDisplayName("back");
+
+		it.setItemMeta(itx);
+
+		it.addUnsafeEnchantment(Enchantment.OXYGEN, 8);
+
+		e.getInventory().setItem(backslot, it);
+		// .............
+
 		int getid = getid(e.getPlayer().getName());
 		// printall("Inventory open " + e.getInventory().getType().name());
 		// printall("Inventory open type " + e.getInventory().getName());
 
-		inv.get(getid).inv = e.getInventory();
+		DewInv tmp = inv.get(getid);
+		tmp.inv = e.getInventory();
 
 		Player p = (Player) e.getPlayer();
-		
+
+		Position posi = tmp.position.get(tmp.now);
+		Block thatBlock = Bukkit.getWorld(posi.worldName).getBlockAt(posi.x, posi.y, posi.z);
+
+		if (api_private.DewddPrivate.hasProtect(thatBlock)) {
+			if (!api_private.DewddPrivate.cando(thatBlock, p)) {
+				tmp.position.remove(tmp.now);
+				saveinventoryfile(p.getName());
+			}
+
+		} else {
+			tmp.position.remove(tmp.now);
+			saveinventoryfile(p.getName());
+		}
 
 		// go
 		boolean fou = true;
@@ -231,10 +405,10 @@ public class DigEventListener2 implements Listener {
 		if (fou == true) {
 			// printall("run run run");
 
-			ItemStack it = new ItemStack(picgo);
+			it = new ItemStack(picgo);
 			it.setAmount(1);
 			it.setTypeId(picgo);
-			ItemMeta itx = it.getItemMeta();
+			itx = it.getItemMeta();
 			itx.setDisplayName("next");
 
 			it.setItemMeta(itx);
@@ -350,14 +524,13 @@ public class DigEventListener2 implements Listener {
 					tmp.position.add(new Position());
 					p.sendMessage("added New Slot " + n3);
 				}
-				
-				if (n3 >= tmp.position.size() ) {
-					p.sendMessage("Inventory Saved Slot range = 0 to " + (tmp.position.size()-1));
+
+				if (n3 >= tmp.position.size()) {
+					p.sendMessage("Inventory Saved Slot range = 0 to " + (tmp.position.size() - 1));
 					return;
 				}
-				
+
 				Position posi = tmp.position.get(n3);
-				
 
 				if (mode == true) { // set
 					Block b3 = p.getLocation().getBlock().getRelative(0, 0, 0);
@@ -395,9 +568,9 @@ public class DigEventListener2 implements Listener {
 					if (b3.getTypeId() != 54) {
 						p.sendMessage("can't open this chest " + n3 + " location at " + posi.x + "," + posi.y + ","
 								+ posi.z + " at " + posi.worldName);
-						
-						tmp.position.remove(n3);
 
+						tmp.position.remove(n3);
+						saveinventoryfile(p.getName());
 						return;
 					}
 
@@ -473,6 +646,31 @@ public class DigEventListener2 implements Listener {
 	}
 
 	@EventHandler
+	public void eventja(PlayerInteractEvent e) {
+		if (!tr.isrunworld(ac.getName(), e.getPlayer().getWorld().getName())) {
+			return;
+		}
+
+		if (e.getAction() == Action.RIGHT_CLICK_BLOCK) {
+			Block b = e.getClickedBlock();
+			if (b.getType() == Material.CHEST) {
+
+				if (api_private.DewddPrivate.hasProtect(b)) {
+					if (api_private.DewddPrivate.cando(b, e.getPlayer())) {
+						addNewInventory(b.getLocation(), inv.get(getid(e.getPlayer().getName())),
+								e.getPlayer().getName());
+
+					}
+
+				}
+
+			}
+
+		}
+
+	}
+
+	@EventHandler
 	public void eventja(PlayerJoinEvent e) {
 		if (!tr.isrunworld(ac.getName(), e.getPlayer().getWorld().getName())) {
 			return;
@@ -522,21 +720,21 @@ public class DigEventListener2 implements Listener {
 			// * save
 			String m[];
 			int getid = getid(pname);
-			
+
 			DewInv tmp = inv.get(getid);
 			tmp.now = -1;
-			
+
 			while ((strLine = br.readLine()) != null) {
 
 				m = strLine.split("\\s+");
-				
+
 				Position posi = new Position();
-				
+
 				posi.x = Integer.parseInt(m[0]);
-				posi.y= Integer.parseInt(m[1]);
+				posi.y = Integer.parseInt(m[1]);
 				posi.z = Integer.parseInt(m[2]);
 				posi.worldName = (m[3]);
-				
+
 				tmp.position.add(posi);
 
 			}
@@ -575,10 +773,9 @@ public class DigEventListener2 implements Listener {
 			DewInv tmp = inv.get(getid);
 
 			for (int l1 = 0; l1 < tmp.position.size(); l1++) {
-				Position posi =  tmp.position.get(l1);
-				
-				String wr = posi.x + " " + posi.y + " " + posi.z + " "
-						+ posi.worldName;
+				Position posi = tmp.position.get(l1);
+
+				String wr = posi.x + " " + posi.y + " " + posi.z + " " + posi.worldName;
 
 				fwriter.write(wr + System.getProperty("line.separator"));
 
