@@ -171,6 +171,13 @@ public class api_skyblock {
 				} else { // if x y z this can do
 					dprint.r.printAll("random " + x + "," + y + "," + z);
 
+					int oldID = getOWNIslandID(player.getName(),false);
+						if (oldID > -1) {
+							rs[oldID].p[0] = getNewOwnerName();
+							
+						}
+					
+					
 					int newid = getOWNIslandID(player.getName(), true);
 					// get free slot for this player
 					rs[newid].x = x;

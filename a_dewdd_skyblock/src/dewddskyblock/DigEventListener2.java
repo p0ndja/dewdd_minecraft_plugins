@@ -1157,6 +1157,11 @@ public class DigEventListener2 implements Listener {
 					dew.saveRSProtectFile();
 					return;
 				} else if (m[1].equalsIgnoreCase("drawprotect")) {
+					
+					if( player.hasPermission(Constant.poveride ) == false) {
+						player.sendMessage(dprint.r.color(tr.gettr("you_dont_have_permisison")));
+						return;
+					}
 
 					int getid = api_skyblock.getprotectid(player.getLocation().getBlock());
 
