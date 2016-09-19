@@ -44,8 +44,9 @@ import li.LXRXLZRZType;
 
 public class dewset extends dewset_interface {
 	
-	public  void DeleteRecursive_mom (HashMap<String, Location> bd, World world, int firstAdded,LXRXLZRZType ee, int id ,byte data) {
-		DeleteRecursive_Thread dr = new DeleteRecursive_Thread(bd, world, firstAdded, ee, id, data);
+	public  void DeleteRecursive_mom (HashMap<String, Location> bd, World world, int firstAdded,LXRXLZRZType ee, 
+			int id ,byte data,int chunklimit,int search) {
+		DeleteRecursive_Thread dr = new DeleteRecursive_Thread(bd, world, firstAdded, ee, id, data,chunklimit,search);
 		Bukkit.getScheduler().scheduleSyncDelayedTask(ac, dr,1);
 		
 	}
@@ -56,13 +57,18 @@ public class dewset extends dewset_interface {
 		private LXRXLZRZType ee;
 		private int id = 0;
 		private byte data = 0;
+		private int chunklimit = 0;
+		private int search = 10;
 
-		public DeleteRecursive_Thread(HashMap<String, Location> bd, World world, int firstAdded,LXRXLZRZType ee, int id ,byte data) {
+		public DeleteRecursive_Thread(HashMap<String, Location> bd, World world, int firstAdded,LXRXLZRZType ee, 
+				int id ,byte data,int chunklimit,int search) {
 			this.bd = bd;
 			this.world = world;
 			this.ee = ee;
 			this.id = id;
 			this.data = data;
+			this.chunklimit = chunklimit;
+			this.search = search;
 
 			// random add
 
@@ -75,7 +81,7 @@ public class dewset extends dewset_interface {
 				return;
 			}
 
-			int search = 10;
+			
 
 			long startTime = System.currentTimeMillis();
 
@@ -88,12 +94,15 @@ public class dewset extends dewset_interface {
 
 				
 
-				while (System.currentTimeMillis() - startTime < 1000) {
+				while (System.currentTimeMillis() - startTime < 1000 && world.getLoadedChunks().length <= chunklimit) {
+					
 
 					int x = li.useful.randomInteger(ee.lx, ee.rx);
 					int z = li.useful.randomInteger(ee.lz, ee.rz);
 
 					int y = li.useful.randomInteger(0, 40);
+					
+					
 
 					Block block = world.getBlockAt(x, y, z);
 					if (block.getType().getId() == id ) {
@@ -107,11 +116,50 @@ public class dewset extends dewset_interface {
 					}
 
 				}
+				
+				
+				for(Player player : Bukkit.getOnlinePlayers()) {
+					if (player == null ) {
+						continue;
+						
+					}
+					
+					Block getStack = player.getLocation().getBlock();
+					if (player.getItemInHand().getType() == Material.STICK) {
+						bd = null;
+						return;
+					}
+						
+					
+					for (int x = -search; x <= search; x++)
+						for (int y = -search; y <= search; y++) {
+							if (search < 0 ) continue;
+							if (search > 255) continue;
+							
+							for (int z = -search; z <= search; z++) {
+								if (x == 0 && y == 0 && z == 0) {
+									continue;
+								}
+
+								Block bo = player.getWorld().getBlockAt(getStack.getX() + x, y,
+										getStack.getZ() + z);
+								if (bo.getType().getId() == id ) {
+									if (bo.getData() == data || data == -29)
+									
+									bd.put(tr.locationToString(bo.getLocation()), bo.getLocation());
+
+								}
+
+							}
+							
+						}
+				
+				}
 
 				if (bd.size() == 0) {
 
 					dprint.r.printAll("recall ... " + bd.size());
-					DeleteRecursive_Thread newRun = new DeleteRecursive_Thread(bd, world, 0,ee,id,data);
+					DeleteRecursive_Thread newRun = new DeleteRecursive_Thread(bd, world, 0,ee,id,data,chunklimit,search);
 					Bukkit.getScheduler().scheduleSyncDelayedTask(ac, newRun, 20L);
 					return;
 				}
@@ -123,15 +171,21 @@ public class dewset extends dewset_interface {
 			int first = 0;
 			while (bd.size() > 0 && System.currentTimeMillis() - startTime < 1000) {
 
-				for (int i = 0; i < 1000000 && System.currentTimeMillis() - startTime < 1000; i++) {
+				for (int i = 0; i < 1000000 && System.currentTimeMillis() - startTime < 1000  ; i++) {
 					String forDeleteLoc = "";
 					for (String locStr : bd.keySet()) {
 
 						Location loc = bd.get(locStr);
+						
 						// bd.remove(locStr);
 						forDeleteLoc = locStr;
 
 						Block getStack = world.getBlockAt(loc);
+						
+						if (getStack.getWorld().getLoadedChunks().length > chunklimit) {
+							break;
+						}
+						
 						if (getStack == null) {
 							continue;
 						}
@@ -153,8 +207,8 @@ public class dewset extends dewset_interface {
 						
 						if (first == 0) {
 							dprint.r.printAll("delete recursive > break > " + getStack.getX() + "," + getStack.getY() + ","
-									+ getStack.getZ() + getStack.getType().name() + ":" + getStack.getData() + " size "
-									+ bd.size() + " > id data " + id + ":" + data);
+									+ getStack.getZ() + " " + getStack.getType().name() + ":" + getStack.getData() + " size "
+									+ bd.size() + " " + getStack.getWorld().getName() +  " > id data " + id + ":" + data );
 							first = 1;
 						}
 
@@ -206,13 +260,14 @@ public class dewset extends dewset_interface {
 					}
 
 					bd.remove(forDeleteLoc);
+					
 
 				}
 
 			}
 
 			if (bd.size() >= 0) {
-				DeleteRecursive_Thread newRun = new DeleteRecursive_Thread(bd, world, 0,ee,id,data);
+				DeleteRecursive_Thread newRun = new DeleteRecursive_Thread(bd, world, 0,ee,id,data,chunklimit,search);
 				Bukkit.getScheduler().scheduleSyncDelayedTask(ac, newRun, 20L);
 				return;
 			}

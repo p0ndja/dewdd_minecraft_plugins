@@ -340,6 +340,11 @@ public class DigEventListener2 implements Listener {
 			}
 
 			// 555
+			
+			if (m[0].equalsIgnoreCase("xD") == true) {
+				player.addPotionEffect(PotionEffectType.REGENERATION.createEffect(30, 1));
+				
+			}
 
 			if (m[0].equalsIgnoreCase("555") == true) {
 				player.setAllowFlight(false);

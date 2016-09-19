@@ -368,7 +368,7 @@ public class DigEventListener2 implements Listener {
 
 						if (first == 0) {
 							dprint.r.printAll("deleteybelow5 > break > " + getStack.getX() + "," + getStack.getY() + ","
-									+ getStack.getZ() + getStack.getType().name() + ":" + getStack.getData() + " size "
+									+ getStack.getZ() +  " " +  getStack.getType().name() + ":" + getStack.getData() + " size "
 									+ bd.size());
 							first = 1;
 						}

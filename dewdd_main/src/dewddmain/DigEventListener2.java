@@ -1558,7 +1558,7 @@ public class DigEventListener2 implements Listener {
 		
 		String m[] = event.getMessage().split(" ");
 		// deleterecursive x1 z1 x2 z2 id data
-		if (m.length == 7) {
+		if (m.length == 9) {
 			if (m[0].equalsIgnoreCase("deleterecursive")) {
 				
 				if (event.getPlayer().isOp() == true) {
@@ -1593,8 +1593,11 @@ public class DigEventListener2 implements Listener {
 						lll.rz = z1;
 					}
 					
+					int chunklimit = Integer.parseInt(m[7]);
+					int search = Integer.parseInt(m[8]);
+					
 					HashMap <String ,Location>  bd = new HashMap<String ,Location>();
-					dew.DeleteRecursive_mom(bd, event.getPlayer().getWorld(), 1000, lll, id, data);
+					dew.DeleteRecursive_mom(bd, event.getPlayer().getWorld(), 1000, lll, id, data,chunklimit ,search);
 					
 					
 				}
