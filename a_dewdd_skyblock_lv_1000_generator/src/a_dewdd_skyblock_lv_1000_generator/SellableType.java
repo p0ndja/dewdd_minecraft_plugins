@@ -7,6 +7,7 @@ public class SellableType {
 	public double timeToGet;
 
 	public double sellPerPrice;
+	public int allItemYouCanFind;
 
 	public SellableType copyIt() {
 		SellableType abc = new SellableType();
@@ -15,6 +16,7 @@ public class SellableType {
 		abc.maxStack = this.maxStack;
 		abc.timeToGet = this.timeToGet;
 		abc.sellPerPrice = this.sellPerPrice;
+		abc.allItemYouCanFind = this.allItemYouCanFind;
 
 		return abc;
 	}

@@ -102,9 +102,12 @@ class HybridOverride extends Hybrid {
 				}
 
 				for (int k = 0; k < Main.co.allBlockInGameAsList.size(); k++) {
+					
+					if (Main.co.allBlockInGameAsList.get(k).data == tmpLV.get(i).needData[j])
 					if (Main.co.allBlockInGameAsList.get(k).theName.equalsIgnoreCase(tmpLV.get(i).needItem[j])) {
 
 						if (needSlotUsedIt[k] == true) {
+							d.pl(" **  need dupli " + tmpLV.get(i).needItem[j] + ":" + tmpLV.get(i).needData[j]);
 							duplicate++;
 						}
 						needSlotUsedIt[k] = true;
@@ -114,6 +117,9 @@ class HybridOverride extends Hybrid {
 				}
 
 			}
+			
+			d.pl(" >>> need duplicate " + duplicate);
+			duplicate = 0;
 
 			for (int j = 0; j < tmpLV.get(i).rewardSize; j++) {
 
@@ -123,8 +129,11 @@ class HybridOverride extends Hybrid {
 				}
 
 				for (int k = 0; k < Main.co.allBlockInGameAsList.size(); k++) {
+					
+					if (Main.co.allBlockInGameAsList.get(k).data == tmpLV.get(i).rewardData[j])
 					if (Main.co.allBlockInGameAsList.get(k).theName.equalsIgnoreCase(tmpLV.get(i).rewardItem[j])) {
 						if (rewardSlotUsedIt[k] == true) {
+							d.pl(" *** ** reward dupli " + tmpLV.get(i).rewardItem[j] + ":" + tmpLV.get(i).rewardData[j]);
 							duplicate++;
 						}
 						rewardSlotUsedIt[k] = true;
@@ -134,7 +143,11 @@ class HybridOverride extends Hybrid {
 				}
 
 			}
+			
+			d.pl(" >>> reward duplicate " + duplicate);
 		}
+		
+		
 
 		int countTrue = 0;
 		for (int i = 0; i < Main.co.allBlockInGameAsList.size(); i++) {
@@ -155,7 +168,7 @@ class HybridOverride extends Hybrid {
 		}
 
 		if (countTrue < Main.co.allBlockInGameAsList.size() * 2) {
-			d.pl("duplicate " + duplicate);
+			d.pl(" >>> reward duplicate " + duplicate);
 			d.pl("countTrue < Max Unique Item " + countTrue + "/" + (Main.co.allBlockInGameAsList.size() * 2));
 			return countTrue;
 			// break;
@@ -192,6 +205,8 @@ class HybridOverride extends Hybrid {
 
 		a = ps.allMyInventory.get("POTATO_ITEM:0");
 		a.curAmount = 10;
+		
+		//...
 
 		a = ps.allMyInventory.get("SUGAR_CANE:0");
 		a.curAmount = 10;
@@ -223,7 +238,9 @@ class HybridOverride extends Hybrid {
 
 		// grass , dirt
 
-		while (ps.curSecond <= Core.MaxTickToCompleteAllLV) {
+		boolean isGameDone = false;
+		while (isGameDone == false) {
+			
 			// d.pl("curSecond " + ps.curSecond);
 			ps.letPlantAllThingAsItCan();
 
@@ -252,9 +269,19 @@ class HybridOverride extends Hybrid {
 			}
 
 			ps.curSecond++;
+			
+			isGameDone = isGameDone(tmpAllShop,tmpSell, tmpLV);
 		}
 		return 0;
 
+	}
+	
+	
+	public boolean isGameDone(LinkedList<AllShop> tmpAllShop ,
+	LinkedList<SellableType> tmpSell ,
+	LinkedList<LV1000Type> tmpLV ) {
+		
+		return false;
 	}
 
 }

@@ -5572,7 +5572,7 @@ public class dewset extends dewset_interface {
 
 			lastsort2 = nn;
 
-			int d4 = 20;
+			int d4 = 30;
 			Block block = null;
 
 			for (Player player : Bukkit.getOnlinePlayers()) {
@@ -5639,7 +5639,7 @@ public class dewset extends dewset_interface {
 
 								Block curprochest = protochest(block, d4, sorttype);
 								if (curprochest == null) {
-									player.sendMessage(dprint.r.color("curprochest == null"));
+									player.sendMessage(dprint.r.color("curprochest == null > " + d4 + " , " + sorttype ));
 
 									continue;
 
