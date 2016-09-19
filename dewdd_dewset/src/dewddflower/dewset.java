@@ -4289,7 +4289,7 @@ public class dewset extends dewset_interface {
 
 	Queue<Block>		bd					= new LinkedList<Block>();
 
-	public JavaPlugin	ac					= null;
+	public static JavaPlugin	ac					= null;
 
 	public boolean		allowfly			= true;
 
@@ -4374,7 +4374,8 @@ public class dewset extends dewset_interface {
 		// if (firstrun19 == false){
 
 		// loadadminlist();
-
+		
+		this.loadmainfile();
 	
 
 		// firstrun19 = true;

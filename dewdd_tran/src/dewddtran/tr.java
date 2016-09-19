@@ -17,6 +17,8 @@ import java.util.ArrayList;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.Plugin;
 
+import dprint.dprint;
+
 class runworldtype {
 	public String				pluginname;
 	public ArrayList<String>	runworld;
@@ -421,7 +423,7 @@ public class tr {
 		try {
 			fff.createNewFile();
 
-			dprint.r.printC("ptdew&dewdd : Start saving " + filena);
+			dprint.printC("ptdew&dewdd : Start saving " + filena);
 			fwriter = new FileWriter(fff);
 
 			boolean cs = false;
@@ -445,7 +447,7 @@ public class tr {
 			}
 
 			fwriter.close();
-			dprint.r.printC("ptdew&dewdd : saved " + filena);
+			dprint.printC("ptdew&dewdd : saved " + filena);
 			return;
 
 		}

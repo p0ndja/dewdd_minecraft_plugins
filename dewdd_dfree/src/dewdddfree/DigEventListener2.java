@@ -51,7 +51,7 @@ public class DigEventListener2 implements Listener {
 
 	Random		rnd			= new Random();
 	
-	dewset dew;
+	dewset dew = null;
 	
 	public DigEventListener2() {
 		delay eee = new delay();
@@ -77,12 +77,12 @@ public class DigEventListener2 implements Listener {
 
 				}
 
-				while (dew == null) {
+			/*	while (dew == null) {
 
 					i++;
 					Thread.sleep(1000);
 					System.out
-							.println("dew main waiting for create dewset sleeping dew +"
+							.println("dew dfree waiting for create dewset sleeping dew +"
 									+ i);
 
 					dew = new dewset();
@@ -94,13 +94,13 @@ public class DigEventListener2 implements Listener {
 					i++;
 					Thread.sleep(1000);
 					System.out
-							.println("dew main waiting for create dewset sleeping dew ac +"
+							.println("dew dfree waiting for create dewset sleeping dew ac +"
 									+ i);
 
 					dew.ac = ac;
 
 				}
-				dew.loadmainfile();
+				dew.loadmainfile();*/
 
 			}
 			catch (InterruptedException e) {

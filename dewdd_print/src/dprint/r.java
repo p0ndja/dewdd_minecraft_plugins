@@ -38,6 +38,8 @@ public class r {
 		}
 	}
 
+	
+	
 	public static void printAll(String abc) {
 		printC(abc);
 		printA(abc);

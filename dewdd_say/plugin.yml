@@ -3,6 +3,7 @@ main: dewddsay.Main
 version: 1
 author: dewtx29@gmail.com
 database: false
+depend: [dewddtran, dewddprint]
 
 commands:
   qdewd:

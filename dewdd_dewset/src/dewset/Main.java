@@ -28,7 +28,7 @@ public class Main extends JavaPlugin {
 		log = getLogger();
 
 		printAll("ptdew&dewdd : " + tr.gettr("loaded_plugin") + " dewset api");
-
+		dewddflower.dewset.ac = this;
 	}
 
 	public void printA(String abc) {

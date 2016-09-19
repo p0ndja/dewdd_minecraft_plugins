@@ -1,8 +1,9 @@
-name: ft
+name: dewddft
 main: dewddft.Main
 version: 1
 author: dewtx29@gmail.com
 database: false
+depend: [dewset, dewddprint, dewddtran]
 
 commands:
   dft:

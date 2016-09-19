@@ -63,10 +63,6 @@ import api_admin.dewddadmin;
 import dewddflower.dewset;
 import dewddtran.tr;
 
-class Dewddminecraft extends dewset {
-
-}
-
 public class DigEventListener2 implements Listener {
 	class chatx implements Runnable {
 		public Boolean	canc	= false;
@@ -1536,7 +1532,7 @@ public class DigEventListener2 implements Listener {
 							.println("dew main waiting for create dewset sleeping dew +"
 									+ i);
 
-					dew = new Dewddminecraft();
+					dew = new dewddflower.dewset();
 
 				}
 
@@ -1658,7 +1654,7 @@ public class DigEventListener2 implements Listener {
 
 	public JavaPlugin		ac	= null;
 
-	public Dewddminecraft	dew	= null;
+	public dewddflower.dewset	dew 	;
 
 	public String	pseecommand	= "dewdd.main.seecommand";
 
@@ -1666,8 +1662,10 @@ public class DigEventListener2 implements Listener {
 	// BlockBreakEvent
 
 	public DigEventListener2() {
-		delay eee = new delay();
-		eee.start();
+		dew = new dewddflower.dewset();
+		
+		/*delay eee = new delay();
+		eee.start();*/
 	}
 
 	// synchronized

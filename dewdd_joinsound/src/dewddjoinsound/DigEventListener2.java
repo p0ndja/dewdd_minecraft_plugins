@@ -20,6 +20,8 @@ import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import dewddtran.tr;
+
 public class DigEventListener2 implements Listener {
 	JavaPlugin	ac				= null;
 	boolean		joinsoundallow	= false;
@@ -73,14 +75,8 @@ public class DigEventListener2 implements Listener {
 		}
 		runsoundfile(Integer.toString(Bukkit.getOnlinePlayers().length));
 
-		if (event.getPlayer().getName().equalsIgnoreCase("ptdew") == true
-				|| event.getPlayer().getName().equalsIgnoreCase("pondja_kung") == true) {
-			return;
-		}
-
-		dprint.r.printA("ptdew&dewdd: 'DewddJoinSound' If you need to call Admin Dew just type 'admin' or 'dewdd' or 'ptdew'");
-		dprint.r.printA("ptdew&dewdd: �ҡ�����Թ dewdd join sound ��ҵ�ͧ��þ��ʹ�Թ��� �������� 'admin' ���� 'dewdd' ���� 'ptdew' ���¡����ͨ��繹Ф�Ѻ");
-
+		dprint.r.printA("ptdew&dewdd: 'Dewdd JoinSound' : " +  tr.gettr("joinsound_if_you_need_to_call_admin_type") + " admin," + tr.gettr("admin_in_thai") + ",ptdew");
+		
 	}
 
 	public void runsoundfile(String abcwrite) {

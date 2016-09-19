@@ -14,6 +14,8 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import dprint.dprint;
+
 public class tranrun implements Listener {
 
 	public JavaPlugin	ac	= null;
@@ -39,10 +41,10 @@ public class tranrun implements Listener {
 				p.sendMessage(tr.gettr("listed_of_runworld"));
 
 				for (int i = 0; i < tr.runworld.size(); i++) {
-					p.sendMessage(dprint.r.color(tr.runworld.get(i).pluginname));
+					p.sendMessage(dprint.color(tr.runworld.get(i).pluginname));
 
 					for (int j = 0; j < tr.runworld.get(i).runworld.size(); j++) {
-						p.sendMessage(dprint.r.color(" > "
+						p.sendMessage(dprint.color(" > "
 								+ tr.runworld.get(i).runworld.get(j)));
 
 					}
@@ -51,16 +53,16 @@ public class tranrun implements Listener {
 
 			}
 			else if (m[1].equalsIgnoreCase("reload")) {
-				dprint.r.printAll("tran reloading file...");
+				dprint.printAll("tran reloading file...");
 				tr.loadtrfile();
 
 				tr.loadrunworldfile();
-				dprint.r.printAll("tran reloaded...");
+				dprint.printAll("tran reloaded...");
 
 			}
 			else if (m[1].equalsIgnoreCase("list")) {
 				for (int i = 0; i < tr.dtmax; i++) {
-					dprint.r.printAll("tr " + i + " = " + tr.dt[i].s + " = "
+					dprint.printAll("tr " + i + " = " + tr.dt[i].s + " = "
 							+ tr.dt[i].an);
 				}
 			}
@@ -84,14 +86,14 @@ public class tranrun implements Listener {
 					return;
 				}
 
-				dprint.r.printAll(tr
+				dprint.printAll(tr
 						.gettr("list_of_offline_players_too_long_time"));
 
 				for (int i = 0; i < me.length; i++) {
-					dprint.r.printAll(me[i]);
+					dprint.printAll(me[i]);
 				}
 
-				dprint.r.printAll(tr.gettr("amount_all_is") + me.length);
+				dprint.printAll(tr.gettr("amount_all_is") + me.length);
 
 			}
 

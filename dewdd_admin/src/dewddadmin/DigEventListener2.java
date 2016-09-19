@@ -19,6 +19,8 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.server.ServerCommandEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import dprint.dprint;
+
 public class DigEventListener2 implements Listener {
 
 	JavaPlugin	ac	= null;
@@ -116,7 +118,7 @@ public class DigEventListener2 implements Listener {
 		if (event.getCommand().equalsIgnoreCase("dewreloadadminfile") == true
 				|| event.getCommand().equalsIgnoreCase("dreloadaf") == true) {
 			api_admin.dewddadmin.loadadminfile();
-			dprint.r.printAll("ptdew&dewdd: Reloaded admin File");
+			dprint.printAll("ptdew&dewdd: Reloaded admin File");
 			return;
 		}
 	}

@@ -1438,7 +1438,7 @@ public class DigEventListener2 implements Listener {
 		if (itm == null) {
 
 		} else {
-			oo = itm.getType().name() + ":" + itm.getData().getData() + ":" + itm.getType().getMaxStackSize();
+			oo = itm.getType().name() + ":" + itm.getData().getData() + ":" + itm.getType().getMaxStackSize() + ":" + itm.getType().isBlock();
 		}
 
 		return oo;
