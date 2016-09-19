@@ -95,34 +95,13 @@ public class api_skyblock {
 
 			// search top left
 
-			int lx = rs[0].x;
-			int rx = rs[0].x;
-			int lz = rs[0].z;
-			int rz = rs[0].z;
-
-			for (int i = 0; i < rsMax; i++) {
-				if (rs[i].x < lx) {
-					lx = rs[i].x;
-				}
-
-				if (rs[i].x > rx) {
-					rx = rs[i].x;
-				}
-
-				if (rs[i].z < lz) {
-					lz = rs[i].z;
-				}
-
-				if (rs[i].z > rz) {
-					rz = rs[i].z;
-				}
-
-			}
+			LXRXLZRZType ee = getPositionLXRXLZRZ();
+			
 
 			Block bb = null;
 
-			for (int tmpx = lx; tmpx <= rx; tmpx += 300) {
-				for (int tmpz = lz; tmpz <= rz; tmpz += 300) {
+			for (int tmpx = ee.lx; tmpx <= ee.rx; tmpx += 300) {
+				for (int tmpz = ee.lz; tmpz <= ee.rz; tmpz += 300) {
 
 					// check protect if there so skip
 					bb = midBlockX0Z0.getLocation().getWorld().getBlockAt(tmpx, 150, tmpz);
@@ -524,6 +503,38 @@ public class api_skyblock {
 		return -1;
 	}
 
+	
+	
+	public static LXRXLZRZType getPositionLXRXLZRZ() {
+		LXRXLZRZType ee = new LXRXLZRZType();
+		
+		ee.lx = rs[0].x;
+		ee.rx = rs[0].x;
+		ee.lz = rs[0].z;
+		ee.rz = rs[0].z;
+
+		for (int i = 0; i < rsMax; i++) {
+			if (rs[i].x < ee.lx) {
+				ee.lx = rs[i].x;
+			}
+
+			if (rs[i].x > ee.rx) {
+				ee.rx = rs[i].x;
+			}
+
+			if (rs[i].z < ee.lz) {
+				ee.lz = rs[i].z;
+			}
+
+			if (rs[i].z > ee.rz) {
+				ee.rz = rs[i].z;
+			}
+
+		}
+		
+		return ee;
+	}
+	
 	public static int getplayerinslot(String player, int rsID) {
 		for (int lop = 0; lop < RSMaxPlayer; lop++) {
 			if (rs[rsID].p[lop].equalsIgnoreCase(player)) {
