@@ -4373,7 +4373,7 @@ public class dewset extends dewset_interface {
 	public static ArrayList<RSWorld> rsWorld = new ArrayList<RSWorld>();
 
 	public static boolean cando_Main(Block block, Player player, String mode) {
-		if ((player.hasPermission(Constant.poveride)) == true) {
+		if ((player.hasPermission(pmainoveride) == true)) {
 			return true;
 		}
 
