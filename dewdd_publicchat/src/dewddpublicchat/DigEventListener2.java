@@ -5,9 +5,6 @@
  */
 package dewddpublicchat;
 
-
-import java.awt.TextComponent;
-
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.event.ChatEvent;
 import net.md_5.bungee.api.plugin.Listener;
@@ -17,22 +14,17 @@ import net.md_5.bungee.event.EventHandler;
 public class DigEventListener2 implements Listener {
 	public static Plugin ac = null;
 
-	/*@EventHandler
-	public void onChat(ChatEvent e) {
-		ProxiedPlayer player = (ProxiedPlayer) e.getSender();
-		
-		for (ProxiedPlayer cc : ac.getProxy().getPlayers()) {
-			if (cc.getAddress().getHostString() ==  (e.getSender().getAddress()).getHostName()) {
-				if (cc.getAddress().getPort() == e.getSender().getAddress().getPort()) {
-				continue;
-				}
-			}
-			//cc.sendMessage(e.getMessage());
-			cc.chat(e.getMessage());
-			System.out.println(cc.getName() + " to him " + e.getMessage());
-		}
-	}*/
-
+	/*
+	 * @EventHandler public void onChat(ChatEvent e) { ProxiedPlayer player =
+	 * (ProxiedPlayer) e.getSender();
+	 * 
+	 * for (ProxiedPlayer cc : ac.getProxy().getPlayers()) { if
+	 * (cc.getAddress().getHostString() ==
+	 * (e.getSender().getAddress()).getHostName()) { if
+	 * (cc.getAddress().getPort() == e.getSender().getAddress().getPort()) {
+	 * continue; } } //cc.sendMessage(e.getMessage()); cc.chat(e.getMessage());
+	 * System.out.println(cc.getName() + " to him " + e.getMessage()); } }
+	 */
 
 	public String engtothai(String st) {
 		if (st.length() > 1) {
@@ -818,28 +810,29 @@ public class DigEventListener2 implements Listener {
 		// , normal
 		return st;
 	}
-	
-	 @EventHandler
-	    public void onPlayerChat(ChatEvent event) {
-	        if (event.getSender() instanceof ProxiedPlayer) {
-	          
-	            if (event.isCommand()) {
-	                return;
-	            }
-	          
-	            ProxiedPlayer player = (ProxiedPlayer)event.getSender();
-	            for (ProxiedPlayer pp : ac.getProxy().getPlayers()) {
-	              
-	                if (player.getServer().getInfo().getName().equalsIgnoreCase(pp.getServer().getInfo().getName())|| pp == player) {
-	                    continue;
-	                }
-	              
-	                String newMessage = "§4";
-	                newMessage = newMessage + player.getServer().getInfo().getName();
-	                newMessage = newMessage + "> §6 " + player.getDisplayName();
-	                newMessage = newMessage + ": §3";
-	                pp.sendMessage(newMessage + " " + engtothai(event.getMessage()));
-	            }
-	        }
-	    }
+
+	@EventHandler
+	public void onPlayerChat(ChatEvent event) {
+		if (event.getSender() instanceof ProxiedPlayer) {
+
+			if (event.isCommand()) {
+				return;
+			}
+
+			ProxiedPlayer player = (ProxiedPlayer) event.getSender();
+			for (ProxiedPlayer pp : ac.getProxy().getPlayers()) {
+
+				if (player.getServer().getInfo().getName().equalsIgnoreCase(pp.getServer().getInfo().getName())
+						|| pp == player) {
+					continue;
+				}
+
+				String newMessage = "§4";
+				newMessage = newMessage + player.getServer().getInfo().getName();
+				newMessage = newMessage + "> §6 " + player.getDisplayName();
+				newMessage = newMessage + ": §3";
+				pp.sendMessage(newMessage + " " + engtothai(event.getMessage()));
+			}
+		}
+	}
 } // class

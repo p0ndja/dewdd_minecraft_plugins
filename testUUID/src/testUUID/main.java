@@ -9,6 +9,8 @@ import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.file.Files;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import print_api.r;
 
@@ -90,36 +92,94 @@ class UUID {
 	}
 
 
+	class CheckItNow implements Runnable {
+		private File sub ;
+		public CheckItNow(File sub) {
+			this.sub = sub;
+			
+		}
+		@Override
+		public void run() {
+			
+			String oldName = getNameFromEssentialsFile(sub.getAbsolutePath());
+			String newName = sendUUID(oldName);
+		
+
+			
+			String desFolder = "real";
+			
+			if (newName.equalsIgnoreCase("not premium")) {
+				desFolder = "crack";
+				
+				
+				String folder = "/ramdisk/" + desFolder ;
+				File fol = new File(folder);
+				fol.mkdirs();
+				
+				File out = new File(folder + "/" + sub.getName());
+			
+				
+				 try {
+					Files.copy(sub.toPath(), out.toPath() );
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				 
+			}
+			else {
+			
+			String folder = "/ramdisk/" + desFolder ;
+			File fol = new File(folder);
+			fol.mkdirs();
+			
+			
+			
+			File out = new File(folder + "/" + spliteUUID(newName)  + ".yml");
+		
+			 try {
+				Files.copy(sub.toPath(), out.toPath() );
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			 
+			}
+		}
+	}
+	
 	public  void allFileInFolder(String path) {
 		File file = new File(path);
 		if (file.isDirectory()) {
+			
+			ExecutorService executor = Executors.newFixedThreadPool(10);
+			       
+			
 			for (File sub : file.listFiles()) {
 				if (sub.isFile()) {
 					
 					r.pl(sub.getName());
 					
-					  
-					String oldName = getNameFromEssentialsFile(sub.getAbsolutePath());
-					String newName = sendUUID(oldName);
-					if (newName.equalsIgnoreCase("not premium")) {
-						continue;
-					}
 					
-					File out = new File("/ramdisk/" + newName  + ".yml");
-					 try {
-						Files.copy(sub.toPath(), out.toPath() );
-					} catch (IOException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-
+			            Runnable worker = new CheckItNow(sub);
+			            executor.execute(worker);
+			          
+			     
+					  
 
 				}
 			}
 			
+			 executor.shutdown();
+			 
 		}
 		
 
+	}
+	
+	public String spliteUUID(String old) {
+		String fff = old.substring(0, 8) + "-" +  old.substring(8, 12) +  "-" +  old.substring(12, 16) + "-"  +  old.substring(16);
+		return fff;
 	}
 
 }
@@ -128,8 +188,14 @@ public class main {
 	public static void main(String abc[]) {
 		UUID xx = new UUID();
 		//xx.sendUUID("natt0880");
-		xx.allFileInFolder("/home/d/mis/survival/plugins/Essentials/userdata");
+		//xx.allFileInFolder("/home/d/mis/survival/plugins/Essentials/userdata");
 		
+		xx.allFileInFolder("/ramdisk/survival");
+		
+		
+		//String eee = xx.sendUUID("dewdd");
+		//r.pl(xx.spliteUUID(eee));
+	
 	}
 
 }
