@@ -12,8 +12,10 @@ import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.HashMap;
 import java.util.Random;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -29,17 +31,18 @@ import dewddtran.tr;
 
 public class api_skyblock {
 
-	class CheckIsThisZoneAreEmpty implements Runnable {
+	class AdjustProtect implements Runnable {
 		private Block midBlockX0Z0;
 		private Player player;
 
-		public CheckIsThisZoneAreEmpty(Block midBlockX0Z0, Player player) {
+		public AdjustProtect(Block midBlockX0Z0, Player player) {
 			this.midBlockX0Z0 = midBlockX0Z0;
 			this.player = player;
 		}
 
+		
 		public void run() {
-
+			
 			int count = 0;
 			boolean thereBlock = false;
 
@@ -91,7 +94,8 @@ public class api_skyblock {
 
 			}
 
-			player.sendMessage("thereBlock " + thereBlock);
+			//player.sendMessage("thereBlock " + thereBlock);
+			
 		}
 	}
 
@@ -1138,17 +1142,11 @@ public class api_skyblock {
 
 	}
 
-	public void checkIsTHisZoneAreEmptyOrNot(Block block, Player player) {
-		int getid = getprotectid(block);
-		if (getid == -1) {
-			player.sendMessage(tr.gettr("this_zone_don't_have_any_skyblock_protect"));
-			return;
-		}
-
-		Block bbo = block.getWorld().getBlockAt(rs[getid].x, rs[getid].y, rs[getid].z);
-
-		CheckIsThisZoneAreEmpty abc = new CheckIsThisZoneAreEmpty(bbo, player);
-		Bukkit.getScheduler().scheduleSyncDelayedTask(ac, abc);
+	public void adjustProtect(Block block, Player player) {
+		
+		AdjustProtect abc = new AdjustProtect(block, player);
+		 Bukkit.getScheduler().scheduleSyncDelayedTask(ac, abc,1);
+		
 
 	}
 

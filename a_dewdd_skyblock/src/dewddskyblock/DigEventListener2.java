@@ -1028,14 +1028,13 @@ public class DigEventListener2 implements Listener {
 				player.sendMessage(dprint.r.color("/skyblock buyhere"));
 
 				player.sendMessage(dprint.r.color("/skyblock max"));
-				player.sendMessage(dprint.r.color("/skyblock drawprotect <true,false>"));
+				
 
 				player.sendMessage("***************************");
 				player.sendMessage("Admin Section");
 				player.sendMessage(dprint.r.color("/skyblock resetlv <lv>"));
-
 				player.sendMessage(dprint.r.color("/skyblock reload"));
-				player.sendMessage(dprint.r.color("/skyblock arethereblock"));
+				player.sendMessage(dprint.r.color("/skyblock drawprotect <true,false>"));
 
 				return;
 
@@ -1087,9 +1086,11 @@ public class DigEventListener2 implements Listener {
 						e1.printStackTrace();
 					}
 
-				} else if (m[1].equalsIgnoreCase("arethereblock")) {
-
-					dew.checkIsTHisZoneAreEmptyOrNot(player.getLocation().getBlock(), player);
+				} else if (m[1].equalsIgnoreCase("adjustprotect")) {
+					
+					dew.adjustProtect(player.getLocation().getBlock(), player);
+				 
+				
 				} else if (m[1].equalsIgnoreCase("buyhere")) {
 					// for buy these zone
 
