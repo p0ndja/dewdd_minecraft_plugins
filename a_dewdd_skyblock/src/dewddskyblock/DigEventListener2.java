@@ -86,64 +86,9 @@ public class DigEventListener2 implements Listener {
 		}
 	}
 
-	public boolean checkNearBlock(Block startBlock, int radiusSearch, Material searchBlock) {
-		boolean foundx = false;
+	
 
-		int x2 = startBlock.getX();
-		int y2 = startBlock.getY();
-		int z2 = startBlock.getZ();
-
-		for (int x3 = x2 - radiusSearch; x3 <= x2 + radiusSearch; x3++) {
-			for (int y3 = y2 - radiusSearch; y3 <= y2 + radiusSearch; y3++) {
-				for (int z3 = z2 - radiusSearch; z3 <= y2 + radiusSearch; z3++) {
-					Block bSpace = startBlock.getWorld().getBlockAt(x3, y3, z3);
-					if (bSpace.getType() == searchBlock) {
-						foundx = true;
-						break;
-					}
-
-				}
-
-				if (foundx == true) {
-					break;
-				}
-
-			}
-
-			if (foundx == true) {
-				break;
-			}
-
-		}
-
-		return foundx;
-
-	}
-
-	class LV1DestroyStone implements Runnable {
-		private Block b;
-		private int curRSID;
-
-		public LV1DestroyStone(Block b, int rsID) {
-			// dprint.r.printAll("lv1destroystone constructure");
-			this.b = b;
-			this.curRSID = rsID;
-		}
-
-		@Override
-		public void run() {
-			// dprint.r.printAll("running ...");
-			boolean xy = checkNearBlock(b, 5, Material.STONE);
-			// dprint.r.printAll("lv1breakALLSTONE " + xy);
-
-			if (xy == false) {
-
-				CallNextMission no = new CallNextMission(curRSID, Missional.LV_0_COBBLESTONE_MACHINE);
-				Bukkit.getScheduler().scheduleSyncDelayedTask(ac, no, 1);
-			}
-
-		}
-	}
+	
 
 	class LV5DestroyNetherRact implements Runnable {
 		private Block signBlock;
@@ -546,12 +491,13 @@ public class DigEventListener2 implements Listener {
 					break;
 				case LV_1_BREAK_STONE:
 
-					// search nearest stone
-					bd = Bukkit.getWorld("world").getBlockAt(api_skyblock.rs[getid].x, api_skyblock.rs[getid].y,
+					 bd = Bukkit.getWorld("world").getBlockAt(api_skyblock.rs[getid].x, api_skyblock.rs[getid].y,
 							api_skyblock.rs[getid].z);
 
-					LV1DestroyStone ee = new LV1DestroyStone(bd, getid);
-					Bukkit.getScheduler().scheduleSyncDelayedTask(ac, ee, 1);
+					if (block.getType() == Material.STONE) {
+						CallNextMission bb = new CallNextMission(getid, Missional.LV_1_BREAK_STONE);
+						Bukkit.getScheduler().scheduleSyncDelayedTask(ac, bb, 1);
+					}
 					break;
 
 				case LV_5_ZOMBIE_ATTACK_1:
