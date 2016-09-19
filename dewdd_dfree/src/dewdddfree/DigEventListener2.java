@@ -33,7 +33,6 @@ import com.earth2me.essentials.api.Economy;
 import com.earth2me.essentials.api.NoLoanPermittedException;
 import com.earth2me.essentials.api.UserDoesNotExistException;
 
-import dewddflower.dewset;
 import dewddtran.tr;
 
 public class DigEventListener2 implements Listener {
@@ -50,8 +49,6 @@ public class DigEventListener2 implements Listener {
 	String		psetamount	= "dewdd.dfree.setamount";
 
 	Random		rnd			= new Random();
-	
-	dewset dew = null;
 	
 	public DigEventListener2() {
 		delay eee = new delay();
@@ -639,7 +636,7 @@ public class DigEventListener2 implements Listener {
 							if (sign.getLine(0).equalsIgnoreCase("[autosort]") == true) {
 								
 
-									dew.autosortchest2(block, player);
+									dewddflower.Main.ds.autosortchest2(block, player);
 									
 									return;
 								
@@ -692,17 +689,17 @@ public class DigEventListener2 implements Listener {
 			Sign sign = (Sign) block.getState();
 			
 			if (sign.getLine(0) != null) {
-				dew.linkurl(player, sign.getLine(0));
+				dewddflower.Main.ds.linkurl(player, sign.getLine(0));
 			}
 			if (sign.getLine(0).equalsIgnoreCase("[dewtobox]") == true) {
 				// player.sendMessage("dewtobox run");
-				dew.chestabsorb();
+				dewddflower.Main.ds.chestabsorb();
 			}
 
 			if (sign.getLine(0).equalsIgnoreCase("[dewsortbox]")
 					|| sign.getLine(0).equalsIgnoreCase("[dewsorttype]")) {
 				// player.sendMessage("dewtobox run");
-				dew.chestabsorb2();
+				dewddflower.Main.ds.chestabsorb2();
 			}
 			
 			

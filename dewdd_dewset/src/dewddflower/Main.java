@@ -3,7 +3,7 @@
  *      E-Mail: dewtx29@gmail.com
  *      facebook: https://www.facebook.com/dewddminecraft
  */
-package dewset;
+package dewddflower;
 
 import java.util.logging.Logger;
 
@@ -15,6 +15,7 @@ import dewddtran.tr;
 
 public class Main extends JavaPlugin {
 	Logger	log;
+	public static dewset ds = null;
 
 	@Override
 	public void onDisable() {
@@ -29,6 +30,8 @@ public class Main extends JavaPlugin {
 
 		printAll("ptdew&dewdd : " + tr.gettr("loaded_plugin") + " dewset api");
 		dewddflower.dewset.ac = this;
+		ds = new dewset();
+		
 	}
 
 	public void printA(String abc) {

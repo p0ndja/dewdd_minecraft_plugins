@@ -646,7 +646,7 @@ public class DigEventListener2 implements Listener {
 		return price;
 	}
 
-	public dewset			dew			= null;
+	public dewset			dew			= dewddflower.Main.ds;
 	public JavaPlugin		ac			= null;
 	int						maxl		= 0;
 

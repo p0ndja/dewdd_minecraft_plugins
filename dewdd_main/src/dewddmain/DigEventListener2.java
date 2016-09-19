@@ -6,7 +6,6 @@
 package dewddmain;
 
 import org.bukkit.Bukkit;
-import org.bukkit.Chunk;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -60,10 +59,12 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.potion.PotionEffectType;
 
 import api_admin.dewddadmin;
-import dewddflower.dewset;
 import dewddtran.tr;
 
 public class DigEventListener2 implements Listener {
+	
+	dewddflower.dewset dew = dewddflower.Main.ds;
+	
 	class chatx implements Runnable {
 		public Boolean	canc	= false;
 
@@ -1524,7 +1525,7 @@ public class DigEventListener2 implements Listener {
 
 				}
 
-				while (dew == null) {
+			/*	while (dew == null) {
 
 					i++;
 					Thread.sleep(1000);
@@ -1547,7 +1548,7 @@ public class DigEventListener2 implements Listener {
 					dew.ac = ac;
 
 				}
-				dew.loadmainfile();
+				dew.loadmainfile();*/
 
 			}
 			catch (InterruptedException e) {
@@ -1654,15 +1655,13 @@ public class DigEventListener2 implements Listener {
 
 	public JavaPlugin		ac	= null;
 
-	public dewddflower.dewset	dew 	;
-
 	public String	pseecommand	= "dewdd.main.seecommand";
 
 	// Chat Event.class
 	// BlockBreakEvent
 
 	public DigEventListener2() {
-		dew = new dewddflower.dewset();
+		//dew = new dewddflower.dewset();
 		
 		/*delay eee = new delay();
 		eee.start();*/
