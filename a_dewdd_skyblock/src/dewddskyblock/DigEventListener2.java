@@ -21,7 +21,6 @@ import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.CreatureType;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
-import org.bukkit.entity.ItemFrame;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -36,6 +35,7 @@ import org.bukkit.event.block.SignChangeEvent;
 import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.event.entity.EntityChangeBlockEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityExplodeEvent;
 import org.bukkit.event.entity.EntityInteractEvent;
 import org.bukkit.event.entity.EntityShootBowEvent;
@@ -43,6 +43,7 @@ import org.bukkit.event.entity.ItemDespawnEvent;
 import org.bukkit.event.hanging.HangingBreakByEntityEvent;
 import org.bukkit.event.hanging.HangingBreakEvent;
 import org.bukkit.event.hanging.HangingBreakEvent.RemoveCause;
+import org.bukkit.event.hanging.HangingEvent;
 import org.bukkit.event.hanging.HangingPlaceEvent;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerBucketEmptyEvent;
@@ -65,6 +66,7 @@ import org.bukkit.util.Vector;
 import api_skyblock.Constant;
 import api_skyblock.api_skyblock;
 import dewddtran.tr;
+import net.minecraft.server.v1_7_R4.EntityPlayer;
 
 public class DigEventListener2 implements Listener {
 
@@ -645,7 +647,7 @@ public class DigEventListener2 implements Listener {
 
 		}
 	}
-	
+
 	@EventHandler
 	public void eventja(ChunkUnloadEvent e) {
 		if (!api_skyblock.isrunworld(e.getChunk().getWorld().getName())) {
@@ -732,7 +734,26 @@ public class DigEventListener2 implements Listener {
 	}
 
 	@EventHandler
+	public void eventja(EntityDamageEvent e) {
+		if (api_skyblock.isrunworld(e.getEntity().getLocation().getWorld().getName()) == false)
+			return;
+
+		if (e.getEntity() instanceof EntityPlayer) {
+			Player br = (Player) e.getEntity();
+			if (api_skyblock.cando(br.getLocation().getBlock(), br, "entitydamageevent") == false) {
+				
+				e.setCancelled(true);
+			}
+
+		}
+
+	}
+
+	@EventHandler
 	public void eventja(EntityChangeBlockEvent e) {
+		if (api_skyblock.isrunworld(e.getEntity().getLocation().getWorld().getName()) == false)
+			return;
+
 		if (e.getEntity() == null)
 			return;
 
@@ -865,6 +886,7 @@ public class DigEventListener2 implements Listener {
 		}
 	}
 
+	
 	@EventHandler
 	public void eventja(HangingBreakByEntityEvent e) {
 
@@ -879,7 +901,7 @@ public class DigEventListener2 implements Listener {
 			Player br = (Player) e.getRemover();
 
 			if (api_skyblock.cando(e.getEntity().getLocation().getBlock(), br, "HangingBreakByEntity") == false) {
-				br.sendMessage(dprint.r.color(tr.gettr("don't_break_hanging_picture_not_yours")));
+				//br.sendMessage(dprint.r.color(tr.gettr("don't_breakbyentity_hanging_picture_not_yours")));
 
 				e.setCancelled(true);
 				return;
@@ -898,6 +920,19 @@ public class DigEventListener2 implements Listener {
 			return;
 		}
 
+		if (e.getEntity() instanceof EntityPlayer) {
+
+			Player br = (Player) e.getEntity();
+
+			if (api_skyblock.cando(br.getLocation().getBlock(), br, "HangingBreakEvent") == false) {
+				e.setCancelled(true);
+				//br.sendMessage(dprint.r.color(tr.gettr("don't_break_hanging_picture_not_yours")));
+			}
+
+		} else {
+			e.setCancelled(true);
+		}
+
 		if (e.getCause() == RemoveCause.EXPLOSION == true)
 			if (api_skyblock.getprotectid(e.getEntity().getLocation().getBlock()) > -1) {
 				e.setCancelled(true);
@@ -914,7 +949,7 @@ public class DigEventListener2 implements Listener {
 
 		Player br = e.getPlayer();
 		if (api_skyblock.cando(e.getPlayer().getLocation().getBlock(), br, "HangingPlaceEvent") == false) {
-			br.sendMessage(dprint.r.color(tr.gettr("don't_place_hanging_picture_not_yours")));
+			//br.sendMessage(dprint.r.color(tr.gettr("don't_place_hanging_picture_not_yours")));
 
 			e.setCancelled(true);
 		}
@@ -1072,7 +1107,6 @@ public class DigEventListener2 implements Listener {
 				player.sendMessage(dprint.r.color("/skyblock buyhere"));
 
 				player.sendMessage(dprint.r.color("/skyblock max"));
-				
 
 				player.sendMessage("***************************");
 				player.sendMessage("Admin Section");
@@ -1136,15 +1170,14 @@ public class DigEventListener2 implements Listener {
 						return;
 					}
 					dew.adjustProtect(player.getLocation().getBlock(), player);
-				 
-				}else if (m[1].equalsIgnoreCase("adjustprotect2")) {
-						if (player.hasPermission(Constant.poveride) == false) {
-							player.sendMessage(dprint.r.color(tr.gettr("you_dont_have_permission")));
-							return;
-						}
-						dew.adjustProtect2(player.getLocation().getBlock(), player);
-					 
-						
+
+				} else if (m[1].equalsIgnoreCase("adjustprotect2")) {
+					if (player.hasPermission(Constant.poveride) == false) {
+						player.sendMessage(dprint.r.color(tr.gettr("you_dont_have_permission")));
+						return;
+					}
+					dew.adjustProtect2(player.getLocation().getBlock(), player);
+
 				} else if (m[1].equalsIgnoreCase("buyhere")) {
 					// for buy these zone
 
@@ -1175,31 +1208,27 @@ public class DigEventListener2 implements Listener {
 					api_skyblock.rs[api_skyblock.rsMax - 1].y = player.getLocation().getBlockY();
 
 					// x
-					
+
 					boolean found = false;
-					
+
 					do {
 						found = false;
-					int tmpX = rnd.nextInt(100) * 300 * (rnd.nextInt(2) == 0 ? -1 : 1);
-					int tmpZ = rnd.nextInt(100) * 300 * (rnd.nextInt(2) == 0 ? -1 : 1);
-					Block block = player.getLocation().getBlock();
-					
-					if (block.getX() >= (tmpX - 150) 
-							&& block.getX() <= (tmpX + 149)
-							&& block.getZ() >= (tmpZ - 150) && 
-							block.getZ() <= (tmpZ + 149)) {
-						
-						dew.rs[dew.rsMax - 1].x = tmpX;
-					dew.rs[dew.rsMax - 1].z = tmpZ;
-					
-						found = true;
-						break;
-					}	
-						
-					} while (found == false) ;
-					
+						int tmpX = rnd.nextInt(100) * 300 * (rnd.nextInt(2) == 0 ? -1 : 1);
+						int tmpZ = rnd.nextInt(100) * 300 * (rnd.nextInt(2) == 0 ? -1 : 1);
+						Block block = player.getLocation().getBlock();
 
-					
+						if (block.getX() >= (tmpX - 150) && block.getX() <= (tmpX + 149) && block.getZ() >= (tmpZ - 150)
+								&& block.getZ() <= (tmpZ + 149)) {
+
+							dew.rs[dew.rsMax - 1].x = tmpX;
+							dew.rs[dew.rsMax - 1].z = tmpZ;
+
+							found = true;
+							break;
+						}
+
+					} while (found == false);
+
 					// z
 
 					//
@@ -1212,8 +1241,8 @@ public class DigEventListener2 implements Listener {
 					dew.saveRSProtectFile();
 					return;
 				} else if (m[1].equalsIgnoreCase("drawprotect")) {
-					
-					if( player.hasPermission(Constant.poveride ) == false) {
+
+					if (player.hasPermission(Constant.poveride) == false) {
 						player.sendMessage(dprint.r.color(tr.gettr("you_dont_have_permisison")));
 						return;
 					}
@@ -1891,6 +1920,12 @@ public class DigEventListener2 implements Listener {
 				// show
 			}
 		} // sign
+
+		if (e.getClickedBlock().equals(Material.ITEM_FRAME)) {
+			if (api_skyblock.cando(block, player, "playerInteractEvent")) {
+				e.setCancelled(true);
+			}
+		}
 
 		boolean cando = false;
 		if (act == Action.RIGHT_CLICK_BLOCK)

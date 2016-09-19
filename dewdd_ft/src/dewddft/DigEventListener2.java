@@ -135,7 +135,7 @@ public class DigEventListener2 implements Listener {
 											}
 
 											double price = DigEventListener2
-													.getprice(ic.getTypeId());
+													.getprice(ic.getType().name() , ic.getData().getData());
 
 											if (price == -1) {
 												continue;
@@ -615,7 +615,8 @@ public class DigEventListener2 implements Listener {
 
 	class sell_type {
 
-		public int		id;
+		public String		name;
+		public Byte	data;
 		public double	price;
 	}
 
@@ -636,12 +637,15 @@ public class DigEventListener2 implements Listener {
 		}
 	}
 
-	public static double getprice(int itemid) {
+	public static double getprice(String name , Byte data) {
 		double price = -1;
 		for (int gr = 0; gr < DigEventListener2.sellmax; gr++)
-			if (DigEventListener2.sell[gr].id == itemid) {
+			if (DigEventListener2.sell[gr].name.equalsIgnoreCase(name)) {
+				if (DigEventListener2.sell[gr].data == data) {
 				price = DigEventListener2.sell[gr].price;
 				break;
+				
+				}
 			}
 
 		return price;
@@ -983,13 +987,17 @@ public class DigEventListener2 implements Listener {
 					for (int i = 0; i < DigEventListener2.sellmax; i++) {
 						for (int j = 0; j < DigEventListener2.sellmax - 1 - i; j++) {
 							if (DigEventListener2.sell[j].price < DigEventListener2.sell[j + 1].price) {
-								int tid = sell[j].id;
+								
+								String name = sell[j].name ;
+								byte data = sell[j].data;
 								double pri = sell[j].price;
 
-								sell[j].id = sell[j + 1].id;
+								sell[j].name = sell[j + 1].name;
+								sell[j].data = sell[j + 1].data;
 								sell[j].price = sell[j + 1].price;
 
-								sell[j + 1].id = tid;
+								sell[j + 1].name = name;
+								sell[j + 1].data = data;
 								sell[j + 1].price = pri;
 
 							}
@@ -998,11 +1006,8 @@ public class DigEventListener2 implements Listener {
 
 					for (int i = 0; i < DigEventListener2.sellmax; i++) {
 						p.sendMessage(dprint.r
-								.color(DigEventListener2.sell[i].id
-										+ "("
-										+ Material.getMaterial(
-												DigEventListener2.sell[i].id)
-												.name() + ") price "
+								.color(DigEventListener2.sell[i].name + ":" + sell[i].data
+										+ " price "
 										+ DigEventListener2.sell[i].price));
 					}
 
@@ -1273,8 +1278,13 @@ public class DigEventListener2 implements Listener {
 				m = strLine.split("\\s+");
 
 				DigEventListener2.sellmax++;
-				DigEventListener2.sell[DigEventListener2.sellmax - 1].id = Integer
-						.parseInt(m[0]);
+				
+				String bem[] = m[0].split(":");
+				
+				DigEventListener2.sell[DigEventListener2.sellmax - 1].name = bem[0];
+				DigEventListener2.sell[DigEventListener2.sellmax - 1].data = Byte.parseByte(bem[1]);
+				
+				
 				DigEventListener2.sell[DigEventListener2.sellmax - 1].price = Double
 						.parseDouble(m[1]);
 

@@ -30,6 +30,7 @@ import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.block.SignChangeEvent;
 import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.event.entity.EntityChangeBlockEvent;
+import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityExplodeEvent;
 import org.bukkit.event.entity.EntityInteractEvent;
 import org.bukkit.event.entity.ItemDespawnEvent;
@@ -62,6 +63,7 @@ import org.bukkit.potion.PotionEffectType;
 import api_admin.dewddadmin;
 import dewddflower.dewset;
 import dewddtran.tr;
+import net.minecraft.server.v1_7_R4.EntityPlayer;
 
 public class DigEventListener2 implements Listener {
 
@@ -2218,7 +2220,7 @@ public class DigEventListener2 implements Listener {
 
 			if (dew.checkpermissionarea(event.getEntity().getLocation().getBlock(), br,
 					"HangingBreakByEntity") == true) {
-				br.sendMessage("ptdew&dewdd : " + tr.gettr("don't_break_hanging_picture_not_yours"));
+			//	br.sendMessage("ptdew&dewdd : " + tr.gettr("don't_break_hanging_picture_not_yours"));
 
 				event.setCancelled(true);
 				return;
@@ -2237,7 +2239,12 @@ public class DigEventListener2 implements Listener {
 
 		if (!tr.isrunworld(ac.getName(), event.getEntity().getWorld().getName()))
 			return;
-
+		
+		
+		if (dew.checkpermissionarea(event.getEntity().getLocation().getBlock()) == true) {
+			event.setCancelled(true);
+		}
+		
 		if (event.getCause() == RemoveCause.EXPLOSION == true) {
 			if (dew.checkpermissionarea(event.getEntity().getLocation().getBlock()) == true) {
 				event.setCancelled(true);
@@ -2263,7 +2270,7 @@ public class DigEventListener2 implements Listener {
 
 				if (dist < 10000)
 					if (dew.checkpermissionarea(event.getEntity().getLocation().getBlock(), pl, "break") == true) {
-						pl.sendMessage(tr.gettr("don't_destroy_hanging_picture_not_yours"));
+					//	pl.sendMessage(tr.gettr("don't_destroy_hanging_picture_not_yours"));
 						event.setCancelled(true);
 						return;
 					}
@@ -2293,13 +2300,28 @@ public class DigEventListener2 implements Listener {
 
 		Player br = event.getPlayer();
 		if (dew.checkpermissionarea(event.getPlayer().getLocation().getBlock(), br, "HangingPlaceEvent") == true) {
-			br.sendMessage("ptdew&dewdd : " + tr.gettr("don't_place_hanging_picture_not_yours"));
+			//br.sendMessage("ptdew&dewdd : " + tr.gettr("don't_place_hanging_picture_not_yours"));
 
 			event.setCancelled(true);
 		}
 
 	}
 
+	@EventHandler
+	public void eventja(EntityDamageEvent e) {
+		if (!tr.isrunworld(ac.getName(), e.getEntity().getWorld().getName()))
+			return;
+		
+		if (e.getEntity() instanceof EntityPlayer) {
+		Player br = (Player) e.getEntity();
+		if (dew.checkpermissionarea(br.getLocation().getBlock(), br, "EntityDamageEvent") == true) {
+			//br.sendMessage("ptdew&dewdd : " + tr.gettr("don't_place_hanging_picture_not_yours"));
+
+			e.setCancelled(true);
+		}
+		}
+	}
+	
 	@EventHandler
 	public void eventja(PlayerInteractEntityEvent e) {
 		
@@ -2308,7 +2330,7 @@ public class DigEventListener2 implements Listener {
 
 		Player br = e.getPlayer();
 		if (dew.checkpermissionarea(e.getPlayer().getLocation().getBlock(), br, "HangingPlaceEvent") == true) {
-			br.sendMessage("ptdew&dewdd : " + tr.gettr("don't_place_hanging_picture_not_yours"));
+		//	br.sendMessage("ptdew&dewdd : " + tr.gettr("don't_interact_not_your"));
 
 			e.setCancelled(true);
 		}
@@ -2692,6 +2714,12 @@ public class DigEventListener2 implements Listener {
 
 		boolean goodc1 = false;
 		goodc1 = dew.checkpermissionarea(block, player, "right");
+		
+		if (event.getAction().equals(Action.RIGHT_CLICK_BLOCK) && event.getClickedBlock().equals(Material.ITEM_FRAME)
+				&& dew.checkpermissionarea(block, player, "playerInteractEvent") == true){
+			
+			event.setCancelled(true);
+		}
 
 		if (goodc1 == true) {
 			event.setCancelled(true);
