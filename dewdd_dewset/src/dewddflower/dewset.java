@@ -34,8 +34,6 @@ import api_skyblock.api_skyblock;
 import dewddtran.tr;
 
 public class dewset extends dewset_interface {
-	
-
 
 	class autosortchest2_class implements Runnable {
 		private Block block;
@@ -525,8 +523,6 @@ public class dewset extends dewset_interface {
 
 			Block block = player.getLocation().getBlock();
 
-			
-
 			if (selectblock[getid] == null) {
 				player.sendMessage(dprint.r.color("ptdew&dewdd : dewa " + tr.gettr("dewa_diamond_sword_null")));
 			}
@@ -714,7 +710,7 @@ public class dewset extends dewset_interface {
 								// zlx + " mx " + mx + "," + my + "," + mz);
 
 								endtime = System.currentTimeMillis();
-								if (endtime - starttime > runtime ) {
+								if (endtime - starttime > runtime) {
 
 									dewa_thread xgn2 = new dewa_thread();
 
@@ -1211,10 +1207,105 @@ public class dewset extends dewset_interface {
 		}
 	}
 
-	class dewcopy_c implements Runnable {
+	class dewfill_thread implements Runnable {
+
+		private byte handdata;
+		private int handid;
+		private int lx = 0;
+		private int ly = 0;
+		private int lz = 0;
+		private int mx = 0;
+
+		private int my = 0;
+		private int mz = 0;
+		private Player player = null;
+
+		private int xlx = 0;
+		private int ylx = 0;
+		private int zlx = 0;
+
+		public dewfill_thread(Player player, int handid, byte handdata, int mx, int my, int mz, int lx, int ly, int lz,
+				int xlx, int ylx, int zlx) {
+			this.player = player;
+			this.handid = handid;
+			this.handdata = handdata;
+			this.mx = mx;
+			this.my = my;
+			this.mz = mz;
+			this.lx = lx;
+			this.ly = ly;
+			this.lz = lz;
+			this.xlx = xlx;
+			this.ylx = ylx;
+			this.zlx = zlx;
+
+		}
+
+		@Override
+		public void run() {
+			long starttime = System.currentTimeMillis();
+			long endtime = 0;
+
+			Block blb = null;
+			boolean arxx = !player.hasPermission(pmaininfinite);
+
+			while (xlx <= mx) {
+				while (ylx <= my) {
+					while (zlx <= mz) {
+
+						endtime = System.currentTimeMillis();
+						if (endtime - starttime > runtime) {
+
+							dewfill_thread xgn2 = new dewfill_thread(player, handid, handdata, mx, my, mz, lx, ly, lz,
+									xlx, ylx, zlx);
+
+							dprint.r.printC("dewfill  " + tr.gettr("recall") + " " + xlx + " , " + ylx + " , " + zlx);
+							dprint.r.printC(
+									"low " + lx + " , " + ly + " , " + lz + " high " + mx + "," + my + "," + mz);
+
+							Bukkit.getScheduler().scheduleSyncDelayedTask(ac, xgn2, sleeptime);
+
+							return;
+						}
+
+						blb = player.getWorld().getBlockAt(xlx, ylx, zlx);
+
+						if (blb.getTypeId() != 0) {
+							zlx++;
+							continue;
+						}
+						if (checkpermissionarea(blb, player, "dewset") == true)
+							return;
+
+						if (arxx)
+							if (decreseitem1(player, handid, handdata, true) == false) {
+								player.sendMessage(
+										dprint.r.color("ptdew&dewdd : " + tr.gettr("don't_have_enough_item")));
+								return;
+							}
+						blb.setTypeIdAndData(handid, handdata, false);
+						//
+
+						zlx++;
+					}
+					zlx = lz;
+
+					ylx++;
+				}
+				ylx = ly;
+
+				xlx++;
+			}
+			xlx = lx;
+
+			dprint.r.printAll("ptdew&dewdd : dewfill " + tr.gettr("done") + " : " + player.getName());
+		}
+	}
+
+	class dewcopy_c_mom implements Runnable {
 		private Player player;
 
-		public dewcopy_c(Player player) {
+		public dewcopy_c_mom(Player player) {
 			this.player = player;
 		}
 
@@ -1228,8 +1319,12 @@ public class dewset extends dewset_interface {
 
 				return;
 			}
-			if (selectx2[getid] == 0 && selecty2[getid] == 0 && selectz2[getid] == 0)
+			if (selectx2[getid] == 0 && selecty2[getid] == 0 && selectz2[getid] == 0) {
+				player.sendMessage(dprint.r.color("ptdew&dewdd : dewcopy " + tr.gettr("please_set_block_2")));
+
 				return;
+
+			}
 
 			boolean xc = false;
 			boolean yc = false;
@@ -1274,63 +1369,48 @@ public class dewset extends dewset_interface {
 				return;
 			}
 
-			// Block bz = new Block();
-
-			
-
 			dprint.r.printAll("ptdew&dewdd : '" + player.getName() + "'" + tr.gettr("starting") + " dewcopy "
 					+ player.getItemInHand().getTypeId() + ":" + player.getItemInHand().getData());
+			// grab mxlx
+			int mx = 0;
+			int lx = 0;
+			int my = 0;
+			int ly = 0;
+			int mz = 0;
+			int lz = 0;
 
-			// 11 - 50
-			// 66 = 11-66 = -55
-
-			for (int amountloop = 1; amountloop <= 2; amountloop++) {
-				for (Block bbd : getselectblock(getid, player)) {
-
-					if (amountloop == 1) { // if first round ... only block
-						if (bbd.getType().isBlock() == false) {
-							continue;
-						}
-					} else if (amountloop == 2)
-						if (bbd.getType().isBlock() == true) {
-							continue;
-						}
-
-					/*
-					 * if (player .getLocation() .getBlock()
-					 * .getRelative(bbd.getX() - selectx1[getid], bbd.getY() -
-					 * selecty1[getid], bbd.getZ() -
-					 * selectz1[getid]).getTypeId() != 0) { continue; }
-					 */
-
-					if (checkpermissionarea(
-							player.getLocation().getBlock().getRelative(bbd.getX() - selectx1[getid],
-									bbd.getY() - selecty1[getid], bbd.getZ() - selectz1[getid]),
-							player, "dewset") == true)
-						return;
-
-					if (arxx)
-						if (decreseitem1(player, bbd.getTypeId(), bbd.getData(), true) == false) {
-							player.sendMessage(dprint.r.color("ptdew&dewdd : dewcopy "
-									+ tr.gettr("don't_have_enough_item") + bbd.getTypeId() + ":" + bbd.getData()));
-							return;
-						}
-
-					player.getLocation().getBlock()
-							.getRelative(bbd.getX() - selectx1[getid], bbd.getY() - selecty1[getid],
-									bbd.getZ() - selectz1[getid])
-							.setTypeIdAndData(
-									Bukkit.getWorld(selectworldname[getid])
-											.getBlockAt(bbd.getX(), bbd.getY(), bbd.getZ()).getTypeId(),
-									Bukkit.getWorld(selectworldname[getid])
-											.getBlockAt(bbd.getX(), bbd.getY(), bbd.getZ()).getData(),
-									false);
-					
-					
-
-				}
+			if (selectx1[getid] >= selectx2[getid]) {
+				mx = selectx1[getid];
+				lx = selectx2[getid];
+			} else {
+				mx = selectx2[getid];
+				lx = selectx1[getid];
 			}
-			dprint.r.printAll("ptdew&dewdd : " + player.getName() + " dewcopy " + tr.gettr(tr.gettr("done")));
+
+			if (selecty1[getid] >= selecty2[getid]) {
+				my = selecty1[getid];
+				ly = selecty2[getid];
+			} else {
+				my = selecty2[getid];
+				ly = selecty1[getid];
+			}
+
+			if (selectz1[getid] >= selectz2[getid]) {
+				mz = selectz1[getid];
+				lz = selectz2[getid];
+			} else {
+				mz = selectz2[getid];
+				lz = selectz1[getid];
+			}
+
+			dewcopy_thread aer = new dewcopy_thread(player, mx, my, mz, lx, ly, lz, lx, ly, lz, 1, selectx1[getid],
+					selecty1[getid], selectz1[getid], selectworldname[getid], player.getLocation().clone());
+			
+			
+
+			Bukkit.getScheduler().scheduleSyncDelayedTask(ac, aer, sleeptime);
+
+			// grab mxlx
 
 		}
 	}
@@ -1405,8 +1485,7 @@ public class dewset extends dewset_interface {
 			dprint.r.printAll("ptdew&dewdd : dewdelete " + tr.gettr("done") + " : " + player.getName());
 		}
 	}
-	
-	
+
 	class dewdig_c implements Runnable {
 		private Player player;
 
@@ -1605,10 +1684,8 @@ public class dewset extends dewset_interface {
 		}
 	}
 
-	class dewfill_thread implements Runnable {
+	class dewcopy_thread implements Runnable {
 
-		private byte handdata;
-		private int handid;
 		private int lx = 0;
 		private int ly = 0;
 		private int lz = 0;
@@ -1621,12 +1698,16 @@ public class dewset extends dewset_interface {
 		private int xlx = 0;
 		private int ylx = 0;
 		private int zlx = 0;
+		private int amountloop = 1;
+		private int selectx1 = 0;
+		private int selecty1 = 0;
+		private int selectz1 = 0;
+		private String selectworldname = "";
+		private Location playerLocation;
 
-		public dewfill_thread(Player player, int handid, byte handdata, int mx, int my, int mz, int lx, int ly, int lz,
-				int xlx, int ylx, int zlx) {
+		public dewcopy_thread(Player player, int mx, int my, int mz, int lx, int ly, int lz, int xlx, int ylx, int zlx,
+				int amountloop, int selectx1, int selecty1, int selectz1, String selectworldname, Location playerLocation) {
 			this.player = player;
-			this.handid = handid;
-			this.handdata = handdata;
 			this.mx = mx;
 			this.my = my;
 			this.mz = mz;
@@ -1636,7 +1717,18 @@ public class dewset extends dewset_interface {
 			this.xlx = xlx;
 			this.ylx = ylx;
 			this.zlx = zlx;
+			this.amountloop = amountloop;
+			this.selectx1 = selectx1;
+			this.selecty1 = selecty1;
 
+			this.selectz1 = selectz1;
+
+			this.selectworldname = selectworldname;
+			this.playerLocation = playerLocation;
+			
+			/*player.sendMessage("l " + lx + "," + ly + "," + lz + " ... m " + mx  + "," 
+			+ my + "," + mz + " = " + playerLocation.getX() + "," + playerLocation.getY() + "," + playerLocation.getZ() + " world "
+			+ selectworldname);*/
 		}
 
 		@Override
@@ -1644,7 +1736,7 @@ public class dewset extends dewset_interface {
 			long starttime = System.currentTimeMillis();
 			long endtime = 0;
 
-			Block blb = null;
+			Block hostBlock = null;
 			boolean arxx = !player.hasPermission(pmaininfinite);
 
 			while (xlx <= mx) {
@@ -1652,12 +1744,12 @@ public class dewset extends dewset_interface {
 					while (zlx <= mz) {
 
 						endtime = System.currentTimeMillis();
-						if (endtime - starttime > runtime ) {
+						if (endtime - starttime > runtime) {
 
-							dewfill_thread xgn2 = new dewfill_thread(player, handid, handdata, mx, my, mz, lx, ly, lz,
-									xlx, ylx, zlx);
+							dewcopy_thread xgn2 = new dewcopy_thread(player, mx, my, mz, lx, ly, lz, xlx, ylx, zlx,
+									amountloop, selectx1, selecty1, selectz1, selectworldname,playerLocation);
 
-							dprint.r.printC("dewfill  " + tr.gettr("recall") + " " + xlx + " , " + ylx + " , " + zlx);
+							dprint.r.printC("dewcopy  " + tr.gettr("recall") + " " + xlx + " , " + ylx + " , " + zlx);
 							dprint.r.printC(
 									"low " + lx + " , " + ly + " , " + lz + " high " + mx + "," + my + "," + mz);
 
@@ -1666,23 +1758,49 @@ public class dewset extends dewset_interface {
 							return;
 						}
 
-						blb = player.getWorld().getBlockAt(xlx, ylx, zlx);
+						hostBlock = Bukkit.getWorld(selectworldname).getBlockAt(xlx, ylx, zlx);
 
-						if (blb.getTypeId() != 0) {
-							zlx++;
-							continue;
-						}
-						if (checkpermissionarea(blb, player, "dewset") == true)
+						if (amountloop == 1) { // if first round ... only block
+							if (hostBlock.getType().isBlock() == false) {
+								continue;
+							}
+						} else if (amountloop == 2)
+							if (hostBlock.getType().isBlock() == true) {
+								continue;
+							}
+
+						Block setBlock = playerLocation.getBlock().getRelative(hostBlock.getX() - selectx1,
+								hostBlock.getY() - selecty1, hostBlock.getZ() - selectz1);
+						
+						
+						if (checkpermissionarea(setBlock, player, "dewset") == true)
 							return;
 
 						if (arxx)
-							if (decreseitem1(player, handid, handdata, true) == false) {
-								player.sendMessage(
-										dprint.r.color("ptdew&dewdd : " + tr.gettr("don't_have_enough_item")));
+							if (decreseitem1(player, hostBlock.getTypeId(), hostBlock.getData(), true) == false) {
+								player.sendMessage(dprint.r.color("ptdew&dewdd : dewcopy "
+										+ tr.gettr("don't_have_enough_item") + hostBlock.getTypeId() + ":" + hostBlock.getData()));
 								return;
 							}
-						blb.setTypeIdAndData(handid, handdata, false);
-						//
+
+						setBlock.setTypeIdAndData(
+								hostBlock
+										.getTypeId(),
+								hostBlock
+										.getData(),
+								false);
+						
+						if (hostBlock.getType() == Material.SIGN_POST ||
+								hostBlock.getType() == Material.WALL_SIGN) {
+							
+							Sign hostSign = (Sign)hostBlock.getState();
+							Sign setSign = (Sign)setBlock.getState();
+							
+							for (int i = 0 ; i < 4 ; i++ )
+							setSign.setLine(i, hostSign.getLine(i));
+							
+							setSign.update(true);
+						}
 
 						zlx++;
 					}
@@ -1696,7 +1814,7 @@ public class dewset extends dewset_interface {
 			}
 			xlx = lx;
 
-			dprint.r.printAll("ptdew&dewdd : dewfill " + tr.gettr("done") + " : " + player.getName());
+			dprint.r.printAll("ptdew&dewdd : dewcopy " + tr.gettr("done") + " : " + player.getName());
 		}
 	}
 
@@ -1925,8 +2043,6 @@ public class dewset extends dewset_interface {
 				return;
 			}
 
-			
-
 			// player.sendMessage(dprint.r.color(". " + e1 + "," + e2 + "|" + e3
 			// + "," + e4);
 
@@ -2052,7 +2168,7 @@ public class dewset extends dewset_interface {
 						blb = player.getWorld().getBlockAt(xlx, ylx, zlx);
 
 						endtime = System.currentTimeMillis();
-						if (endtime - starttime > runtime ) {
+						if (endtime - starttime > runtime) {
 
 							dewset_thread xgn2 =
 
@@ -2284,7 +2400,7 @@ public class dewset extends dewset_interface {
 							continue;
 						}
 						endtime = System.currentTimeMillis();
-						if (endtime - starttime > runtime ) {
+						if (endtime - starttime > runtime) {
 
 							dewsetblock_thread xgn2 = new dewsetblock_thread(player, handid, handdata, mx, my, mz, lx,
 									ly, lz, xlx, ylx, zlx, getid, isfillmode);
@@ -2457,7 +2573,7 @@ public class dewset extends dewset_interface {
 					while (zlx <= mz) {
 
 						endtime = System.currentTimeMillis();
-						if (endtime - starttime > runtime ) {
+						if (endtime - starttime > runtime) {
 
 							dewsetl_thread xgn2 = new dewsetl_thread(player, handid, handdata, mx, my, mz, lx, ly, lz,
 									xlx, ylx, zlx, getid);
@@ -2721,7 +2837,7 @@ public class dewset extends dewset_interface {
 						}
 
 						endtime = System.currentTimeMillis();
-						if (endtime - starttime > runtime ) {
+						if (endtime - starttime > runtime) {
 
 							dewsetroom_thread xgn2 = new dewsetroom_thread(player, handid, handdata, mx, my, mz, lx, ly,
 									lz, xlx, ylx, zlx, getid, isfillmode);
@@ -2903,7 +3019,7 @@ public class dewset extends dewset_interface {
 						}
 
 						endtime = System.currentTimeMillis();
-						if (endtime - starttime > runtime ) {
+						if (endtime - starttime > runtime) {
 
 							dewsetwall_thread xgn2 = new dewsetwall_thread(player, handid, handdata, mx, my, mz, lx, ly,
 									lz, xlx, ylx, zlx, getid, isfillmode);
@@ -3061,13 +3177,13 @@ public class dewset extends dewset_interface {
 		private Boolean isfirst;
 		private Queue<Block> bd;
 
-		public dewspreadq_c(Player player, int handid, byte handdata, boolean isfirst, Queue<Block> bd ) {
+		public dewspreadq_c(Player player, int handid, byte handdata, boolean isfirst, Queue<Block> bd) {
 			this.player = player;
 			this.handid = handid;
 			this.handdata = handdata;
 			this.isfirst = isfirst;
 			this.bd = bd;
-			
+
 			Bukkit.getScheduler().scheduleSyncDelayedTask(ac, this, rnd.nextInt(20));
 		}
 
@@ -3147,7 +3263,7 @@ public class dewset extends dewset_interface {
 				}
 
 				if (ccc > 10) {
-					new dewspreadq_c(player, handid, handdata, false,bd);
+					new dewspreadq_c(player, handid, handdata, false, bd);
 					return;
 				}
 
@@ -3329,7 +3445,7 @@ public class dewset extends dewset_interface {
 					while (zlx <= mz) {
 
 						endtime = System.currentTimeMillis();
-						if (endtime - starttime > runtime ) {
+						if (endtime - starttime > runtime) {
 
 							dewwallcircle_thread xgn2 = new dewwallcircle_thread(player, handid, handdata, mx, my, mz,
 									lx, ly, lz, xlx, ylx, zlx, getid, isfillmode, midr, midtx, midty, midtz);
@@ -3757,8 +3873,6 @@ public class dewset extends dewset_interface {
 				return;
 			}
 
-		
-
 			if (e.equalsIgnoreCase("dewdown") || e.equalsIgnoreCase("dn") || e.equalsIgnoreCase("down")) {
 				dewdown(player, a1, a2);
 				return;
@@ -3952,8 +4066,6 @@ public class dewset extends dewset_interface {
 	long lastsort2 = 0;
 
 	Random rnd = new Random();
-
-	
 
 	public static JavaPlugin ac = null;
 
@@ -4722,7 +4834,7 @@ public class dewset extends dewset_interface {
 	}
 
 	public void dewcopy(Player player) {
-		dewcopy_c abr = new dewcopy_c(player);
+		dewcopy_c_mom abr = new dewcopy_c_mom(player);
 		Bukkit.getScheduler().scheduleSyncDelayedTask(ac, abr);
 	}
 
@@ -4964,7 +5076,7 @@ public class dewset extends dewset_interface {
 
 	public void dewspreadq(Player player, int handid, byte handdata) {
 		Queue<Block> bd = new LinkedList<Block>();
-		new dewspreadq_c(player, handid, handdata, true,bd);
+		new dewspreadq_c(player, handid, handdata, true, bd);
 	}
 
 	public void dewwallcircle(Player player, int handid, byte handdata, boolean isfillmode) {
@@ -5480,8 +5592,6 @@ public class dewset extends dewset_interface {
 		@Override
 		public void run() {
 
-		
-
 			Bukkit.getScheduler().scheduleSyncDelayedTask(ac, ab, rnd.nextInt(100));
 
 		}
@@ -5554,7 +5664,7 @@ public class dewset extends dewset_interface {
 								sign.setLine(0, "[dewtobox]");
 								sign.update(true);
 							}
-							
+
 							if (sign.getLine(0).equalsIgnoreCase("[dewtobox]") == true) {
 								// player.sendMessage(dprint.r.color("found
 								// dewtobox sign : "
@@ -5697,7 +5807,7 @@ public class dewset extends dewset_interface {
 								sign.setLine(0, "[dewsortbox]");
 								sign.update(true);
 							}
-							
+
 							if (sign.getLine(0).equalsIgnoreCase("[dewsortbox]") == true) {
 
 								/*
@@ -5771,8 +5881,7 @@ public class dewset extends dewset_interface {
 											// dewsorttype
 
 											Sign js = (Sign) temp.getState();
-										
-											
+
 											if (js.getLine(0).equalsIgnoreCase("[dewsortbox]") == true) {
 
 												/*
@@ -6323,7 +6432,7 @@ public class dewset extends dewset_interface {
 						sign2.setLine(0, "[dewsorttype]");
 						sign2.update(true);
 					}
-					
+
 					if (sign2.getLine(0).equalsIgnoreCase("[dewsorttype]")) {
 						if (sign2.getLine(1).equalsIgnoreCase(sorttype)) {
 							// found proto type
@@ -6382,8 +6491,6 @@ public class dewset extends dewset_interface {
 					.color(tr.gettr("this_item_not_allow_for_dewset") + tr.gettr("for") + "dewset " + a1 + ":" + a2));
 			return;
 		}
-
-		
 
 		if (a1 == 0)
 			if (player.hasPermission(pmaindelete) == false) {
