@@ -116,6 +116,7 @@ class HybridOverride extends Hybrid {
 		
 		// grass , dirt
 		
+		ps.letPlantAllThingAsItCan();
 
 		return 0;
 
