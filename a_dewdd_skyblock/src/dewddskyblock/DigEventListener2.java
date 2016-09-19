@@ -671,7 +671,7 @@ public class DigEventListener2 implements Listener {
 		}
 		Player player = e.getPlayer();
 
-		dew.lastmessage = e.getMessage();
+		dew.lastMessage = e.getMessage();
 
 		String[] eo = e.getMessage().split("\\s+");
 		if (eo[0].equalsIgnoreCase("maxautocut")) {

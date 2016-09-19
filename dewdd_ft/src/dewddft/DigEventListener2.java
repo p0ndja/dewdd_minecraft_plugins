@@ -631,9 +631,13 @@ public class DigEventListener2 implements Listener {
 	String pdura = "dewdd.ft.fix";
 
 	String pautoshoot = "dewdd.ft.autoshoot";
+	String pusednick = "dewdd.ft.dnick";
 
+	
 	String pbleed = "dewdd.ft.bleed";
 	String pmonkill = "dewdd.ft.monkill";
+	
+	
 
 	public HashMap<Player, Inventory> inventory = new HashMap<Player, Inventory>();
 
@@ -1155,6 +1159,12 @@ public class DigEventListener2 implements Listener {
 				}
 
 		} else if (m[0].equalsIgnoreCase("/dnick")) {
+			if (p.hasPermission(pusednick) == false) {
+				p.sendMessage(tr.gettr("you don't have permission") + pusednick);
+				return;
+			}
+			
+			
 			if (m.length != 3) {
 				p.sendMessage("/dnick <prefix,suffix> <name>");
 				return;
@@ -1166,7 +1176,11 @@ public class DigEventListener2 implements Listener {
 			}
 
 			p.sendMessage("sending..");
+			
+			
 			Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "manuaddv " + p.getName() + " " + m[1] + " " + m[2]);
+
+			Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "pex user " + p.getName() + " set " + m[1] + " " + m[2]);
 
 		}
 
