@@ -44,6 +44,16 @@ class Redex {
 	
 	public Player player;
 	
+	public ArrayList<Chromosome> dna ;
+	
+	Hybrid hybrid = new Hybrid();
+	
+	
+	public void nextGen() {
+		hybrid.setDnaLength(1125);
+		dna = hybrid.getPopulation();
+		
+	}
 
 	
 	public Redex(World world , Player player) {
@@ -146,23 +156,11 @@ class AreaType {
 
 }
 
-class HybridRed extends Hybrid {
-	private ArrayList <Double> fitness = new ArrayList<Double >();
-	
-	
-	@Override
-	public double fitness(double[] dna) {
-		return fitness.get(index)
-				
-	}
-}
-
-
-class CleanAllArea implements Runnable {
+class DecodeDNA implements Runnable {
 	private Redex redex;
 	private int curId = 0 ;
 
-	public CleanAllArea(Redex redex, int curId) {
+	public DecodeDNA	(Redex redex, int curId) {
 		this.redex = redex;
 		this.curId = curId;
 	}
@@ -201,6 +199,89 @@ class CleanAllArea implements Runnable {
 				}
 			}
 		}
+		
+		curId ++;
+		if (curId < redex.listEx.size()) {
+			// recall own self
+			CleanAllArea caa = new CleanAllArea(redex, curId);
+			Bukkit.getScheduler().scheduleSyncDelayedTask(DigEventListener2.ac, caa, 1);
+		}
+		else {
+			dprint.r.printAll("Cleaned Done");
+		}
+	}
+}
+
+class CleanSubArea implements Runnable {
+	private Redex redex;
+	private int curId = 0 ;
+
+	public CleanSubArea(Redex redex, int curId) {
+		this.redex = redex;
+		this.curId = curId;
+	}
+
+	@Override
+	public void run() {
+
+		// re copying start pattern to them
+		Block hostBlock = null;
+		Block setBlock = null;
+		
+		dprint.r.printAll("curid " + curId);
+		
+		AreaType at = redex.listEx.get(curId);
+
+		for (int x = redex.start.loc.lx; x <= redex.start.loc.rx; x++) {
+
+			for (int y = redex.start.loc.ly; y <= redex.start.loc.ry; y++) {
+
+				for (int z = redex.start.loc.lz; z <= redex.start.loc.rz; z++) {
+					hostBlock = at.world.getBlockAt(x, y, z);
+
+					int gx = at.loc.lx + (x - redex.start.loc.lx);
+					int gy = at.loc.ly + (y);
+					int gz = at.loc.lz + (z - redex.start.loc.lz);
+
+					setBlock = at.world.getBlockAt(gx, gy, gz);
+					
+					if (hostBlock.getType() == setBlock.getType() && hostBlock.getData() == setBlock.getData()) {
+						continue;
+					}
+					
+					setBlock.setTypeIdAndData(hostBlock.getType().getId(), hostBlock.getData(), true);
+					
+
+				}
+			}
+		}
+		
+
+	}
+}
+
+class CleanAllArea implements Runnable {
+	private Redex redex;
+	private int curId = 0 ;
+
+	public CleanAllArea(Redex redex, int curId) {
+		this.redex = redex;
+		this.curId = curId;
+	}
+
+	@Override
+	public void run() {
+
+		// re copying start pattern to them
+		Block hostBlock = null;
+		Block setBlock = null;
+		
+		dprint.r.printAll("curid " + curId);
+		
+		AreaType at = redex.listEx.get(curId);
+		
+		CleanSubArea sub = new CleanSubArea(redex, curId);
+		sub.run();
 		
 		curId ++;
 		if (curId < redex.listEx.size()) {

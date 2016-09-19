@@ -88,4 +88,4 @@ permissions:
     default: op
   dewdd.main.fasterbreak:
     description: faster breaking block (only work at protected zone if config set)
-    default: default
+    default: true
