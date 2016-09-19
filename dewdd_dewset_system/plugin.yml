@@ -7,6 +7,9 @@ depend: [dewddprint, dewddtran]
 softdepend: [worldguard, dewddskyblock]
 
 commands:
+  wand:
+    description: get Wooden Hoe
+    usage: /<command>
   set:
     description: dewset is replace everyblock
     usage: /<command>

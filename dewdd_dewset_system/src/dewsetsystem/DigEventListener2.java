@@ -90,6 +90,12 @@ public class DigEventListener2 implements Listener {
 				this.canc = true;
 				return;
 			}
+			
+			if ((this.message.equalsIgnoreCase("wand"))) {
+				this.player.getInventory().addItem(new ItemStack(Material.WOOD_HOE));
+				
+				return;
+			}
 
 			if ((this.message.equalsIgnoreCase("pos2") == true) || (this.message.equalsIgnoreCase("dewpos2") == true)) {
 				int getid = DigEventListener2.this.dew.getfreeselect(this.player);
