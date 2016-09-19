@@ -189,14 +189,13 @@ public class DigEventListener2 implements Listener {
 
 				return;
 
-			case WHEAT:
+			case SEEDS:
 			case CARROT:
 			case POTATO:
 				if (b.getData() != 7)
 					return;
 
 				switch (b.getType()) {
-				case WHEAT:
 				case SEEDS:
 					b.breakNaturally();
 					b.setType(Material.WHEAT);
@@ -519,6 +518,10 @@ public class DigEventListener2 implements Listener {
 					for (int xx = -5; xx <= 5; xx++) {
 						for (int yy = -5; yy <= 5; yy++) {
 							for (int zz = -5; zz <= 5; zz++) {
+								
+								if (b.getRelative(xx, yy, zz).getType() == Material.COBBLESTONE ) {
+									continue;
+								}
 
 								Autocut ax2 = new Autocut(b.getRelative(xx, yy, zz), getid, se);
 								Bukkit.getScheduler().scheduleSyncDelayedTask(ac, ax2);
@@ -968,6 +971,7 @@ public class DigEventListener2 implements Listener {
 
 				player.sendMessage(dprint.r.color("/skyblock buyhere"));
 				player.sendMessage(dprint.r.color("/skyblock reload"));
+				player.sendMessage(dprint.r.color("/skyblock arethereblock"));
 
 				return;
 
@@ -1020,7 +1024,10 @@ public class DigEventListener2 implements Listener {
 					}
 
 				}
-
+				else if (m[1].equalsIgnoreCase("arethereblock")) {
+					
+					dew.checkIsTHisZoneAreEmptyOrNot(player.getLocation().getBlock(), player);
+				}
 				else if (m[1].equalsIgnoreCase("buyhere")) {
 					// for buy these zone
 

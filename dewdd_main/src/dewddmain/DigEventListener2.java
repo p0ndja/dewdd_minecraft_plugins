@@ -1676,6 +1676,7 @@ public class DigEventListener2 implements Listener {
 
 			// call fixtool
 			
+			if (player.getItemInHand() != null) {
 			if (player.getItemInHand().getItemMeta().getDisplayName() != null ) {
 			String itName[] = player.getItemInHand().getItemMeta().getDisplayName().split(" ");
 			
@@ -1697,6 +1698,7 @@ public class DigEventListener2 implements Listener {
 				
 			}
 			
+			}
 			}
 			
 			dew.randomplaynote(player.getLocation());
@@ -1765,6 +1767,7 @@ public class DigEventListener2 implements Listener {
 				// player.getItemInHand().getTypeId());
 
 				
+				if (player.getItemInHand() != null) {
 				if (player.getItemInHand().getItemMeta().getDisplayName() != null) {
 				String itName[] = player.getItemInHand().getItemMeta().getDisplayName().split(" ");
 				
@@ -1784,6 +1787,7 @@ public class DigEventListener2 implements Listener {
 							//player.sendMessage("ptdew&dewdd : 55 done...");
 					}
 					
+				}
 				}
 				}
 				

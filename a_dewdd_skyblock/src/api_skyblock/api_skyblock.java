@@ -30,13 +30,71 @@ import net.minecraft.server.v1_7_R4.EntityCreature;
 
 public class api_skyblock {
 
+	class CheckIsThisZoneAreEmpty implements Runnable {
+		private Block midBlockX0Z0;
+		private Player player;
+
+		public CheckIsThisZoneAreEmpty(Block midBlockX0Z0, Player player) {
+			this.midBlockX0Z0 = midBlockX0Z0;
+			this.player = player;
+		}
+
+		public void run() {
+
+			int count = 0;
+			boolean thereBlock = false;
+
+			int search = 5;
+			for (int x = -search; x <= search; x++) {
+				for (int y = 0; y <= 256; y++) {
+
+					for (int z = -search; z <= search; z++) {
+
+						Block bbo = midBlockX0Z0.getWorld().getBlockAt(midBlockX0Z0.getX() + x, y,
+								midBlockX0Z0.getZ() + z);
+
+						if (bbo.getType() != Material.AIR) {
+
+							player.sendMessage(bbo.getX() + "," + bbo.getY() + "," + bbo.getZ() + " = "
+									+ bbo.getType().name() + ":" + bbo.getData());
+							thereBlock = true;
+							break;
+						}
+					}
+				}
+
+			}
+
+			while (count < 10000) {
+				count++;
+
+				int x = rnd.nextInt(300) - 150;
+				int y = rnd.nextInt(256);
+				int z = rnd.nextInt(300) - 150;
+
+				Block bbo = midBlockX0Z0.getWorld().getBlockAt(midBlockX0Z0.getX() + x, y, midBlockX0Z0.getZ() + z);
+
+				if (bbo.getType() != Material.AIR) {
+
+					player.sendMessage(bbo.getX() + "," + bbo.getY() + "," + bbo.getZ() + " = " + bbo.getType().name()
+							+ ":" + bbo.getData());
+					thereBlock = true;
+					break;
+				}
+
+			}
+
+			player.sendMessage("thereBlock " + thereBlock);
+		}
+	}
+
 	class CreateSkyblockRS implements Runnable {
 
 		private Player player;
 
 		public CreateSkyblockRS(Player player) {
 			this.player = player;
-			
+
 		}
 
 		@Override
@@ -61,25 +119,24 @@ public class api_skyblock {
 			int x = 0;
 			int y = 0;
 			int z = 0;
-			
+
 			int searchRadius = 1;
 			int searchCount = 0;
-			
 
 			while (buildcomplete == false) {
-				searchCount ++;
-				
+				searchCount++;
+
 				if (searchCount > 50) {
 					searchRadius += 1;
 				}
-				
+
 				// random x y z this is not near old rs list
 				buildcomplete = true;
 
 				x = rnd.nextInt(searchRadius) * 300 * (rnd.nextInt(2) == 1 ? 1 : -1);
 				z = rnd.nextInt(searchRadius) * 300 * (rnd.nextInt(2) == 1 ? 1 : -1);
 				y = rnd.nextInt(200) + 50;
-				
+
 				dprint.r.printAll("searching..." + x + "," + y + "," + z);
 
 				boolean checkrs = true;
@@ -92,11 +149,10 @@ public class api_skyblock {
 					}
 				}
 
-				
 				if (checkrs == true) {
-					for (int i = 1 ; i < 200 ; i++ ) {
-						
-						Block bd = player.getWorld().getBlockAt(x	, i	, z);
+					for (int i = 1; i < 200; i++) {
+
+						Block bd = player.getWorld().getBlockAt(x, i, z);
 						if (bd.getType() != Material.AIR) {
 							checkrs = false;
 						}
@@ -178,16 +234,14 @@ public class api_skyblock {
 					itm = new ItemStack(Material.SAPLING, 3);
 					itm.getData().setData((byte) 3);
 					chest.getInventory().addItem(itm.getData().toItemStack(3));
-					
+
 					itm = new ItemStack(Material.SAPLING, 3);
 					itm.getData().setData((byte) 4);
 					chest.getInventory().addItem(itm.getData().toItemStack(3));
-					
+
 					itm = new ItemStack(Material.SAPLING, 3);
 					itm.getData().setData((byte) 5);
 					chest.getInventory().addItem(itm.getData().toItemStack(3));
-					
-					
 
 					itm = new ItemStack(Material.CARROT, 3);
 
@@ -265,8 +319,7 @@ public class api_skyblock {
 					saveRSProtectFile();
 					buildcomplete = true;
 				}
-				
-				
+
 			} // loop build complete
 		}
 	}
@@ -292,7 +345,7 @@ public class api_skyblock {
 
 				if (getplayerinslot(player.getName(), id) > -1) {
 
-					player.sendMessage(dprint.r.color(  getFullMissionHeadAndCurLevel(rs[id].mission)));
+					player.sendMessage(dprint.r.color(getFullMissionHeadAndCurLevel(rs[id].mission)));
 				}
 
 				// check his
@@ -628,11 +681,11 @@ public class api_skyblock {
 			int count = 0;
 			do {
 				bo2 = searchSpaceCube(bo, 5, 5);
-				count ++;
-				
+				count++;
+
 				if (count > 5000) {
-					dprint.r.printAll(tr.gettr("this_is_land_cannot_search_anyblock_for_applyReward_LV4" + " " + 
-				 rsID + " xyz = " + rs[rsID].x  +"," + rs[rsID].y + "," + rs[rsID].z));
+					dprint.r.printAll(tr.gettr("this_is_land_cannot_search_anyblock_for_applyReward_LV4" + " " + rsID
+							+ " xyz = " + rs[rsID].x + "," + rs[rsID].y + "," + rs[rsID].z));
 					break;
 				}
 			} while (bo2.getRelative(-1, 0, 0).getType() == Material.AIR);
@@ -723,33 +776,29 @@ public class api_skyblock {
 			printToAllPlayerOnRS(rsID, tr.gettr("got_reward_lv_" + rs[rsID].mission));
 
 			break;
-			
+
 		case 6:
 
 			bo = getBlockMiddleRS(rsID);
-			//bo2 = searchSpaceCube(bo, 5, 5);
-			
-			
+			// bo2 = searchSpaceCube(bo, 5, 5);
+
 			for (int i = -10; i < 10; i++) {
 				for (int i2 = 255; i2 <= 255; i2++) {
 					for (int i3 = -10; i3 < 10; i3++) {
 
-						 bo3 = bo.getWorld().getBlockAt(bo.getX() + i , i2 , bo.getZ() + i3);
-						 
+						bo3 = bo.getWorld().getBlockAt(bo.getX() + i, i2, bo.getZ() + i3);
+
 						if (bo3.getType() != Material.AIR) {
 							dprint.r.printAll(tr.gettr("error while applyReward lv 0 block is != air"));
 							break;
 						}
 
-						
-							bo3.setType(Material.GRAVEL);
-						
+						bo3.setType(Material.GRAVEL);
 
 					}
 				}
 			}
 
-			
 			printToAllPlayerOnRS(rsID, tr.gettr("got_reward_lv_" + rs[rsID].mission));
 
 			break;
@@ -877,8 +926,8 @@ public class api_skyblock {
 
 				if (m.length == 24) {
 					int bb = (int) Double.parseDouble(m[23]);
-					
-				//	bb = 0;
+
+					// bb = 0;
 					rs[rsMax - 1].mission = (bb);
 
 				}
@@ -895,7 +944,7 @@ public class api_skyblock {
 		}
 	}
 
-	public synchronized void nextMission(int rsID,int cur) {
+	public synchronized void nextMission(int rsID, int cur) {
 		printToAllPlayerOnRS(rsID, (Constant.getMissionHeader(rs[rsID].mission) + " " + tr.gettr("mission_complete")));
 
 		// dprint.r.printAll("0 calling apply reward");
@@ -915,27 +964,25 @@ public class api_skyblock {
 		saveRSProtectFile();
 
 	}
-	
 
 	public void printToAllPlayerOnRS(int rsID, String message) {
-		//dprint.r.printA("printToallplayeronrs " + rsID + " , " + message);
-		
+		// dprint.r.printA("printToallplayeronrs " + rsID + " , " + message);
+
 		for (int i = 0; i < RSMaxPlayer; i++) {
-			
+
 			Player player = Bukkit.getPlayer(rs[rsID].p[i]);
-			
+
 			if (player == null) {
 				continue;
 			}
-			
-			
-		//	dprint.r.printA("player " + i + " = " + player.getName());
-			
+
+			// dprint.r.printA("player " + i + " = " + player.getName());
+
 			if (player.isOnline() == false) {
 				continue;
 			}
-			
-			//dprint.r.printA("online player " + i + " = " + player.getName());
+
+			// dprint.r.printA("online player " + i + " = " + player.getName());
 
 			player.sendMessage(dprint.r.color(message));
 		}
@@ -955,8 +1002,7 @@ public class api_skyblock {
 		File dir = new File(Constant.folder_name);
 		dir.mkdir();
 
-		String filena = Constant.folder_name + File.separator + Constant.rsProtect_filename
-				;
+		String filena = Constant.folder_name + File.separator + Constant.rsProtect_filename;
 		File fff = new File(filena);
 
 		FileWriter fwriter;
@@ -995,6 +1041,20 @@ public class api_skyblock {
 			// Auto-generated catch block
 			e.printStackTrace();
 		}
+
+	}
+
+	public void checkIsTHisZoneAreEmptyOrNot(Block block, Player player) {
+		int getid = getprotectid(block);
+		if (getid == -1) {
+			player.sendMessage(tr.gettr("this_zone_don't_have_any_skyblock_protect"));
+			return;
+		}
+
+		Block bbo = block.getWorld().getBlockAt(rs[getid].x, rs[getid].y, rs[getid].z);
+
+		CheckIsThisZoneAreEmpty abc = new CheckIsThisZoneAreEmpty(bbo, player);
+		Bukkit.getScheduler().scheduleSyncDelayedTask(ac, abc);
 
 	}
 
