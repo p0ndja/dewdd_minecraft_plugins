@@ -40,343 +40,303 @@ public class Core {
 
 	// 415 unique item
 
+	public int decodeTmpSell(LinkedList<SellableType> tmpSell, final double[] chromosome, int curChro) {
+		while (tmpSell.size() < sell.size()) {
+
+			double tmpReadChro = Math.abs(chromosome[curChro]);
+
+			SellableType x = sellAsList.get(tmpSell.size()).copyIt();
+
+			x.sellPerPrice = tmpReadChro * SellMaxCost;
+			tmpSell.add(x);
+			// d.pl("chro sell = " + curChro);
+			curChro++;
+			continue;
+
+		}
+
+		return curChro;
+	}
+
+	class TmpAllItemInShopType {
+		LinkedList<AllBlockInGameType> tmpAllItemInShop;
+		double[] chromosome;
+		int curChro;
+		int curMissionItemSwapPosition;
+		boolean tmpBoolean[];
+	}
+
+	public TmpAllItemInShopType decondTmpAllItemInShop(TmpAllItemInShopType tmpType) {
+		while (tmpType.tmpAllItemInShop.size() < allBlockInGameAsList.size()) {
+			double tmpReadChro = Math.abs(tmpType.chromosome[tmpType.curChro]);
+
+			AllBlockInGameType bo = new AllBlockInGameType();
+
+			int itemSlot = getNextUnuseMissionItem((int) (tmpReadChro * swapMultipy),
+					tmpType.curMissionItemSwapPosition, tmpType.tmpBoolean);
+
+			tmpType.curChro++;
+
+			tmpType.curMissionItemSwapPosition = itemSlot;
+
+			bo.theName = allBlockInGameAsList.get(itemSlot).theName;
+			bo.data = allBlockInGameAsList.get(itemSlot).data;
+			// ........
+			tmpReadChro = Math.abs(tmpType.chromosome[tmpType.curChro]);
+
+			bo.curAmount = (int) (tmpReadChro * allBlockInGameAsList.get(itemSlot).maxStack);
+			tmpType.curChro++;
+
+			tmpType.tmpAllItemInShop.add(bo);
+
+			continue;
+		}
+
+		return tmpType;
+	}
+
+	class TmpShopPriceAmountOfItemInShopType {
+		int shopSlotMax;
+		int curChro;
+		double[] chromosome;
+
+		double[] price;
+		int[] amount;
+
+	}
+
+	public void decodeShopPriceAmountOfItemInShop(TmpShopPriceAmountOfItemInShopType tmpType) {
+
+		while (tmpType.shopSlotMax < allBlockInGameAsList.size()) {
+			d.pl("sperateShop > curChro " + tmpType.curChro);
+			d.pl("sperateShop : " + tmpType.shopSlotMax + " = " + (allBlockInGameAsList.size()));
+
+			double tmpReadChro = tmpType.chromosome[tmpType.curChro];
+			tmpReadChro = Math.abs(tmpReadChro);
+
+			d.pl(" the shop curchro " + tmpType.curChro + " | " + tmpReadChro + " | "
+
+			+ tmpType.shopSlotMax);
+
+			d.pl("size = " + tmpReadChro + " .. " + tmpType.curChro + " unique " + tmpType.shopSlotMax);
+
+			tmpType.price[tmpType.shopSlotMax] = tmpReadChro * ShopMaxCost;
+
+			tmpType.curChro++;
+			tmpReadChro = Math.abs(tmpReadChro);
+
+			tmpType.shopSlotMax++;
+
+			tmpType.curChro++;
+			continue;
+
+		} // mission
+
+	}
+
 	public void dnaDecoder(final double[] chromosome, LinkedList<AllShop> tmpAllShop, LinkedList<SellableType> tmpSell,
 			LinkedList<LV1000Type> tmpLV) {
 
-		LinkedList<Double> tmpReading = new LinkedList<Double>();
+		int curChro = 0;
 
-		int tmpAllShopUniqueDone = 0;
-		int curMissionItemSwapPosition = 0;
+		// decond player sell
+		curChro = decodeTmpSell(tmpSell, chromosome, curChro);
 		
+//************************************************************************
 		
+		// decond all item in shop
 		LinkedList<AllBlockInGameType> tmpAllItemInShop = new LinkedList<AllBlockInGameType>();
 		tmpAllItemInShop.clear();
 
+		TmpAllItemInShopType tmp = new TmpAllItemInShopType();
+		int curMissionItemSwapPosition = 0;
+
+		tmp.chromosome = chromosome;
+		tmp.curChro = curChro;
+		tmp.curMissionItemSwapPosition = curMissionItemSwapPosition;
+		tmp.tmpAllItemInShop = tmpAllItemInShop;
+
+		boolean tmpBoolean[] = new boolean[allBlockInGameAsList.size()];
+		for (int i = 0; i < allBlockInGameAsList.size(); i++) {
+			tmpBoolean[i] = false;
+		}
+		tmp.tmpBoolean = tmpBoolean;
+
+		tmp = decondTmpAllItemInShop(tmp);
+		curChro = tmp.curChro;
+		curMissionItemSwapPosition = tmp.curMissionItemSwapPosition;
+
+//**********************************************************************************
+		
+		// decond shop price , and amount of items in shop
+		int shopSlotMax = 0;
+
+	
+
+		int maxShopBuffer = 1000;
+
+		TmpShopPriceAmountOfItemInShopType tmp2 = new TmpShopPriceAmountOfItemInShopType();
+		tmp2.amount = new int[maxShopBuffer];
+		tmp2.chromosome = chromosome;
+		tmp2.curChro = curChro;
+		tmp2.price = new double[maxShopBuffer];
+		tmp2.shopSlotMax = shopSlotMax;
+
+		decodeShopPriceAmountOfItemInShop(tmp2);
+		
+		curChro = tmp2.curChro;
+		shopSlotMax = tmp2.shopSlotMax;
+		
+		
+
+//******************************************************************************************
+		// decode level
+		TmpLVType tmp3 = new TmpLVType();
+		tmp3.chromosome = chromosome;
+		tmp3.curChro = curChro;
+		tmp3.curMissionItemSwapPosition = curMissionItemSwapPosition;
+		tmp3.tmpLV = tmpLV;
+		
 		boolean usedItShopList[] = new boolean[Main.co.allBlockInGameAsList.size()];
 
 		for (int i = 0; i < Main.co.allBlockInGameAsList.size(); i++) {
 			usedItShopList[i] = false;
 		}
 
-		int curChro = 0;
-
 		boolean usedItNeedList[] = new boolean[Main.co.allBlockInGameAsList.size()];
 		boolean usedItRewardList[] = new boolean[Main.co.allBlockInGameAsList.size()];
 		int tmpUsedItNeedUniqueCount = 0;
 		int tmpUsedItRewardUniqueCount = 0;
-		
-		
-		
-		
+
 		for (int i = 0; i < Main.co.allBlockInGameAsList.size(); i++) {
 			usedItNeedList[i] = false;
 			usedItRewardList[i] = false;
 		}
-
-	//	while (curChro < dnaSize) {
-			// d.pl("while " + curChro + " / " + dnaSize);
-
-			// ****************************************************
-
-			// deal with player sell price
-			
-			
-			while (tmpSell.size() < sell.size()) {
-
-				double tmpReadChro = Math.abs(chromosome[curChro]);
-
-				SellableType x = sellAsList.get(tmpSell.size()).copyIt();
-
-				x.sellPerPrice = tmpReadChro * SellMaxCost;
-				tmpSell.add(x);
-				// d.pl("chro sell = " + curChro);
-				curChro++;
-				continue;
-
-			}
-
-			// ****************************************************
-
-			// price shift <amount> shift <amount> shift <amount>
-			
-			boolean tmpBoolean[] = new boolean[allBlockInGameAsList.size()];
-			for (int i = 0 ; i < allBlockInGameAsList.size() ; i ++ ){
-				tmpBoolean[i] = false;
-			}
-			
-			// grab all item
-			while( tmpAllItemInShop.size() < allBlockInGameAsList.size()) {
-				double tmpReadChro = Math.abs(chromosome[curChro]);
-
-				AllBlockInGameType bo =  new AllBlockInGameType();
-				
-				
-				
-				int itemSlot = getNextUnuseMissionItem(
-						(int) (tmpReadChro * swapMultipy)
-						, curMissionItemSwapPosition,
-						tmpBoolean);
-				
-				curChro ++;
-				
-				
-				curMissionItemSwapPosition = itemSlot;
-				
-			
-				bo.theName = allBlockInGameAsList.get(itemSlot).theName;
-				bo.data = allBlockInGameAsList.get(itemSlot).data;
-				// ........
-				tmpReadChro = Math.abs(chromosome[curChro]);
-				
-				bo.curAmount = (int) (tmpReadChro
-						* allBlockInGameAsList.get(itemSlot).maxStack);
-				curChro ++;
-				
-				
-				
-				tmpAllItemInShop.add(bo);
-				
-
-				continue;
-			}
-
-			
-			
-			while (tmpAllShopUniqueDone < allBlockInGameAsList.size()) {
-				d.pl("tmpAllShop > " + curChro);
-
-				d.pl("tmpAllShop : " + tmpAllShopUniqueDone + " = " + (allBlockInGameAsList.size()));
-
-			/*	if (allBlockInGameAsList.size() - tmpAllShopUniqueDone < minShopSize+1
-						&& allBlockInGameAsList.size() - tmpAllShopUniqueDone > 0) {
-					d.pl("last shop can't have item to fit minshopsize = " + minShopSize + " , " + tmpAllShopUniqueDone
-							+ "/" + allBlockInGameAsList.size());
-
-					return;
-				}*/
-
-				
-				boolean logic1 = tmpReading.size() >= (1 + (minShopSize * 2)); // 7
-				boolean logic2 =  tmpReading.size() <= (1 + (maxShopSize * 2));  // 21
-				boolean logic3 = tmpReading.size() % 2 == 1;
-						
-				 				// 417     -  414   = 3
-				                
-				boolean logic4 = allBlockInGameAsList.size() - tmpAllShopUniqueDone  <= minShopSize; // if last shop does  not have item left for minShopSize 3
-				boolean logic5 =  tmpReading.size() == 1 +((allBlockInGameAsList.size() - tmpAllShopUniqueDone)*2);
-				
-				
-				boolean logic6 = logic1 && logic2 && logic3;
-				boolean logic7 = logic4 && logic5;
-				
-				
-				if (tmpAllShopUniqueDone >= 410) {
-					
-					d.pl("");
-					d.pl("**************");
-					d.pl("41x = " + tmpAllShopUniqueDone + " , tmpReading Size " + tmpReading.size());
-					
-					d.pl("1 " + logic1 + ", " +
-					"2 " + logic2 + ", " 
-					+"3 " + logic3 + ", " +
-					"4 " + logic4 + ", " +
-					"5 " + logic5 + ", " + 
-					"6 " + logic6 + ", "
-					+ "7 " + logic7 + ", ");
-					
-				}
-				if (tmpAllShopUniqueDone >= 413 ) {
-					d.pl("413");
-				}
-			
-				
-				if ( (logic6)
-						|| (logic7)){
-
-					double tmpReadChro = chromosome[curChro];
-
-					if (tmpReadChro <= 0 || logic7 ) { // that
-																							// mean
-																							// do
-																							// it
-																							// now
-						tmpReadChro = Math.abs(chromosome[curChro]);
-						d.pl(" the shop curchro " + curChro + " | " + tmpReading.size() + " | " + tmpAllShop.size()
-								+ " | " + tmpAllShopUniqueDone);
-
-						d.pl("size = " + tmpReading.size() + " .. " + curChro + " unique " + tmpAllShopUniqueDone);
-
-						AllShop x = new AllShop();
-
-						x.PlayPrice = tmpReading.get(0) * ShopMaxCost;
-
-						for (int i = 1; i < tmpReading.size(); i++) {
-							int itemSlot = getNextUnuseMissionItem(
-									(int) (tmpReading.get(i).doubleValue() * swapMultipy), curMissionItemSwapPosition,
-									usedItShopList);
-							curMissionItemSwapPosition = itemSlot;
-
-							x.Item[x.size] = allBlockInGameAsList.get(itemSlot).theName;
-							x.data[x.size] = allBlockInGameAsList.get(itemSlot).data;
-							x.amount[x.size] = (int) (tmpReading.get(i + 1).doubleValue()
-									* allBlockInGameAsList.get(itemSlot).maxStack);
-							i++;
-
-							tmpAllShopUniqueDone++;
-							x.size++;
-						}
-
-						tmpAllShop.add(x);
-						tmpReading.clear();
-						curChro++;
-						continue;
-
-					} else {
-
-						tmpReading.add(Math.abs(chromosome[curChro]));
-
-						curChro++;
-						continue;
-
-					}
-
-				}
-
-				else { // add to tmpReading
-
-					tmpReading.add(Math.abs(chromosome[curChro]));
-
-					curChro++;
-					continue;
-
-				}
-
-			} // mission
-
-			/*
-			 * d.pl("tmpAllShop !@ " + tmpAllShop.size() + " , unique " +
-			 * tmpAllShopUniqueDone); d.pl("done shop");
-			 */
-			// ****************************************************
-			// ****************************************************
-
-			// grab level
-
-			// if that are lv greb Inventory <lv type> id:data:amount
-			// id:data:amount etc...
-			// then reward <10 times for block> <10 times for item>
-
-			// <lv type> shift : amount ?:?:? ?:?:?
-			// <10 times for block> <amount> <10 times for item> <amount>
-
-			// d.pl("space " + curChro);
-
-			
-
-			while (tmpLV.size() <= maxLV ) {
-				// d.pl("tmpLV " + tmpLV.size() + " , tmpReading " +
-				// tmpReading.size() + " , curChro " + curChro);
-
-				LV1000Type x = new LV1000Type();
-				// break
-				// it's mean LV break drop place MODE
-
-				// add lv need item list
-				for (int i = 0; i < maxItemForCompleteMission && curChro < dnaSize && tmpUsedItNeedUniqueCount < allBlockInGameAsList.size(); i++) {
-					double tmpReadChro = chromosome[curChro];
-					if (i < minItemForCompleteMission) {
-						tmpReadChro = Math.abs(tmpReadChro);
-					}
-					
-
-					// next Add part
-					if (tmpReadChro <= 0) {
-						continue;
-					}
-
-					int itemSlot = getNextBlockSwapMissionType((int) (tmpReadChro * swapMultipy),
-							curMissionItemSwapPosition, 0, usedItNeedList);
-					curMissionItemSwapPosition = itemSlot;
-
-					x.needItem[x.needSize] = allBlockInGameAsList.get(itemSlot).theName;
-					x.needData[x.needSize] = allBlockInGameAsList.get(itemSlot).data;
-
-					double tmpAmount = Math.abs(chromosome[curChro]);
-					curChro++;
-
-					if (tmpAmount > 1) {
-						tmpAmount = 1;
-					}
-					double tmpAmountInt = tmpAmount * allBlockInGameAsList.get(itemSlot).maxStack;
-					if ((int) tmpAmountInt < 0) {
-						tmpAmountInt = 1;
-					}
-
-					x.needAmount[x.needSize] = (int) (tmpAmountInt);
-
-					x.needSize++;
-					tmpUsedItNeedUniqueCount++;
-					if (tmpUsedItNeedUniqueCount >= allBlockInGameAsList.size()) {
-						tmpUsedItNeedUniqueCount = 0;
-						for (int kk = 0; kk < allBlockInGameAsList.size() ; kk++ ){
-							usedItNeedList[kk] = false;
-						}
-					}
-				}
-
-				// add reward part
-
-				// add reward block part
-				for (int i = 0; i < maxRewardDiffBlockType && curChro < dnaSize ; i++) {
-					double tmpReadChro = chromosome[curChro];
-					if (i == minRewardDiffBlockType) {
-						tmpReadChro = Math.abs(tmpReadChro);
-					}
-
-					// next Add part
-					if (tmpReadChro <= 0) {
-						continue;
-					}
-
-					int itemSlot = getNextBlockSwapMissionType((int) (tmpReadChro * swapMultipy),
-							curMissionItemSwapPosition, 0, usedItRewardList);
-					curMissionItemSwapPosition = itemSlot;
-
-					x.rewardItem[x.rewardSize] = allBlockInGameAsList.get(itemSlot).theName;
-					x.rewardData[x.rewardSize] = allBlockInGameAsList.get(itemSlot).data;
-
-					double tmpAmount = Math.abs(chromosome[curChro]);
-					curChro++;
-
-					if (tmpAmount > 1) {
-						tmpAmount = 1;
-					}
-					double tmpAmountInt = tmpAmount * allBlockInGameAsList.get(itemSlot).maxStack;
-					if ((int) tmpAmountInt < 0) {
-						tmpAmountInt = 1;
-					}
-
-					x.rewardAmount[x.rewardSize] = (int) (tmpAmountInt);
-
-					x.rewardSize++;
-					tmpUsedItRewardUniqueCount++;
-					if (tmpUsedItRewardUniqueCount >= allBlockInGameAsList.size()) {
-						tmpUsedItRewardUniqueCount = 0;
-						for (int kk = 0; kk < allBlockInGameAsList.size() ; kk++ ){
-							usedItRewardList[kk] = false;
-						}
-					}
-				}
-
-				tmpLV.add(x);
-				tmpReading.clear();
-				// curChro++;
-				continue;
-
-			} 
-	
+		
+		tmp3.tmpUsedItNeedUniqueCount = tmpUsedItNeedUniqueCount;
+		tmp3.tmpUsedItRewardUniqueCount = tmpUsedItRewardUniqueCount;
+		tmp3.usedItNeedList = usedItNeedList;
+		tmp3.usedItRewardList = usedItRewardList;
+		
 
 		d.pl("abc");
+	}
+
+	class TmpLVType {
+		LinkedList<LV1000Type> tmpLV = new LinkedList<LV1000Type>();
+		int curChro;
+		int tmpUsedItNeedUniqueCount;
+		double[] chromosome;
+		int curMissionItemSwapPosition;
+		boolean[] usedItNeedList;
+		boolean[] usedItRewardList;
+		int tmpUsedItRewardUniqueCount;
+
+	}
+
+	public void decodeLV(TmpLVType tmpType) {
+
+		while (tmpType.tmpLV.size() <= maxLV) {
+			// d.pl("tmpLV " + tmpLV.size() + " , tmpReading " +
+			// tmpReading.size() + " , curChro " + curChro);
+
+			LV1000Type x = new LV1000Type();
+			// break
+			// it's mean LV break drop place MODE
+
+			// add lv need item list
+			for (int i = 0; i < maxItemForCompleteMission && tmpType.curChro < dnaSize
+					&& tmpType.tmpUsedItNeedUniqueCount < allBlockInGameAsList.size(); i++) {
+				double tmpReadChro = tmpType.chromosome[tmpType.curChro];
+				if (i < minItemForCompleteMission) {
+					tmpReadChro = Math.abs(tmpReadChro);
+				}
+
+				// next Add part
+				if (tmpReadChro <= 0) {
+					continue;
+				}
+
+				int itemSlot = getNextBlockSwapMissionType((int) (tmpReadChro * swapMultipy),
+						tmpType.curMissionItemSwapPosition, 0, tmpType.usedItNeedList);
+				tmpType.curMissionItemSwapPosition = itemSlot;
+
+				x.needItem[x.needSize] = allBlockInGameAsList.get(itemSlot).theName;
+				x.needData[x.needSize] = allBlockInGameAsList.get(itemSlot).data;
+
+				double tmpAmount = Math.abs(tmpType.chromosome[tmpType.curChro]);
+				tmpType.curChro++;
+
+				if (tmpAmount > 1) {
+					tmpAmount = 1;
+				}
+				double tmpAmountInt = tmpAmount * allBlockInGameAsList.get(itemSlot).maxStack;
+				if ((int) tmpAmountInt < 0) {
+					tmpAmountInt = 1;
+				}
+
+				x.needAmount[x.needSize] = (int) (tmpAmountInt);
+
+				x.needSize++;
+				tmpType.tmpUsedItNeedUniqueCount++;
+				if (tmpType.tmpUsedItNeedUniqueCount >= allBlockInGameAsList.size()) {
+					tmpType.tmpUsedItNeedUniqueCount = 0;
+					for (int kk = 0; kk < allBlockInGameAsList.size(); kk++) {
+						tmpType.usedItNeedList[kk] = false;
+					}
+				}
+			}
+
+			// add reward part
+
+			// add reward block part
+			for (int i = 0; i < maxRewardDiffBlockType && tmpType.curChro < dnaSize; i++) {
+				double tmpReadChro = tmpType.chromosome[tmpType.curChro];
+				if (i == minRewardDiffBlockType) {
+					tmpReadChro = Math.abs(tmpReadChro);
+				}
+
+				// next Add part
+				if (tmpReadChro <= 0) {
+					continue;
+				}
+
+				int itemSlot = getNextBlockSwapMissionType((int) (tmpReadChro * swapMultipy),
+						tmpType.curMissionItemSwapPosition, 0, tmpType.usedItRewardList);
+				tmpType.curMissionItemSwapPosition = itemSlot;
+
+				x.rewardItem[x.rewardSize] = allBlockInGameAsList.get(itemSlot).theName;
+				x.rewardData[x.rewardSize] = allBlockInGameAsList.get(itemSlot).data;
+
+				double tmpAmount = Math.abs(tmpType.chromosome[tmpType.curChro]);
+				tmpType.curChro++;
+
+				if (tmpAmount > 1) {
+					tmpAmount = 1;
+				}
+				double tmpAmountInt = tmpAmount * allBlockInGameAsList.get(itemSlot).maxStack;
+				if ((int) tmpAmountInt < 0) {
+					tmpAmountInt = 1;
+				}
+
+				x.rewardAmount[x.rewardSize] = (int) (tmpAmountInt);
+
+				x.rewardSize++;
+				tmpType.tmpUsedItRewardUniqueCount++;
+				if (tmpType.tmpUsedItRewardUniqueCount >= allBlockInGameAsList.size()) {
+					tmpType.tmpUsedItRewardUniqueCount = 0;
+					for (int kk = 0; kk < allBlockInGameAsList.size(); kk++) {
+						tmpType.usedItRewardList[kk] = false;
+					}
+				}
+			}
+
+			tmpType.tmpLV.add(x);
+
+			// curChro++;
+			continue;
+
+		}
 	}
 
 	public int getNextBlockSwapMissionType(int swapNextxTime, int curMissionItemSwapPosition, int iNeedBlock,
