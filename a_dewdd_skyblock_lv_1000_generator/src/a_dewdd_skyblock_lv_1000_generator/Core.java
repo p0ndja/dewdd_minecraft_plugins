@@ -17,14 +17,14 @@ public class Core {
 		boolean tmpBoolean[];
 	}
 	class TmpLVType {
-		LinkedList<LV1000Type> tmpLV = new LinkedList<LV1000Type>();
-		int curChro;
-		int tmpUsedItNeedUniqueCount;
-		double[] chromosome;
-		int curMissionItemSwapPosition;
-		boolean[] usedItNeedList;
-		boolean[] usedItRewardList;
-		int tmpUsedItRewardUniqueCount;
+		public LinkedList<LV1000Type> tmpLV = new LinkedList<LV1000Type>();
+		public int curChro;
+		public int tmpUsedItNeedUniqueCount;
+		public double[] chromosome;
+		public int curMissionItemSwapPosition;
+		public boolean[] usedItNeedList;
+		public boolean[] usedItRewardList;
+		public int tmpUsedItRewardUniqueCount;
 
 	}
 
@@ -69,6 +69,8 @@ public class Core {
 	LinkedList<SellableType> sellAsList = new LinkedList<SellableType>();
 
 	LinkedList<AllBlockInGameType> allBlockInGameAsList = new LinkedList<AllBlockInGameType>();
+
+	private Object tmp4;
 
 	public double convertStringToTime(String abc) {
 		String m[] = abc.split(" ");
@@ -219,8 +221,8 @@ public class Core {
 
 	public void decodeShopPriceAmountOfItemInShop(TmpShopPriceAmountOfItemInShopType tmpType) {
 		
-		
-		while (tmpType.shopSlotMax < allBlockInGameAsList.size()) {
+		int countItem = 0;
+		while (countItem < allBlockInGameAsList.size()) {
 			d.pl("sperateShop > curChro " + tmpType.curChro);
 			d.pl("sperateShop : " + tmpType.shopSlotMax + " = " + (allBlockInGameAsList.size()));
 
@@ -256,6 +258,7 @@ public class Core {
 			double curAmount = (tmpReadChro * max)+ minShopSize;
 			tmpType.amount[tmpType.shopSlotMax] = (int)curAmount;
 			
+			countItem += tmpType.amount[tmpType.shopSlotMax];
 					
 
 			tmpType.shopSlotMax++;
@@ -286,7 +289,7 @@ public class Core {
 		return curChro;
 	}
 
-	public TmpAllItemInShopType decondTmpAllItemInShop(TmpAllItemInShopType tmpType) {
+	public TmpAllItemInShopType decodeTmpAllItemInShop(TmpAllItemInShopType tmpType) {
 		while (tmpType.tmpAllItemInShop.size() < allBlockInGameAsList.size()) {
 			double tmpReadChro = Math.abs(tmpType.chromosome[tmpType.curChro]);
 
@@ -318,13 +321,68 @@ public class Core {
 	class TmpTmpShopPriceToAllShopType {
 		LinkedList<AllBlockInGameType> tmpAllItemInShop ;
 		double[] price;
-		double[] amount;
+		int[] amount;
 		int shopSlotMax;
 		
 		LinkedList<AllShop> tmpAllShop;
 	}
 	
-	public void decodeTmpShopPriceAmountOfItemInShopToAllShopType() {
+	public void convertTmpShopPriceAmountOfItemInShopToAllShopType(TmpTmpShopPriceToAllShopType tmpType) {
+		tmpType.tmpAllShop.clear();
+		
+		// check is the last shop ( have enough item >= minshop)
+		
+		if (tmpType.amount[tmpType.shopSlotMax - 1 ]  < minShopSize) {
+			boolean foundx = false;
+			for (int i = 0; i < tmpType.shopSlotMax -1 ; i ++ ) {
+				if (tmpType.amount[i] < maxShopSize) {
+					tmpType.amount[i] ++;
+					tmpType.amount[tmpType.shopSlotMax-1] = 0;
+					tmpType.price[tmpType.shopSlotMax - 1] = 0;
+					tmpType.shopSlotMax --;
+					foundx = true;
+					break;
+					
+				}
+			}
+			
+			if (foundx = true) {
+				d.pl("shift yet, convert shopPrice to AllShop found last shopSlot have not enough item it last slot");
+				
+			}
+			else {
+				d.pl("weird things happends , can't shift last shopAmount,shopPrice  to another slot");
+			}
+			
+		}
+		
+		// to time convert to All Shop
+		
+		int curItemIndex = 0;
+		
+		for (int i = 0 ; i < tmpType.shopSlotMax ; i ++ ) {
+			AllShop ab = new AllShop();
+			
+			ab.playPrice = tmpType.price[i];
+			ab.size = tmpType.amount[i];
+			
+			ab.item = new String[ab.size];
+			ab.data = new byte[ab.size];
+			ab.amount = new int[ab.size];
+			
+			for (int j = 0; j < tmpType.amount[i] ; j ++ ) {
+				AllBlockInGameType abigt = tmpType.tmpAllItemInShop.get(curItemIndex);
+				ab.item[j] = abigt.theName;
+				ab.data[j] = abigt.data;
+				ab.amount[j] = abigt.curAmount;
+				
+				curItemIndex ++;
+			}
+		
+			tmpType.tmpAllShop.add(ab);
+			
+		}
+		
 		
 	}
 
@@ -356,7 +414,7 @@ public class Core {
 		}
 		tmp.tmpBoolean = tmpBoolean;
 
-		tmp = decondTmpAllItemInShop(tmp);
+		tmp = decodeTmpAllItemInShop(tmp);
 		curChro = tmp.curChro;
 		curMissionItemSwapPosition = tmp.curMissionItemSwapPosition;
 
@@ -379,15 +437,30 @@ public class Core {
 		curChro = tmp2.curChro;
 		shopSlotMax = tmp2.shopSlotMax;
 
-		// ******************************************************************************************
+		// *****************************************************************************************
+		// convert all data to AllShop
 		
+		TmpTmpShopPriceToAllShopType tmp3 = new TmpTmpShopPriceToAllShopType();
+		tmp3.amount = tmp2.amount;
+		tmp3.price = tmp2.price;
+		tmp3.shopSlotMax = shopSlotMax;
+		tmp3.tmpAllItemInShop = tmp.tmpAllItemInShop;
+		tmp3.tmpAllShop = tmpAllShop;
+		
+		convertTmpShopPriceAmountOfItemInShopToAllShopType(tmp3);
+		
+		
+		
+		// ******************************************************************************************
+
 		
 		// decode level
-		TmpLVType tmp3 = new TmpLVType();
-		tmp3.chromosome = chromosome;
-		tmp3.curChro = curChro;
-		tmp3.curMissionItemSwapPosition = curMissionItemSwapPosition;
-		tmp3.tmpLV = tmpLV;
+				
+		TmpLVType tmp4  = new TmpLVType();
+		tmp4.chromosome = chromosome;
+		tmp4.curChro = curChro;
+		tmp4.curMissionItemSwapPosition = curMissionItemSwapPosition;
+		tmp4.tmpLV = tmpLV;
 
 		boolean usedItShopList[] = new boolean[Main.co.allBlockInGameAsList.size()];
 
@@ -405,10 +478,12 @@ public class Core {
 			usedItRewardList[i] = false;
 		}
 
-		tmp3.tmpUsedItNeedUniqueCount = tmpUsedItNeedUniqueCount;
-		tmp3.tmpUsedItRewardUniqueCount = tmpUsedItRewardUniqueCount;
-		tmp3.usedItNeedList = usedItNeedList;
-		tmp3.usedItRewardList = usedItRewardList;
+		tmp4.tmpUsedItNeedUniqueCount = tmpUsedItNeedUniqueCount;
+		tmp4.tmpUsedItRewardUniqueCount = tmpUsedItRewardUniqueCount;
+		tmp4.usedItNeedList = usedItNeedList;
+		tmp4.usedItRewardList = usedItRewardList;
+		
+		decodeLV(tmp4);
 
 		d.pl("abc");
 	}
