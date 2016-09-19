@@ -821,7 +821,7 @@ public class DigEventListener2 implements Listener {
 		int inf1 = 0;
 		int inf2 = 0;
 
-			while( countUsed < allBlockInGame.size() && inf1 <= 5000 ) {
+			while( countUsed < allBlockInGame.size() && inf1 <= 50000 ) {
 				inf1 ++;
 				// random Item
 				AllShop newShop = new AllShop();
@@ -856,7 +856,7 @@ public class DigEventListener2 implements Listener {
 
 							}
 						}
-					} while (found == false && inf2 <= 5000);
+					} while (found == false && inf2 <= 50000);
 
 					// random add to shop
 					SellType allItemRand = allBlockInGame.get(ranid);
