@@ -772,69 +772,165 @@ public class DigEventListener2 implements Listener {
 
 		}
 	}
-	
-	public HashMap<Player,Inventory> inventory = new HashMap<Player,Inventory>();
-	public  HashMap<Player , Integer> inventoryID = new HashMap<Player , Integer>();
+
+	public HashMap<Player, Inventory> inventory = new HashMap<Player, Inventory>();
+	public HashMap<Player, Integer> inventoryID = new HashMap<Player, Integer>();
 
 	public void updateInventory(Inventory inv, Player player) {
 		int id = inventoryID.get(player);
-		
+
 		inv.clear();
-		
-		ItemStack itm = new ItemStack( Material.STICK, 1);
+
+		ItemStack itm = new ItemStack(Material.STICK, 1);
 		itm.addUnsafeEnchantment(Enchantment.DIG_SPEED, 10);
-		ItemMeta ex =  itm.getItemMeta();
-		
+		ItemMeta ex = itm.getItemMeta();
+
 		ex.setDisplayName("next");
 		itm.setItemMeta(ex);
-		inv.setItem( 53,itm);
-		
-		
-		 itm = new ItemStack( Material.STICK, 1);
+		inv.setItem(53, itm);
+
+		itm = new ItemStack(Material.STICK, 1);
 		itm.addUnsafeEnchantment(Enchantment.DIG_SPEED, 10);
-		 ex =  itm.getItemMeta();
-		
+		ex = itm.getItemMeta();
+
 		ex.setDisplayName("back");
 		itm.setItemMeta(ex);
-		inv.setItem( 52,itm);
-		
-		
-		for (int i = 0 ; i < 3 && id + i < allShop.size(); i ++ ) {
+		inv.setItem(52, itm);
+
+		for (int i = 0; i < 3 && id + i < allShop.size(); i++) {
 			AllShop ash = allShop.get(i + id);
-			
-			for ( int j = 0; j < ash.size ; j ++ ) {
-				
+
+			for (int j = 0; j < ash.size; j++) {
+
 				int curPosition = 9 * i * 2;
 				if (j > 4) {
 					curPosition += 4;
 				}
-				
-				if ( i == 1 ) {
+
+				if (i == 1) {
 					curPosition += 4;
 				}
-				
-				 itm = new ItemStack( Material.getMaterial(ash.item[j]) , ash.amount[j],ash.data[j]);
-				 ex =  itm.getItemMeta();
-				ex.setDisplayName("Shop " + (i + id) + " > " + ash.playPrice	);
+
+				itm = new ItemStack(Material.getMaterial(ash.item[j]), ash.amount[j], ash.data[j]);
+				ex = itm.getItemMeta();
+				ex.setDisplayName("Shop " + (i + id) + " > " + ash.playPrice);
 				itm.setItemMeta(ex);
-				
-				inv.setItem(curPosition +j , itm);
-				
+
+				inv.setItem(curPosition + j, itm);
+
 			}
-			
+
 		}
 	}
-	
+
 	@EventHandler
 	public void eventja(InventoryOpenEvent e) {
 
 	}
-	
+
 	@EventHandler
 	public void eventja(InventoryClickEvent e) {
-		if (e.getInventory().getName().equalsIgnoreCase("dew shop")) {
-			e.setCancelled(true);
+		
+		Inventory inv = e.getClickedInventory();
+		if (inv == null) {
+			return;
 		}
+		if (inv.getName().equalsIgnoreCase("dew shop")) {
+			
+			e.setCancelled(true);
+			Player p = (Player) e.getWhoClicked();
+			
+			
+
+			//p.sendMessage("slot " + e.getSlot());
+			
+			
+			if (e.getSlot() == 53) {
+				
+				int curId = inventoryID.get(p);
+
+				curId+=3;
+				
+				
+
+				if (curId > allShop.size() - 1) {
+					curId = allShop.size() - 1;
+				}
+				
+				inventoryID.put(p, curId);
+				updateInventory(inv, p);
+			}
+			else if (e.getSlot() == 52) {
+
+				int curId = inventoryID.get(p);
+
+				curId-=3;
+
+				
+				
+				if (curId < 0) {
+					curId = 0;
+				}
+
+
+				inventoryID.put(p, curId);
+				updateInventory(inv, p);
+			}
+			
+			else {
+				int curId = inventoryID.get(p);
+				int delta = e.getSlot() / 9 / 2;
+				
+				
+				int truely = curId + delta;
+				//p.sendMessage("delta " + truely);
+				
+				// 
+				int space = p.getInventory().firstEmpty();
+				if (space == -1) {
+					p.sendMessage(dprint.r.color(tr.gettr("dew_shop_you_don't_have_space_inventory_can't_buy")));
+					return;
+				}
+				else {
+					// check his money
+					
+					try {
+						if (Economy.getMoney(p.getName()) < allShop.get(truely).playPrice) {
+							
+							p.sendMessage(dprint.r.color(tr.gettr("dew_shop_not_enoght_money_to_bet")));
+							e.setCancelled(true);
+							return;
+						}
+						else {
+							// random item
+							AllShop sh = allShop.get(truely);
+							
+							int rander = rnd.nextInt(allShop.get(truely).size);
+							ItemStack theItem = new ItemStack( Material.getMaterial(  sh.item[rander]) , sh.amount[rander], sh.data[rander]  
+									);
+							//e.setCurrentItem(theItem);
+							
+							
+							Economy.subtract(p.getName(), sh.playPrice);
+							p.getInventory().addItem(theItem);
+							p.sendMessage(dprint.r.color(tr.gettr("dew_shop_you_bought_item_name") +  theItem.getType().name() + ":" + theItem.getData().getData() + tr.gettr("amount") 
+							+ theItem.getAmount() + " ... " + tr.gettr("money_left") + Economy.getMoney(p.getName())));
+							
+							
+							
+							//e.setCancelled(true);
+						}
+						
+					} catch (UserDoesNotExistException | NoLoanPermittedException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
+					
+					
+				}
+			}
+		}
+
 	}
 
 	@EventHandler
@@ -848,16 +944,13 @@ public class DigEventListener2 implements Listener {
 
 		if (e.getMessage().equalsIgnoreCase("/dft shop")) {
 			p.sendMessage("here");
-			Inventory myInventory = Bukkit.createInventory(null,54, "dew shop");
+			Inventory myInventory = Bukkit.createInventory(null, 54, "dew shop");
 			inventory.put(p, myInventory);
 			inventoryID.put(p, 0);
-			
-			
 
 			p.openInventory(myInventory);
-			
+
 			updateInventory(myInventory, p);
-			
 
 		}
 
