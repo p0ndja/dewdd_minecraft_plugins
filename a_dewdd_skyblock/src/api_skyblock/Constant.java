@@ -31,18 +31,7 @@ public class Constant {
 
 	public static int rsBuffer = 1000;
 	
-	public static String getMissionHeader(int mission) {
-		String header = "skyblock_mission_header_";
-	
-		String aa = "";
 
-			aa = tr.gettr(header + mission);
-	
-			
-			
-	
-		return aa;
-	}
 	public static boolean is8_10block(int impo) {
 	
 		switch (impo) {

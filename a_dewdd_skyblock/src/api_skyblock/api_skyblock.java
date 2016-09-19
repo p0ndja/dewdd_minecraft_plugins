@@ -465,7 +465,7 @@ public class api_skyblock {
 
 					lastcreate = System.currentTimeMillis();
 
-					player.sendMessage(getFullMissionHeadAndCurLevel(rs[newid].mission));
+					player.sendMessage( tr.gettr("cur_lv_is") + (rs[newid].mission));
 
 					// add item done
 
@@ -499,7 +499,7 @@ public class api_skyblock {
 
 				if (getplayerinslot(player.getName(), id) > -1) {
 
-					player.sendMessage(dprint.r.color(getFullMissionHeadAndCurLevel(rs[id].mission)));
+					player.sendMessage(dprint.r.color(tr.gettr("cur_lv_is") + (rs[id].mission)));
 				}
 
 				// check his
@@ -1069,11 +1069,7 @@ strLine = br.readLine();
 		return b;
 	}
 
-	public String getFullMissionHeadAndCurLevel(int mission) {
-		String header = Constant.getMissionHeader(mission);
-		String aa = tr.gettr("is_cur_level_mission_showing_") + " " + mission + " " + header;
-		return aa;
-	}
+	
 
 	public int getOWNIslandID(String player, boolean rebuild) {
 		// loop for check exits rs id and return or not build new one
@@ -1241,7 +1237,7 @@ strLine = br.readLine();
 	}
 
 	public synchronized void nextMission(int rsID, int cur) {
-		printToAllPlayerOnRS(rsID, (Constant.getMissionHeader(rs[rsID].mission) + " " + tr.gettr("mission_complete")));
+		printToAllPlayerOnRS(rsID, ((rs[rsID].mission) + " " + tr.gettr("mission_complete")));
 
 		// dprint.r.printAll("0 calling apply reward");
 		applyReward(rsID);
@@ -1249,13 +1245,13 @@ strLine = br.readLine();
 		printToAllPlayerOnRS(rsID, tr.gettr("next_mission"));
 
 		dprint.r.printAdmin(tr.gettr("owner_of_island_name") + rs[rsID].p[0] + " " + tr.gettr("did_mission_complete")
-				+ " " + Constant.getMissionHeader(rs[rsID].mission));
+				+ " " +(rs[rsID].mission));
 
 		int tmpID = (cur);
 		tmpID++;
 		rs[rsID].mission = (tmpID);
 
-		printToAllPlayerOnRS(rsID, (Constant.getMissionHeader(rs[rsID].mission) + " ..."));
+		printToAllPlayerOnRS(rsID, ((rs[rsID].mission) + " ..."));
 
 		saveRSProtectFile();
 

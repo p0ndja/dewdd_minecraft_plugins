@@ -980,14 +980,88 @@ public class DigEventListener2 implements Listener {
 		}
 
 		if (inv.getName().equalsIgnoreCase("sky lv")) {
-			
-			Player p =  (Player) e.getPlayer();
-			p.sendMessage("inv lv closed");
-			
+
+			Player p = (Player) e.getPlayer();
+
+			int idx = dew.getprotectid(p.getLocation().getBlock());
+
+			LV1000Type lv = dew.lv1000.get(dew.rs[idx].mission);
+
+			boolean allDone = true;
+
+			for (int i = 0; i < lv.needSize; i++) {
+				boolean there = false;
+
+				Material m1 = lv.getMaterial(lv.needNameData[i]);
+
+				ItemStack needItem = new ItemStack(m1, lv.needAmount[i], lv.getData(lv.needNameData[i]));
+
+				for (int j = 11; j < 44; j++) {
+					ItemStack itemInInv = inv.getItem(j);
+					if (itemInInv == null) {
+						continue;
+					}
+
+					if (needItem.getType().name().equalsIgnoreCase(itemInInv.getType().name())) {
+						if (needItem.getData().getData() == itemInInv.getData().getData()) {
+							if (needItem.getAmount() <= itemInInv.getAmount()) {
+								there = true;
+								break;
+
+							}
+						}
+
+					}
+
+					if (there == true) {
+						break;
+					}
+				}
+
+				if (there == false) {
+					allDone = false;
+					break;
+				}
+
+			}
+
+			// p.sendMessage("allDone " + allDone);
+			if (allDone == false) {
+				//p.sendMessage(dprint.r.color(tr.gettr("sky_lv_item_not_enough_to_complete_lv_so_return_all_item")));
+
+				// drop item
+
+				for (int j = 11; j < 44; j++) {
+					ItemStack itemInInv = inv.getItem(j);
+					if (itemInInv == null) {
+						continue;
+					}
+
+					p.getWorld().dropItem(p.getLocation().getBlock().getRelative(0, 10, 0).getLocation(), itemInInv);
+				}
+
+			} else {
+				p.sendMessage(
+						dprint.r.color(tr.gettr("sky_lv_got_all_item_to_completed_cur_lv_") + dew.rs[idx].mission));
+
+				dew.rs[idx].mission ++;
+				dew.saveRSProtectFile();
+				
+				// give reward
+				for (int j = 0; j < lv.rewardSize; j++) {
+					ItemStack rewardIt = new ItemStack(lv.getMaterial(lv.rewardNameData[j]),
+
+							lv.rewardAmount[j], lv.getData(lv.rewardNameData[j]));
+
+					p.getWorld().dropItem(p.getLocation().getBlock().getRelative(0, 10, 0).getLocation(), rewardIt);
+				}
+
+			}
+
+			// drop item
 		}
 	}
-	
-	
+
 	@EventHandler
 	public void eventja(InventoryOpenEvent e) {
 
@@ -1010,58 +1084,6 @@ public class DigEventListener2 implements Listener {
 				e.setCancelled(true);
 			}
 
-			// check inventory
-
-			Player p = (Player) e.getWhoClicked();
-			int idx = dew.getprotectid(p.getLocation().getBlock());
-
-			LV1000Type lv = dew.lv1000.get(dew.rs[idx].mission);
-
-			boolean allDone = true;
-
-			for (int i = 0; i < lv.needSize; i++) {
-				boolean there = false;
-
-				Material m1 = lv.getMaterial(lv.needNameData[i]);
-
-				ItemStack needItem = new ItemStack(m1, lv.needAmount[i], lv.getData(lv.needNameData[i]));
-
-				for (int j = 11; j < 44; j++) {
-					ItemStack itemInInv = inv.getItem(j);
-					if (itemInInv == null) {
-						continue;
-					}
-					
-					
-					if (needItem.getType().name().equalsIgnoreCase(itemInInv.getType().name())) {
-						if (needItem.getData().getData() == itemInInv.getData().getData()) {
-							if (needItem.getAmount() <= itemInInv.getAmount()) {
-							there = true;
-							break;
-							
-							}
-						}
-						
-					}
-					
-					if (there == true) {
-						break;
-					}
-				}
-				
-				if (there == false ) {
-					allDone = false;
-					break;
-				}
-
-			}
-			
-			
-			p.sendMessage("allDone " + allDone);
-			if (allDone == false) {
-				return;
-			}
-			
 			
 
 		}
@@ -1438,13 +1460,13 @@ public class DigEventListener2 implements Listener {
 						api_skyblock.rs[getid].mission = 0;
 						dprint.r.printAll(tr.gettr("reseted_lv_of_is_this_guys") + api_skyblock.rs[getid].p[0]);
 
-						dew.printToAllPlayerOnRS(getid, Constant.getMissionHeader(dew.rs[getid].mission));
+						dew.printToAllPlayerOnRS(getid, tr.gettr("cur_lv_is") + (dew.rs[getid].mission));
 
 					} else if (m.length == 3) {
 						api_skyblock.rs[getid].mission = (Integer.parseInt(m[2]));
 						dprint.r.printAll(tr.gettr("reseted_lv_of_is_this_guys") + api_skyblock.rs[getid].p[0]);
 
-						dew.printToAllPlayerOnRS(getid, Constant.getMissionHeader(dew.rs[getid].mission));
+						dew.printToAllPlayerOnRS(getid, tr.gettr("cur_lv_is") +(dew.rs[getid].mission));
 
 					} else {
 						player.sendMessage(tr.gettr("/sky resetlv <lv>"));
@@ -1600,8 +1622,15 @@ public class DigEventListener2 implements Listener {
 								dprint.r.color(tr.gettr("owner_of_this_island_name") + " = " + dew.rs[getid].p[0]));
 					}
 
-					player.sendMessage(dprint.r.color(dew.getFullMissionHeadAndCurLevel(dew.rs[getid].mission)));
-					dew.printToAllPlayerOnRS(getid, Constant.getMissionHeader(dew.rs[getid].mission));
+					
+					if (dew.rs[getid].mission >= dew.lv1000.size()) {
+						player.sendMessage(dprint.r.color(tr.gettr("sky_lv_all_lv_done_thanks_to_play")));
+						return;
+						
+					}
+					
+					player.sendMessage(dprint.r.color(tr.gettr("cur_lv_is") + (dew.rs[getid].mission)));
+					dew.printToAllPlayerOnRS(getid, (tr.gettr("cur_lv_is") + dew.rs[getid].mission));
 
 					Inventory inv = Bukkit.createInventory(null, 54, "sky lv");
 					updateLVInventory(inv, player);
@@ -2135,7 +2164,7 @@ public class DigEventListener2 implements Listener {
 			player.sendMessage(tr.gettr("type_this_command_for_create_new_skyblock"));
 
 		} else {
-			player.sendMessage(dew.getFullMissionHeadAndCurLevel(api_skyblock.rs[rsid].mission));
+			player.sendMessage(tr.gettr("cur_lv_is") +(api_skyblock.rs[rsid].mission));
 
 		}
 
