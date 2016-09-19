@@ -161,7 +161,7 @@ public class api_skyblock {
 					rs[newid].p[0] = player.getName();
 					rs[newid].p[1] = flag_autocut;
 					rs[newid].p[2] = flag_autoabsorb;
-					rs[newid].mission = 0;
+					rs[newid].mission = Missional.LV_0_COBBLESTONE_MACHINE;
 					// clean target chunk and build island
 					Chunk chunk = null;
 
@@ -348,7 +348,7 @@ public class api_skyblock {
 		public int y;
 		public int z;
 
-		public int mission = 0;
+		public Missional mission = Missional.LV_0_COBBLESTONE_MACHINE;
 		
 		public int tmpValue1 = 0;
 
@@ -369,7 +369,10 @@ public class api_skyblock {
 	public static int rsMax = 0;
 
 	public static JavaPlugin ac = null;
-
+	
+	public static int LV_2_USE_BONE_MEAL_AMOUNT = 45;
+	public static int LV_3_DROP_TOUCH_AMOUNT = 64;
+	
 	public static boolean cando(Block block, Player player, String mode) {
 		if ((player.hasPermission(poveride)) == true) {
 			return true;
@@ -508,7 +511,7 @@ public class api_skyblock {
 		// dprint.r.printAll("appyreward " + rsID + " mission " +
 		// rs[rsID].mission);
 		switch (rs[rsID].mission) {
-		case 0: // get cobble stone
+		case LV_0_COBBLESTONE_MACHINE: // get cobble stone
 
 			// dprint.r.printAll("nope");
 
@@ -544,7 +547,7 @@ public class api_skyblock {
 			printToAllPlayerOnRS(rsID,tr.gettr("got_reward_lv_" + rs[rsID].mission));
 
 			break;
-		case 1:
+		case LV_1_Break_STONE:
 
 			 bo = getBlockMiddleRS(rsID);
 			 bo2 = searchSpaceCube(bo, 5, 5);
@@ -578,7 +581,7 @@ public class api_skyblock {
 			rs[rsID].tmpValue1 = 0;
 			
 			break;
-		case 2:
+		case LV_2_USE_BONE_MEAL:
 
 
 			 bo = getBlockMiddleRS(rsID);
@@ -670,6 +673,44 @@ public class api_skyblock {
 
 
 			break;
+			
+			
+		case LV_3_DROP_TOUCH: // get cobble stone
+
+			// dprint.r.printAll("nope");
+
+			// ItemStack itm = new ItemStack(Material.IRON_AXE , 1);
+
+			// giveItemToAllPlayerInRS(rsID, itm.getData().toItemStack(1));
+
+			 bo = getBlockMiddleRS(rsID);
+			 bo2 = searchSpaceCube(bo, 5, 5);
+
+			for (int i = 0; i < 5; i++) {
+				for (int i2 = 0; i2 < 5; i2++) {
+					for (int i3 = 0; i3 < 5; i3++) {
+
+						Block bo3 = bo2.getRelative(i, i2, i3);
+						if (bo3.getType() != Material.AIR) {
+							dprint.r.printAll(tr.gettr("error while applyReward lv 0 block is != air"));
+							break;
+						}
+
+						if (rnd.nextInt(100) > 90) {
+							bo3.setType(Material.IRON_ORE);
+						}
+
+					}
+				}
+			}
+
+		
+			printToAllPlayerOnRS (rsID,tr.gettr("generated_small_island_at") 
+					+ " " + bo2.getX() + "," + bo2.getY() + "," + bo2.getZ());
+			
+			printToAllPlayerOnRS(rsID,tr.gettr("got_reward_lv_" + rs[rsID].mission));
+
+			break;
 		default:
 
 			printToAllPlayerOnRS(rsID, tr.gettr("got_reward_lv_" + rs[rsID].mission));
@@ -677,6 +718,9 @@ public class api_skyblock {
 			break;
 		}
 	}
+	
+	
+	
 
 	public void createSkyblockRS(Player player) {
 		CreateSkyblockRS ab = new CreateSkyblockRS(player);
@@ -699,29 +743,37 @@ public class api_skyblock {
 
 		return b;
 	}
+	
+	
 
-	public String getFullMissionHeadAndCurLevel(int mission) {
+	
+	
+	public String getFullMissionHeadAndCurLevel(Missional mission) {
 		String header = getMissionHeader(mission);
 		String aa = tr.gettr("is_cur_level_mission_showing_") + " " + mission + " " + header;
 		return aa;
 	}
 
-	public String getMissionHeader(int mission) {
+	public String getMissionHeader(Missional mission) {
 		String header = "skyblock_mission_header_";
 
 		String aa = "";
 		switch (mission) {
-		case 0: // get cobble stone
+		case LV_0_COBBLESTONE_MACHINE: // get cobble stone
 			aa = tr.gettr(header + mission);
 
 			break;
-		case 1:
+		case LV_1_Break_STONE:
 
 			aa = tr.gettr(header + mission);
 			break;
-		case 2:
+		case LV_2_USE_BONE_MEAL:
 			aa = tr.gettr(header + mission);
 			break;
+		case LV_3_DROP_TOUCH:
+			aa = tr.gettr(header + mission);
+			break;
+			
 		default:
 			aa = tr.gettr(header + "default");
 			break;
@@ -832,7 +884,8 @@ public class api_skyblock {
 				}
 
 				if (m.length == 24) {
-					rs[rsMax - 1].mission = (int) Double.parseDouble(m[23]);
+					int bb = (int) Double.parseDouble(m[23]);
+					rs[rsMax - 1].mission = Missional.idToMission(bb) ;
 
 				}
 
@@ -855,8 +908,12 @@ public class api_skyblock {
 		applyReward(rsID);
 
 		printToAllPlayerOnRS(rsID, tr.gettr("next_mission"));
+		
+		dprint.r.printAdmin(tr.gettr("owner_of_island_name") + rs[rsID].p[0] +  " " + tr.gettr("did_mission_complete") + " "   +    getMissionHeader(rs[rsID].mission) );
 
-		rs[rsID].mission++;
+		int tmpID =  Missional.getID(  rs[rsID].mission);
+		tmpID ++;
+		rs[rsID].mission = Missional.idToMission(tmpID);
 
 		printToAllPlayerOnRS(rsID, (getMissionHeader(rs[rsID].mission) + " ..."));
 
@@ -914,7 +971,7 @@ public class api_skyblock {
 
 				}
 
-				wr = wr + " " + rs[y].mission;
+				wr = wr + " " + rs[y].mission.toID();
 
 				fwriter.write(wr + System.getProperty("line.separator"));
 

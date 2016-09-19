@@ -40,6 +40,7 @@ import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerBucketEmptyEvent;
 import org.bukkit.event.player.PlayerBucketFillEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
+import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
@@ -52,8 +53,10 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.util.Vector;
 
+import api_skyblock.Missional;
 import api_skyblock.api_skyblock;
 import dewddtran.tr;
+import sun.util.resources.CalendarData;
 
 public class DigEventListener2 implements Listener {
 
@@ -80,21 +83,18 @@ public class DigEventListener2 implements Listener {
 		}
 	}
 
-	
-  
-	public   boolean checkNearBlock(Block startBlock, int radiusSearch , Material searchBlock) {
+	public boolean checkNearBlock(Block startBlock, int radiusSearch, Material searchBlock) {
 		boolean foundx = false;
-		
+
 		int x2 = startBlock.getX();
 		int y2 = startBlock.getY();
 		int z2 = startBlock.getZ();
-		
-		
+
 		for (int x3 = x2 - radiusSearch; x3 <= x2 + radiusSearch; x3++) {
 			for (int y3 = y2 - radiusSearch; y3 <= y2 + radiusSearch; y3++) {
 				for (int z3 = z2 - radiusSearch; z3 <= y2 + radiusSearch; z3++) {
 					Block bSpace = startBlock.getWorld().getBlockAt(x3, y3, z3);
-					if (bSpace.getType() ==  searchBlock) {
+					if (bSpace.getType() == searchBlock) {
 						foundx = true;
 						break;
 					}
@@ -112,51 +112,53 @@ public class DigEventListener2 implements Listener {
 			}
 
 		}
-		
+
 		return foundx;
-		
+
 	}
-	
+
 	class LV1DestroyStone implements Runnable {
 		private Block b;
 		private int curRSID;
 
-		public  LV1DestroyStone(Block b, int rsID) {
-			//dprint.r.printAll("lv1destroystone constructure");
+		public LV1DestroyStone(Block b, int rsID) {
+			// dprint.r.printAll("lv1destroystone constructure");
 			this.b = b;
 			this.curRSID = rsID;
 		}
 
 		@Override
 		public void run() {
-			//dprint.r.printAll("running ...");
-			boolean xy = checkNearBlock(b , 5, Material.STONE);
-		//	dprint.r.printAll("lv1breakALLSTONE " + xy);
-			
-			
+			// dprint.r.printAll("running ...");
+			boolean xy = checkNearBlock(b, 5, Material.STONE);
+			// dprint.r.printAll("lv1breakALLSTONE " + xy);
+
 			if (xy == false) {
-				dew.nextMission(curRSID);
+				
+				
+				CallNextMission no = new CallNextMission(curRSID);
+				Bukkit.getScheduler().scheduleSyncDelayedTask(ac, no);
 			}
-			
+
 		}
 	}
-	
-	
-	class callNextMission implements Runnable {
+
+	class CallNextMission implements Runnable {
 
 		private int curRSID;
-		public callNextMission(int rsid) {
-		
+
+		public CallNextMission(int rsid) {
+
 			this.curRSID = rsid;
 		}
 
 		@Override
 		public void run() {
-			 dew.nextMission(curRSID);
+			dew.nextMission(curRSID);
 		}
-		
+
 	}
-	
+
 	class Autocut implements Runnable {
 		private Block b;
 		private int curRSID;
@@ -181,10 +183,11 @@ public class DigEventListener2 implements Listener {
 				break;
 			case COBBLESTONE:
 				// dprint.r.printAll("0 autocut");
-				if (api_skyblock.rs[curRSID].mission == 0) {
+				if (api_skyblock.rs[curRSID].mission == Missional.LV_0_COBBLESTONE_MACHINE) {
 
 					// dprint.r.printAll("0 alling nextMission");
-					dew.nextMission(curRSID);
+					CallNextMission ee = new CallNextMission(curRSID);
+					Bukkit.getScheduler().scheduleSyncDelayedTask(ac, ee);
 
 				}
 
@@ -356,15 +359,10 @@ public class DigEventListener2 implements Listener {
 
 			e.setCancelled(true);
 		}
-		
-		
-		
 
 		System.gc();
 
 	}
-	
-	
 
 	@EventHandler
 	public void eventja(BlockBreakEvent e) {
@@ -379,38 +377,34 @@ public class DigEventListener2 implements Listener {
 			e.setCancelled(true);
 			return;
 		}
-		
-		
+
 		int getid = api_skyblock.getprotectid(player.getLocation().getBlock());
 
 		if (getid > -1) {
 			// have protect
-			
+
 			// check you are in that home
-			
-			int gx =  dew.getplayerinslot(player.getName() , getid);
-			
-		//	dprint.r.printAll("blockbreak lv 1 gx = " + gx);
-			
+
+			int gx = dew.getplayerinslot(player.getName(), getid);
+
+			// dprint.r.printAll("blockbreak lv 1 gx = " + gx);
+
 			if (gx > -1) {
-				
+
 				// check mission
-				if (api_skyblock.rs[getid].mission == 1) {
-					
+				if (api_skyblock.rs[getid].mission == Missional.LV_1_Break_STONE) {
+
 					// search nearest stone
-					Block bd = Bukkit.getWorld("world").getBlockAt(api_skyblock.rs[getid].x,
-							api_skyblock.rs[getid].y ,api_skyblock.rs[getid].z);
-					
+					Block bd = Bukkit.getWorld("world").getBlockAt(api_skyblock.rs[getid].x, api_skyblock.rs[getid].y,
+							api_skyblock.rs[getid].z);
+
 					LV1DestroyStone ee = new LV1DestroyStone(bd, getid);
 					Bukkit.getScheduler().scheduleSyncDelayedTask(ac, ee);
-					
-					
+
 				}
 			}
-			
-			
+
 		}
-		
 
 	}
 
@@ -472,44 +466,40 @@ public class DigEventListener2 implements Listener {
 			e.setCancelled(true);
 			return;
 		}
-		
+
 		int getid = api_skyblock.getprotectid(player.getLocation().getBlock());
 
 		if (getid > -1) {
 			// have protect
-			
+
 			// check you are in that home
-			
-			int gx =  dew.getplayerinslot(player.getName() , getid);
-			
-		//	dprint.r.printAll("blockbreak lv 1 gx = " + gx);
-			
+
+			int gx = dew.getplayerinslot(player.getName(), getid);
+
+			// dprint.r.printAll("blockbreak lv 1 gx = " + gx);
+
 			if (gx > -1) {
-				
+
 				// check mission
-				if (api_skyblock.rs[getid].mission == 2) { // bone
-					
+				if (api_skyblock.rs[getid].mission == Missional.LV_2_USE_BONE_MEAL) { // bone
+
 					if (player.getItemInHand().getType() == Material.INK_SACK) {
-						api_skyblock.rs[getid].tmpValue1 ++;
-						dew.printToAllPlayerOnRS(getid, 
-								tr.gettr("bone_meal_use_counting_=") + api_skyblock.rs[getid].tmpValue1 + "/45");
-						
-						if (api_skyblock.rs[getid].tmpValue1 >= 45) {
-							
-							callNextMission ee = new callNextMission(getid);
+						api_skyblock.rs[getid].tmpValue1++;
+						dew.printToAllPlayerOnRS(getid,
+								tr.gettr("bone_meal_use_counting_=") + api_skyblock.rs[getid].tmpValue1 + "/" + api_skyblock.LV_2_USE_BONE_MEAL_AMOUNT);
+
+						if (api_skyblock.rs[getid].tmpValue1 >= api_skyblock.LV_2_USE_BONE_MEAL_AMOUNT) {
+
+							CallNextMission ee = new CallNextMission(getid);
 							Bukkit.getScheduler().scheduleSyncDelayedTask(ac, ee);
 						}
 					}
-					
-					
+
 					// search nearest stone
-					
-					
-					
+
 				}
 			}
-			
-			
+
 		}
 
 	}
@@ -962,13 +952,11 @@ public class DigEventListener2 implements Listener {
 
 					}
 
-					api_skyblock.rs[getid].mission = 0;
+					api_skyblock.rs[getid].mission = Missional.LV_0_COBBLESTONE_MACHINE;
 					dprint.r.printAll(tr.gettr("reseted_lv_of_is_this_guys") + api_skyblock.rs[getid].p[0]);
 
-					
-					dew.printToAllPlayerOnRS(getid,dew.getMissionHeader(dew.rs[getid].mission));
-					
-					
+					dew.printToAllPlayerOnRS(getid, dew.getMissionHeader(dew.rs[getid].mission));
+
 				} else if (m[1].equalsIgnoreCase("go")) {
 					// go
 
@@ -1071,9 +1059,8 @@ public class DigEventListener2 implements Listener {
 
 					}
 
-					
 					player.sendMessage("lv = " + api_skyblock.rs[getid].mission);
-					dew.printToAllPlayerOnRS(getid,  dew.getMissionHeader(dew.rs[getid].mission));
+					dew.printToAllPlayerOnRS(getid, dew.getMissionHeader(dew.rs[getid].mission));
 				}
 
 				else if (m[1].equalsIgnoreCase("owner")) {
@@ -1251,6 +1238,45 @@ public class DigEventListener2 implements Listener {
 	}
 
 	@EventHandler
+	public void eventja(PlayerDropItemEvent e) {
+		if (!api_skyblock.isrunworld(e.getPlayer().getWorld().getName())) {
+			return;
+		}
+
+		Player player = e.getPlayer();
+		int getid = api_skyblock.getprotectid(player.getLocation().getBlock());
+
+		if (getid > -1) {
+			// have protect
+
+			// check you are in that home
+
+			int gx = dew.getplayerinslot(player.getName(), getid);
+
+			// dprint.r.printAll("blockbreak lv 1 gx = " + gx);
+
+			if (gx > -1) {
+
+				// check mission
+				if (api_skyblock.rs[getid].mission == Missional.LV_3_DROP_TOUCH) {
+					if (e.getItemDrop() != null ) {
+						if (e.getItemDrop().getItemStack().getType() == Material.TORCH) {
+							if (e.getItemDrop().getItemStack().getAmount() >= api_skyblock.LV_3_DROP_TOUCH_AMOUNT){
+								e.getItemDrop().getItemStack().setType(Material.CLAY);
+								e.getItemDrop().getItemStack().setAmount(10);
+								
+								CallNextMission ee = new CallNextMission(getid);
+								Bukkit.getScheduler().scheduleSyncDelayedTask(ac, ee);
+							}
+						}
+					}
+				}
+			}
+
+		}
+	}
+
+	@EventHandler
 	public void eventja(PlayerInteractEvent e) {
 
 		if (!api_skyblock.isrunworld(e.getPlayer().getWorld().getName())) {
@@ -1277,7 +1303,7 @@ public class DigEventListener2 implements Listener {
 				int pidmax = 0;
 
 				for (int i = 0; i < api_skyblock.rsMax; i++) {
-					if (api_skyblock.rs[i].mission > 0) {
+					if (api_skyblock.rs[i].mission != Missional.LV_0_COBBLESTONE_MACHINE) {
 						pid[pidmax] = i;
 						pidmax++;
 
@@ -1290,7 +1316,7 @@ public class DigEventListener2 implements Listener {
 				for (int i = 0; i < pidmax; i++) {
 					for (int j = 0; j < (pidmax - 1 - i); j++) {
 
-						if (api_skyblock.rs[pid[j]].mission < api_skyblock.rs[pid[j + 1]].mission) {
+						if (api_skyblock.rs[pid[j]].mission.toID() < api_skyblock.rs[pid[j + 1]].mission.toID()) {
 							t = pid[j];
 
 							pid[j] = pid[j + 1];
