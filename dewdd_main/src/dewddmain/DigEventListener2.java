@@ -1676,7 +1676,8 @@ public class DigEventListener2 implements Listener {
 
 			// call fixtool
 			
-			if (player.getItemInHand() != null) {
+			if (player.getItemInHand() != null) 
+				if (player.getItemInHand().getItemMeta() != null)
 			if (player.getItemInHand().getItemMeta().getDisplayName() != null ) {
 			String itName[] = player.getItemInHand().getItemMeta().getDisplayName().split(" ");
 			
@@ -1699,7 +1700,7 @@ public class DigEventListener2 implements Listener {
 			}
 			
 			}
-			}
+			
 			
 			dew.randomplaynote(player.getLocation());
 			
@@ -1767,7 +1768,8 @@ public class DigEventListener2 implements Listener {
 				// player.getItemInHand().getTypeId());
 
 				
-				if (player.getItemInHand() != null) {
+				if (player.getItemInHand() != null) 
+					if (player.getItemInHand().getItemMeta() != null)
 				if (player.getItemInHand().getItemMeta().getDisplayName() != null) {
 				String itName[] = player.getItemInHand().getItemMeta().getDisplayName().split(" ");
 				
@@ -1789,7 +1791,7 @@ public class DigEventListener2 implements Listener {
 					
 				}
 				}
-				}
+				
 				
 				if (player.getItemInHand().getTypeId() == Material.REDSTONE_TORCH_OFF.getId()
 						|| player.getItemInHand().getTypeId() == Material.REDSTONE_TORCH_ON.getId())

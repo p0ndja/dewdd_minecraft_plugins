@@ -9,7 +9,7 @@ import org.bukkit.entity.Player;
 
 public abstract class dewset_interface extends dewsetdatabase {
 
-	public String	flag_everyone				= "everyone";
+	public String	flag_everyone				= "<everyone>";
 	public String	flag_monster				= "<monster>";
 	public String	flag_noinwater				= "<noinwater>";
 

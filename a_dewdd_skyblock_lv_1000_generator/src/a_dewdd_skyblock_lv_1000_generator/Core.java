@@ -47,6 +47,10 @@ public class Core {
 
 		int tmpAllShopUniqueDone = 0;
 		int curMissionItemSwapPosition = 0;
+		
+		
+		LinkedList<AllBlockInGameType> tmpAllItemInShop = new LinkedList<AllBlockInGameType>();
+		tmpAllItemInShop.clear();
 
 		boolean usedItShopList[] = new boolean[Main.co.allBlockInGameAsList.size()];
 
@@ -60,6 +64,9 @@ public class Core {
 		boolean usedItRewardList[] = new boolean[Main.co.allBlockInGameAsList.size()];
 		int tmpUsedItNeedUniqueCount = 0;
 		int tmpUsedItRewardUniqueCount = 0;
+		
+		
+		
 		
 		for (int i = 0; i < Main.co.allBlockInGameAsList.size(); i++) {
 			usedItNeedList[i] = false;
@@ -91,7 +98,50 @@ public class Core {
 			// ****************************************************
 
 			// price shift <amount> shift <amount> shift <amount>
+			
+			boolean tmpBoolean[] = new boolean[allBlockInGameAsList.size()];
+			for (int i = 0 ; i < allBlockInGameAsList.size() ; i ++ ){
+				tmpBoolean[i] = false;
+			}
+			
+			// grab all item
+			while( tmpAllItemInShop.size() < allBlockInGameAsList.size()) {
+				double tmpReadChro = Math.abs(chromosome[curChro]);
 
+				AllBlockInGameType bo =  new AllBlockInGameType();
+				
+				
+				
+				int itemSlot = getNextUnuseMissionItem(
+						(int) (tmpReadChro * swapMultipy)
+						, curMissionItemSwapPosition,
+						tmpBoolean);
+				
+				curChro ++;
+				
+				
+				curMissionItemSwapPosition = itemSlot;
+				
+			
+				bo.theName = allBlockInGameAsList.get(itemSlot).theName;
+				bo.data = allBlockInGameAsList.get(itemSlot).data;
+				// ........
+				tmpReadChro = Math.abs(chromosome[curChro]);
+				
+				bo.curAmount = (int) (tmpReadChro
+						* allBlockInGameAsList.get(itemSlot).maxStack);
+				curChro ++;
+				
+				
+				
+				tmpAllItemInShop.add(bo);
+				
+
+				continue;
+			}
+
+			
+			
 			while (tmpAllShopUniqueDone < allBlockInGameAsList.size()) {
 				d.pl("tmpAllShop > " + curChro);
 
