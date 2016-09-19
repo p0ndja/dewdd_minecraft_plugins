@@ -15,6 +15,7 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.plugin.Plugin;
 
 import dprint.dprint;
@@ -36,7 +37,12 @@ public class tr {
 
 	public static ArrayList<runworldtype>	runworld	= new ArrayList<runworldtype>();
 
-	public static void generaterunworldfile() {
+	public static String locationToString(Location location) {
+		String a = location.getX() + "," + location.getY() + "," + location.getZ();
+		return a;
+	}
+	
+	public static void generateRunWorldFile() {
 
 		System.out.println("generating_runworld_file");
 
@@ -55,12 +61,12 @@ public class tr {
 
 		}
 
-		tr.writefile("dewdd_tran", "drunworld.txt", r);
-		tr.loadrunworldfile();
+		tr.writeFile("dewdd_tran", "drunworld.txt", r);
+		tr.loadRunWorldFile();
 
 	}
 
-	public static String[] getlastonline(int day, String path) {
+	public static String[] getLastOnline(int day, String path) {
 
 		String[] re = new String[3000];
 		int remax = 0;
@@ -163,7 +169,7 @@ public class tr {
 		so = so.replace(" ", "_");
 
 		if (tr.dtmax == 0) {
-			tr.loadtrfile();
+			tr.loadTrFile();
 
 		}
 
@@ -180,8 +186,8 @@ public class tr {
 		tr.dt[tr.dtmax - 1].s = so;
 		tr.dt[tr.dtmax - 1].an = so;
 
-		tr.savetrfile();
-		tr.loadtrfile();
+		tr.saveTrFile();
+		tr.loadTrFile();
 
 		return so + " ";
 	}
@@ -191,7 +197,7 @@ public class tr {
 		so = so.replace(" ", "_");
 
 		if (tr.dtmax == 0) {
-			tr.loadtrfile();
+			tr.loadTrFile();
 
 		}
 
@@ -209,8 +215,8 @@ public class tr {
 		tr.dt[tr.dtmax - 1].s = so;
 		tr.dt[tr.dtmax - 1].an = "-1";
 
-		tr.savetrfile();
-		tr.loadtrfile();
+		tr.saveTrFile();
+		tr.loadTrFile();
 
 		return -1;
 	}
@@ -288,7 +294,7 @@ public class tr {
 		return null;
 	}
 
-	public static void loadrunworldfile() {
+	public static void loadRunWorldFile() {
 
 		String lo[] = tr.loadfile("dewdd_tran", "drunworld.txt");
 		System.out.println("lo size = " + lo.length);
@@ -297,7 +303,7 @@ public class tr {
 
 		if (lo.length == 0) {
 			System.out.println("drunworld_empty_generateing_it");
-			tr.generaterunworldfile();
+			tr.generateRunWorldFile();
 			return;
 		}
 
@@ -350,7 +356,7 @@ public class tr {
 
 	}
 
-	public static void loadtrfile() {
+	public static void loadTrFile() {
 		String worldf = "dew_tr.txt";
 
 		File dir = new File(tr.folder_name);
@@ -411,7 +417,7 @@ public class tr {
 		}
 	}
 
-	public static void savetrfile() {
+	public static void saveTrFile() {
 
 		File dir = new File(tr.folder_name);
 		dir.mkdir();
@@ -463,7 +469,7 @@ public class tr {
 		// ******************************
 	}
 
-	public static boolean writefile(String folderpath, String filename,
+	public static boolean writeFile(String folderpath, String filename,
 			String data[]) {
 
 		File dir = new File("plugins" + File.separator + folderpath);
