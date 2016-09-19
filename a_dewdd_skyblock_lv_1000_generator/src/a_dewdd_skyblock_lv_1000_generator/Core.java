@@ -42,7 +42,7 @@ public class Core {
 						curMissionItemSwapPosition);
 
 			} else {
-				SellableType x = sell.get(tmpSell.size() - 1).copyIt();
+				SellableType x = sell.get(tmpSell.size()).copyIt();
 				x.sellPerPrice = chromosome[curChro];
 
 				tmpSell.add(x);
@@ -60,7 +60,9 @@ public class Core {
 
 		if (tmpAllShopUniqueDone < mission.size()) {
 
-			if (tmpReading.size() <= (1 + (minShopSize*2))) {
+			if (tmpReading.size() >= (1 + (minShopSize*2)) && 
+				tmpReading.size() <= (1 + maxShopSize*2)   
+				 && tmpReading.size()%2 == 1) {
 
 				if (chromosome[curChro] <= 0 && tmpAllShopUniqueDone < mission.size() ) { // that mean do it now
 					AllShop x = new AllShop();
@@ -73,12 +75,13 @@ public class Core {
 						
 						x.Item[x.size] = mission.get(itemSlot).theName;
 						x.data[x.size] = mission.get(itemSlot).data;
-						x.amount[x.size] = (int)tmpReading.get(i+1).doubleValue();
+						x.amount[x.size] = (int)(tmpReading.get(i+1).doubleValue() * mission.get(itemSlot).maxStack);
 						i ++;
 						
 						tmpAllShopUniqueDone ++;
 						x.size ++;
 					}
+					
 					
 					tmpAllShop.add(x);
 					tmpReading.clear();
@@ -99,7 +102,7 @@ public class Core {
 						
 						x.Item[x.size] = mission.get(itemSlot).theName;
 						x.data[x.size] = mission.get(itemSlot).data;
-						x.amount[x.size] = (int)tmpReading.get(i+1).doubleValue();
+						x.amount[x.size] = (int)(tmpReading.get(i+1).doubleValue() * mission.get(itemSlot).maxStack);
 						i ++;
 						
 						tmpAllShopUniqueDone ++;
