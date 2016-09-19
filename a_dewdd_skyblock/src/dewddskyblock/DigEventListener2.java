@@ -1065,10 +1065,17 @@ public class DigEventListener2 implements Listener {
 					p.getWorld().dropItem(p.getLocation().getBlock().getRelative(0, 10, 0).getLocation(), itemInInv);
 				}
 
+				p.sendMessage(dprint.r
+						.color(tr.gettr("sky_c_not_enough_item_to_complete_c")));
+				
 			} else {
 				p.sendMessage(dprint.r
 						.color(tr.gettr("sky_c_got_all_item_to_completed_cur_c_") + api_skyblock.rs[idx].mission));
 
+				dprint.r.printAll(dprint.r
+						.color(p.getName() + " = " + tr.gettr("sky_c_got_all_item_to_completed_cur_c_") + api_skyblock.rs[idx].mission));
+
+				
 				api_skyblock.rs[idx].mission++;
 				dew.saveRSProtectFile();
 
