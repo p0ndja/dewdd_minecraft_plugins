@@ -34,7 +34,7 @@ public class DigEventListener2 implements Listener {
 
 	@EventHandler
 	public void eventja(EntityChangeBlockEvent e) {
-		if (tr.isrunworld(ac.getName(), e.getEntity().getLocation().getWorld().getName()) == false)
+		if (!tr.isrunworld(ac.getName(), e.getEntity().getLocation().getWorld().getName()) )
 			return;
 
 		if (e.getEntity() == null)

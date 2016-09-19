@@ -27,6 +27,7 @@ import dewddflower.dewset;
 import dewddflower.dewset_interface;
 import dewddtran.tr;
 import li.IDDataType;
+import net.minecraft.server.v1_9_R1.Chunk;
 
 public class DigEventListener2 implements Listener {
 
@@ -231,6 +232,13 @@ public class DigEventListener2 implements Listener {
 						this.player.sendMessage(tr.gettr("item.size() == 0"));
 						return;
 					}
+
+					if (item.size() == 1) {
+						if (item.get(0).data == -29) {
+							item.get(0).data = 0;
+						}
+					}
+
 					DigEventListener2.this.dew.dewset_down(this.player, item);
 
 				} else if (m.length == 2) {
@@ -241,6 +249,12 @@ public class DigEventListener2 implements Listener {
 					if (item.size() == 0) {
 						this.player.sendMessage(tr.gettr("item.size() == 0"));
 						return;
+					}
+
+					if (item.size() == 1) {
+						if (item.get(0).data == -29) {
+							item.get(0).data = 0;
+						}
 					}
 					DigEventListener2.this.dew.dewset_down(this.player, item);
 				}
@@ -259,6 +273,11 @@ public class DigEventListener2 implements Listener {
 						this.player.sendMessage(tr.gettr("item.size() == 0"));
 						return;
 					}
+					if (item.size() == 1) {
+						if (item.get(0).data == -29) {
+							item.get(0).data = 0;
+						}
+					}
 					DigEventListener2.this.dew.dewset_wall(this.player, item, itemSearch);
 
 				} else if ((m.length >= 2) && (m.length <= 3)) {
@@ -274,6 +293,11 @@ public class DigEventListener2 implements Listener {
 					if (item.size() == 0) {
 						this.player.sendMessage(tr.gettr("item.size() == 0"));
 						return;
+					}
+					if (item.size() == 1) {
+						if (item.get(0).data == -29) {
+							item.get(0).data = 0;
+						}
 					}
 					DigEventListener2.this.dew.dewset_wall(this.player, item, itemSearch);
 				}
@@ -292,6 +316,11 @@ public class DigEventListener2 implements Listener {
 						this.player.sendMessage(tr.gettr("item.size() == 0"));
 						return;
 					}
+					if (item.size() == 1) {
+						if (item.get(0).data == -29) {
+							item.get(0).data = 0;
+						}
+					}
 					DigEventListener2.this.dew.dewset_block(this.player, item, itemSearch);
 				} else if ((m.length >= 2) && (m.length <= 3)) {
 					ArrayList<IDDataType> item = new ArrayList<IDDataType>();
@@ -306,6 +335,11 @@ public class DigEventListener2 implements Listener {
 					if (item.size() == 0) {
 						this.player.sendMessage(tr.gettr("item.size() == 0"));
 						return;
+					}
+					if (item.size() == 1) {
+						if (item.get(0).data == -29) {
+							item.get(0).data = 0;
+						}
 					}
 					DigEventListener2.this.dew.dewset_block(this.player, item, itemSearch);
 				}
@@ -324,6 +358,11 @@ public class DigEventListener2 implements Listener {
 						this.player.sendMessage(tr.gettr("item.size() == 0"));
 						return;
 					}
+					if (item.size() == 1) {
+						if (item.get(0).data == -29) {
+							item.get(0).data = 0;
+						}
+					}
 					DigEventListener2.this.dew.dewset_room(this.player, item, itemSearch);
 				} else if ((m.length >= 2) && (m.length <= 3)) {
 					ArrayList<IDDataType> item = new ArrayList<IDDataType>();
@@ -338,6 +377,11 @@ public class DigEventListener2 implements Listener {
 					if (item.size() == 0) {
 						this.player.sendMessage(tr.gettr("item.size() == 0"));
 						return;
+					}
+					if (item.size() == 1) {
+						if (item.get(0).data == -29) {
+							item.get(0).data = 0;
+						}
 					}
 					DigEventListener2.this.dew.dewset_room(this.player, item, itemSearch);
 				}
@@ -356,6 +400,11 @@ public class DigEventListener2 implements Listener {
 						this.player.sendMessage(tr.gettr("item.size() == 0"));
 						return;
 					}
+					if (item.size() == 1) {
+						if (item.get(0).data == -29) {
+							item.get(0).data = 0;
+						}
+					}
 					DigEventListener2.this.dew.dewset(this.player, item, itemSearch, false);
 				} else if ((m.length >= 2) && (m.length <= 3)) {
 					ArrayList<IDDataType> item = new ArrayList<IDDataType>();
@@ -370,6 +419,11 @@ public class DigEventListener2 implements Listener {
 					if (item.size() == 0) {
 						this.player.sendMessage(tr.gettr("item.size() == 0"));
 						return;
+					}
+					if (item.size() == 1) {
+						if (item.get(0).data == -29) {
+							item.get(0).data = 0;
+						}
 					}
 					DigEventListener2.this.dew.dewset(this.player, item, itemSearch, false);
 				}
@@ -388,6 +442,11 @@ public class DigEventListener2 implements Listener {
 						this.player.sendMessage(tr.gettr("item.size() == 0"));
 						return;
 					}
+					if (item.size() == 1) {
+						if (item.get(0).data == -29) {
+							item.get(0).data = 0;
+						}
+					}
 					DigEventListener2.this.dew.dewset(this.player, item, itemSearch, true);
 				} else if ((m.length >= 2) && (m.length <= 3)) {
 					ArrayList<IDDataType> item = new ArrayList<IDDataType>();
@@ -402,6 +461,11 @@ public class DigEventListener2 implements Listener {
 					if (item.size() == 0) {
 						this.player.sendMessage(tr.gettr("item.size() == 0"));
 						return;
+					}
+					if (item.size() == 1) {
+						if (item.get(0).data == -29) {
+							item.get(0).data = 0;
+						}
 					}
 					DigEventListener2.this.dew.dewset(this.player, item, itemSearch, true);
 				}
@@ -421,6 +485,11 @@ public class DigEventListener2 implements Listener {
 						this.player.sendMessage(tr.gettr("item.size() == 0"));
 						return;
 					}
+					if (item.size() == 1) {
+						if (item.get(0).data == -29) {
+							item.get(0).data = 0;
+						}
+					}
 					DigEventListener2.this.dew.dewset_spreadq(this.player, item, itemSearch);
 				} else if ((m.length >= 2) && (m.length <= 3)) {
 					ArrayList<IDDataType> item = new ArrayList<IDDataType>();
@@ -435,6 +504,11 @@ public class DigEventListener2 implements Listener {
 					if (item.size() == 0) {
 						this.player.sendMessage(tr.gettr("item.size() == 0"));
 						return;
+					}
+					if (item.size() == 1) {
+						if (item.get(0).data == -29) {
+							item.get(0).data = 0;
+						}
 					}
 					DigEventListener2.this.dew.dewset_spreadq(this.player, item, itemSearch);
 				}
@@ -453,6 +527,11 @@ public class DigEventListener2 implements Listener {
 						this.player.sendMessage(tr.gettr("item.size() == 0"));
 						return;
 					}
+					if (item.size() == 1) {
+						if (item.get(0).data == -29) {
+							item.get(0).data = 0;
+						}
+					}
 					DigEventListener2.this.dew.dewset_spreadSphere(this.player, item, itemSearch);
 				} else if ((m.length >= 2) && (m.length <= 3)) {
 					ArrayList<IDDataType> item = new ArrayList<IDDataType>();
@@ -467,6 +546,11 @@ public class DigEventListener2 implements Listener {
 					if (item.size() == 0) {
 						this.player.sendMessage(tr.gettr("item.size() == 0"));
 						return;
+					}
+					if (item.size() == 1) {
+						if (item.get(0).data == -29) {
+							item.get(0).data = 0;
+						}
 					}
 					DigEventListener2.this.dew.dewset_spreadSphere(this.player, item, itemSearch);
 				}
@@ -485,6 +569,11 @@ public class DigEventListener2 implements Listener {
 						this.player.sendMessage(tr.gettr("item.size() == 0"));
 						return;
 					}
+					if (item.size() == 1) {
+						if (item.get(0).data == -29) {
+							item.get(0).data = 0;
+						}
+					}
 					DigEventListener2.this.dew.dewset_light(this.player, item);
 				} else if (m.length == 2) {
 					ArrayList<IDDataType> item = new ArrayList<IDDataType>();
@@ -494,6 +583,11 @@ public class DigEventListener2 implements Listener {
 					if (item.size() == 0) {
 						this.player.sendMessage(tr.gettr("item.size() == 0"));
 						return;
+					}
+					if (item.size() == 1) {
+						if (item.get(0).data == -29) {
+							item.get(0).data = 0;
+						}
 					}
 					DigEventListener2.this.dew.dewset_light(this.player, item);
 				}
@@ -512,6 +606,11 @@ public class DigEventListener2 implements Listener {
 						this.player.sendMessage(tr.gettr("item.size() == 0"));
 						return;
 					}
+					if (item.size() == 1) {
+						if (item.get(0).data == -29) {
+							item.get(0).data = 0;
+						}
+					}
 					DigEventListener2.this.dew.dewset_sphere(this.player, item, itemSearch);
 				} else if ((m.length >= 2) && (m.length <= 3)) {
 					ArrayList<IDDataType> item = new ArrayList<IDDataType>();
@@ -526,6 +625,11 @@ public class DigEventListener2 implements Listener {
 					if (item.size() == 0) {
 						this.player.sendMessage(tr.gettr("item.size() == 0"));
 						return;
+					}
+					if (item.size() == 1) {
+						if (item.get(0).data == -29) {
+							item.get(0).data = 0;
+						}
 					}
 					DigEventListener2.this.dew.dewset_sphere(this.player, item, itemSearch);
 				}
@@ -544,6 +648,11 @@ public class DigEventListener2 implements Listener {
 						this.player.sendMessage(tr.gettr("item.size() == 0"));
 						return;
 					}
+					if (item.size() == 1) {
+						if (item.get(0).data == -29) {
+							item.get(0).data = 0;
+						}
+					}
 					DigEventListener2.this.dew.dewset_wallSphere(this.player, item, itemSearch);
 				} else if ((m.length >= 2) && (m.length <= 3)) {
 					ArrayList<IDDataType> item = new ArrayList<IDDataType>();
@@ -558,6 +667,11 @@ public class DigEventListener2 implements Listener {
 					if (item.size() == 0) {
 						this.player.sendMessage(tr.gettr("item.size() == 0"));
 						return;
+					}
+					if (item.size() == 1) {
+						if (item.get(0).data == -29) {
+							item.get(0).data = 0;
+						}
 					}
 					DigEventListener2.this.dew.dewset_wallSphere(this.player, item, itemSearch);
 				}
