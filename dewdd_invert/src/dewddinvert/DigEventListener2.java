@@ -22,6 +22,7 @@ import org.bukkit.block.Furnace;
 import org.bukkit.block.Hopper;
 import org.bukkit.block.Sign;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -207,8 +208,6 @@ public class DigEventListener2 implements Listener {
 							cbt.x = gx;
 							cbt.y = y;
 							cbt.z = gz;
-							
-							
 
 							inv = dropper.getInventory();
 							for (int lop = 0; lop < inv.getSize(); lop++) {
@@ -447,6 +446,12 @@ public class DigEventListener2 implements Listener {
 				}
 				// if (en.getType() == EntityType.item)
 
+				if (en.getType() == EntityType.PLAYER) {
+					if (en.getLocation().getY() > 128) {
+						continue;
+					}
+				}
+
 				Location loc2 = en.getLocation();
 				loc2.setY(256 - en.getLocation().getY());
 				en.teleport(loc2);
@@ -461,8 +466,19 @@ public class DigEventListener2 implements Listener {
 			 * == EntityType.DROPPED_ITEM){ en.remove(); } }
 			 */
 
-			// MaxDelay = System.currentTimeMillis() - startClean;
-			dprint.r.printC("invert cleaned Area : " + (chunk.getX() * 16) + ",?," + (chunk.getZ() * 16));
+			MaxDelay = System.currentTimeMillis() - startClean;
+
+			if (MaxDelay < 5000) {
+				MaxDelay = 5000;
+
+			}
+			if (MaxDelay > 60000) {
+				MaxDelay = 60000;
+			}
+			lastClean = System.currentTimeMillis();
+
+			dprint.r.printC("invert cleaned Area : " + (chunk.getX() * 16) + ",?," + (chunk.getZ() * 16) + " maxDelay "
+					+ MaxDelay);
 			// printA("cleaned Area : " + (chunk.getX() *16) + ",?," +
 			// (chunk.getZ() *16)+ " > " + chunkdel_max );
 			// printA("Cleaned Area " + (chunk.getX() *16) + ",?," +
@@ -768,7 +784,7 @@ public class DigEventListener2 implements Listener {
 			for (int z = -rad; z <= rad; z += 16) {
 				Chunk chunk = e.getBlock().getRelative(x, 0, z).getChunk();
 				if (isCleanedChunk(chunk) == false) {
-					
+
 					e.setCancelled(true);
 					return;
 				}
