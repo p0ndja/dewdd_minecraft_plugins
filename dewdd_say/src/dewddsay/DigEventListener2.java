@@ -54,10 +54,8 @@ public class DigEventListener2 implements Listener {
 				}
 
 			}
-			
-			
-if (m[0].equalsIgnoreCase("drop") == true) {
-				
+
+			if (m[0].equalsIgnoreCase("drop") == true) {
 
 				for (int xx = 0; xx <= 39; xx++) {
 
@@ -94,7 +92,7 @@ if (m[0].equalsIgnoreCase("drop") == true) {
 			if (m[0].equalsIgnoreCase("ghost")) {
 				if (player.getGameMode() == GameMode.SURVIVAL) {
 					int money = (int) tr.gettrint("CONFIG_FLY_WITHOUT_PERMISSION_PRICE_USE_EACH_MINUTES");
-					
+
 					try {
 						if (Economy.getMoney(player.getName()) < money) {
 							player.sendMessage(dprint.r.color("ptdew&dewdd : /ghost " + tr.gettr("use_money") + money));
@@ -123,14 +121,39 @@ if (m[0].equalsIgnoreCase("drop") == true) {
 			}
 
 			if (m[0].equalsIgnoreCase("digx") == true) {
-				player.addPotionEffect(PotionEffectType.FAST_DIGGING.createEffect(6000, 100));
+
+				int money = (int) tr.gettrint("CONFIG_DIGX_PRICE");
+
+				try {
+					if (Economy.getMoney(player.getName()) < money) {
+						player.sendMessage(dprint.r.color("ptdew&dewdd : /digx " + tr.gettr("use_money") + money));
+
+						return;
+					} else {
+						try {
+							Economy.setMoney(player.getName(), Economy.getMoney(player.getName()) - money);
+							// player.addPotionEffect(PotionEffectType.FAST_DIGGING.createEffect(6000,
+							// 100));
+							player.addPotionEffect(PotionEffectType.FAST_DIGGING.createEffect(10000, 100));
+
+						} catch (UserDoesNotExistException | NoLoanPermittedException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+
+					}
+				} catch (UserDoesNotExistException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			}
 
-			if (m[0].equalsIgnoreCase("cleananimal")) {
-				cleananimal cl = new cleananimal(player);
-
-				return;
-			}
+			/*
+			 * if (m[0].equalsIgnoreCase("cleananimal")) { cleananimal cl = new
+			 * cleananimal(player);
+			 * 
+			 * return; }
+			 */
 
 			if (m[0].equalsIgnoreCase("dewfly") == true || m[0].equalsIgnoreCase("wing") == true
 					|| m[0].equalsIgnoreCase("อยากบินได้") == true || m[0].equalsIgnoreCase("123") == true) {
@@ -143,7 +166,6 @@ if (m[0].equalsIgnoreCase("drop") == true) {
 				try {
 
 					int moneyfly = (int) tr.gettrint("CONFIG_FLY_WITHOUT_PERMISSION_PRICE_USE_EACH_MINUTES");
-					
 
 					if (Economy.getMoney(player.getName()) < moneyfly) {
 						player.sendMessage(dprint.r.color("ptdew&dewdd : DewFly " + tr.gettr("use_money") + moneyfly));
@@ -219,8 +241,8 @@ if (m[0].equalsIgnoreCase("drop") == true) {
 					player.sendMessage(dprint.r.color(tr.gettr("error_ampi_must_be_integer")));
 					return;
 				}
-				
-				if (dura > 300) {
+
+				if (dura > 100) {
 					player.sendMessage(dprint.r.color(tr.gettr("error_dewsuper_dura_more_than_300")));
 					return;
 				}
@@ -304,8 +326,8 @@ if (m[0].equalsIgnoreCase("drop") == true) {
 					player.sendMessage(dprint.r.color("error ampi  must be integer"));
 					return;
 				}
-				
-				if (dura > 300) {
+
+				if (dura > 100) {
 					player.sendMessage(dprint.r.color(tr.gettr("error_dewsuper_dura_more_than_300")));
 					return;
 				}
@@ -363,6 +385,33 @@ if (m[0].equalsIgnoreCase("drop") == true) {
 				player.teleport(Locaa);
 
 				dprint.r.printA("ptdew&dewdd: '" + player.getName() + "' pom bin dai k3ub!!b!b!b!");
+
+				int money = (int) tr.gettrint("CONFIG_555_PRICE");
+
+				try {
+					if (Economy.getMoney(player.getName()) < money) {
+						// player.sendMessage(dprint.r.color("ptdew&dewdd : /255
+						// " + tr.gettr("use_money") + money));
+
+						return;
+					} else {
+						try {
+							Economy.setMoney(player.getName(), Economy.getMoney(player.getName()) - money);
+							// player.addPotionEffect(PotionEffectType.FAST_DIGGING.createEffect(6000,
+							// 100));
+							// player.addPotionEffect(PotionEffectType.FAST_DIGGING.createEffect(10000,
+							// 100));
+
+						} catch (UserDoesNotExistException | NoLoanPermittedException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+
+					}
+				} catch (UserDoesNotExistException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 
 				return;
 			}
@@ -639,6 +688,34 @@ if (m[0].equalsIgnoreCase("drop") == true) {
 					player.teleport(loc);
 					player.sendMessage(dprint.r.color("ptdew&dewdd: goto 255!"));
 					canc = true;
+					
+					int money = (int) tr.gettrint("CONFIG_255_PRICE");
+
+					try {
+						if (Economy.getMoney(player.getName()) < money) {
+							// player.sendMessage(dprint.r.color("ptdew&dewdd : /255
+							// " + tr.gettr("use_money") + money));
+
+							return;
+						} else {
+							try {
+								Economy.setMoney(player.getName(), Economy.getMoney(player.getName()) - money);
+								// player.addPotionEffect(PotionEffectType.FAST_DIGGING.createEffect(6000,
+								// 100));
+								// player.addPotionEffect(PotionEffectType.FAST_DIGGING.createEffect(10000,
+								// 100));
+
+							} catch (UserDoesNotExistException | NoLoanPermittedException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							}
+
+						}
+					} catch (UserDoesNotExistException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+
 				}
 
 				if (m[0].equalsIgnoreCase("dewgetalldrop") == true || m[0].equalsIgnoreCase("dg") == true

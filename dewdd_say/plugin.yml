@@ -6,6 +6,9 @@ database: false
 depend: [dewddtran, dewddprint]
 
 commands:
+  ghost:
+    description: be spectate gamemode
+    usage: /<command>
   qdewd:
     description: dewdd hack player command
     usage: /<command> [player] [command]
@@ -17,6 +20,9 @@ commands:
     usage: /<command>
   255:
     description: go to 255
+    usage: /<command>
+  digx:
+    description: fast digging ever
     usage: /<command>
   unloadchunk:
     description: unload all chunk with no player near it
