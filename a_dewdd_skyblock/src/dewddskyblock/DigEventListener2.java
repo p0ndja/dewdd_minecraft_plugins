@@ -1699,7 +1699,34 @@ public class DigEventListener2 implements Listener {
 
 					}
 
-					if (nearname >= 1) {
+					if (counttruename == 1 || nearname == 1) {
+						for (int lop2 = 0; lop2 < api_skyblock.rsMax; lop2++) {
+							if (api_skyblock.getplayerinslot(player.getName(), lop2) == -1) {
+								continue;
+							}
+							
+							
+
+							if ( ((api_skyblock.rs[lop2].p[0].equalsIgnoreCase(m[2])) && counttruename == 1)
+								 ||  ( api_skyblock.rs[lop2].p[0].toLowerCase().indexOf(m[2].toLowerCase()) > -1) && counttruename != 1) {
+								Block block = player.getWorld().getBlockAt(api_skyblock.rs[lop2].x,
+										api_skyblock.rs[lop2].y + 10, api_skyblock.rs[lop2].z);
+								block.getChunk().load();
+								player.teleport(block.getLocation());
+								player.sendMessage(dprint.r.color("teleported you to (" + block.getX() + ","
+										+ block.getY() + "," + block.getZ() + ") of " + api_skyblock.rs[lop2].p[0]));
+
+								return;
+							}
+							
+							
+
+						}
+
+					}
+					
+					
+					if (nearname > 1) {
 						player.sendMessage(dprint.r.color(tr.gettr("list of sky protect name like your search name")));
 
 						for (int lop2 = 0; lop2 < api_skyblock.rsMax; lop2++) {
@@ -1718,26 +1745,6 @@ public class DigEventListener2 implements Listener {
 						return;
 					}
 
-					if (nearname == 1) {
-						for (int lop2 = 0; lop2 < api_skyblock.rsMax; lop2++) {
-							if (api_skyblock.getplayerinslot(player.getName(), lop2) == -1) {
-								continue;
-							}
-
-							if (api_skyblock.rs[lop2].p[0].toLowerCase().indexOf(m[2].toLowerCase()) > -1) {
-								Block block = player.getWorld().getBlockAt(api_skyblock.rs[lop2].x,
-										api_skyblock.rs[lop2].y + 10, api_skyblock.rs[lop2].z);
-								block.getChunk().load();
-								player.teleport(block.getLocation());
-								player.sendMessage(dprint.r.color("teleported you to (" + block.getX() + ","
-										+ block.getY() + "," + block.getZ() + ") of " + api_skyblock.rs[lop2].p[0]));
-
-								return;
-							}
-
-						}
-
-					}
 					
 					 if (nearname == 0 ){
 						player.sendMessage(dprint.r
