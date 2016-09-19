@@ -33,9 +33,6 @@ public class Core {
 	public static double ShopMaxCost = 10000;
 	
 	public static int maxLV = 100;
-	
-
-	LinkedList<AllShop> allShop = new LinkedList<AllShop>();
 
 	// 415 unique item
 
@@ -158,11 +155,17 @@ public class Core {
 							int itemSlot = getNextBlockSwapMissionType(
 									(int) (tmpReading.get(i).doubleValue() * swapMultipy), curMissionItemSwapPosition,2);
 							curMissionItemSwapPosition = itemSlot;
+							
+							
+							int tmpAmount =(int) (tmpReading.get(i).doubleValue()
+									* mission.get(itemSlot).maxStack);
+							if (tmpAmount <= 0) {
+								tmpAmount = 1;
+							}
 
 							x.needItem[x.needSize] = mission.get(itemSlot).theName;
 							x.needData[x.needSize] = mission.get(itemSlot).data;
-							x.needAmount[x.needSize] = (int) (tmpReading.get(i).doubleValue()
-									* mission.get(itemSlot).maxStack);
+							x.needAmount[x.needSize] = tmpAmount ;
 						
 
 							x.needSize++;
@@ -179,7 +182,7 @@ public class Core {
 							
 							// next Add part
 							if (tmpReadChro <= 0) {
-								break;
+								continue;
 							}
 							
 							int itemSlot = getNextBlockSwapMissionType(
@@ -216,7 +219,7 @@ public class Core {
 							
 							// next Add part
 							if (tmpReadChro <= 0) {
-								break;
+								continue;
 							}
 							
 							int itemSlot = getNextBlockSwapMissionType(

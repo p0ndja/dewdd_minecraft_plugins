@@ -12,7 +12,9 @@ class HybridOverride extends Hybrid{
 	@Override
 	public double fitness(double dna[]) {
 		return 0;
+		
 	}
+	
 }
 
 public class main {
@@ -70,17 +72,19 @@ public class main {
 		
 		LinkedList<AllShop> tmpAllShop = new LinkedList<AllShop>();
 		LinkedList<SellableType> tmpSell = new LinkedList<SellableType>();
-		LinkedList<LV1000Type> tmpMission =  new LinkedList<LV1000Type>();
+		LinkedList<LV1000Type> tmpLV =  new LinkedList<LV1000Type>();
 		LinkedList<Double> tmpReading  = new LinkedList<Double>();
 		
 		co.dnaDecoder(hy.population.get(0).dna,   tmpAllShop,
-				tmpSell,  tmpMission,  tmpReading,
+				tmpSell,  tmpLV,  tmpReading,
 				0, 0);
 		
 		for (int i = 0 ; i < tmpSell.size() ; i ++) {
 			d.pl("tmpSell : " + i + " = " + tmpSell.get(i).theName + ":" + tmpSell.get(i).data + ":" + tmpSell.get(i).timeToGet +  ":"  + tmpSell.get(i).sellPerPrice);
 		}
 		
+		
+		// Shop
 		for (int i = 0 ; i < tmpAllShop.size() ; i ++ ){
 			
 			d.pl("tmpAllShop ID " + i );
@@ -94,6 +98,28 @@ public class main {
 			}
 			
 		}
+		
+		//LV
+		
+		for (int i = 0 ; i < tmpLV.size() ; i ++ ){
+			
+			d.pl("tmpLV ID " + i );
+			
+			
+			for (int j = 0 ; j < tmpLV.get(i).needSize ; j ++ ) {
+				d.pl("need slot " + j + " = " + tmpLV.get(i).needItem[j] + ":" + tmpLV.get(i).needData[j] 
+						+ ":" + tmpLV.get(i).needAmount[j]);
+				
+			}
+			
+			for (int j = 0 ; j < tmpLV.get(i).rewardSize ; j ++ ) {
+				d.pl("reward slot " + j + " = " + tmpLV.get(i).rewardItem[j] + ":" + tmpLV.get(i).rewardData[j] 
+						+ ":" + tmpLV.get(i).rewardAmount[j]);
+				
+			}
+		}
+		
+		
 		//hy.run();
 	}
 
