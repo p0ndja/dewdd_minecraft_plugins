@@ -12,6 +12,7 @@ import java.io.InputStreamReader;
 import java.util.Random;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Chunk;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.WorldCreator;
@@ -27,6 +28,7 @@ import org.bukkit.event.block.SignChangeEvent;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.server.ServerCommandEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -44,8 +46,7 @@ public class DigEventListener2 implements Listener {
 					Thread.sleep(1000);
 					dprint.r.printC("dewworld sleeping +" + i);
 				}
-			}
-			catch (InterruptedException e) {
+			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
@@ -53,6 +54,7 @@ public class DigEventListener2 implements Listener {
 			loadworldfile();
 		}
 	}
+
 	class loadworldfilec implements Runnable {
 
 		public void run() {
@@ -61,16 +63,14 @@ public class DigEventListener2 implements Listener {
 
 			try {
 
-				dprint.r.printAll("ptdeW&DewDD World : Starting Loading "
-						+ filex);
+				dprint.r.printAll("ptdeW&DewDD World : Starting Loading " + filex);
 				// Open the file that is the first
 				// command line parameter
 				FileInputStream fstream = new FileInputStream(filex);
 
 				// Get the object of DataInputStream
 				DataInputStream in = new DataInputStream(fstream);
-				BufferedReader br = new BufferedReader(
-						new InputStreamReader(in));
+				BufferedReader br = new BufferedReader(new InputStreamReader(in));
 				String strLine;
 				// Read File Line By Line
 
@@ -90,24 +90,18 @@ public class DigEventListener2 implements Listener {
 
 					if (m.length == 1) {
 						w.environment(w.environment().NORMAL);
-					}
-					else {
+					} else {
 						if (m[1].toLowerCase().indexOf("flat") > -1) {
 							w.type(WorldType.FLAT);
-						}
-						else if (m[1].toLowerCase().indexOf("nether") > -1) {
+						} else if (m[1].toLowerCase().indexOf("nether") > -1) {
 							w.environment(w.environment().NETHER);
-						}
-						else if (m[1].toLowerCase().indexOf("large") > -1) {
+						} else if (m[1].toLowerCase().indexOf("large") > -1) {
 							w.type(WorldType.LARGE_BIOMES);
-						}
-						else if (m[1].toLowerCase().indexOf("end") > -1) {
+						} else if (m[1].toLowerCase().indexOf("end") > -1) {
 							w.environment(w.environment().THE_END);
-						}
-						else if (m[1].toLowerCase().indexOf("1_1") > -1) {
+						} else if (m[1].toLowerCase().indexOf("1_1") > -1) {
 							w.type(WorldType.VERSION_1_1);
-						}
-						else {
+						} else {
 							w.type(WorldType.NORMAL);
 
 						}
@@ -122,15 +116,15 @@ public class DigEventListener2 implements Listener {
 				dprint.r.printAll("ptdew&DewDD world : Loaded " + filex);
 
 				in.close();
-			}
-			catch (Exception e) {// Catch exception if any
+			} catch (Exception e) {// Catch exception if any
 				dprint.r.printAll("Error load world file: " + e.getMessage());
 			}
 		}
 	}
+
 	class runworldc implements Runnable {
-		Player	player	= null;
-		String	message	= "";
+		Player player = null;
+		String message = "";
 
 		public void run() {
 			String m[] = message.split("\\s+");
@@ -146,12 +140,13 @@ public class DigEventListener2 implements Listener {
 				dprint.r.printAll("starting unload all world...as possible...");
 
 				for (World www : Bukkit.getWorlds()) {
-					if (www.getName().equalsIgnoreCase("world") == true
-							|| www.getName().equalsIgnoreCase("world_nether") == true
-							|| www.getName().equalsIgnoreCase("world_the_end") == true) {
-						dprint.r.printAll("these worlds can't be unload");
-						continue;
-					}
+					/*
+					 * if (www.getName().equalsIgnoreCase("world") == true ||
+					 * www.getName().equalsIgnoreCase("world_nether") == true ||
+					 * www.getName().equalsIgnoreCase("world_the_end") == true)
+					 * { dprint.r.printAll("these worlds can't be unload");
+					 * continue; }
+					 */
 
 					boolean ff = false;
 					for (Player pj : www.getPlayers()) {
@@ -160,8 +155,7 @@ public class DigEventListener2 implements Listener {
 					}
 
 					if (ff == true) {
-						dprint.r.printAll("can't unload " + www.getName()
-								+ " cuz there are some player there...");
+						dprint.r.printAll("can't unload " + www.getName() + " cuz there are some player there...");
 						continue;
 					}
 
@@ -179,9 +173,8 @@ public class DigEventListener2 implements Listener {
 							Location loc = player.getLocation();
 							loc.setWorld(Bukkit.getWorld(message));
 
-							player.sendMessage("teleported  from "
-									+ player.getWorld().getName() + " to "
-									+ ww.getName());
+							player.sendMessage(
+									"teleported  from " + player.getWorld().getName() + " to " + ww.getName());
 							player.teleport(loc);
 							return;
 						}
@@ -210,8 +203,7 @@ public class DigEventListener2 implements Listener {
 				dprint.r.printC("l/u = '" + pl + "'");
 				dprint.r.printC("com = '" + com + "'");
 
-				if (pl.equalsIgnoreCase("load") == true
-						|| pl.equalsIgnoreCase("l") == true) {
+				if (pl.equalsIgnoreCase("load") == true || pl.equalsIgnoreCase("l") == true) {
 					if (player != null) {
 						if (player.hasPermission(pload) == false) {
 							player.sendMessage("you don't have permission for load world");
@@ -224,24 +216,18 @@ public class DigEventListener2 implements Listener {
 
 					if (m.length == 3) {
 						w.environment(w.environment().NORMAL);
-					}
-					else if (m.length == 4) {
+					} else if (m.length == 4) {
 						if (m[3].toLowerCase().indexOf("flat") > -1) {
 							w.type(WorldType.FLAT);
-						}
-						else if (m[3].toLowerCase().indexOf("nether") > -1) {
+						} else if (m[3].toLowerCase().indexOf("nether") > -1) {
 							w.environment(w.environment().NETHER);
-						}
-						else if (m[3].toLowerCase().indexOf("large") > -1) {
+						} else if (m[3].toLowerCase().indexOf("large") > -1) {
 							w.type(WorldType.LARGE_BIOMES);
-						}
-						else if (m[3].toLowerCase().indexOf("end") > -1) {
+						} else if (m[3].toLowerCase().indexOf("end") > -1) {
 							w.environment(w.environment().THE_END);
-						}
-						else if (m[3].toLowerCase().indexOf("1_1") > -1) {
+						} else if (m[3].toLowerCase().indexOf("1_1") > -1) {
 							w.type(WorldType.VERSION_1_1);
-						}
-						else {
+						} else {
 							w.type(WorldType.NORMAL);
 
 						}
@@ -254,9 +240,7 @@ public class DigEventListener2 implements Listener {
 					w.createWorld();
 					Bukkit.createWorld(w);
 					dprint.r.printAll("finished load '" + com + "' world");
-				}
-				else if (pl.equalsIgnoreCase("unload") == true
-						|| pl.equalsIgnoreCase("u") == true) {
+				} else if (pl.equalsIgnoreCase("unload") == true || pl.equalsIgnoreCase("u") == true) {
 
 					if (player != null) {
 						if (player.hasPermission(punload) == false) {
@@ -265,12 +249,13 @@ public class DigEventListener2 implements Listener {
 						}
 					}
 
-					if (com.equalsIgnoreCase("world") == true
-							|| com.equalsIgnoreCase("world_nether") == true
-							|| com.equalsIgnoreCase("world_the_end") == true) {
-						dprint.r.printAll("these worlds can't be unload");
-						return;
-					}
+					/*
+					 * if (com.equalsIgnoreCase("world") == true ||
+					 * com.equalsIgnoreCase("world_nether") == true ||
+					 * com.equalsIgnoreCase("world_the_end") == true) {
+					 * dprint.r.printAll("these worlds can't be unload");
+					 * return; }
+					 */
 
 					boolean ff = false;
 					for (Player pj : Bukkit.getWorld(com).getPlayers()) {
@@ -279,16 +264,14 @@ public class DigEventListener2 implements Listener {
 					}
 
 					if (ff == true) {
-						dprint.r.printAll("can't unload " + com
-								+ " cuz there are some player there...");
+						dprint.r.printAll("can't unload " + com + " cuz there are some player there...");
 						return;
 					}
 
 					dprint.r.printAll("Starting unload '" + com + "' world");
 					Bukkit.unloadWorld(com, true);
 					dprint.r.printAll("finished unload '" + com + "' world");
-				}
-				else {
+				} else {
 					dprint.r.printAll("please enter l/u");
 				}
 
@@ -298,14 +281,15 @@ public class DigEventListener2 implements Listener {
 
 		}
 	}
-	JavaPlugin	ac			= null;
-	Random		randomG		= new Random();
 
-	String		pload		= "dewdd.dewworld.load";
+	JavaPlugin ac = null;
+	Random randomG = new Random();
 
-	String		punload		= "dewdd.dewworld.unload";
+	String pload = "dewdd.dewworld.load";
 
-	String		punloadall	= "dewdd.dewworld.unloadall";
+	String punload = "dewdd.dewworld.unload";
+
+	String punloadall = "dewdd.dewworld.unloadall";
 
 	public DigEventListener2() {
 		delay eee = new delay();
@@ -323,18 +307,16 @@ public class DigEventListener2 implements Listener {
 			event.setCancelled(true);
 		}
 		if (event.getMessage().equalsIgnoreCase("dewdd world") == true) {
-			player.sendMessage("ปลั๊กอิน world สามารถ  โหลดโลก ปิดโลกได้ตามใจชอบ   ปลั๊กอินเกิดขึ้นเพราะ เราอยากรวมแมพเก่าๆในเซิฟ skyblock");
+			player.sendMessage(
+					"ปลั๊กอิน world สามารถ  โหลดโลก ปิดโลกได้ตามใจชอบ   ปลั๊กอินเกิดขึ้นเพราะ เราอยากรวมแมพเก่าๆในเซิฟ skyblock");
 
 			event.setCancelled(true);
 		}
 
 		if (event.getMessage().equalsIgnoreCase("pdewworld") == true) {
-			player.sendMessage("load  = "
-					+ Boolean.toString(player.hasPermission(pload)));
-			player.sendMessage("unload = "
-					+ Boolean.toString(player.hasPermission(punload)));
-			player.sendMessage("unload all = "
-					+ Boolean.toString(player.hasPermission(punloadall)));
+			player.sendMessage("load  = " + Boolean.toString(player.hasPermission(pload)));
+			player.sendMessage("unload = " + Boolean.toString(player.hasPermission(punload)));
+			player.sendMessage("unload all = " + Boolean.toString(player.hasPermission(punloadall)));
 		}
 
 		runworld(event.getPlayer(), event.getMessage());
@@ -347,10 +329,41 @@ public class DigEventListener2 implements Listener {
 	}
 
 	@EventHandler
-	public void eventja(PlayerInteractEvent event) {
-		if (event.getAction() == Action.LEFT_CLICK_AIR) return;
+	public void eventja(PlayerQuitEvent event) {
+		for (World wx : Bukkit.getWorlds()) {
 
-		if (event.getAction() == Action.RIGHT_CLICK_AIR) return;
+			boolean playernear = false;
+
+			for (Chunk cj : wx.getLoadedChunks()) {
+				playernear = false;
+
+				for (Player pj : wx.getPlayers()) {
+					if (Math.pow((Math.pow(((cj.getX() * 16) - pj.getLocation().getBlockX()), 2))
+							+ (Math.pow(((cj.getZ() * 16) - pj.getLocation().getBlockZ()), 2)), 0.5)
+
+					<= 50) {
+						playernear = true;
+						break;
+					}
+
+				}
+
+				if (playernear == false) {
+					cj.unload(true);
+					dprint.r.printAll("ptdew&dewdd: unloaded chunk at (" + cj.getX() * 16 + "," + cj.getZ() * 16 + ")");
+				}
+
+			}
+		}
+	}
+
+	@EventHandler
+	public void eventja(PlayerInteractEvent event) {
+		if (event.getAction() == Action.LEFT_CLICK_AIR)
+			return;
+
+		if (event.getAction() == Action.RIGHT_CLICK_AIR)
+			return;
 
 		Block block = event.getClickedBlock();
 
@@ -372,16 +385,14 @@ public class DigEventListener2 implements Listener {
 					for (int sloop = 0; sloop <= 3; sloop++) {
 						if (sii.getLine(sloop) == null) {
 							break;
-						}
-						else {
+						} else {
 							sto = sto + sii.getLine(sloop);
 						}
 					}
 
 				}
 				if (sto.equalsIgnoreCase("") == false) {
-					Bukkit.getServer().dispatchCommand(
-							Bukkit.getConsoleSender(), sto);
+					Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), sto);
 					dprint.r.printC("sto=" + sto);
 					return;
 				}
@@ -403,8 +414,7 @@ public class DigEventListener2 implements Listener {
 					for (int sloop = 0; sloop <= 3; sloop++) {
 						if (sii.getLine(sloop) == null) {
 							break;
-						}
-						else {
+						} else {
 							sto = sto + sii.getLine(sloop);
 						}
 					}
@@ -450,8 +460,7 @@ public class DigEventListener2 implements Listener {
 					for (int sloop = 0; sloop <= 3; sloop++) {
 						if (sii.getLine(sloop) == null) {
 							break;
-						}
-						else {
+						} else {
 							sto = sto + sii.getLine(sloop);
 						}
 					}
@@ -545,4 +554,3 @@ public class DigEventListener2 implements Listener {
 	}
 
 } // class
-
