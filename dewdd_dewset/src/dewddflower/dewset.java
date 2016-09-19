@@ -40,6 +40,7 @@ import com.earth2me.essentials.api.UserDoesNotExistException;
 
 import api_skyblock.api_skyblock;
 import dewddtran.tr;
+import li.Constant_Protect;
 import li.LXRXLZRZType;
 
 public class dewset extends dewset_interface {
@@ -1910,7 +1911,7 @@ public class dewset extends dewset_interface {
 			}
 
 			// String abab = dewsignname[homeid][18] ;
-			if (dewsignname[getworldid(player.getWorld().getName())][homeid][0].equalsIgnoreCase(flag_sell) == true) {
+			if (dewsignname[getworldid(player.getWorld().getName())][homeid][0].equalsIgnoreCase(Constant_Protect.flag_sell) == true) {
 				dprint.r.printAll("ptdew&dewdd : '" + player.getName() + "'" + tr.gettr("starting") + " dewbuyzone "
 						+ player.getItemInHand().getTypeId() + ":" + player.getItemInHand().getData());
 
@@ -5248,11 +5249,11 @@ public class dewset extends dewset_interface {
 					// dprint.r.printAll("dewsignnow " + dewsignnow );
 
 					if (dewsignname[getworldid(block.getWorld().getName())][dewsignnow][0]
-							.equalsIgnoreCase(flag_everyone) == true) {
+							.equalsIgnoreCase(Constant_Protect.flag_everyone) == true) {
 						continue;
 					}
 				} else if (dewsignname[getworldid(block.getWorld().getName())][dewsignnow][0]
-						.equalsIgnoreCase(flag_everyone) == false) {
+						.equalsIgnoreCase(Constant_Protect.flag_everyone) == false) {
 					continue;
 				}
 
@@ -5362,7 +5363,7 @@ public class dewset extends dewset_interface {
 			dewsignloop[getworldid(block.getWorld().getName())][dewsignnow]++;
 
 			if (modeevent.equalsIgnoreCase("right") == true) { // right everyone
-				che1 = havethisnameinthishome(getworldid(block.getWorld().getName()), dewsignnow, flag_everyone);
+				che1 = havethisnameinthishome(getworldid(block.getWorld().getName()), dewsignnow, Constant_Protect.flag_everyone);
 
 				if (che1 == true) { // if" + tr.gettr("for") + "everyone
 					goodc1 = false;
@@ -5375,10 +5376,7 @@ public class dewset extends dewset_interface {
 						goodc1 = true;
 					}
 
-					if (block.getTypeId() == 154) {
-						goodc1 = havethisnameinthishome(getworldid(block.getWorld().getName()), dewsignnow,
-								flag_protecthopper);
-					}
+					
 
 				} else { // not" + tr.gettr("for") + "everyone
 					che2 = havethisnameinthishome(getworldid(block.getWorld().getName()), dewsignnow, player.getName());
@@ -5408,24 +5406,15 @@ public class dewset extends dewset_interface {
 
 				) { // paste chest sign
 
-					che1 = havethisnameinthishome(getworldid(block.getWorld().getName()), dewsignnow, flag_sign);
+					che2 = havethisnameinthishome(getworldid(block.getWorld().getName()), dewsignnow, player.getName());
 
-					if (che1 == true) { // if" + tr.gettr("for") + "<sign>
-						goodc1 = false;
-						if (api_admin.dewddadmin.is2moderator(player) == true) {
-							// staff
-							// can't
-							// do
-							// it
-							goodc1 = true;
+					goodc1 = !che2;
+
+					if (goodc1 == true)
+						if (player.hasPermission(pmainoveride) == true) {
+							goodc1 = false;
 						}
-
-					} else { // if not" + tr.gettr("for") + "sign
-						che2 = havethisnameinthishome(getworldid(block.getWorld().getName()), dewsignnow,
-								player.getName());
-
-						goodc1 = !che2;
-					}
+					return goodc1;
 
 				} // neary <sign>
 				else { // not
@@ -5744,22 +5733,14 @@ public class dewset extends dewset_interface {
 			player.sendMessage(dprint.r.color("dewadd " + tr.gettr("your_friend_name")));
 
 			player.sendMessage(dprint.r.color("flags list :"));
-			player.sendMessage(dprint.r.color(flag_monster + "  " + tr.gettr("allow_monster_spawn_at_your_zone")));
-			player.sendMessage(dprint.r.color(flag_pvp + "  " + tr.gettr("allow_to_hit_player")));
-			player.sendMessage(dprint.r.color(flag_stopwater + tr.gettr("stop_lava_and_water_flowing")));
+			player.sendMessage(dprint.r.color(Constant_Protect.flag_monster + "  " + tr.gettr("allow_monster_spawn_at_your_zone")));
+			player.sendMessage(dprint.r.color(Constant_Protect.flag_pvp + "  " + tr.gettr("allow_to_hit_player")));
+			player.sendMessage(dprint.r.color(Constant_Protect.flag_everyone + tr.gettr("allow_everyone_rightclick")));
 			player.sendMessage(
-					dprint.r.color(flag_noinwater + tr.gettr("not_allow_lava_and_water_flowing_to_your_zone")));
-			player.sendMessage(
-					dprint.r.color(flag_nooutwater + tr.gettr("not_allow_lava_and_water_flowing_to_your_zone")));
-			player.sendMessage(dprint.r.color(flag_everyone + tr.gettr("allow_everyone_rightclick")));
-			player.sendMessage(dprint.r.color(flag_sign + tr.gettr("not_allow_lava_and_water_flowing_to_your_zone")));
-			player.sendMessage(
-					dprint.r.color(flag_sell + tr.gettr("explain_sell_flag") + tr.gettr("explain_sell_flag_2")));
+					dprint.r.color(Constant_Protect.flag_sell + tr.gettr("explain_sell_flag") + tr.gettr("explain_sell_Constant_Protect.flag_2")));
 
-			player.sendMessage(dprint.r.color(flag_protectanimal + tr.gettr("not_allow_hit_animal")));
-			player.sendMessage(
-					dprint.r.color(flag_protecthopper + tr.gettr("not_allow_another_right_click_at_hopper")));
-
+			player.sendMessage(dprint.r.color(Constant_Protect.flag_protectanimal + tr.gettr("not_allow_hit_animal")));
+			
 			return false;
 		}
 
@@ -5794,9 +5775,9 @@ public class dewset extends dewset_interface {
 		 * api_admin.dewddadmin.isadminname(str11) == false &&
 		 * api_admin.dewddadmin.is2moderator(player) == true) {
 		 * 
-		 * if (str11.equalsIgnoreCase(flag_sell) == true) { dprint.r.printAll(
+		 * if (str11.equalsIgnoreCase(Constant_Protect.flag_sell) == true) { dprint.r.printAll(
 		 * "ptdew&dewdd : staff " + player.getName() +
-		 * tr.gettr("try_to_add_sell_flag_to_his_protect")); return false; }
+		 * tr.gettr("try_to_add_sell_Constant_Protect.flag_to_his_protect")); return false; }
 		 * player.sendMessage(dprint.r.color("ptdew&dewdd : " +
 		 * tr.gettr("staff_can't_add_member_to_your_zone") +
 		 * dewsignname[getworldid(player.getWorld().getName())][xyz][0]));

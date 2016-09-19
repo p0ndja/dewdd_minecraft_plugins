@@ -12,6 +12,7 @@ import java.util.Random;
 import core_optimization_api.Chromosome;
 import ga_optimization_api.Hybrid;
 
+
 public class HybridOverride extends Hybrid {
 
 	public static int maxUnUnique = 0;

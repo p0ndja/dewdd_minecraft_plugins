@@ -26,6 +26,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import dewddtran.tr;
+import li.Constant_Protect;
 import li.LXRXLZRZType;
 
 public class api_skyblock {
@@ -237,8 +238,8 @@ public class api_skyblock {
 						rs[newid].p[lop] = "null";
 					}
 					rs[newid].p[0] = player.getName();
-					rs[newid].p[1] = Constant.flag_autocut;
-					rs[newid].p[2] = Constant.flag_autoabsorb;
+					rs[newid].p[1] = Constant_Protect.flag_autocut;
+					rs[newid].p[2] = Constant_Protect.flag_autoabsorb;
 					rs[newid].mission = 0;
 					player.getWorld().getBlockAt(x - 16, y, z - 16).getChunk().getX();
 					player.getWorld().getBlockAt(x - 16, y, z - 16).getChunk().getZ();
@@ -447,12 +448,12 @@ public class api_skyblock {
 		// found
 		int getslot = getplayerinslot(player.getName(), getid);
 		
-		if (getplayerinslot(Constant.flag_noprotect, getid) > -1 ) {
+		if (getplayerinslot(Constant_Protect.flag_noprotect, getid) > -1 ) {
 
 			return true;
 		}
 		
-		if (getplayerinslot(Constant.flag_everyone, getid) > -1 && mode.equalsIgnoreCase("right")) {
+		if (getplayerinslot(Constant_Protect.flag_everyone, getid) > -1 && mode.equalsIgnoreCase("right")) {
 
 			// player.sendMessage(dprint.r.color("this is not your skyblock ,
 			// host is "

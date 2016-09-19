@@ -74,6 +74,7 @@ import api_skyblock.Constant;
 import api_skyblock.LV1000Type;
 import api_skyblock.api_skyblock;
 import dewddtran.tr;
+import li.Constant_Protect;
 import li.LXRXLZRZType;
 import net.minecraft.server.v1_8_R3.EntityPlayer;
 
@@ -723,7 +724,7 @@ public class DigEventListener2 implements Listener {
 
 		// search
 
-		int se = api_skyblock.getplayerinslot(Constant.flag_autocut, getid);
+		int se = api_skyblock.getplayerinslot(Constant_Protect.flag_autocut, getid);
 
 		if (se == -1)
 			return;
@@ -900,7 +901,7 @@ public class DigEventListener2 implements Listener {
 			return;
 		}
 
-		if (api_skyblock.getplayerinslot(Constant.flag_monster, getid) > -1) {
+		if (api_skyblock.getplayerinslot(Constant_Protect.flag_monster, getid) > -1) {
 			e.setCancelled(true);
 			return;
 		}
@@ -976,7 +977,7 @@ public class DigEventListener2 implements Listener {
 
 				int pvparea = api_skyblock.getprotectid(plvi.getLocation().getBlock());
 				if (pvparea >= 0) {
-					if (api_skyblock.getplayerinslot(Constant.flag_pvp, pvparea) == -1
+					if (api_skyblock.getplayerinslot(Constant_Protect.flag_pvp, pvparea) == -1
 							&& !plp.hasPermission(Constant.poveride)
 							&& api_skyblock.getplayerinslot(plp.getName(), pvparea) == -1) {
 						e.setDamage(0);
@@ -1037,7 +1038,7 @@ public class DigEventListener2 implements Listener {
 		// e.setCancelled(true);
 		int getid = api_skyblock.getprotectid(block);
 		if (getid > -1) {
-			if (api_skyblock.getplayerinslot(Constant.flag_explode, getid) > -1)
+			if (api_skyblock.getplayerinslot(Constant_Protect.flag_explode, getid) > -1)
 				e.setCancelled(true);
 			return;
 		}
@@ -1254,7 +1255,7 @@ public class DigEventListener2 implements Listener {
 
 		// search
 
-		int se = api_skyblock.getplayerinslot(Constant.flag_autoabsorb, getid);
+		int se = api_skyblock.getplayerinslot(Constant_Protect.flag_autoabsorb, getid);
 
 		if (se == -1)
 			return;
@@ -1414,13 +1415,13 @@ public class DigEventListener2 implements Listener {
 
 					player.sendMessage(dprint.r.color(tr.gettr("skyblock add these flag to your zone to activate something")));
 					
-					player.sendMessage(dprint.r.color((Constant.flag_autoabsorb + " " +tr.gettr("flag " + Constant.flag_autoabsorb + " meaning"))));
-					player.sendMessage(dprint.r.color((Constant.flag_autocut + " " +tr.gettr("flag " + Constant.flag_autocut + " meaning"))));
-					player.sendMessage(dprint.r.color((Constant.flag_everyone + " " +tr.gettr("flag " + Constant.flag_everyone + " meaning"))));
-					player.sendMessage(dprint.r.color((Constant.flag_explode + " " +tr.gettr("flag " + Constant.flag_explode + " meaning"))));
-					player.sendMessage(dprint.r.color((Constant.flag_monster + " " +tr.gettr("flag " + Constant.flag_monster + " meaning"))));
-					player.sendMessage(dprint.r.color((Constant.flag_noprotect + " " +tr.gettr("flag " + Constant.flag_noprotect + " meaning"))));
-					player.sendMessage(dprint.r.color((Constant.flag_pvp + " " +tr.gettr("flag " + Constant.flag_pvp + " meaning"))));
+					player.sendMessage(dprint.r.color((Constant_Protect.flag_autoabsorb + " " +tr.gettr("flag " + Constant_Protect.flag_autoabsorb + " meaning"))));
+					player.sendMessage(dprint.r.color((Constant_Protect.flag_autocut + " " +tr.gettr("flag " + Constant_Protect.flag_autocut + " meaning"))));
+					player.sendMessage(dprint.r.color((Constant_Protect.flag_everyone + " " +tr.gettr("flag " + Constant_Protect.flag_everyone + " meaning"))));
+					player.sendMessage(dprint.r.color((Constant_Protect.flag_explode + " " +tr.gettr("flag " + Constant_Protect.flag_explode + " meaning"))));
+					player.sendMessage(dprint.r.color((Constant_Protect.flag_monster + " " +tr.gettr("flag " + Constant_Protect.flag_monster + " meaning"))));
+					player.sendMessage(dprint.r.color((Constant_Protect.flag_noprotect + " " +tr.gettr("flag " + Constant_Protect.flag_noprotect + " meaning"))));
+					player.sendMessage(dprint.r.color((Constant_Protect.flag_pvp + " " +tr.gettr("flag " + Constant_Protect.flag_pvp + " meaning"))));
 					
 					
 
@@ -2355,7 +2356,7 @@ public class DigEventListener2 implements Listener {
 
 						// search
 
-						int se = api_skyblock.getplayerinslot(Constant.flag_autocut, getid);
+						int se = api_skyblock.getplayerinslot(Constant_Protect.flag_autocut, getid);
 
 						if (se == -1)
 							continue;
@@ -2388,7 +2389,7 @@ public class DigEventListener2 implements Listener {
 			if (pvparea >= 0)
 				if (api_skyblock.getplayerinslot(plvi.getName(), pvparea) == -1
 						&& !plvi.hasPermission(Constant.poveride)
-						&& api_skyblock.getplayerinslot(Constant.flag_pvp, pvparea) == -1) {
+						&& api_skyblock.getplayerinslot(Constant_Protect.flag_pvp, pvparea) == -1) {
 					Entity en = e.getProjectile();
 					en.getVelocity();
 					en.setVelocity(Vector.getRandom());

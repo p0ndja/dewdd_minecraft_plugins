@@ -9,18 +9,7 @@ import org.bukkit.entity.Player;
 
 public abstract class dewset_interface extends dewsetdatabase {
 
-	public String flag_everyone = "<everyone>";
-	public String flag_monster = "<monster>";
-	public String flag_noinwater = "<noinwater>";
-
-	public String flag_nooutwater = "<nooutwater>";
-
-	public String flag_protectanimal = "<protectanimal>";
-
-	public String flag_protecthopper = "<protecthopper>";
-	public String flag_pvp = "<pvp>";
-
-	public String flag_sell = "<sell>";
+	
 
 	public int selectmax = 29;
 
@@ -47,9 +36,7 @@ public abstract class dewset_interface extends dewsetdatabase {
 	
 	public String pmainalsocopyinventoryblockwhenyouusedewset = "dewdd.main.dewset.copyinventoryblocks";
 
-	public String flag_sign = "<sign>";
 
-	public String flag_stopwater = "<stopwater>";
 
 	public abstract boolean dewps_add(String message, Player player);
 
