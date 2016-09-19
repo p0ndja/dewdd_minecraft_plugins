@@ -197,7 +197,7 @@ public class DigEventListener2 implements Listener {
 					e.printStackTrace();
 				}
 
-				dprint.r.printAll("ft waiting ac != null");
+			//	dprint.r.printAll("ft waiting ac != null");
 
 			}
 

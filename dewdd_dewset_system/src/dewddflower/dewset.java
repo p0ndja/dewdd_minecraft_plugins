@@ -1038,6 +1038,8 @@ public class dewset extends dewset_interface {
 			dewset.this.addItemIfItemIsZero(this.item, this.player);
 
 			CoreProtectAPI CoreProtect = dewset.getCoreProtect();
+			
+			int count = 0;
 
 			while (this.xlx <= this.mx) {
 				while (this.ylx <= this.my) {
@@ -1045,7 +1047,7 @@ public class dewset extends dewset_interface {
 
 						endtime = System.currentTimeMillis();
 						if ((endtime - starttime) > dewset.this.runtime) {
-
+						//if (count  >= 1) {
 							dewset_light_c xgn2 = new dewset_light_c(this.player, this.item, this.mx, this.my, this.mz,
 									this.lx, this.ly, this.lz, this.xlx, this.ylx, this.zlx, this.getid,
 									this.playerLocation);
@@ -1059,6 +1061,8 @@ public class dewset extends dewset_interface {
 
 							return;
 						}
+						
+						count ++;
 
 						blb = this.playerLocation.getWorld().getBlockAt(this.xlx, this.ylx, this.zlx);
 
@@ -1121,7 +1125,7 @@ public class dewset extends dewset_interface {
 								}
 							}
 
-							blb.setTypeIdAndData(id, data, false);
+							blb.setTypeIdAndData(id, data, true);
 
 							if (CoreProtect != null) { // Ensure we have access
 														// to the API

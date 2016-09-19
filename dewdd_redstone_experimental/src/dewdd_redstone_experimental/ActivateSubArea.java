@@ -3,11 +3,9 @@ package dewdd_redstone_experimental;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 
-import core_optimization_api.Chromosome;
-
 public class ActivateSubArea implements Runnable {
-	private Redex redex;
-	private int curId = 0;
+	private Redex	redex;
+	private int		curId	= 0;
 
 	public ActivateSubArea(Redex redex, int curId) {
 		this.redex = redex;
@@ -18,13 +16,14 @@ public class ActivateSubArea implements Runnable {
 	public void run() {
 		Block setBlock = null;
 
-		if (curId % 100 == 0) {
-			dprint.r.printAll("Activate : curid " + curId);
+		if ((this.curId % 100) == 0) {
+			dprint.r.printAll("Activate : curid " + this.curId);
 
 		}
 
-		AreaType at = redex.listEx.get(curId);
-		setBlock = at.getBlocklxlylz().getRelative(redex.beaconX, redex.beaconY, redex.beaconZ);
+		AreaType at = this.redex.listEx.get(this.curId);
+		setBlock = at.getBlocklxlylz().getRelative(this.redex.beaconX,
+				this.redex.beaconY, this.redex.beaconZ);
 		setBlock.setType(Material.REDSTONE_BLOCK);
 
 	}

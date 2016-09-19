@@ -365,15 +365,15 @@ public class tr {
 
 			//dprint_tran.r.printAll("runWorld size " + xxx.runWorld.size());
 
-			for (int j = 0; j < xxx.runWorld.size(); j++) {
+			/*for (int j = 0; j < xxx.runWorld.size(); j++) {
 				dprint_tran.r.printAll(xxx.runWorld.get(j));
-			}
+			}*/
 
 			//dprint_tran.r.printAll("skipWorld size " + xxx.skipWorld.size());
 
-			for (int j = 0; j < xxx.skipWorld.size(); j++) {
+			/*for (int j = 0; j < xxx.skipWorld.size(); j++) {
 				dprint_tran.r.printAll(xxx.skipWorld.get(j));
-			}
+			}*/
 		}
 
 		System.out.println("loaded_runworld_file_data");

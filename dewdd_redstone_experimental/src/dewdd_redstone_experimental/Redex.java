@@ -20,6 +20,8 @@ public class Redex {
 	// update the best
 	// produce next gen
 
+	public static int				maxTopBest					= 10;
+
 	public static int				maxPopulation				= 10;
 
 	public static long				maxNothingBetterInTick		= (60 * 1) * 10;				// 1
@@ -51,6 +53,9 @@ public class Redex {
 	public AreaType					output						= new AreaType();
 
 	public AreaType					start						= new AreaType();
+
+	public AreaType					topBest						=  null;
+
 	public World					world;
 
 	public LinkedList<AreaType>		listEx						= new LinkedList<AreaType>();
@@ -58,6 +63,8 @@ public class Redex {
 	public ArrayList<Chromosome>	dnaList;
 
 	public Hybrid					hybrid;
+	
+	public EventListenerX eventListenerX = null;
 
 	public Redex(World world) {
 		this.world = world;
@@ -66,6 +73,9 @@ public class Redex {
 		this.hybrid.setDnaLength(Redex.dnaLength);
 		this.hybrid.setPopulationSize(Redex.maxPopulation);
 		this.hybrid.prepareToRunGA();
+		
+		eventListenerX = new EventListenerX(this);
+		this.hybrid.registerEvent(eventListenerX);
 
 		this.dnaList = this.hybrid.getPopulation();
 
