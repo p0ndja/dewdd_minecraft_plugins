@@ -81,7 +81,7 @@ public class DigEventListener2 implements Listener {
 	public DigEventListener2() {
 		delay dl =  new delay();
 		Thread dlt = new Thread(dl);
-		
+		dlt.start();
 	
 	}
 	
@@ -1279,10 +1279,23 @@ public class DigEventListener2 implements Listener {
 
 		Player player = e.getPlayer();
 
-		if (player.getInventory().first(83) >= 0) return;
+	/*	if (player.getInventory().first(83) >= 0) return;
 
 		ItemStack ite = new ItemStack(83, 1);
-		player.getInventory().addItem(ite);
+		player.getInventory().addItem(ite);*/
+		
+		int rsid = dew.getOWNIslandID(player, false);
+		
+		if (rsid == -1) {
+		player.sendMessage(tr.gettr("you_dont_have_anyskyblock"));
+			player.sendMessage(tr.gettr("type_this_command_for_create_new_skyblock"));
+			
+		
+		}
+		else {
+			player.sendMessage(dew.getFullMissionHeadAndCurLevel(dew.rs[rsid].mission));
+			
+		}
 
 	}
 

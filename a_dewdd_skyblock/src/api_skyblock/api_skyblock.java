@@ -315,6 +315,8 @@ public class api_skyblock {
 
 					lastcreate = System.currentTimeMillis();
 
+					player.sendMessage(getFullMissionHeadAndCurLevel(rs[newid].mission));
+					
 					// add item done
 
 					// save file
@@ -363,7 +365,7 @@ public class api_skyblock {
 		Bukkit.getScheduler().cancelTasks(ac);
 
 		Bukkit.getScheduler().scheduleSyncRepeatingTask(ac, new missionNotification(),
-				1, 1200);
+				1, 2400);
 	}
 	class missionNotification implements Runnable{
 
@@ -382,14 +384,20 @@ public class api_skyblock {
 					continue;
 				}
 				
-				String header = getMissionHeader(rs[id].mission);
-				player.sendMessage(tr.gettr("is_cur_level_mission_showing_" ) +" " +  "header");
+				
+				player.sendMessage(getFullMissionHeadAndCurLevel(rs[id].mission));
 				
 				// check his 
 			}
 			
 		}
 		
+	}
+	
+	public String getFullMissionHeadAndCurLevel(int mission) {
+		String header = getMissionHeader(mission);
+		String aa = tr.gettr("is_cur_level_mission_showing_" )+" " + header;
+		return aa;
 	}
 
 	public class rsdata {
