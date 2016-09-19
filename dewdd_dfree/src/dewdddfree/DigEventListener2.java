@@ -629,51 +629,8 @@ public class DigEventListener2 implements Listener {
 				dewddflower.Main.ds.chestabsorb2();
 			}
 
-			// exchange
-			if (sign.getLine(0).equalsIgnoreCase("dewexchange")) {
-				sign.setLine(0, "[dewexchange]");
-				sign.update(true);
-			}
-
-			if (sign.getLine(0).endsWith("[dewexchange]") == true) {
-				if (player.hasPermission(pudexchange) == false) {
-					player.sendMessage("ptdew&dewdd: you don't have permission for use dew exchange");
-					return;
-
-				}
-
-				if (player.getItemInHand() == null) {
-					player.sendMessage("ptdew&dewdd: can't use [dewexchange] cuz your item in hand = empty");
-					return;
-				}
-
-				int a1 = Integer.parseInt(sign.getLine(1));
-				int a2 = Integer.parseInt(sign.getLine(2));
-				if (act == Action.LEFT_CLICK_BLOCK) {
-					if (player.getItemInHand().getTypeId() == a1) {
-						player.getItemInHand().setTypeId(a2);
-						player.sendMessage("ptdew&dewdd: exchange done!");
-						e.setCancelled(true);
-						return;
-					} else {
-						player.sendMessage("ptdew&dewdd: What!! this item can't exchange");
-						e.setCancelled(true);
-						return;
-					}
-				} else if (act == Action.RIGHT_CLICK_BLOCK) {
-					if (player.getItemInHand().getTypeId() == a2) {
-						player.getItemInHand().setTypeId(a1);
-						player.sendMessage("ptdew&dewdd: exchange done!");
-						e.setCancelled(true);
-						return;
-					} else {
-						player.sendMessage("ptdew&dewdd: What!! this item can't exchange");
-						e.setCancelled(true);
-						return;
-					}
-				}
-
-			}
+			
+			
 			// exchange
 
 			if (act == Action.RIGHT_CLICK_BLOCK) {
@@ -744,34 +701,7 @@ public class DigEventListener2 implements Listener {
 			return;
 		}
 
-		if (e.getLine(0).endsWith("[dewexchange]") == true || e.getLine(0).equalsIgnoreCase("[dewexchange]")) {
-			if (player.hasPermission(pcdexchange) == false) {
-				e.setLine(0, "<dewexchange>");
-				e.setLine(1, "only admin!");
-				e.setLine(2, "Access Deny");
-				e.setLine(3, "...");
-
-				player.sendMessage("ptdew&dewdd: [dewexchange] you dan't have permission");
-				player.sendMessage("ptdew&dewdd: [dewexchange] มีแค่แอดมินเท่านั้นที่สร้างได้");
-
-				return;
-			} else {
-				if (e.getLine(1).equalsIgnoreCase("")) {
-					e.setLine(0, "<dewexchange>");
-					e.setLine(1, "source id?");
-					return;
-				}
-				if (e.getLine(2).equalsIgnoreCase("")) {
-					e.setLine(0, "<dewexchange>");
-					e.setLine(2, "des id?");
-
-					return;
-				}
-
-				player.sendMessage("ptdew&dewdd: dewexchange done");
-			}
-
-		}
+		
 
 		if (e.getLine(0).endsWith("[dfree]") == true) {
 			if (player.hasPermission(pcdfree) == false) {

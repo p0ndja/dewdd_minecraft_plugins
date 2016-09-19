@@ -3012,14 +3012,14 @@ public class DigEventListener2 implements Listener {
 			Sign sd = (Sign) block.getState();
 			if (sd.getLine(0).toLowerCase().endsWith("[buy]") || sd.getLine(0).toLowerCase().endsWith("[sell]")
 					|| sd.getLine(0).toLowerCase().endsWith("[trade]") || sd.getLine(0).toLowerCase().endsWith("[free]")
-							&& block.getWorld().getName().equalsIgnoreCase("world") == false
+						
 
 			) {
 				block.breakNaturally();
 			}
 
 			if (sd.getLine(0).toLowerCase().endsWith("admin shop")
-					&& block.getWorld().getName().equalsIgnoreCase("world") == false) {
+					) {
 				block.breakNaturally();
 			}
 
@@ -3048,57 +3048,7 @@ public class DigEventListener2 implements Listener {
 					dew.redtorchchest(block, player);
 				}
 
-			if (block.getTypeId() == 63 || block.getTypeId() == 68) {
-
-				Sign sign = (Sign) block.getState();
-
-				if (sign.getLine(0).endsWith("[dclear]") == true) {
-					if (api_admin.dewddadmin.is2admin(player) == false
-							&& api_admin.dewddadmin.is2moderator(player) == false) {
-						player.sendMessage("ptdew&dewdd : " + tr.gettr("only_admin_can_build_this_sign"));
-						return;
-					}
-
-					player.getInventory().clear();
-					player.sendMessage("ptdew&dewdd : " + tr.gettr("cleared_your_inventory"));
-					return;
-
-				}
-
-				if (sign.getLine(0).endsWith("[dgive]") == true) {
-					if (api_admin.dewddadmin.is2admin(player) == false
-							&& api_admin.dewddadmin.is2moderator(player) == false) {
-						player.sendMessage("ptdew&dewdd : " + tr.gettr("only_admin_can_build_this_sign"));
-						return;
-					}
-					int gid = Integer.parseInt(sign.getLine(1));
-					byte gdata = Byte.parseByte(sign.getLine(2));
-					int gamount = Integer.parseInt(sign.getLine(3));
-
-					if (gamount <= 0) {
-						player.sendMessage("ptdew&dewdd : line 4 = amount  so  amount must > 0");
-
-						return;
-					}
-					if (gdata < 0) {
-						player.sendMessage("ptdew&dewdd : line 3 = data id  so  amount must >= 0");
-						return;
-					}
-
-					if (gid <= 0) {
-						player.sendMessage("ptdew&dewdd : line 2 = id  so  amount must > 0");
-						return;
-					}
-
-					ItemStack ax = new ItemStack(gid, gamount);
-					ax.getData().setData(gdata);
-					player.getInventory().addItem(ax);
-					player.sendMessage("ptdew&dewdd : " + tr.gettr("gave_item_to_you"));
-
-					return;
-				}
-
-			}
+		
 
 			/*
 			 * if (player.getItemInHand().getTypeId() == 276 &&
@@ -3351,12 +3301,7 @@ public class DigEventListener2 implements Listener {
 		Player player = event.getPlayer();
 		Block block = event.getBlock();
 
-		if (event.getLine(0).equalsIgnoreCase("dewbuy")) {
-			event.setLine(0, "[dewbuy]");
-		}
-		if (event.getLine(0).equalsIgnoreCase("dewhome")) {
-			event.setLine(0, "[dewhome]");
-		}
+		
 
 		if (event.getLine(0).equalsIgnoreCase("[dewbuy]") == true
 				|| event.getLine(0).equalsIgnoreCase("[dewhome]") == true) {
@@ -3418,36 +3363,7 @@ public class DigEventListener2 implements Listener {
 
 		}
 
-		if (event.getLine(0).equalsIgnoreCase("dgive")) {
-			event.setLine(0, "[dgive]");
-		}
-		if (event.getLine(0).endsWith("[dgive]") == true) {
-			if (api_admin.dewddadmin.is2admin(player) == false && api_admin.dewddadmin.is2moderator(player) == false) {
-				player.sendMessage("ptdew&dewdd : " + tr.gettr("only_staff_admin_can_build_this_sign"));
-				event.getBlock().breakNaturally();
-				return;
-			}
-			int gid = Integer.parseInt(event.getLine(1));
-			int gdata = Integer.parseInt(event.getLine(2));
-			int gamount = Integer.parseInt(event.getLine(3));
-
-			if (gamount <= 0) {
-				player.sendMessage("ptdew&dewdd : line 4 = amount  so  amount must > 0");
-				return;
-			}
-			if (gdata < 0) {
-				player.sendMessage("ptdew&dewdd : line 3 = data id  so  amount must >= 0");
-				return;
-			}
-
-			if (gid <= 0) {
-				player.sendMessage("ptdew&dewdd : line 2 = id  so  amount must > 0");
-				return;
-			}
-
-			player.sendMessage("ptdew&dewdd : " + tr.gettr("created_sign"));
-			return;
-		}
+		
 	}
 
 	// PlayerRespawnEvent

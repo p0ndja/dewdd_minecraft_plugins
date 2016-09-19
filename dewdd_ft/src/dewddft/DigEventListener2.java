@@ -276,30 +276,22 @@ public class DigEventListener2 implements Listener {
 
 					i++;
 					Thread.sleep(1000);
-					System.out.println("dew main waiting for create dewset sleeping ac +" + i);
+					System.out.println("dew ft waiting for create dewset sleeping ac +" + i);
 
 				}
 
-				while (dew == null) {
+				while (dewddflower.Main.ds == null) {
 
 					i++;
 					Thread.sleep(1000);
-					System.out.println("dew main waiting for create dewset sleeping dew +" + i);
+					System.out.println("dew ft waiting for create dewset sleeping dew +" + i);
 
-					dew = new dewset();
-
-				}
-
-				while (dewset.ac == null) {
-
-					i++;
-					Thread.sleep(1000);
-					System.out.println("dew main waiting for create dewset sleeping dew ac +" + i);
-
-					dewset.ac = ac;
+					// dew = dewddflower.Main.ds;
 
 				}
-				dew.loadmainfile();
+				dew = dewddflower.Main.ds;
+
+				
 
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block

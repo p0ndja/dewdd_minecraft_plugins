@@ -8,6 +8,7 @@ package dewddskyblock;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Random;
 
@@ -313,7 +314,7 @@ public class DigEventListener2 implements Listener {
 
 			if (bd.size() == 0) {
 				bd = null;
-				bd = new HashMap<String , Location>();
+				bd = new HashMap<String, Location>();
 				// dprint.r.printAll("run () bd.size = " + bd.size());
 
 				LXRXLZRZType ee = api_skyblock.getPositionLXRXLZRZ();
@@ -369,8 +370,8 @@ public class DigEventListener2 implements Listener {
 
 						if (first == 0) {
 							dprint.r.printAll("deleteybelow5 > break > " + getStack.getX() + "," + getStack.getY() + ","
-									+ getStack.getZ() +  " " +  getStack.getType().name() + ":" + getStack.getData() + " size "
-									+ bd.size());
+									+ getStack.getZ() + " " + getStack.getType().name() + ":" + getStack.getData()
+									+ " size " + bd.size());
 							first = 1;
 						}
 
@@ -600,8 +601,6 @@ public class DigEventListener2 implements Listener {
 		public Player player;
 		public int lastStandProtectID = -1;
 	}
-
-	
 
 	public JavaPlugin ac = null;
 
@@ -1213,8 +1212,8 @@ public class DigEventListener2 implements Listener {
 				}
 
 			} else {
-				p.sendMessage(
-						dprint.r.color(tr.gettr("sky_lv_got_all_item_to_completed_cur_lv_") + api_skyblock.rs[idx].mission));
+				p.sendMessage(dprint.r
+						.color(tr.gettr("sky_lv_got_all_item_to_completed_cur_lv_") + api_skyblock.rs[idx].mission));
 
 				api_skyblock.rs[idx].mission++;
 				dew.saveRSProtectFile();
@@ -1411,22 +1410,25 @@ public class DigEventListener2 implements Listener {
 
 					player.sendMessage("xy " + ee.lx + "," + ee.lz + " to " + ee.rx + "," + ee.rz);
 				} else if (m[1].equalsIgnoreCase("flag")) {
-					
 
-					player.sendMessage(dprint.r.color(tr.gettr("skyblock add these flag to your zone to activate something")));
-					
-					player.sendMessage(dprint.r.color((Constant_Protect.flag_autoabsorb + " " +tr.gettr("flag " + Constant_Protect.flag_autoabsorb + " meaning"))));
-					player.sendMessage(dprint.r.color((Constant_Protect.flag_autocut + " " +tr.gettr("flag " + Constant_Protect.flag_autocut + " meaning"))));
-					player.sendMessage(dprint.r.color((Constant_Protect.flag_everyone + " " +tr.gettr("flag " + Constant_Protect.flag_everyone + " meaning"))));
-					player.sendMessage(dprint.r.color((Constant_Protect.flag_explode + " " +tr.gettr("flag " + Constant_Protect.flag_explode + " meaning"))));
-					player.sendMessage(dprint.r.color((Constant_Protect.flag_monster + " " +tr.gettr("flag " + Constant_Protect.flag_monster + " meaning"))));
-					player.sendMessage(dprint.r.color((Constant_Protect.flag_noprotect + " " +tr.gettr("flag " + Constant_Protect.flag_noprotect + " meaning"))));
-					player.sendMessage(dprint.r.color((Constant_Protect.flag_pvp + " " +tr.gettr("flag " + Constant_Protect.flag_pvp + " meaning"))));
-					
-					
+					player.sendMessage(
+							dprint.r.color(tr.gettr("skyblock add these flag to your zone to activate something")));
 
-				
-					
+					player.sendMessage(dprint.r.color((Constant_Protect.flag_autoabsorb + " "
+							+ tr.gettr("flag " + Constant_Protect.flag_autoabsorb + " meaning"))));
+					player.sendMessage(dprint.r.color((Constant_Protect.flag_autocut + " "
+							+ tr.gettr("flag " + Constant_Protect.flag_autocut + " meaning"))));
+					player.sendMessage(dprint.r.color((Constant_Protect.flag_everyone + " "
+							+ tr.gettr("flag " + Constant_Protect.flag_everyone + " meaning"))));
+					player.sendMessage(dprint.r.color((Constant_Protect.flag_explode + " "
+							+ tr.gettr("flag " + Constant_Protect.flag_explode + " meaning"))));
+					player.sendMessage(dprint.r.color((Constant_Protect.flag_monster + " "
+							+ tr.gettr("flag " + Constant_Protect.flag_monster + " meaning"))));
+					player.sendMessage(dprint.r.color((Constant_Protect.flag_noprotect + " "
+							+ tr.gettr("flag " + Constant_Protect.flag_noprotect + " meaning"))));
+					player.sendMessage(dprint.r.color((Constant_Protect.flag_pvp + " "
+							+ tr.gettr("flag " + Constant_Protect.flag_pvp + " meaning"))));
+
 				} else if (m[1].equalsIgnoreCase("buyhere")) {
 					// for buy these zone
 
@@ -1552,27 +1554,68 @@ public class DigEventListener2 implements Listener {
 
 					if (m.length != 3) {
 						player.sendMessage(dprint.r.color("need 3 arguments   /skyblock go <player>"));
-						for (int lop2 = 0; lop2 < api_skyblock.rsMax; lop2++) { // lop2
+						/*for (int lop2 = 0; lop2 < api_skyblock.rsMax; lop2++) { // lop2
 							Block block = player.getWorld().getBlockAt(api_skyblock.rs[lop2].x,
 									api_skyblock.rs[lop2].y + 10, api_skyblock.rs[lop2].z);
 							player.sendMessage(dprint.r.color("Island at (" + block.getX() + "," + block.getY() + ","
 									+ block.getZ() + ") of " + api_skyblock.rs[lop2].p[0]));
 
 						} // lop2
-
+*/
 						return;
 					}
 
-					for (int lop2 = 0; lop2 < api_skyblock.rsMax; lop2++)
-						if (api_skyblock.rs[lop2].p[0].toLowerCase().indexOf(m[2].toLowerCase()) > -1) {
-							Block block = player.getWorld().getBlockAt(api_skyblock.rs[lop2].x,
-									api_skyblock.rs[lop2].y + 10, api_skyblock.rs[lop2].z);
-							block.getChunk().load();
-							player.teleport(block.getLocation());
-							player.sendMessage(dprint.r.color("teleported you to (" + block.getX() + "," + block.getY()
-									+ "," + block.getZ() + ") of " + api_skyblock.rs[lop2].p[0]));
-							return;
+					int counttruename = 0;
+					int nearname = 0;
+
+					for (int lop2 = 0; lop2 < api_skyblock.rsMax; lop2++) {
+
+						if (api_skyblock.rs[lop2].p[0].equalsIgnoreCase(m[2])) {
+							counttruename++;
 						}
+
+						if (api_skyblock.rs[lop2].p[0].toLowerCase().indexOf(m[2].toLowerCase()) > -1) {
+
+							// player.sendMessage(dprint.r.color("" +
+							// api_skyblock.rs[lop2].p[0]));
+							nearname++;
+
+						}
+
+					}
+
+					if (nearname > 1) {
+						player.sendMessage(dprint.r.color(tr.gettr("list of sky protect name like your search name")));
+
+						for (int lop2 = 0; lop2 < api_skyblock.rsMax; lop2++) {
+
+							if (api_skyblock.rs[lop2].p[0].toLowerCase().indexOf(m[2].toLowerCase()) > -1) {
+
+								player.sendMessage(dprint.r.color("" + api_skyblock.rs[lop2].p[0]));
+
+							
+							}
+
+						}
+						
+					}
+
+					
+					for (int lop2 = 0; lop2 < api_skyblock.rsMax; lop2++) {
+
+						if (api_skyblock.rs[lop2].p[0].equalsIgnoreCase(m[2])) {
+								Block block = player.getWorld().getBlockAt(api_skyblock.rs[lop2].x,
+								api_skyblock.rs[lop2].y + 10, api_skyblock.rs[lop2].z);
+						block.getChunk().load();
+						player.teleport(block.getLocation());
+						player.sendMessage(dprint.r.color("teleported you to (" + block.getX() + "," + block.getY()
+								+ "," + block.getZ() + ") of " + api_skyblock.rs[lop2].p[0]));
+						
+						return;
+						}
+						
+					
+					}
 
 				} else if (m[1].equalsIgnoreCase("goid")) {
 					// go
@@ -1692,8 +1735,8 @@ public class DigEventListener2 implements Listener {
 					}
 
 					if (api_skyblock.getplayerinslot(player.getName(), getid) == -1) {
-						player.sendMessage(
-								dprint.r.color(tr.gettr("owner_of_this_island_name") + " = " + api_skyblock.rs[getid].p[0]));
+						player.sendMessage(dprint.r
+								.color(tr.gettr("owner_of_this_island_name") + " = " + api_skyblock.rs[getid].p[0]));
 					}
 
 					if (api_skyblock.rs[getid].mission >= api_skyblock.lv1000.size()) {
@@ -1899,8 +1942,9 @@ public class DigEventListener2 implements Listener {
 						return;
 					}
 
-					player.sendMessage(dprint.r.color("protect id ") + getid + " , position (" + api_skyblock.rs[getid].x + ","
-							+ api_skyblock.rs[getid].y + "," + api_skyblock.rs[getid].z + ")");
+					player.sendMessage(
+							dprint.r.color("protect id ") + getid + " , position (" + api_skyblock.rs[getid].x + ","
+									+ api_skyblock.rs[getid].y + "," + api_skyblock.rs[getid].z + ")");
 
 					for (int i = 0; i < api_skyblock.RSMaxPlayer; i++)
 						if (api_skyblock.rs[getid].p[i].equalsIgnoreCase("null") == false)
@@ -1954,8 +1998,8 @@ public class DigEventListener2 implements Listener {
 					if (api_skyblock.rs[getido].p[0].equalsIgnoreCase(player.getName()) == false) {
 
 						if (player.hasPermission(Constant.poveride) == false) {
-							player.sendMessage(dprint.r.color(
-									tr.gettr("you_can't_deleteisland_cuz_owner_here_is") + " " + api_skyblock.rs[getido].p[0]));
+							player.sendMessage(dprint.r.color(tr.gettr("you_can't_deleteisland_cuz_owner_here_is") + " "
+									+ api_skyblock.rs[getido].p[0]));
 							return;
 
 						} else {
@@ -2276,8 +2320,8 @@ public class DigEventListener2 implements Listener {
 					if (curStand == i.lastStandProtectID) {
 
 					} else {
-						p.sendMessage(dprint.r.color(
-								tr.gettr("enter to sky protect of ") + api_skyblock.rs[curStand].p[0] + " id " + curStand));
+						p.sendMessage(dprint.r.color(tr.gettr("enter to sky protect of ")
+								+ api_skyblock.rs[curStand].p[0] + " id " + curStand));
 						i.lastStandProtectID = curStand;
 						return;
 

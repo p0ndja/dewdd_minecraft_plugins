@@ -19,6 +19,8 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import dewddtran.tr;
+
 public class DigEventListener2 implements Listener {
 	class runp implements Runnable {
 		private Player p;
@@ -52,25 +54,35 @@ public class DigEventListener2 implements Listener {
 
 			if (m[0].equalsIgnoreCase("/dewsaveteleport")) {
 				if (p.hasPermission(pbuildsign) == false) {
-					p.sendMessage("only op !");
+					p.sendMessage(dprint.r.color(tr.gettr("you don't have permission") + pbuildsign));
 					return;
 				}
 				sx = p.getLocation().getBlockX();
 				sy = p.getLocation().getBlockY();
 				sz = p.getLocation().getBlockZ();
 				sworld = p.getWorld();
-				dprint.r.printAll("ptdew&dewdd : save teleport completed");
+				p.sendMessage(dprint.r.color(tr.gettr("save teleport completed")));
 				return;
 			}
 			if (m[0].equalsIgnoreCase("/dewloadteleport")) {
 				if (p.hasPermission(pbuildsign) == false) {
-					p.sendMessage("only op !");
+					p.sendMessage(dprint.r.color(tr.gettr("you don't have permission") + pbuildsign));
 					return;
 				}
+				
 				if (sworld == null) {
-					dprint.r.printAll("ptdew&dewdd : save teleport point first!");
+					p.sendMessage(dprint.r.color(tr.gettr("you need to type /dewsaveteleport first")));
 					return;
 				}
+				
+				for (int i = 0 ; i >= -3 ; i --) {
+					Block b = p.getLocation().getBlock().getRelative(0, i, 0);
+					if (dewddflower.Main.ds.checkpermissionarea(b, p, "build") == true) {
+						p.sendMessage(dprint.r.color(tr.gettr("this zone is protected you can't build")));
+						return;
+					}
+				}
+				
 				Block b = p.getLocation().getBlock().getRelative(0, -2, 0);
 				b.setTypeId(68, false);
 
