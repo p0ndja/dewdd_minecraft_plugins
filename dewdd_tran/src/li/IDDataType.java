@@ -21,7 +21,7 @@ public class IDDataType {
 		for (int i = 0 ; i < item.size() ; i ++ ) {
 			IDDataType the = item.get(i);
 			
-			abc = + the.id + ":" + the.data +  (i == item.size() - 1 ? ",":" ");
+			abc = abc + the.id + ":" + the.data +  (i == item.size() - 1 ? ",":" ");
 		}
 		
 		return abc;

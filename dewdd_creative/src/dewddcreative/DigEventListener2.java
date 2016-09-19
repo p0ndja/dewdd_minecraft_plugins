@@ -17,6 +17,9 @@ import org.bukkit.block.Sign;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.BlockExpEvent;
+import org.bukkit.event.block.BlockExplodeEvent;
+import org.bukkit.event.entity.EntityExplodeEvent;
 import org.bukkit.event.entity.ItemDespawnEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.event.inventory.InventoryType;
@@ -421,6 +424,24 @@ public class DigEventListener2 implements Listener {
 	}
 
 	@EventHandler
+	public void eventja(EntityExplodeEvent event){
+		if (tr.isrunworld(ac.getName(), event.getLocation().getWorld().getName())) {
+			event.setCancelled(true);
+			return;
+		}
+	}
+	@EventHandler
+	public void eventja(BlockExplodeEvent event) {
+		if (tr.isrunworld(ac.getName(), event.getBlock().getWorld().getName())) {
+			event.setCancelled(true);
+			return;
+		}
+		
+		
+		
+	}
+	
+	@EventHandler
 	public void eventja(PlayerMoveEvent event) {
 		if (!tr.isrunworld(ac.getName(), event.getPlayer().getWorld().getName())) {
 			return;
@@ -459,7 +480,7 @@ public class DigEventListener2 implements Listener {
 	
 	@EventHandler
 	public void eventja(InventoryOpenEvent event) {
-		if (tr.isrunworld(ac.getName(), event.getPlayer().getName())) {
+		if (tr.isrunworld(ac.getName(), event.getPlayer().getWorld().getName())) {
 			if (event.getInventory().getType() == InventoryType.ENDER_CHEST) {
 				event.getPlayer().sendMessage(dprint.r.color(tr.gettr("Creative Don't allow to open ender chest as this world")));
 				event.setCancelled(true);

@@ -2335,7 +2335,7 @@ public class DigEventListener2 implements Listener {
 		Player player = event.getPlayer();
 		if (event.getNewGameMode() == GameMode.CREATIVE) {
 			boolean xgz = dewddadmin.is2admin(player) || dewddadmin.is2moderator(player)
-					|| dewddadmin.is2gamemode(player);
+					|| dewddadmin.is2gamemode(player) || player.hasPermission("essentials.gamemode");
 
 			if ((!xgz)) {
 				event.setCancelled(true);
