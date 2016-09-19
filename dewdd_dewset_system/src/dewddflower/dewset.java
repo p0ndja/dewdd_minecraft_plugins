@@ -41,7 +41,6 @@ import net.coreprotect.CoreProtectAPI;
 
 public class dewset extends dewset_interface {
 
-	
 	class dewset_block_mom implements Runnable {
 
 		private ArrayList<IDDataType> item;
@@ -201,9 +200,9 @@ public class dewset extends dewset_interface {
 
 							dewset_c xgn2 =
 
-							new dewset_c(this.player, this.item, this.itemSearch, this.invert, this.mx, this.my,
-									this.mz, this.lx, this.ly, this.lz, this.xlx, this.ylx, this.zlx, this.getid,
-									this.playerLocation);
+									new dewset_c(this.player, this.item, this.itemSearch, this.invert, this.mx, this.my,
+											this.mz, this.lx, this.ly, this.lz, this.xlx, this.ylx, this.zlx,
+											this.getid, this.playerLocation);
 
 							dprint.r.printC(this.player.getName() + " dewset  " + tr.gettr("recall") + " " + this.xlx
 									+ " , " + this.ylx + " , " + this.zlx);
@@ -422,41 +421,62 @@ public class dewset extends dewset_interface {
 							return;
 						}
 
-						if (arxx) {
-							if (dewset.this.decreseitem1(this.player, hostBlock.getTypeId(), hostBlock.getData(),
-									true) == false) {
+						if (hostBlock.getTypeId() == 0 && setBlock.getTypeId() == 0) {
+							zlx++;
+							continue;
+						}
+						else if (hostBlock.getTypeId() == 0 && setBlock.getTypeId() != 0) { // if delete
+							if (!perDelete) {
 								this.player.sendMessage(
-										dprint.r.color("ptdew&dewdd : dewcopy " + tr.gettr("don't_have_enough_item")
-												+ hostBlock.getTypeId() + ":" + hostBlock.getData()));
+										dprint.r.color(tr.gettr("don't_have_permission_for_access_delete_command")));
 								return;
 							}
-						}
+							if (CoreProtect != null) { // Ensure we have access
+														// to the API
+								boolean success = CoreProtect.logRemoval(this.player.getName(), hostBlock.getLocation(),
+										0, (byte)0);
+							}
+							hostBlock.setTypeId(0);
 
-						// if (setBlock.getType() != hostBlock.getType() &&
-						// setBlock.getData() != hostBlock.getData()) {
-						dewset.this.saveHistory(CoreProtect, this.player, hostBlock, setBlock, false);
+						} else {
 
-						// }
-
-						if ((hostBlock.getType() == Material.SIGN_POST)
-								|| (hostBlock.getType() == Material.WALL_SIGN)) {
-
-							Sign hostSign = (Sign) hostBlock.getState();
-							Sign setSign = (Sign) setBlock.getState();
-
-							for (int i = 0; i < 4; i++) {
-								setSign.setLine(i, hostSign.getLine(i));
+							if (arxx) {
+								if (dewset.this.decreseitem1(this.player, hostBlock.getTypeId(), hostBlock.getData(),
+										true) == false) {
+									this.player.sendMessage(
+											dprint.r.color("ptdew&dewdd : dewcopy " + tr.gettr("don't_have_enough_item")
+													+ hostBlock.getTypeId() + ":" + hostBlock.getData()));
+								//	dprint.r.printAll("nope");
+									return;
+								}
 							}
 
-							setSign.update(true);
-							dewset.this.saveHistory(CoreProtect, this.player, hostBlock, setBlock, true);
+							// if (setBlock.getType() != hostBlock.getType() &&
+							// setBlock.getData() != hostBlock.getData()) {
+							dewset.this.saveHistory(CoreProtect, this.player, hostBlock, setBlock, false);
+
+							// }
+
+							if ((hostBlock.getType() == Material.SIGN_POST)
+									|| (hostBlock.getType() == Material.WALL_SIGN)) {
+
+								Sign hostSign = (Sign) hostBlock.getState();
+								Sign setSign = (Sign) setBlock.getState();
+
+								for (int i = 0; i < 4; i++) {
+									setSign.setLine(i, hostSign.getLine(i));
+								}
+
+								setSign.update(true);
+								dewset.this.saveHistory(CoreProtect, this.player, hostBlock, setBlock, true);
+							}
 						}
+						
 
 						if ((this.amountloop == 3) && this.player
 								.hasPermission(dewset_interface.pmainalsocopyinventoryblockwhenyouusedewset)) {
 
 							copyInventory(hostBlock, setBlock, player, CoreProtect);
-							
 
 						}
 
@@ -488,56 +508,100 @@ public class dewset extends dewset_interface {
 				Bukkit.getScheduler().scheduleSyncDelayedTask(dewset.ac, xgn2, dewset.this.sleeptime);
 				return;
 			}
-			
-			
+
 			for (Entity en : playerLocation.getWorld().getEntities()) {
 				if (en == null) {
 					continue;
 				}
-				
-				
-				
+
 				if (en.getType() == EntityType.ITEM_FRAME) {
-					dprint.r.printAll("item frame location " + tr.locationToString(en.getLocation())
-							);
-					
-					dprint.r.printAll("x " + lx + ","  + mx);
-					dprint.r.printAll("y " + ly + ","  + my);
-					dprint.r.printAll("z " + lz + ","  + mz);
-					
+
+					// dprint.r.printAll("x " + lx + "," + mx);
+					// dprint.r.printAll("y " + ly + "," + my);
+					// dprint.r.printAll("z " + lz + "," + mz);
+
 					if (en.getLocation().getBlockX() >= lx && en.getLocation().getBlockX() <= mx) {
-						dprint.r.printAll("x in range");
+						// dprint.r.printAll("x in range");
 						if (en.getLocation().getBlockY() >= ly && en.getLocation().getBlockY() <= my) {
-							dprint.r.printAll("y in range");
+							// dprint.r.printAll("y in range");
 							if (en.getLocation().getBlockZ() >= lz && en.getLocation().getBlockZ() <= mz) {
-								dprint.r.printAll("z in range");
+								// dprint.r.printAll("z in range");
 								// copy to new one
-								
-								int tmpx =( en.getLocation().getBlockX() - selectx1) + playerLocation.getBlockX();
-								int tmpy =( en.getLocation().getBlockY() - selecty1) + playerLocation.getBlockY();
-								int tmpz =( en.getLocation().getBlockZ() - selectz1) + playerLocation.getBlockZ();
-								
+
+								dprint.r.printAll("item frame location " + tr.locationToString(en.getLocation()));
+
+								int tmpx = (en.getLocation().getBlockX() - selectx1) + playerLocation.getBlockX();
+								int tmpy = (en.getLocation().getBlockY() - selecty1) + playerLocation.getBlockY();
+								int tmpz = (en.getLocation().getBlockZ() - selectz1) + playerLocation.getBlockZ();
+
 								Location loc2 = en.getLocation();
 								loc2.setX(tmpx);
 								loc2.setY(tmpy);
 								loc2.setZ(tmpz);
-								
-								
-								Entity newen = playerLocation.getWorld().spawnEntity(loc2, EntityType.ITEM_FRAME);
-								
+
+								Entity newen = null;
+
+								if (!checkThereIsEntityOnThisLocation(EntityType.ITEM_FRAME, loc2)) {
+									if (arxx) {
+										if (dewset.this.decreseitem1(this.player, Material.ITEM_FRAME.getId(), (byte) 0,
+												true) == false) {
+											this.player.sendMessage(dprint.r
+													.color("ptdew&dewdd : dewcopy " + tr.gettr("don't_have_enough_item")
+															+ Material.ITEM_FRAME.getId() + ":" + 0));
+											//dprint.r.printAll("nope2");
+											return;
+										}
+
+									}
+									newen = playerLocation.getWorld().spawnEntity(loc2, EntityType.ITEM_FRAME);
+									dprint.r.printAll("false new");
+
+								} else {
+									dprint.r.printAll("found item_frame");
+
+									newen = getEntityOnThisLocation(EntityType.ITEM_FRAME, loc2);
+									dprint.r.printAll("getEntity " + (newen == null));
+
+								}
+
 								ItemFrame item = (ItemFrame) newen;
 								ItemFrame sour = (ItemFrame) en;
-								item.setItem(sour.getItem());
-								
-								
-								dprint.r.printAll("copy item frame"  + loc2.getBlockX()  + "," + loc2.getBlockY() + "," + loc2.getBlockZ());
-								
-							}	
+
+								item.setFacingDirection(sour.getFacing());
+
+								if (sour.getItem() == null) {
+									continue;
+								}
+
+								if (item.getItem().getType() == sour.getItem().getType()
+										&& item.getItem().getData() == sour.getItem().getData()) {
+									continue;
+
+								} else {
+									if (arxx) {
+										if (dewset.this.decreseitem1(this.player, sour.getItem().getTypeId(),
+												sour.getItem().getData().getData(), true) == false) {
+											this.player.sendMessage(dprint.r
+													.color("ptdew&dewdd : dewcopy " + tr.gettr("don't_have_enough_item")
+															+ sour.getItem().getTypeId() + ":" + sour.getItem().getData()));
+											//dprint.r.printAll("nope3");
+											return;
+										}
+										newen = playerLocation.getWorld().spawnEntity(loc2, EntityType.ITEM_FRAME);
+
+									}
+
+									item.setItem(sour.getItem());
+								}
+
+								dprint.r.printAll("copy item frame" + loc2.getBlockX() + "," + loc2.getBlockY() + ","
+										+ loc2.getBlockZ());
+
+							}
 						}
 					}
 				}
 			}
-			
 
 			dprint.r.printC("ptdew&dewdd : dewcopy " + tr.gettr("done") + " : " + this.player.getName());
 			this.player.sendMessage("ptdew&dewdd : dewcopy " + tr.gettr("done") + " : " + this.player.getName());
@@ -545,50 +609,86 @@ public class dewset extends dewset_interface {
 		}
 	}
 
-	
-	public void copyInventory(Block hostBlock , Block setBlock ,Player player , CoreProtectAPI coreProtect) {
+	public boolean checkThereIsEntityOnThisLocation(EntityType ent, Location loc) {
+		for (Entity en : loc.getWorld().getEntities()) {
+			if (en == null) {
+				continue;
+			}
+
+			if (en.getType() == ent) {
+				if (en.getLocation().getBlockX() == loc.getBlockX() && en.getLocation().getBlockY() == loc.getBlockY()
+						&& en.getLocation().getBlockZ() == loc.getBlockZ()
+
+				) {
+					return true;
+				}
+			}
+		}
+
+		return false;
+	}
+
+	public Entity getEntityOnThisLocation(EntityType ent, Location loc) {
+		for (Entity en : loc.getWorld().getEntities()) {
+			if (en == null) {
+				continue;
+			}
+
+			if (en.getType() == ent) {
+				if (en.getLocation().getBlockX() == loc.getBlockX() && en.getLocation().getBlockY() == loc.getBlockY()
+						&& en.getLocation().getBlockZ() == loc.getBlockZ()
+
+				) {
+					return en;
+				}
+			}
+		}
+
+		return null;
+	}
+
+	public void copyInventory(Block hostBlock, Block setBlock, Player player, CoreProtectAPI coreProtect) {
 		switch (hostBlock.getType()) {
 		case CHEST:
 		case TRAPPED_CHEST:
 
 			Chest hostChest = (Chest) hostBlock.getState();
 			Chest setChest = (Chest) setBlock.getState();
-			
+
 			Inventory hostInv = hostChest.getInventory();
 			Inventory setInv = setChest.getInventory();
 
-			for (int lop = 0 ; lop < hostInv.getSize(); lop ++) {
+			for (int lop = 0; lop < hostInv.getSize(); lop++) {
 				ItemStack itm = hostInv.getItem(lop);
 				if (itm == null) {
 					continue;
 				}
 
-				setInv.setItem(lop,itm);
+				setInv.setItem(lop, itm);
 
 				continue;
 
 			}
 
-		
 			setChest.update(true);
-			dewset.this.saveHistory(coreProtect,player, hostBlock, setBlock, true);
-			
+			dewset.this.saveHistory(coreProtect, player, hostBlock, setBlock, true);
+
 			break;
 		case DISPENSER:
 
 			Dispenser hostDispenser = (Dispenser) hostBlock.getState();
 			Dispenser setDispenser = (Dispenser) setBlock.getState();
-			
-			 hostInv = hostDispenser.getInventory();
-			 setInv = setDispenser.getInventory();
 
-			for (int lop = 0 ; lop < hostInv.getSize(); lop ++) {
+			hostInv = hostDispenser.getInventory();
+			setInv = setDispenser.getInventory();
+
+			for (int lop = 0; lop < hostInv.getSize(); lop++) {
 				ItemStack itm = hostInv.getItem(lop);
 				if (itm == null) {
 					continue;
 				}
 
-				setInv.setItem(lop,itm);
+				setInv.setItem(lop, itm);
 
 				continue;
 
@@ -603,15 +703,15 @@ public class dewset extends dewset_interface {
 			Hopper setHopper = (Hopper) setBlock.getState();
 
 			hostInv = hostHopper.getInventory();
-			 setInv = setHopper.getInventory();
+			setInv = setHopper.getInventory();
 
-			for (int lop = 0 ; lop < hostInv.getSize(); lop ++) {
+			for (int lop = 0; lop < hostInv.getSize(); lop++) {
 				ItemStack itm = hostInv.getItem(lop);
 				if (itm == null) {
 					continue;
 				}
 
-				setInv.setItem(lop,itm);
+				setInv.setItem(lop, itm);
 
 				continue;
 
@@ -627,15 +727,15 @@ public class dewset extends dewset_interface {
 			Dropper setDropper = (Dropper) setBlock.getState();
 
 			hostInv = hostDropper.getInventory();
-			 setInv = setDropper.getInventory();
+			setInv = setDropper.getInventory();
 
-			for (int lop = 0 ; lop < hostInv.getSize(); lop ++) {
+			for (int lop = 0; lop < hostInv.getSize(); lop++) {
 				ItemStack itm = hostInv.getItem(lop);
 				if (itm == null) {
 					continue;
 				}
 
-				setInv.setItem(lop,itm);
+				setInv.setItem(lop, itm);
 
 				continue;
 
@@ -644,15 +744,15 @@ public class dewset extends dewset_interface {
 			setDropper.update(true);
 			dewset.this.saveHistory(coreProtect, player, hostBlock, setBlock, true);
 			break;
-		
+
 		default:
 			dewset.this.saveHistory(coreProtect, player, hostBlock, setBlock, true);
 			break;
-			
+
 		}
-		
+
 	}
-	
+
 	class dewset_copy_mom implements Runnable {
 		private Player player;
 
@@ -1635,9 +1735,9 @@ public class dewset extends dewset_interface {
 
 							dewset_sphere_c xgn2 =
 
-							new dewset_sphere_c(this.player, this.item, this.itemSearch, this.mx, this.my, this.mz,
-									this.lx, this.ly, this.lz, this.xlx, this.ylx, this.zlx, this.getid,
-									this.playerLocation);
+									new dewset_sphere_c(this.player, this.item, this.itemSearch, this.mx, this.my,
+											this.mz, this.lx, this.ly, this.lz, this.xlx, this.ylx, this.zlx,
+											this.getid, this.playerLocation);
 
 							dprint.r.printC(this.player.getName() + " dewset  " + tr.gettr("recall") + " " + this.xlx
 									+ " , " + this.ylx + " , " + this.zlx);
@@ -2357,7 +2457,6 @@ public class dewset extends dewset_interface {
 										.hasPermission(dewset_interface.pmainalsocopyinventoryblockwhenyouusedewset)) {
 
 									copyInventory(hostBlock, setBlock, player, coreProtect);
-									
 
 								} else {
 									if ((hostBlock.getType() == Material.SIGN_POST)
@@ -2373,10 +2472,9 @@ public class dewset extends dewset_interface {
 										setSign.update(true);
 										dewset.this.saveHistory(coreProtect, this.player, hostBlock, setBlock, true);
 									}
-									
+
 									dewset.this.saveHistory(coreProtect, this.player, hostBlock, setBlock, true);
-									
-									
+
 								}
 
 								this.zlx++;
@@ -3383,9 +3481,9 @@ public class dewset extends dewset_interface {
 
 	public int selectz2[] = new int[dewset_interface.selectmax + 1];
 
-	public  WorldGuardPlugin wgapi = null;
+	public WorldGuardPlugin wgapi = null;
 
-	public  boolean CONFIG_NEED_PROTECT = false;
+	public boolean CONFIG_NEED_PROTECT = false;
 
 	public dewset() {
 		// if (firstrun19 == false){
@@ -3465,7 +3563,7 @@ public class dewset extends dewset_interface {
 
 	}
 
-	public  boolean cando_all(Block block, Player player, String modeevent) {
+	public boolean cando_all(Block block, Player player, String modeevent) {
 
 		boolean wg = false;
 		boolean wgHasProtect = false;
@@ -3474,9 +3572,6 @@ public class dewset extends dewset_interface {
 			wgapi = dewset.getWorldGuard();
 		}
 
-	
-		
-		
 		if (wgapi != null) {
 			if (CONFIG_NEED_PROTECT == true) {
 
@@ -3491,8 +3586,8 @@ public class dewset extends dewset_interface {
 			wg = wgapi.canBuild(player, block);
 
 		}
-		
-		//*****************************************
+
+		// *****************************************
 
 		boolean sky = false;
 		boolean skyHasProtect = false;
@@ -3505,43 +3600,43 @@ public class dewset extends dewset_interface {
 
 			}
 		}
-		
-		
-		//....................
-		
+
+		// ....................
+
 		boolean cre = false;
 		boolean creHasProtect = false;
 		if (Bukkit.getPluginManager().getPlugin("dewddcreative") == null) {
 			cre = true;
 		} else {
-			cre = dewddcreative.api_creative.cando(block.getX()	, block.getY(), block.getZ(), player) ;// .cando(block, player, modeevent);
+			cre = dewddcreative.api_creative.cando(block.getX(), block.getY(), block.getZ(), player);// .cando(block,
+																										// player,
+																										// modeevent);
 			if (CONFIG_NEED_PROTECT == true) {
 				creHasProtect = dewddcreative.api_creative.isProtectedArea(block);
 
 			}
 		}
-		
-		//............................
-		
+
+		// ............................
+
 		boolean pri = false;
 		boolean priHasProtect = false;
 		if (Bukkit.getPluginManager().getPlugin("dewddprivate") == null) {
-			pri= true;
+			pri = true;
 		} else {
-			pri = api_private.DewddPrivate.cando( block, player) ;// .cando(block, player, modeevent);
+			pri = api_private.DewddPrivate.cando(block, player);// .cando(block,
+																// player,
+																// modeevent);
 			if (CONFIG_NEED_PROTECT == true) {
 				priHasProtect = api_private.DewddPrivate.hasProtect(block);
 
 			}
 		}
-		
-		
-		
-		
-		//........................
+
+		// ........................
 
 		boolean candoYap = wg && sky && cre && pri;
-		boolean hasProtectYap = wgHasProtect || skyHasProtect || creHasProtect || priHasProtect ;
+		boolean hasProtectYap = wgHasProtect || skyHasProtect || creHasProtect || priHasProtect;
 		boolean output = false;
 
 		if (CONFIG_NEED_PROTECT == true) {
@@ -4281,7 +4376,6 @@ public class dewset extends dewset_interface {
 
 	// savesignfile
 
-
 	public Block protochest(Block block, int d4, String sorttype) {
 		Block temp = null;
 		Sign sign2 = null;
@@ -4336,25 +4430,23 @@ public class dewset extends dewset_interface {
 		Bukkit.getScheduler().scheduleSyncDelayedTask(dewset.ac, arr);
 	}
 
-	public boolean saveHistoryBreaking(CoreProtectAPI CoreProtect, Player player, Block hostBlock, Block setBlock
-			) {
+	public boolean saveHistoryBreaking(CoreProtectAPI CoreProtect, Player player, Block hostBlock, Block setBlock) {
 		if (CoreProtect != null) { // Ensure we have
 			// access
 			// to the API
 			boolean success = false;
 			// mean set 0
-			success =success = CoreProtect.logRemoval(player.getName(), hostBlock.getLocation(),
-					hostBlock.getType(), hostBlock.getData());
-					return success;
-		
+			success = success = CoreProtect.logRemoval(player.getName(), hostBlock.getLocation(), hostBlock.getType(),
+					hostBlock.getData());
+			return success;
 
 		} else {
 			setBlock.setTypeIdAndData(hostBlock.getTypeId(), hostBlock.getData(), false);
-			
 
 		}
 		return false;
 	}
+
 	public boolean saveHistory(CoreProtectAPI CoreProtect, Player player, Block hostBlock, Block setBlock,
 			boolean saveHistoryOnPlacing) {
 		if (CoreProtect != null) { // Ensure we have
@@ -4380,7 +4472,6 @@ public class dewset extends dewset_interface {
 
 		} else {
 			setBlock.setTypeIdAndData(hostBlock.getTypeId(), hostBlock.getData(), false);
-			
 
 		}
 		return false;
