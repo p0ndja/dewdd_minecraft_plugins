@@ -68,11 +68,11 @@ commands:
   selectcube:
     description: dewselectcube select block near you  amount of item in hand = radius
     usage: /<command>
+  pmain:
+    description: Check your Permission 
+    usage: /<command>
 
 permissions:
-  dewdd.main.overide:
-    description: can dewset to All Protected Zone (there are WorldGuard Protection)
-    default: op
   dewdd.main.delete:
     description: allow to /set 0 , /setBlock 0 (delete block)
     default: op

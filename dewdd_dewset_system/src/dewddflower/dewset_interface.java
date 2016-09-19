@@ -14,8 +14,6 @@ public abstract class dewset_interface  {
 
 	public static String pmaininfinite = "dewdd.main.dewset.infinite";
 
-	public static String pmainoveride = "dewdd.main.overide";
-
 	public static String pmainalsocopyinventoryblockwhenyouusedewset = "dewdd.main.dewset.copyinventoryblocks";
 
 

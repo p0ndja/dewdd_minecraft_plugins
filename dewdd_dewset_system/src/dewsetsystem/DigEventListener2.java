@@ -61,9 +61,7 @@ public class DigEventListener2 implements Listener {
 						.color(dewset_interface.pmaindelete + " " + Boolean.toString(player.hasPermission(dewset_interface.pmaindelete))));
 				player.sendMessage(dprint.r
 						.color(dewset_interface.pmaininfinite + " " + Boolean.toString(player.hasPermission(dewset_interface.pmaininfinite))));
-				player.sendMessage(dprint.r
-						.color(dewset_interface.pmainoveride + " " + Boolean.toString(player.hasPermission(dewset_interface.pmainoveride))));
-				player.sendMessage(dprint.r.color(dewset_interface.pmainalsocopyinventoryblockwhenyouusedewset + " "
+					player.sendMessage(dprint.r.color(dewset_interface.pmainalsocopyinventoryblockwhenyouusedewset + " "
 						+ Boolean.toString(player.hasPermission(dewset_interface.pmainalsocopyinventoryblockwhenyouusedewset))));
 
 				return;
@@ -149,7 +147,7 @@ public class DigEventListener2 implements Listener {
 			
 			
 
-			if (m[0].equalsIgnoreCase("dewselectcube") == true)
+			if (m[0].equalsIgnoreCase("dewselectcube") == true || m[0].equalsIgnoreCase("selectcube") == true)
 				if (m.length == 1) {
 
 					player.sendMessage(tr.gettr("item_on_hand_is_radius") + player.getItemInHand().getAmount());
@@ -433,7 +431,7 @@ public class DigEventListener2 implements Listener {
 						player.sendMessage(tr.gettr("item.size() == 0"));
 						return;
 					}
-					dew.dewspreadcircle(player, item, itemSearch);
+					dew.dewSpreadSphere(player, item, itemSearch);
 				}
 				else if (m.length >= 2 && m.length <= 3) {
 					ArrayList<IDDataType> item = new ArrayList<IDDataType>();
@@ -449,7 +447,7 @@ public class DigEventListener2 implements Listener {
 						player.sendMessage(tr.gettr("item.size() == 0"));
 						return;
 					}
-					dew.dewspreadcircle(player, item, itemSearch);
+					dew.dewSpreadSphere(player, item, itemSearch);
 				}
 				
 				
