@@ -23,7 +23,7 @@ public class HybridOverride extends HybridMultithreading {
 		
 		Chromosome ceo = new Chromosome();
 		ceo.dna = new double[Core.dnaSize];
-		ceo.lastBestFitness = Double.MAX_VALUE;
+		ceo.lastBestFitness = Double.MIN_VALUE;
 
 		try {
 
@@ -54,7 +54,7 @@ public class HybridOverride extends HybridMultithreading {
 
 				
 				if (ceo.lastBestFitness == Double.MIN_VALUE) {
-					ceo.lastBestFitness = Double.parseDouble(m[0]);
+					ceo.lastBestFitness = Double.parseDouble(m[0].split(" ")[0]);
 				}
 				else {
 				ceo.dna[curDnaID] = Double.parseDouble(m[0]);
@@ -75,18 +75,66 @@ public class HybridOverride extends HybridMultithreading {
 	public LinkedList<Chromosome> loadAndSortTheBestFromRamdisk() {
 		LinkedList<Chromosome> cho = new LinkedList<Chromosome>();
 		
-		File fie = new File(EventListenerOverride.folder_Name);
+		File fie = new File(EventListenerOverride.folder_Name + File.separator + "lastGen");
 		
 		
 		
 		for (File fi: fie.listFiles()) {
 			d.pl(fi.getAbsolutePath());
 			
+			cho.add(loadChroFile(fi));
 			// read 
 			
 		}
 		
-		return null;
+		
+		// let's sort them
+		if (cho.size() > Main.populationSize) {
+			
+			Chromosome [] gem = new Chromosome[cho.size()];
+			for (int i = 0; i < cho.size() ; i ++ ) {
+				gem[i] = new Chromosome();
+				gem[i].lastBestFitness = cho.get(i).lastBestFitness;
+				gem[i].dna = cho.get(i).dna;
+			}
+			
+			 boolean flag = true;   // set flag to true to begin first pass
+		    
+
+		     while ( flag )
+		     {
+		            flag= false;    //set flag to false awaiting a possible swap
+		            for( int j=0;  j < gem.length -1;  j++ )
+		            {
+		         
+		            	
+		                   if (gem[j].lastBestFitness < gem[j+1].lastBestFitness )   // change to > for ascending sort
+		                   {
+		                	 Chromosome tmpgem = gem[j].copyChromosome();
+		                                         //swap elements
+		                           gem[j] = gem[j+1].copyChromosome();
+		                           gem[j+1] = tmpgem;
+		                          flag = true;              //shows a swap occurred 
+		                          d.pl("bubble sort  "  + j + " and " +(j + 1) + " > " + gem[j].lastBestFitness + "," + gem[j+1].lastBestFitness);
+		                  } 
+		                   
+		                 
+		            } 
+		      } 
+		     
+		     for (int i = 0 ; i < Main.populationSize ; i ++ ) {
+		    	 d.pl("sorted best fitness = " + i + " = " +cho.get(i).lastBestFitness);
+		    	 
+		     }
+		     
+		     // re copy
+		     cho.clear();
+		     for (int j = 0 ; j < Main.populationSize ; j ++ ) {
+		    	 cho.add(gem[j]);
+		     }
+		}
+		
+		return cho;
 	}
 
 	@Override

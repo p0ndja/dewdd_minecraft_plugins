@@ -2,10 +2,13 @@ package a_dewdd_skyblock_lv_1000_generator;
 
 import java.util.LinkedList;
 
+import ga_optimization_api.Chromosome;
+
 public class Main {
 
 	public static Core co;
-
+	public static int populationSize = 100;
+	
 	public static void main(String[] args) {
 
 		co = new Core();
@@ -71,13 +74,13 @@ public class Main {
 		HybridOverride hy = new HybridOverride();
 
 		hy.setChromosomeLength(Core.dnaSize);
-		hy.setPopulationSize(100);
+		hy.setPopulationSize(populationSize);
 		hy.setRunCount(1000000);
 
 		// set chromosome here
 
-		hy.loadAndSortTheBestFromRamdisk();
-		
+		LinkedList<Chromosome> seo = hy.loadAndSortTheBestFromRamdisk();
+		hy.setAllChromosomeGen1(seo);
 		hy.prepareToRunGA();
 
 		EventListenerOverride evn = new EventListenerOverride();
