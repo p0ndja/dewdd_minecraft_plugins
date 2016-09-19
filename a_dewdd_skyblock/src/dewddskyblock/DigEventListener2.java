@@ -137,8 +137,42 @@ public class DigEventListener2 implements Listener {
 			if (xy == false) {
 
 				CallNextMission no = new CallNextMission(curRSID);
-				Bukkit.getScheduler().scheduleSyncDelayedTask(ac, no);
+				Bukkit.getScheduler().scheduleSyncDelayedTask(ac, no,1);
 			}
+
+		}
+	}
+	
+	class LV5DestroyNetherRact implements Runnable {
+		private Block signBlock;
+		private int curRSID;
+
+		public LV5DestroyNetherRact(Block signBlock, int rsID) {
+			// dprint.r.printAll("lv1destroystone constructure");
+			this.signBlock = signBlock;
+			this.curRSID = rsID;
+		}
+
+		@Override
+		public void run() {
+			//dprint.r.printAll("lv5 class");
+			
+			if (signBlock.getType() == Material.SIGN_POST) {
+				//dprint.r.printAll("lv5 class sign");
+				
+
+				Block nether = readBlockFromSign(signBlock);
+				if (nether.getType() != Material.NETHERRACK) {
+				
+					//dprint.r.printAll("lv5 class nether");
+					
+				CallNextMission oo = new CallNextMission(curRSID);
+				Bukkit.getScheduler().scheduleSyncDelayedTask(ac, oo);
+				}
+
+			}
+			
+			
 
 		}
 	}
@@ -507,7 +541,7 @@ public class DigEventListener2 implements Listener {
 							api_skyblock.rs[getid].z);
 
 					LV1DestroyStone ee = new LV1DestroyStone(bd, getid);
-					Bukkit.getScheduler().scheduleSyncDelayedTask(ac, ee);
+					Bukkit.getScheduler().scheduleSyncDelayedTask(ac, ee,1);
 					break;
 
 				case LV_5_ZOMBIE_ATTACK_1:
@@ -519,13 +553,11 @@ public class DigEventListener2 implements Listener {
 					Block signBlock = block.getWorld().getBlockAt(dew.rs[getid].x, 1, dew.rs[getid].z);
 
 					if (signBlock.getType() == Material.SIGN_POST) {
-
-						Block nether = readBlockFromSign(signBlock);
 						
-						CallNextMission oo = new CallNextMission(getid);
-						Bukkit.getScheduler().scheduleSyncDelayedTask(ac, oo);
-
+						LV5DestroyNetherRact eo = new LV5DestroyNetherRact(signBlock, getid);
+						Bukkit.getScheduler().scheduleSyncDelayedTask(ac, eo,1);
 					}
+					
 
 					break;
 
