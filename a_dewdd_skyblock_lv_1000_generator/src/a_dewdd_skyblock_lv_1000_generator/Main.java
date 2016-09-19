@@ -71,8 +71,8 @@ public class Main {
 		HybridOverride hy = new HybridOverride();
 
 		hy.setChromosomeLength(Core.dnaSize);
-		hy.setPopulationSize(10);
-		hy.setRunCount(1000);
+		hy.setPopulationSize(100);
+		hy.setRunCount(100000);
 
 		hy.prepareToRunGA();
 
