@@ -1513,7 +1513,7 @@ public class DigEventListener2 implements Listener {
 		Block block = e.getClickedBlock();
 
 		if (player.getItemInHand() != null) {
-			if (player.getItemInHand().getType() == Material.APPLE) {
+			if (player.getItemInHand().getType() == Material.COMPASS) {
 				if (player.getItemInHand().getItemMeta().getDisplayName().equalsIgnoreCase("/sky gorandom")) {
 
 					

@@ -3,7 +3,7 @@
  *      E-Mail: dewtx29@gmail.com
  *      facebook: https://www.facebook.com/dewddminecraft
  */
-package dewddft;
+package dewdd_fixthings;
 
 import java.util.logging.Logger;
 

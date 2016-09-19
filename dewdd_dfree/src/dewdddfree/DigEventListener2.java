@@ -51,7 +51,68 @@ public class DigEventListener2 implements Listener {
 
 	Random		rnd			= new Random();
 	
-	dewset dew = new dewset();
+	dewset dew;
+	
+	public DigEventListener2() {
+		delay eee = new delay();
+		eee.start();
+	}
+	
+	class delay extends Thread {
+
+		@Override
+		public void run() {
+
+			try {
+				// dew = null;
+
+				int i = 0;
+				while (ac == null) {
+
+					i++;
+					Thread.sleep(1000);
+					System.out
+							.println("dew main waiting for create dewset sleeping ac +"
+									+ i);
+
+				}
+
+				while (dew == null) {
+
+					i++;
+					Thread.sleep(1000);
+					System.out
+							.println("dew main waiting for create dewset sleeping dew +"
+									+ i);
+
+					dew = new dewset();
+
+				}
+
+				while (dew.ac == null) {
+
+					i++;
+					Thread.sleep(1000);
+					System.out
+							.println("dew main waiting for create dewset sleeping dew ac +"
+									+ i);
+
+					dew.ac = ac;
+
+				}
+				dew.loadmainfile();
+
+			}
+			catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				delay eee = new delay();
+				eee.start();
+
+				e.printStackTrace();
+			}
+
+		}
+	}
 
 	public boolean dewnosign(Player player, String str) {
 		Block block = null;
@@ -560,6 +621,39 @@ public class DigEventListener2 implements Listener {
 		Player player = e.getPlayer();
 		
 		
+		if (block.getType() == Material.CHEST
+				) { 
+			
+			int x = 0;
+			int y = 0;
+			int z = 0;
+			Block block2 = null;
+
+			for (x = -1; x <= 1; x++) {
+				for (y = -1; y <= 1; y++) {
+					for (z = -1; z <= 1; z++) {
+						block2 = block.getRelative(x, y, z);
+						if (block2.getTypeId() == 63
+								|| block2.getTypeId() == 68) {
+							Sign sign = (Sign) block2.getState();
+							if (sign.getLine(0).equalsIgnoreCase("[autosort]") == true) {
+								
+
+									dew.autosortchest2(block, player);
+									
+									return;
+								
+							}
+						}
+
+					}
+				}
+			}
+			
+			
+		}
+
+		
 
 		if (block.getType() == Material.DISPENSER) { // dis
 			// [dfree]
@@ -610,6 +704,8 @@ public class DigEventListener2 implements Listener {
 				// player.sendMessage("dewtobox run");
 				dew.chestabsorb2();
 			}
+			
+			
 
 			// exchange
 			if (sign.getLine(0).endsWith("[dewexchange]") == true) {

@@ -1,5 +1,5 @@
 name: FixThings
-main: dewddft.Main
+main: dewdd_fixthings.Main
 version: 1
 author: dewtx29@gmail.com
 database: false

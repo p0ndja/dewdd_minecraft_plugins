@@ -2954,10 +2954,7 @@ public class DigEventListener2 implements Listener {
 		}
 		else {
 
-			/*if (block.getTypeId() == Material.CHEST.getId()
-					|| block.getTypeId() == Material.TRAPPED_CHEST.getId()) {
-				dew.autosortchest2(block, player);
-			}*/
+		
 
 			if (player.getItemInHand().getTypeId() == Material.REDSTONE_TORCH_OFF
 					.getId()

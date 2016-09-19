@@ -774,7 +774,7 @@ public class api_skyblock {
 
 	public String getFullMissionHeadAndCurLevel(Missional mission) {
 		String header = Constant.getMissionHeader(mission);
-		String aa = tr.gettr("is_cur_level_mission_showing_") + " " + mission + " " + header;
+		String aa = tr.gettr("is_cur_level_mission_showing_") + " " + mission.toID() + " " + header;
 		return aa;
 	}
 

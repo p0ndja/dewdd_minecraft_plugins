@@ -4337,7 +4337,7 @@ public class dewset extends dewset_interface {
 
 	public Random		randomG				= new Random();
 
-	int					randomInt			= randomG.nextInt(500);
+				
 
 	// *********
 
@@ -6713,7 +6713,7 @@ public class dewset extends dewset_interface {
 	}
 
 	public int randomnumberint() {
-		randomInt = randomG.nextInt(50);
+		int	randomInt = randomG.nextInt(50);
 		randomInt += 1;
 		return randomInt;
 	}
