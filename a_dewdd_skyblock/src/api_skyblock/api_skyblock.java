@@ -2046,7 +2046,7 @@ public class api_skyblock {
 
 	public void commandRuning(String m[], Player player) {
 
-		if (m[0].equalsIgnoreCase("/skyblock") || m[0].equalsIgnoreCase("/sky")) {
+		if (m[0].equalsIgnoreCase("/skyblock") || m[0].equalsIgnoreCase("/sky") || m[0].equalsIgnoreCase("/is")) {
 
 			if (api_skyblock.isrunworld(player.getLocation().getWorld().getName()) == false) {
 				player.sendMessage(dprint.r.color(tr.gettr("this_world_is_not_skyblock")));
@@ -2054,24 +2054,24 @@ public class api_skyblock {
 			}
 
 			if (m.length == 1) {
-				player.sendMessage(dprint.r.color("/skyblock new"));
-				player.sendMessage(dprint.r.color("/skyblock home [name]"));
-				player.sendMessage(dprint.r.color("/skyblock add <player>"));
-				player.sendMessage(dprint.r.color("/skyblock remove <player>"));
-				player.sendMessage(dprint.r.color("/skyblock list"));
-				player.sendMessage(dprint.r.color("/skyblock owner <player>"));
-				player.sendMessage(dprint.r.color("/skyblock exitFromThisHome <owner name>"));
+				player.sendMessage(dprint.r.color("/is new"));
+				player.sendMessage(dprint.r.color("/is home [name]"));
+				player.sendMessage(dprint.r.color("/is add <player>"));
+				player.sendMessage(dprint.r.color("/is remove <player>"));
+				player.sendMessage(dprint.r.color("/is list"));
+				player.sendMessage(dprint.r.color("/is owner <player>"));
+				player.sendMessage(dprint.r.color("/is exitFromThisHome <owner name>"));
 
-				player.sendMessage(dprint.r.color("/skyblock c"));
-				player.sendMessage(dprint.r.color("/skyblock go <player>"));
-				player.sendMessage(dprint.r.color("/skyblock goid <id>"));
-				player.sendMessage(dprint.r.color("/skyblock gorandom"));
-				player.sendMessage(dprint.r.color("/skyblock flag"));
+				player.sendMessage(dprint.r.color("/is c"));
+				player.sendMessage(dprint.r.color("/is go <player>"));
+				player.sendMessage(dprint.r.color("/is goid <id>"));
+				player.sendMessage(dprint.r.color("/is gorandom"));
+				player.sendMessage(dprint.r.color("/is flag"));
 
-				player.sendMessage(dprint.r.color("/skyblock delete"));
-				player.sendMessage(dprint.r.color("/skyblock buyhere"));
+				player.sendMessage(dprint.r.color("/is delete"));
+				player.sendMessage(dprint.r.color("/is buyhere"));
 
-				player.sendMessage(dprint.r.color("/skyblock max"));
+				player.sendMessage(dprint.r.color("/is max"));
 
 				return;
 
@@ -2083,7 +2083,7 @@ public class api_skyblock {
 					Block chestpls = player.getLocation().getBlock().getRelative(BlockFace.DOWN);
 					if (chestpls.getType() != Material.CHEST) {
 
-						player.sendMessage("/skyblock generatelistBlock you need to stand on chest");
+						player.sendMessage("/is generatelistBlock you need to stand on chest");
 						return;
 
 					}
@@ -2253,7 +2253,7 @@ public class api_skyblock {
 					}
 
 					if (m.length != 3) {
-						player.sendMessage(dprint.r.color("/skyblock drawprotect true/false"));
+						player.sendMessage(dprint.r.color("/is drawprotect true/false"));
 						return;
 					}
 
@@ -2424,7 +2424,7 @@ public class api_skyblock {
 								continue;
 							}
 
-							player.sendMessage(dprint.r.color("/skyblock home " + api_skyblock.rs[lop2].p[0]));
+							player.sendMessage(dprint.r.color("/is home " + api_skyblock.rs[lop2].p[0]));
 
 						}
 
@@ -2506,7 +2506,7 @@ public class api_skyblock {
 
 							if (api_skyblock.rs[lop2].p[0].toLowerCase().indexOf(m[2].toLowerCase()) > -1) {
 
-								player.sendMessage(dprint.r.color("/skyblock home " + api_skyblock.rs[lop2].p[0]));
+								player.sendMessage(dprint.r.color("/is home " + api_skyblock.rs[lop2].p[0]));
 
 							}
 
@@ -2524,7 +2524,7 @@ public class api_skyblock {
 								continue;
 							}
 
-							player.sendMessage(dprint.r.color("/skyblock home " + api_skyblock.rs[lop2].p[0]));
+							player.sendMessage(dprint.r.color("/is home " + api_skyblock.rs[lop2].p[0]));
 
 						}
 
@@ -2588,7 +2588,7 @@ public class api_skyblock {
 								player.sendMessage(dprint.r.color(tr.gettr("overide_this_zone")));
 
 						if (m.length != 3) {
-							player.sendMessage(dprint.r.color("/skyblock owner <playername>"));
+							player.sendMessage(dprint.r.color("/is owner <playername>"));
 							return;
 						}
 
@@ -2679,7 +2679,7 @@ public class api_skyblock {
 					}
 
 					if (m.length != 3) {
-						player.sendMessage(dprint.r.color("/skyblock add <playername>"));
+						player.sendMessage(dprint.r.color("/is add <playername>"));
 						return;
 					}
 					// if found his skyblock teleport him
@@ -2722,7 +2722,7 @@ public class api_skyblock {
 					}
 
 					if (m.length != 3) {
-						player.sendMessage(dprint.r.color("/skyblock remove <playername>"));
+						player.sendMessage(dprint.r.color("/is remove <playername>"));
 						return;
 					}
 

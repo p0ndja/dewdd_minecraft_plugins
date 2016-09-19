@@ -9,7 +9,7 @@ commands:
   skyblock:
     description: can use /skyblock , /sky commands ( need to add for all player)
     usage: /<command>
-    aliases: [sky]
+    aliases: [sky,is]
     permissions: dewdd.skyblock.skyblock
 
 permissions:
