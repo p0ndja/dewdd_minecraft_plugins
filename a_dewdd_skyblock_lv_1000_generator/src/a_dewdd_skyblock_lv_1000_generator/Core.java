@@ -25,8 +25,6 @@ public class Core {
 
 	public static int maxRewardDiffBlockType = 10;
 	public static int minRewardDiffBlockType = 1;
-	public static int maxRewardDiffItemType = 10;
-	public static int minRewardDiffItemType = 0;
 
 	public static long MaxTickToCompleteAllLV = 60 * 60 * 24 * 31;
 
@@ -97,26 +95,55 @@ public class Core {
 
 				d.pl("tmpAllShop : " + tmpAllShopUniqueDone + " = " + (allBlockInGameAsList.size()));
 
-				if (allBlockInGameAsList.size() - tmpAllShopUniqueDone < minShopSize
+			/*	if (allBlockInGameAsList.size() - tmpAllShopUniqueDone < minShopSize+1
 						&& allBlockInGameAsList.size() - tmpAllShopUniqueDone > 0) {
 					d.pl("last shop can't have item to fit minshopsize = " + minShopSize + " , " + tmpAllShopUniqueDone
 							+ "/" + allBlockInGameAsList.size());
 
 					return;
+				}*/
+
+				
+				boolean logic1 = tmpReading.size() >= (1 + (minShopSize * 2)); // 7
+				boolean logic2 =  tmpReading.size() <= (1 + (maxShopSize * 2));  // 21
+				boolean logic3 = tmpReading.size() % 2 == 1;
+						
+				 				// 417     -  414   = 3
+				                
+				boolean logic4 = allBlockInGameAsList.size() - tmpAllShopUniqueDone  <= minShopSize; // if last shop does  not have item left for minShopSize 3
+				boolean logic5 =  tmpReading.size() == 1 +((allBlockInGameAsList.size() - tmpAllShopUniqueDone)*2);
+				
+				
+				boolean logic6 = logic1 && logic2 && logic3;
+				boolean logic7 = logic4 && logic5;
+				
+				
+				if (tmpAllShopUniqueDone >= 410) {
+					
+					d.pl("");
+					d.pl("**************");
+					d.pl("41x = " + tmpAllShopUniqueDone + " , tmpReading Size " + tmpReading.size());
+					
+					d.pl("1 " + logic1 + ", " +
+					"2 " + logic2 + ", " 
+					+"3 " + logic3 + ", " +
+					"4 " + logic4 + ", " +
+					"5 " + logic5 + ", " + 
+					"6 " + logic6 + ", "
+					+ "7 " + logic7 + ", ");
+					
 				}
-
-				if ((tmpAllShop.size() < allBlockInGameAsList.size() - 1 && tmpReading.size() >= (1 + (minShopSize * 2))
-						&& tmpReading.size() <= (1 + maxShopSize * 2) && tmpReading.size() % 2 == 1)
-
-				|| ((tmpAllShop.size() == allBlockInGameAsList.size() - 1
-						&& tmpReading.size() >= (1 + (minShopSize * 2)) && tmpReading.size() <= (1 + maxShopSize * 2)
-						&& tmpReading.size() % 2 == 1))
-
-				) {
+				if (tmpAllShopUniqueDone >= 413 ) {
+					d.pl("413");
+				}
+			
+				
+				if ( (logic6)
+						|| (logic7)){
 
 					double tmpReadChro = chromosome[curChro];
 
-					if (tmpReadChro <= 0 || tmpReading.size() == (1 + maxShopSize * 2)) { // that
+					if (tmpReadChro <= 0 || logic7 ) { // that
 																							// mean
 																							// do
 																							// it
@@ -194,7 +221,7 @@ public class Core {
 
 			
 
-			if (tmpLV.size() <= maxLV) {
+			if (tmpLV.size() <= maxLV ) {
 				// d.pl("tmpLV " + tmpLV.size() + " , tmpReading " +
 				// tmpReading.size() + " , curChro " + curChro);
 
@@ -250,7 +277,7 @@ public class Core {
 				// add reward block part
 				for (int i = 0; i < maxRewardDiffBlockType && curChro < dnaSize ; i++) {
 					double tmpReadChro = chromosome[curChro];
-					if (i == 0) {
+					if (i == minRewardDiffBlockType) {
 						tmpReadChro = Math.abs(tmpReadChro);
 					}
 

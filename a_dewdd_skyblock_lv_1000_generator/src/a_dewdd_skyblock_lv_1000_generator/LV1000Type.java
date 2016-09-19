@@ -9,9 +9,9 @@ public class LV1000Type {
 	
 	public int needSize = 0;
 	
-	public String[] rewardItem = new String[Core.maxRewardDiffItemType + Core.maxRewardDiffBlockType];
-	public byte[] rewardData = new byte[Core.maxRewardDiffItemType + Core.maxRewardDiffBlockType];
-	public int[] rewardAmount = new int[Core.maxRewardDiffItemType + Core.maxRewardDiffBlockType];
+	public String[] rewardItem = new String[Core.maxRewardDiffBlockType ];
+	public byte[] rewardData = new byte[Core.maxRewardDiffBlockType];
+	public int[] rewardAmount = new int[Core.maxRewardDiffBlockType];
 	
 	public int rewardSize= 0;
 	
