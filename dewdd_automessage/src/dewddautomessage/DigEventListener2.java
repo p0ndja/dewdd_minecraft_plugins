@@ -10,6 +10,7 @@ import java.io.DataInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
 import java.util.Random;
 
 import org.bukkit.Bukkit;
@@ -38,8 +39,7 @@ class Dewminecraft {
 	int countLoop = 0;
 	int countShow = 0;
 
-	String autostr[];
-	int autostrmax = -1;
+	ArrayList<String> autostr = new ArrayList<String>();
 	int autostrnow = -1;
 	int countmax = 100;
 
@@ -56,17 +56,17 @@ class Dewminecraft {
 
 			countLoop = -1;
 			autostrnow++;
-			if (autostrnow > autostrmax) {
+			if (autostrnow >= autostr.size()) {
 				autostrnow = -1;
 			}
 
 			if (autostrnow > -1) {
 				for (World wor : Bukkit.getWorlds()) {
-					//wor.save();
+					// wor.save();
 					for (Player pla : wor.getPlayers()) {
 						randomInt = randomGenerator.nextInt(9);
-						pla.sendMessage("§" + randomInt + "ptdew&dewdd : " + autostr[autostrnow]);
-						//pla.saveData();
+						pla.sendMessage("§" + randomInt + "ptdew&dewdd : " + autostr.get(autostrnow));
+						// pla.saveData();
 					}
 				}
 			}
@@ -85,7 +85,7 @@ class Dewminecraft {
 		try {
 			fff.createNewFile();
 
-			System.out.println("ptdeW&DewDD Automessage: Starting Loading " + filena);
+			dprint.r.printAll("ptdeW&DewDD Automessage: Starting Loading " + filena);
 			// Open the file that is the first
 			// command line parameter
 			FileInputStream fstream = new FileInputStream(filena);
@@ -97,31 +97,27 @@ class Dewminecraft {
 
 			String strAll = "";
 
-			autostrmax = -1;
-			autostr = new String[1000];
+			autostr = new ArrayList<String>();
 			// sthae
 			// aosthoeau
 			// * save
-			boolean firsttime = true;
+			
 
 			while ((strLine = br.readLine()) != null) {
 				// Print the content on the console
 
-				if (firsttime == true) {
-					countmax = Integer.parseInt(strLine);
-					firsttime = false;
-				} else {
+				
 					if (strLine.equalsIgnoreCase("*") == true) {
-						autostrmax++;
-						autostr[autostrmax] = strAll;
+
+						autostr.add(strAll);
 						strAll = "";
 					} else {
 						strAll = strAll + strLine;
 					}
-				}
+				
 			}
 
-			System.out.println("ptdew&DewDD AutoMessage: Loaded " + filena);
+			dprint.r.printAll("ptdew&DewDD AutoMessage: Loaded " + filena + " size " + autostr.size());
 
 			in.close();
 		} catch (Exception e) {// Catch exception if any
