@@ -675,6 +675,13 @@ public class Core {
 				miss.data = Byte.parseByte(m[1]);
 				miss.maxStack = Integer.parseInt(m[2]);
 				miss.isBlock = Boolean.parseBoolean(m[3]);
+				
+				if (m.length == 5) {
+					miss.atTheEndNeed = Integer.parseInt(m[4]);
+				}
+				else {
+					miss.atTheEndNeed = 0;
+				}
 
 				// d.pl("...");
 				// rs[rsMax - 1].mission = 0;

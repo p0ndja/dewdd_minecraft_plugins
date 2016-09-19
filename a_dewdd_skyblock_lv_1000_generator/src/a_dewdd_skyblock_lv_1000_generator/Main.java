@@ -316,6 +316,31 @@ public class Main {
 		d.pl("");
 
 		co.loadMissionBlockFile();
+		
+		
+		// search the all block in game don't have block from sellable
+		
+		for (int i = 0 ; i < co.sellAsList.size() ; i ++ ) {
+			SellableType e = co.sellAsList.get(i);
+			
+			// search in
+			boolean foundx = false;
+			for (int j = 0; j < co.allBlockInGameAsList.size() ; j ++ ) {
+				AllBlockInGameType f = co.allBlockInGameAsList.get(j);
+				
+				if (e.theName.equalsIgnoreCase(f.theName) && e.data == f.data) {
+					foundx = true;
+					break;
+				}
+			}
+			
+			if (foundx == false ) {
+				d.pl("sellable not in the list " + e.theName + ":" + e.data);
+				
+			}
+		}
+		
+		
 		LinkedList<AllBlockInGameType> mis = co.allBlockInGameAsList;
 
 		d.pl("*** mission size = " + mis.size());
