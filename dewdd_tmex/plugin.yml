@@ -1,0 +1,12 @@
+name: Rollback-Explosion
+main: dewddtmex.Main
+version: 1
+author: dewtx29@gmail.com
+database: false
+
+commands:
+  rbes:
+    description: rollback explosion
+    usage: /<command>
+    permissions: dewdd.rbes
+    

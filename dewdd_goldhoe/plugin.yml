@@ -1,0 +1,16 @@
+name: dewddgoldhoe
+main: dewddgoldhoe.Main
+version: 1
+author: dewtx29@gmail.com
+database: false
+
+commands:
+  dewdnear:
+    description: dewdd d near can delet neary block recursive
+    usage: /<command> [blocksearch] [blockdelete] [far]
+    aliases: [ednear]
+
+permissions:
+  dewdd.deletenear:
+    description: for op can use deletenear
+    default: op

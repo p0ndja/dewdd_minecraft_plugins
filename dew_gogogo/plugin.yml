@@ -1,0 +1,10 @@
+name: dewgun
+main: dewgun.Main
+version: 1
+author: dewtx29@gmail.com
+database: false
+
+
+commands:
+  
+    

@@ -1,0 +1,7 @@
+name: dewdd_empty
+main: dewdd_empty.dewdd_empty
+version: 1
+author: dewtx29@gmail.com
+database: false
+load: STARTUP
+

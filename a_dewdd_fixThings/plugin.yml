@@ -1,0 +1,19 @@
+name: FixThings
+main: dewddft.Main
+version: 1
+author: dewtx29@gmail.com
+database: false
+
+commands:
+  fixthings:
+    description: auto fix items each minutes
+    usage: /<command>
+
+permissions:
+   dewdd.fixthings.fix:
+     description: player will get auto fix every minute
+     default: true
+   dewdd.fixthings.setandreload:
+     description: Allows you to set fixValue rate per Minutes
+     default: false
+    

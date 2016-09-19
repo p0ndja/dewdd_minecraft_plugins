@@ -1,0 +1,24 @@
+name: dewddpl
+main: dewddpl.Main
+version: 1
+author: dewtx29@gmail.com
+database: false
+
+commands:
+  dewpl d all:
+    description: dewdd pl clear plugin
+    usage: /<command>
+    aliases: [epldall]
+    
+  dewpl:
+    description: dewdd pl load unload pl
+    usage: /<command> [load|unload] [pl]
+    aliases: [epl]    
+    
+permissions:
+  dewdd.pl.clear:
+    description: for op can clear pl...
+    default: op
+  dewdd.pl.toggle:
+    description: for op can load unload pl
+    default: op

@@ -1,0 +1,43 @@
+name: dewddnolag
+main: dewddnolag.Main
+version: 1
+author: dewtx29@gmail.com
+database: false
+
+commands:
+  bfalse:
+    description: disable all watching variable
+    usage: /<command>
+  btrue:
+    description: enable all watching variable
+    usage: /<command>
+  bhopmove:
+    description: toggle watching hopper moving item
+    usage: /<command>
+  bminecart:
+    description: toggle auto delete minecart
+    usage: /<command>
+  bwater:
+    description: toggle auto delete water and lava
+    usage: /<command>
+  bhop:
+    description: toggle watching hopper eat item LOL
+    usage: /<command>
+  bbreak:
+    description: toggle auto destroy redstone circuit
+    usage: /<command>
+  bmon:
+    description: toggle auto watching monster spawning
+    usage: /<command>
+  bmonlight:
+    description: toggle auto place torch at mon spawning place
+    usage: /<command>
+  bchunk:
+    description: toggle true= don't allow chunk to unload
+    usage: /<command>
+    
+permissions:
+  dewdd.nolag:
+    description: can access any nolag command
+    default: op
+    

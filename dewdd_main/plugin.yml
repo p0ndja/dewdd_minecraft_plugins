@@ -1,0 +1,132 @@
+name: dewddmain
+main: dewddmain.Main
+version: 1
+author: dewtx29@gmail.com
+database: false
+
+commands:
+  dewset:
+    description: dewset is replace everyblock
+    usage: /<command>
+    aliases: [ds]
+  dewfill:
+    description: dewfill is fill blocks at space
+    usage: /<command>
+    aliases: [df]
+  dewsetwall:
+    description: dewsetwall is replace blocks for build wall
+    usage: /<command>
+    aliases: [dsw]
+  dewfillwall:
+    description: dewfillwall is fill blocks for wal
+    usage: /<command>
+    aliases: [dfw]
+  dewa:
+    description: dewa is stack selected blocked to some direction
+    usage: /<command>
+    aliases: [da]
+  dewcopy:
+    description: dewcopy is copy block to your position.. position will seem place at left click...(select 1)
+    usage: /<command>
+    aliases: [dc]
+  dewdown:
+    description: dewdown is put the block on your hand under your feet
+    usage: /<command>
+    aliases: [dn]
+  dewsetlight:
+    description: dewsetlight is place torch in the area it's dark
+    usage: /<command>
+    aliases: [dsl]
+  dewspreadcircle:
+    description: dewspreadcircle is spread blocks from your position.. to every direction..
+    usage: /<command>
+    aliases: [dsc]
+  dewspreadq:
+    description: dewspreadq is spread blocks from your position... only seem y (very fast)
+    usage: /<command>
+    aliases: [dsq]
+  dewbuyremove:
+    description: dewbuyremove for admin , remove all protect zone in selected blockb
+    usage: /<command>
+    aliases: [dbr]
+  dewwallcircle:
+    description: dewwallcircle is create circle (only wall)
+    usage: /<command>
+    aliases: [dwc]
+  dewfillcircle:
+    description: dewfillcircle is create circle (only wall)
+    usage: /<command>
+    aliases: [dfc]
+  dewsetcircle:
+    description: dewsetcircle is create circle (only wall)
+    usage: /<command>
+  dewfullcircle:
+    description: dewfullcircle fill mode
+    usage: /<command>
+  loadmainfile:
+    description: loadmainfile is force dewset reload world,signfile,deadposition files...
+    usage: /<command>
+  dewextend:
+    description: dewextend set y = 0 to y = 255
+    usage: /<command>
+    aliases: [de]
+  dewselectcube:
+    description: dewselectcube select block near you  amount of item in hand = radius
+    usage: /<command>
+  dewselectprotect:
+    description: dewselectprotect select all blocks in protected zone
+    usage: /<command>
+  dewbreak:
+    description: dewbreak break all blocks in selected zone only admin
+    usage: /<command>
+  dewadd:
+    description: dewadd=<playername>   add player to protect zone
+    usage: /<command> <player>
+  dewremove:
+    description: dewremove=<playername> remove player from protect zone
+    usage: /<command> <player>
+  gift:
+    description: get item from warp gift
+    usage: /<command> [id:data]
+  digx:
+    description: fast diging
+    usage: /<command>
+  gotohell:
+    description: send player to hell
+    usage: /<command>
+  compact:
+    description: compact item
+    usage: /<command>
+
+permissions:
+  dewdd.main.overide:
+    description: can build every where
+    default: op
+  dewdd.main.dewbuy.replace:
+    description: dew buy replace another zone
+    default: op
+  dewdd.main.dewbuy.notcount:
+    description: dew buy very fast not count block
+    default: op
+  dewdd.main.dewbuydelete:
+    description: delete protect zone
+    default: op
+  dewdd.main.dewbuy.modifymember:
+    description: modify member at zone
+    default: op
+  dewdd.main.dewbuy.changehost:
+    description: modify host
+    default: op
+  dewdd.main.dewset.everywhere:
+    description: can dewset everywhere (admin should't have)
+    default: op
+  dewdd.main.placeblock.noprotect:
+    description: only for moderator If have this permission can place block at Non-protect area
+    default: op
+  dewdd.main.delete:
+    description: allow to access delete command
+    default: op
+    
+    
+    
+    

@@ -1,0 +1,70 @@
+name: dewddskywar
+main: dewddskywar.Main
+version: 1
+author: dewtx29@gmail.com
+database: false
+
+commands:
+  skywar:
+    description: d skywar for go to skywar game or create some skywar
+    usage: /<command>
+  dewset:
+    description: dewset is replace everyblock
+    usage: /<command>
+    aliases: [ds]
+  dewfill:
+    description: dewfill is fill blocks at space
+    usage: /<command>
+    aliases: [df]
+  dewsetwall:
+    description: dewsetwall is replace blocks for build wall
+    usage: /<command>
+    aliases: [dsw]
+  dewfillwall:
+    description: dewfillwall is fill blocks for wal
+    usage: /<command>
+    aliases: [dfw]
+  dewa:
+    description: dewa is stack selected blocked to some direction
+    usage: /<command>
+    aliases: [da]
+  dewcopy:
+    description: dewcopy is copy block to your position.. position will seem place at left click...(select 1)
+    usage: /<command>
+    aliases: [dc]
+  dewdown:
+    description: dewdown is put the block on your hand under your feet
+    usage: /<command>
+    aliases: [dn]
+  dewsetlight:
+    description: dewsetlight is place torch in the area it's dark
+    usage: /<command>
+    aliases: [dsl]
+  dewspreadcircle:
+    description: dewspreadcircle is spread blocks from your position.. to every direction..
+    usage: /<command>
+    aliases: [dsc]
+  dewspreadq:
+    description: dewspreadq is spread blocks from your position... only seem y (very fast)
+    usage: /<command>
+    aliases: [dsq]
+  dewwallcircle:
+    description: dewwallcircle is create circle (only wall)
+    usage: /<command>
+    aliases: [dwc]
+  dewsetcircle:
+    description: dewsetcircle is create circle (only wall)
+    usage: /<command>
+  dewfillcircle:
+    description: dewfillcircle is create circle (only wall)
+    usage: /<command>
+    aliases: [dfc]
+  dewextend:
+    description: dewextend set y = 0 to y = 255
+    usage: /<command>
+    aliases: [de]
+  dewselectcube:
+    description: dewselectcube select block near you  amount of item in hand = radius
+    usage: /<command>
+    aliases: [dewselectcube2]
+  

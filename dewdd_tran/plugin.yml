@@ -1,0 +1,11 @@
+name: dewddtran
+main: dewddtran.Main
+version: 1
+author: dewtx29@gmail.com
+database: false
+
+commands:
+  dtran:
+    description: dtran for reload
+    usage: /<command>
+    

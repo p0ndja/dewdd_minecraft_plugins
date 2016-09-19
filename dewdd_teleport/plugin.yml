@@ -1,0 +1,21 @@
+name: dewddteleport
+main: dewddteleport.Main
+version: 1
+author: dewtx29@gmail.com
+database: false
+
+commands:
+  dewsaveteleport:
+    description: dewdd teleport save location for build teleport sign
+    usage: /<command>
+  dewloadteleport:
+    description: dewdd teleport load locatian and build sign
+    usage: /<command>
+  dtp:
+    description: teleport to that player
+    usage: /<command>
+
+permissions:
+  dewdd.teleport.buildsign:
+    description: for create dfree sign
+    default: op

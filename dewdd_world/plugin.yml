@@ -1,0 +1,25 @@
+name: dewddworld
+main: dewddworld.Main
+version: 1
+author: dewtx29@gmail.com
+database: false
+
+commands:
+  dewworld:
+    description: dewdd world load unload wolrd
+    usage: /<command> [load|unload] [world]
+  dewworld u all:
+    description: dewdd world unload all world
+    usage: /<command>
+    
+permissions:
+  dewdd.dewworld.load:
+    description: for everyone can load world
+    default: op
+  dewdd.dewworld.unload:
+    description: for admin can unload world
+    default: op
+  dewdd.dewworld.unloadall:
+    description: for admin can unload all world
+    default: op
+ 

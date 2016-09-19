@@ -1,0 +1,37 @@
+name: dewddgetaway
+main: dewddgetaway.Main
+version: 1
+author: dewtx29@gmail.com
+database: false
+
+commands:
+  dewgetaway:
+    description: toggle getaway
+    usage: /<command> [player] [on|off]
+  dewgetawayrun:
+    description: toggle getaway tick
+    usage: /<command>
+  dewtransformer:
+    description: toggle transformer radius and go or back
+    usage: /<command> [radius] [go|back]
+  dewtransformerrun:
+    description: toggle transformer tick
+    usage: /<command>
+  dewanimation:
+    description: toggle animation tick
+    usage: /<command>
+
+permissions:
+  dewdd.getaway.use:
+    description: use it for your self
+    default: op
+  dewdd.getaway.use.other:
+    description: use it for any player
+    default: op
+  dewdd.getaway.transformer:
+    description: use transformer
+    default: op
+  dewdd.getaway.toggle.animation:
+    description: toggle animation
+    default: op
+    

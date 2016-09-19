@@ -1,0 +1,18 @@
+name: dewddpicture
+main: dewddpicture.Main
+version: 1
+author: dewtx29@gmail.com
+database: false
+
+commands:
+  dewpicture:
+    description: dewdd picture copy picture
+    usage: /<command>
+  dewpictureu:
+    description: dewdd picture url copy picture
+    usage: /<command>
+
+permissions:
+  dewdd.picture.draw:
+    description: for draw picture
+    default: op

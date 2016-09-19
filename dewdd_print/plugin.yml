@@ -1,0 +1,6 @@
+name: dewprint
+main: print.Main
+version: 1
+author: dewtx29@gmail.com
+database: false
+load: STARTUP

@@ -1,0 +1,14 @@
+name: dewddinv
+main: dewddinv.Main
+version: 1
+author: dewtx29@gmail.com
+database: false
+
+commands:
+  dinvl:
+    description: open last inventory
+    usage: /<command>
+  dinv:
+    description: open visual chest by ptdew
+    usage: /<command>
+    

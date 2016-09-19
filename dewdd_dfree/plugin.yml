@@ -1,0 +1,36 @@
+name: dewdddfree
+main: dewdddfree.Main
+version: 1
+author: dewtx29@gmail.com
+database: false
+
+commands:
+  dewenchant:
+    description: dewenchant item inhand
+    usage: /<command> [enchantment] [level]
+  setamount:
+    description: dewset amount item inhand
+    usage: /<command>
+    
+permissions:
+  dewdd.dfree.cdfree:
+    description: for create dfree sign
+    default: op
+  dewdd.dfree.cdexchange:
+    description: for create dew exchange
+    default: op
+  dewdd.dfree.udexchange:
+    description: for use dewexchange sign
+    default: op
+  dewdd.dfree.cdenchant:
+    description: for create dewenchant sign
+    default: op
+  dewdd.dfree.udenchant:
+    description: for use dewenchant sign
+    default: op
+  dewdd.dfree.dura:
+    description: item will can be break full durability
+    default: op
+  dewdd.dfree.dura:
+    description: never need food
+    default: op
