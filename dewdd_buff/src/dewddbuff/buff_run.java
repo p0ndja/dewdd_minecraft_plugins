@@ -9,16 +9,24 @@ import java.util.Random;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.block.Block;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.ExperienceOrb;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.block.BlockFromToEvent;
+import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryOpenEvent;
+import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerExpChangeEvent;
+import org.bukkit.event.player.PlayerInventoryEvent;
 import org.bukkit.event.player.PlayerLevelChangeEvent;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.potion.PotionEffectType;
@@ -28,6 +36,7 @@ import com.earth2me.essentials.api.NoLoanPermittedException;
 import com.earth2me.essentials.api.UserDoesNotExistException;
 
 import dewddtran.tr;
+import net.minecraft.server.v1_8_R3.EnchantmentManager;
 
 public class buff_run implements Listener {
 
@@ -115,6 +124,65 @@ public class buff_run implements Listener {
 
 	Random rnd = new Random();
 
+	class clearItem1000 implements Runnable {
+		private Inventory inv;
+
+		public clearItem1000(Inventory inv) {
+			this.inv = inv;
+			Bukkit.getScheduler().scheduleSyncDelayedTask(ac, this,1);
+		}
+
+		@Override
+		public void run() {
+
+			if (inv == null) {
+				return;
+			}
+
+			for (int i = 0; i < inv.getSize(); i++) {
+				ItemStack itm = inv.getItem(i);
+				if (itm == null) {
+
+					continue;
+				}
+				
+			//	dprint.r.printAll("ii " + i);
+
+				// Enchantment ench;
+				boolean found = false;
+				for (Enchantment ench : org.bukkit.enchantments.Enchantment.values()) {
+					
+					if (itm.getEnchantmentLevel(ench) > 30 || itm.getEnchantmentLevel(ench) < -30) {
+					//	dprint.r.printAll("fnoud true " + i);
+						found = true;
+						break;
+					}
+				}
+				
+				if (found == true) {
+				//	dprint.r.printAll("remove " + i);
+				inv.remove(itm);
+				}
+			}
+		}
+
+	}
+	@EventHandler
+	public void eventja(InventoryClickEvent e) {
+			Inventory inv = e.getInventory();
+		//if (inv.getType() != InventoryType.CREATIVE) {
+			clearItem1000 xxx = new clearItem1000(inv);
+		//}
+	}
+	
+	@EventHandler
+	public void eventja(InventoryOpenEvent e) {
+		Inventory inv = e.getInventory();
+		//if (inv.getType() != InventoryType.CREATIVE) {
+			clearItem1000 xxx = new clearItem1000(inv);
+		//}
+	}
+
 	@EventHandler
 	public void eventja(AsyncPlayerChatEvent e) {
 		if (!tr.isrunworld(ac.getName(), e.getPlayer().getWorld().getName())) {
@@ -175,6 +243,64 @@ public class buff_run implements Listener {
 			e.setCancelled(true);
 		}
 
+	}
+
+	@EventHandler
+	public void eventja(BlockFromToEvent e) {
+		// /* Block toBlock = e.getToBlock();
+		// Block block = e.getBlock();
+		// if (!block.getWorld().getName().equalsIgnoreCase("flat")) {
+		// return;
+		// }
+		//
+		// liquidInvert abc = new liquidInvert(e.getToBlock(), e.getBlock());
+		// //e.setCancelled(true);
+		//
+		//
+		//
+		// */
+
+	}
+
+	class liquidInvert implements Runnable {
+
+		private Block toBlock;
+		private Block block;
+
+		public liquidInvert(Block toBlock, Block block) {
+			this.toBlock = toBlock;
+			this.block = block;
+			Bukkit.getScheduler().scheduleSyncDelayedTask(ac, this, 20);
+		}
+
+		@Override
+		public void run() {
+
+			Random rnd = new Random();
+
+			int xx = 0;
+
+			do {
+				do {
+					xx = rnd.nextInt(50000);
+
+				} while (org.bukkit.Material.getMaterial(xx) == null);
+
+			} while (org.bukkit.Material.getMaterial(xx).isBlock() == false);
+
+			switch (toBlock.getTypeId()) {
+			case 0:
+			case 8:
+			case 9:
+			case 10:
+			case 11:
+				toBlock.setType(org.bukkit.Material.getMaterial(xx));
+
+				//
+				break;
+			}
+
+		}
 	}
 
 	@EventHandler

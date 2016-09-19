@@ -399,9 +399,17 @@ public class DigEventListener2 implements Listener {
 				Enchantment ar = null;
 				;
 				if (isNumeric(m[1]) == true) {
+					
 					ar = Enchantment.getById(Integer.parseInt(m[1]));
 				}
 
+				
+				int thelv = Integer.parseInt(m[2]);
+				if (thelv > 100 || thelv < -100) {
+					player.sendMessage(" -100 < x < 100");
+					return;
+				}
+				
 				if (ar == null) {
 
 					int coc = 0;
@@ -422,7 +430,7 @@ public class DigEventListener2 implements Listener {
 							if (en.getName().toLowerCase().indexOf(m[1].toLowerCase()) > -1) {
 
 								player.sendMessage("starting enchant " + en.getName());
-								player.getItemInHand().addUnsafeEnchantment(en, Integer.parseInt(m[2]));
+								player.getItemInHand().addUnsafeEnchantment(en, thelv);
 								player.sendMessage("ptdew&dewdd: Enchanted '" + en.getName() + "'");
 								return;
 
@@ -435,7 +443,7 @@ public class DigEventListener2 implements Listener {
 							if (en.getName().equalsIgnoreCase(m[1])) {
 
 								player.sendMessage("starting enchant " + en.getName());
-								player.getItemInHand().addUnsafeEnchantment(en, Integer.parseInt(m[2]));
+								player.getItemInHand().addUnsafeEnchantment(en, thelv);
 								player.sendMessage("ptdew&dewdd: Enchanted '" + en.getName() + "'");
 								return;
 

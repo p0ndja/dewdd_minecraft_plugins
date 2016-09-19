@@ -13,10 +13,12 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Random;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
@@ -31,6 +33,361 @@ import li.Constant_Protect;
 import li.LXRXLZRZType;
 
 public class api_skyblock {
+	
+	/*class LoListType {
+		public Location location ;
+		public boolean searchYet = false;
+	}
+	
+	class SkyLVType {
+		public int		id;
+		public byte		data;
+		public int		targetamount;
+		public int		nowamount;
+		public double	percent;
+
+	}
+	
+	public String getKeyFromLocation(Location lo) {
+		String abc = lo.getBlockX() + "," + lo.getBlockY() + "," + lo.getBlockZ();
+		return abc;
+	}
+	
+	class checkrateis implements Runnable {
+
+		private Block	startblock;
+		private int		mode;
+		private ArrayList<SkyLVType> skyLVType = new ArrayList<SkyLVType>();
+		private HashMap<String,LoListType> loList = new HashMap<String,LoListType>();
+		private int curloid = 0;
+
+		public checkrateis(Block startblock, int mode,ArrayList<SkyLVType> skyLVType,
+				HashMap<String,LoListType> loList,int curloid) {
+			this.startblock = startblock;
+			this.mode = mode;
+			this.skyLVType = skyLVType;
+			this.loList = loList;
+			this.curloid = curloid;
+
+			Bukkit.getScheduler().scheduleSyncDelayedTask(ac, this,
+					rnd.nextInt(20) + 1);
+		}
+		
+		
+
+		public void run() {
+			long startTime = System.currentTimeMillis();
+			long nowTime = System.currentTimeMillis();
+			long maxTime = 1000;
+			
+			int maxblock = 50;
+			if (lastMessage.equalsIgnoreCase("cancel")) {
+				return;
+			}
+
+			if (dewddtps.tps.getTPS() < 18) {
+				lastcri = now;
+				checkrateis abc = new checkrateis(startblock, mode);
+				return;
+			}
+
+			startTime = nowTime;
+
+			int proid = getProtectid(startblock);
+			if (proid == -1) {
+				dprint.r.printAll(tr.gettr("this_is_not_anyone_zone"));
+				return;
+			}
+
+
+			Block mid = startblock.getWorld().getBlockAt(rs[proid].x,
+					rs[proid].y, rs[proid].z);
+			// add some block near it
+			Block t;
+
+			boolean fo = false;
+
+			if (mode == 0) {
+				if (loList.size() == 0) {
+					dprint.r.printAll(tr.gettr("starting_checkpercent_of_is")
+							+ rs[proid].p[0]);
+					dprint.r.printAll(tr.gettr("counting_amo_block"));
+
+					loList.clear();
+
+					for (int z = -5; z <= 5; z++)
+						for (int y = -5; y <= 5; y++)
+							for (int x = -5; x <= 5; x++) {
+								t = mid.getRelative(x, y, z);
+								if (t.getTypeId() == 0) continue;
+
+								// check is it have that block
+								
+								
+								fo = false;
+								String theKey = getKeyFromLocation(t.getLocation());
+								LoListType theLo = loList.get(theKey);
+								if (theLo == null) {
+									fo = false;
+									
+								}
+								else {
+									fo = true;
+								}
+								
+								if (fo == true) continue;
+
+								LoListType newLo = new LoListType();
+								newLo.location = t.getLocation();
+								newLo.searchYet = false;
+
+							}
+
+					mode = 1;
+					dprint.r.printAll(tr
+							.gettr("amo_of_block_of_this_island_is_loop1" + proid + " = ")
+							+ loList.size());
+
+					dprint.r.printAll(tr.gettr("starting_searching_loop2" + proid )
+							);
+
+				} // size is 0
+
+			} // mode 0
+			
+			// search another block left
+			if (mode == 1) {
+				boolean stillFound = false; 
+startTime = System.currentTimeMillis();
+				// loop until can't add new block
+
+			long curLo = 0;
+				for (LoListType sk : loList.values()) {
+					curLo ++;
+					
+					if (sk.searchYet == true) {
+						continue;
+					}
+
+					for (int z = -1; z <= 1; z++)
+						for (int y = -1; y <= 1; y++)
+							for (int x = -1; x <= 1; x++) {
+								t = sk.location.getBlock().getRelative(x, y, z);
+
+								if (t.getTypeId() == 0) continue;
+
+								// check is it have that block
+								fo = false;
+
+								String theKey = getKeyFromLocation(t.getLocation());
+									LoListType lo = loList.get(theKey);
+								fo = lo == null ? false: true;
+
+								if (fo == true) continue;
+
+								loList.put(theKey, lo) ;
+								
+								sk.searchYet  = true;
+								
+								 * dprint.r.printAll("added " +
+								 * t.getType().name() + " = " + t.getX() + "," +
+								 * t.getY() + "," + t.getZ() + " total " +
+								 * csmax);
+								 
+
+							}
+
+				
+						// pause system
+					nowTime = System.currentTimeMillis();
+						if (nowTime - startTime > maxTime) {
+							dprint.r.printAll(tr.gettr("counting_rate_is")
+									+ curLo + "/" + loList.size() + "  > "
+									+ ((curLo * 100) / (loList.size()+1)) + "%");
+							startTime = System.currentTimeMillis();
+						}
+						checkrateis abc = new checkrateis(startblock, mode,skyLVType,loList,curloid);
+						curloid = 0;
+						return;
+					
+
+				}
+
+				mode = 2;
+
+				dprint.r.printAll(tr
+						.gettr("amo_of_block_of_this_island_is_loop2") + loList.size());
+
+				dprint.r.printAll(tr.gettr("starting_calc_rate_of_is"));
+
+			} // mode 1
+				// after got all of block check the score
+
+			if (mode == 2) {
+				
+				if (curloid == 0) {
+
+					String mr[] = tr.loadfile("dewdd_skyblock", "drate.txt");
+					String m[];
+					String m2;
+
+					skyLVType.clear();
+
+					
+					//dprint.r.printAll("lvBlocksMax " + crimax);
+
+					for (int i = 0; i < mr.length; i++) {
+						m2 = mr[i];
+
+						m = m2.split("\\s+");
+						
+						SkyLVType cri = new SkyLVType();
+
+						cri.id = Integer.parseInt(m[0]);
+						cri.data = Byte.parseByte(m[1]);
+						cri.targetamount = Integer.parseInt(m[2]);
+						cri.nowamount = 0;
+
+						skyLVType.add(cri);
+					}
+
+					curLoID = 0;
+					dprint.r.printAll(tr.gettr("loaded_drate_file"));
+					dprint.r.printAll(tr.gettr("starting_count_percent"));
+				} // cs 0
+
+				// time to count the block
+
+				int csstart = curLoID;
+
+				while (curLoID < csmax) {
+					startTime = System.currentTimeMillis();
+
+					// search
+					for (int j = 0; j < crimax; j++) {
+						if (cs[curLoID].getTypeId() == cri[j].id) {
+							if (cs[curLoID].getData() == cri[j].data
+									|| cri[j].data == -29) {
+
+								cri[j].nowamount++;
+								break;
+
+							}
+
+						}
+					}
+
+					curLoID++;
+
+					if (nowTime - startTime > 30000) {
+						dprint.r.printAll(tr.gettr("percent_of_processing_is")
+								+ (curLoID * 100) / csmax + "%");
+
+						startTime = System.currentTimeMillis();
+					}
+
+					if (curLoID - csstart >= maxblock) {
+						checkrateis abc = new checkrateis(startblock, mode);
+						return;
+					}
+				}
+
+				dprint.r.printAll(tr
+						.gettr("calc_percent_of_each_block_complete"));
+				dprint.r.printAll(tr
+						.gettr("starting_showing_percent_of_each_block_type"));
+
+				double eachper = getpercent(1);
+				dprint.r.printAll(tr.gettr("eachper") + eachper);
+
+				// count percent of each block
+				for (int i = 0; i < crimax; i++) {
+
+					if (cri[i].nowamount > cri[i].targetamount)
+						cri[i].nowamount = cri[i].targetamount;
+
+					cri[i].percent = (eachper * cri[i].nowamount)
+							/ (cri[i].targetamount);
+
+				}
+
+				// bubble sort
+
+				dprint.r.printAll(tr.gettr("sorting_rank_is"));
+				int swapc = 0;
+
+				boolean xx = false;
+				if (xx == false) {
+					for (int i = 0; i < crimax; i++) {
+						for (int j = 0; j < (crimax - 1 - i); j++) {
+
+							if (cri[j].percent < cri[j + 1].percent) {
+								// swap it
+								cridata ttt = new cridata();
+
+								ttt.percent = cri[j].percent;
+								ttt.id = cri[j].id;
+								ttt.data = cri[j].data;
+								ttt.targetamount = cri[j].targetamount;
+								ttt.nowamount = cri[j].nowamount;
+
+								cri[j].percent = cri[j + 1].percent;
+								cri[j].id = cri[j + 1].id;
+								cri[j].data = cri[j + 1].data;
+								cri[j].nowamount = cri[j + 1].nowamount;
+								cri[j].targetamount = cri[j + 1].targetamount;
+
+								cri[j + 1].percent = ttt.percent;
+								cri[j + 1].id = ttt.id;
+								cri[j + 1].data = ttt.data;
+								cri[j + 1].nowamount = ttt.nowamount;
+								cri[j + 1].targetamount = ttt.targetamount;
+
+								swapc++;
+							}
+
+						}
+
+					}
+				}
+
+				dprint.r.printAll(tr.gettr("sorted_rank_amount_is") + swapc);
+				lastcri = System.currentTimeMillis();
+				for (int i = 0; i < crimax; i++) {
+
+					if (cri[i].nowamount >= cri[i].targetamount
+							|| cri[i].nowamount == 0) continue;
+
+					String na = i + " _ " + cri[i].id + " > "
+							+ Material.getMaterial(cri[i].id).name();
+					dprint.r.printAll(na + " = " + cri[i].nowamount + "/"
+							+ cri[i].targetamount + " (" + cri[i].percent
+							+ "%)");
+				}
+
+				double sumper = 0.0;
+
+				for (int i = 0; i < crimax; i++) {
+
+					sumper += cri[i].percent;
+				}
+
+				dprint.r.printAll(tr.gettr("sum_per_rate_of_island")
+						+ rs[proid].p[0] + " = " + sumper + "%");
+
+				rs[proid].percent = sumper;
+
+				if (sumper == 0) rs[proid].p[0] = "";
+				saversprotectfile();
+				loadrsprotectfile();
+
+				return;
+
+			} // mode 2
+
+		}
+	}*/
+	
 	public Block gethFirstBlockHigh(Block block) {
 		for (int i = 255 ;  i >= 0 ; i --) {
 			
@@ -677,7 +1034,7 @@ public class api_skyblock {
 
 	public int maxautocut = 5;
 
-	public String lastmessage = "";
+	public String lastMessage = "";
 
 	long lastcreate = 0;
 
