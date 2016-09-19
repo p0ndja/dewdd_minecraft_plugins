@@ -420,7 +420,7 @@ public class DigEventListener2 implements Listener {
 
 	
 
-	public JavaPlugin ac = null;
+	public static JavaPlugin ac = null;
 
 	public api_skyblock dew = null;
 
@@ -1171,7 +1171,7 @@ public class DigEventListener2 implements Listener {
 		Player player = e.getPlayer();
 		String m[] = e.getMessage().split("\\s+");
 
-		dew.commandRuning(m, player);;
+		dew.commandRuning(m, player);
 		
 	}
 

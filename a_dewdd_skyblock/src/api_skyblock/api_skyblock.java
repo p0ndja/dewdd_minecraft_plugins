@@ -35,6 +35,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import dewddskyblock.AllBlockInGameType;
+import dewddskyblock.DigEventListener2;
 import dewddtran.tr;
 import li.Constant_Protect;
 import li.LXRXLZRZType;
@@ -693,8 +694,7 @@ public class api_skyblock {
 						itm.getData().setData((byte) a.data);
 						int tmpSize = rnd.nextInt(itm.getType().getMaxStackSize() + 1) + 1;
 						inv.addItem(itm.getData().toItemStack(tmpSize));
-						
-						
+
 						a.curAmount -= 64;
 						count++;
 
@@ -1063,14 +1063,14 @@ public class api_skyblock {
 					block2 = block.getRelative(0, 4, 0);
 					Chest chest = (Chest) block2.getState();
 					chest.getInventory().clear();
-					
+
 					ItemStack itm = new ItemStack(Material.DIAMOND, 3);
 					chest.getInventory().addItem(itm.getData().toItemStack(3));
-					
-					 itm = new ItemStack(Material.COAL, 3);
+
+					itm = new ItemStack(Material.COAL, 3);
 					chest.getInventory().addItem(itm.getData().toItemStack(3));
 
-					 itm = new ItemStack(Material.SAPLING, 3);
+					itm = new ItemStack(Material.SAPLING, 3);
 					chest.getInventory().addItem(itm.getData().toItemStack(3));
 
 					itm = new ItemStack(Material.SAPLING, 3);
@@ -1172,7 +1172,7 @@ public class api_skyblock {
 					saveRSProtectFile();
 					buildcomplete = true;
 
-				//	addSmallIslandNearThisBlock(block, 20);
+					// addSmallIslandNearThisBlock(block, 20);
 
 				}
 
@@ -1907,6 +1907,77 @@ public class api_skyblock {
 		return oo;
 	}
 
+	class drawAllProtectLine implements Runnable {
+
+		private Player player;
+		private boolean drawOrDelete = false;
+		private int curid = 0;
+		private byte color = 0;
+
+		public drawAllProtectLine(Player player, boolean drawOrDelete, int curid, byte color) {
+
+			this.player = player;
+			this.drawOrDelete = drawOrDelete;
+			this.curid = curid;
+			this.color = color;
+		}
+
+		@Override
+		public void run() {
+
+			// loop all protected zone
+
+			// delete all wll
+
+			// add all new wall
+
+			if (curid >= api_skyblock.rsMax) {
+				return;
+			}
+
+			Block block = null;
+
+
+			RSData rs = api_skyblock.rs[curid];
+
+			block = player.getWorld().getBlockAt(rs.x, rs.y, rs.z);
+			drawProtectLine dp = new drawProtectLine(block, player, false);
+			dp.run();
+
+			//ItemStack itm = new ItemStack(Material.STAINED_GLASS, 1,color);
+			ItemStack itm = new ItemStack(Material.STONE, 1,(byte)0);
+			
+			itm.setAmount(1);
+			//itm.getData().setData(color);
+			// itm.getData().setData(color);
+
+			player.setItemInHand(itm);
+			
+		
+
+			dp = new drawProtectLine(block, player, drawOrDelete);
+			dp.run();
+
+			color++;
+			if (color > 15) {
+				color = 0;
+			}
+
+			dprint.r.printAll("drawing Wall : " + curid + " / " + api_skyblock.rsMax);
+			for (Chunk chu : Bukkit.getWorld("world").getLoadedChunks()) {
+				if (chu == null) {
+					continue;
+				}
+				chu.unload();
+			}
+			curid ++;
+			drawAllProtectLine dap = new drawAllProtectLine(player, drawOrDelete, curid, color);
+			Bukkit.getScheduler().scheduleSyncDelayedTask(DigEventListener2.ac, dap,1);
+
+			
+		}
+	}
+
 	class drawProtectLine implements Runnable {
 
 		private Block block;
@@ -1950,13 +2021,12 @@ public class api_skyblock {
 						if (drawOrDelete == true) {
 							if (cc.getType() == Material.AIR) {
 								cc.setType(player.getItemInHand().getType());
+								cc.setData(player.getItemInHand().getData().getData());
 
 							}
 						} else {
-							if (cc.getType() == player.getItemInHand().getType()) {
-								cc.setType(Material.AIR);
 
-							}
+							cc.setType(Material.AIR);
 
 						}
 					}
@@ -2255,6 +2325,21 @@ public class api_skyblock {
 					if (m.length != 3) {
 						player.sendMessage(dprint.r.color("/is drawprotect true/false"));
 						return;
+					}
+
+					if (m.length == 3) {
+						if (m[2].equalsIgnoreCase("setAll")) {
+							drawAllProtectLine dp = new drawAllProtectLine(player, true, 0, (byte) 0);
+
+							Bukkit.getScheduler().scheduleSyncDelayedTask(ac, dp);
+							return;
+						}
+						else 						if (m[2].equalsIgnoreCase("deleteAll")) {
+							drawAllProtectLine dp = new drawAllProtectLine(player, false, 0, (byte) 0);
+
+							Bukkit.getScheduler().scheduleSyncDelayedTask(ac, dp);
+							return;
+						}
 					}
 
 					drawProtectLine dp = new drawProtectLine(player.getLocation().getBlock(), player,
@@ -2775,11 +2860,11 @@ public class api_skyblock {
 
 					for (ItemStack itm : player.getInventory().getContents()) {
 						if (itm != null) {
-							
+
 							if (itm.getType() == Material.CHEST) {
 								continue;
 							}
-							
+
 							hav = true;
 							break;
 						}
@@ -2874,7 +2959,7 @@ public class api_skyblock {
 
 					lv.needAmount[i], lv.getData(lv.needNameData[i]));
 
-			//itm.addUnsafeEnchantment(Enchantment.DAMAGE_UNDEAD, 1);
+			// itm.addUnsafeEnchantment(Enchantment.DAMAGE_UNDEAD, 1);
 
 			ItemMeta mm = itm.getItemMeta();
 			mm.setDisplayName(lv.needNameData[i] + " NEED");

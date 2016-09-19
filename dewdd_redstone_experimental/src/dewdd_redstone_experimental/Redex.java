@@ -21,7 +21,7 @@ public class Redex {
 	// produce next gen
 
 
-	public static int				maxPopulation				= 1000;
+	public static int				maxPopulation				= 100;
 
 	public static long				maxNothingBetterInTick		= (5 * 1) * 10;				// 1
 																								// minutes
