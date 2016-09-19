@@ -11,6 +11,7 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
+import org.bukkit.block.Dropper;
 import org.bukkit.block.Sign;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.CreatureType;
@@ -25,6 +26,7 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockBurnEvent;
 import org.bukkit.event.block.BlockDamageEvent;
+import org.bukkit.event.block.BlockDispenseEvent;
 import org.bukkit.event.block.BlockFromToEvent;
 import org.bukkit.event.block.BlockPistonExtendEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
@@ -57,19 +59,19 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.event.server.ServerCommandEvent;
 import org.bukkit.event.world.ChunkUnloadEvent;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.potion.PotionEffectType;
 
 import api_admin.dewddadmin;
-import api_skyblock.api_skyblock;
 import dewddflower.dewset;
 import dewddtran.tr;
 import net.minecraft.server.v1_8_R3.EntityPlayer;
 
 public class DigEventListener2 implements Listener {
 
-	dewset dew ;
+	dewset dew;
 
 	class chatx implements Runnable {
 		public Boolean canc = false;
@@ -134,9 +136,8 @@ public class DigEventListener2 implements Listener {
 					player.sendMessage(lop + " = " + dew.dewworldlist[lop]);
 				}
 			}
-			
-			if (m[0].equalsIgnoreCase("cleardrop") == true
-					|| m[0].equalsIgnoreCase("cp") == true
+
+			if (m[0].equalsIgnoreCase("cleardrop") == true || m[0].equalsIgnoreCase("cp") == true
 					|| m[0].equalsIgnoreCase("cd") == true) {
 
 				for (Entity ent : player.getWorld().getEntities()) {
@@ -145,13 +146,11 @@ public class DigEventListener2 implements Listener {
 						Location lo2 = dew.giftblock.getLocation();
 
 						lo2.setWorld(Bukkit.getWorld("world"));
-						if (player.getWorld().getName()
-								.equalsIgnoreCase("world") == true) {
+						if (player.getWorld().getName().equalsIgnoreCase("world") == true) {
 
 							ent.teleport(lo2);
 
-						}
-						else {
+						} else {
 
 							ent.remove();
 
@@ -1359,32 +1358,30 @@ public class DigEventListener2 implements Listener {
 					System.out.println("dew main waiting for create dewset sleeping ac +" + i);
 
 				}
-				
-			    
-			    System.out.println("***** main dew = " + dew==null?"null":"not null" );
-			    System.out.println("***** main dewddflower.Main.ds = " + dewddflower.Main.ds==null?"null":"not null");
-			 
 
-				
-				  while (dewddflower.Main.ds == null) {
-				  
-				  i++
-				  ; Thread.sleep(1000); System.out .println(
-				  "dew main waiting for create dewset sleeping dew +" + i);
-				  
-				 
-				  		//dew = dewddflower.Main.ds;
-				  
-				  }
-				    dew = dewddflower.Main.ds;
-				    
-				    dew.loadmainfile();
-				    
-				    
-				    System.out.println("***** main dew = " + dew==null?"null":"not null" );
-				    System.out.println("***** main dewddflower.Main.ds = " + dewddflower.Main.ds==null?"null":"not null");
-				 
-				 /* while (dew.ac == null) {
+				System.out.println("***** main dew = " + dew == null ? "null" : "not null");
+				System.out.println(
+						"***** main dewddflower.Main.ds = " + dewddflower.Main.ds == null ? "null" : "not null");
+
+				while (dewddflower.Main.ds == null) {
+
+					i++;
+					Thread.sleep(1000);
+					System.out.println("dew main waiting for create dewset sleeping dew +" + i);
+
+					// dew = dewddflower.Main.ds;
+
+				}
+				dew = dewddflower.Main.ds;
+
+				dew.loadmainfile();
+
+				System.out.println("***** main dew = " + dew == null ? "null" : "not null");
+				System.out.println(
+						"***** main dewddflower.Main.ds = " + dewddflower.Main.ds == null ? "null" : "not null");
+
+				/*
+				 * while (dew.ac == null) {
 				 * 
 				 * i++; Thread.sleep(1000); System.out .println(
 				 * "dew main waiting for create dewset sleeping dew ac +" + i);
@@ -1497,9 +1494,9 @@ public class DigEventListener2 implements Listener {
 	public DigEventListener2() {
 		// dew = new dewddflower.dewset();
 
-		
-		  delay eee = new delay(); eee.start();
-		 
+		delay eee = new delay();
+		eee.start();
+
 	}
 
 	// synchronized
@@ -1725,37 +1722,38 @@ public class DigEventListener2 implements Listener {
 			}
 
 			// call fixtool
-			
-			if (player.getItemInHand() != null) 
+
+			if (player.getItemInHand() != null)
 				if (player.getItemInHand().getItemMeta() != null)
-			if (player.getItemInHand().getItemMeta().getDisplayName() != null ) {
-			String itName[] = player.getItemInHand().getItemMeta().getDisplayName().split(" ");
-			
-			//player.sendMessage("itName " + itName[0] + " " + itName[1]);
-			
-			if (itName.length == 3) {
-				if (itName[0].equalsIgnoreCase("55")) {
-					
-					dew.amountRecursiveCount = 0;
-					
-					int ig1 = block.getTypeId();
-					byte ig2 = block.getData();
-					
-					
-					//player.sendMessage("ptdew&dewdd : 55 runing..." + ig1 + ":" + ig2);
-					dew.item55delete(block, player, ig1, ig2, Integer.parseInt(itName[1]), Integer.parseInt(itName[2]),20);
-					//player.sendMessage("ptdew&dewdd : 55 done...");
-				}
-				
-			}
-			
-			}
-			
-			
+					if (player.getItemInHand().getItemMeta().getDisplayName() != null) {
+						String itName[] = player.getItemInHand().getItemMeta().getDisplayName().split(" ");
+
+						// player.sendMessage("itName " + itName[0] + " " +
+						// itName[1]);
+
+						if (itName.length == 3) {
+							if (itName[0].equalsIgnoreCase("55")) {
+
+								dew.amountRecursiveCount = 0;
+
+								int ig1 = block.getTypeId();
+								byte ig2 = block.getData();
+
+								// player.sendMessage("ptdew&dewdd : 55
+								// runing..." + ig1 + ":" + ig2);
+								dew.item55delete(block, player, ig1, ig2, Integer.parseInt(itName[1]),
+										Integer.parseInt(itName[2]), 20);
+								// player.sendMessage("ptdew&dewdd : 55
+								// done...");
+							}
+
+						}
+
+					}
+
 			dew.randomplaynote(player.getLocation());
-			
+
 		}
-		
 
 	}
 
@@ -1817,32 +1815,33 @@ public class DigEventListener2 implements Listener {
 				// player.sendMessage("iteminhand= " +
 				// player.getItemInHand().getTypeId());
 
-				
-				if (player.getItemInHand() != null) 
+				if (player.getItemInHand() != null)
 					if (player.getItemInHand().getItemMeta() != null)
-				if (player.getItemInHand().getItemMeta().getDisplayName() != null) {
-				String itName[] = player.getItemInHand().getItemMeta().getDisplayName().split(" ");
-				
-				//player.sendMessage("itName " + itName[0] + " " + itName[1]);
-				
-				if (itName.length == 3) {
-					if (itName[0].equalsIgnoreCase("55")) {
-						
-						dew.amountRecursiveCount = 0;
-						
-						int ig1 = block.getTypeId();
-						byte ig2 = block.getData();
-						
-						
-						//player.sendMessage("ptdew&dewdd : 55 runing..." + ig1 + ":" + ig2);
-						dew.item55delete(block, player, ig1, ig2, Integer.parseInt(itName[1]), Integer.parseInt(itName[2]),20);
-							//player.sendMessage("ptdew&dewdd : 55 done...");
-					}
-					
-				}
-				}
-				
-				
+						if (player.getItemInHand().getItemMeta().getDisplayName() != null) {
+							String itName[] = player.getItemInHand().getItemMeta().getDisplayName().split(" ");
+
+							// player.sendMessage("itName " + itName[0] + " " +
+							// itName[1]);
+
+							if (itName.length == 3) {
+								if (itName[0].equalsIgnoreCase("55")) {
+
+									dew.amountRecursiveCount = 0;
+
+									int ig1 = block.getTypeId();
+									byte ig2 = block.getData();
+
+									// player.sendMessage("ptdew&dewdd : 55
+									// runing..." + ig1 + ":" + ig2);
+									dew.item55delete(block, player, ig1, ig2, Integer.parseInt(itName[1]),
+											Integer.parseInt(itName[2]), 20);
+									// player.sendMessage("ptdew&dewdd : 55
+									// done...");
+								}
+
+							}
+						}
+
 				if (player.getItemInHand().getTypeId() == Material.REDSTONE_TORCH_OFF.getId()
 						|| player.getItemInHand().getTypeId() == Material.REDSTONE_TORCH_ON.getId())
 					if (block.getTypeId() == 54) {
@@ -2175,32 +2174,167 @@ public class DigEventListener2 implements Listener {
 	}
 
 	// EntityExplodeEvent
-	
+
+	@EventHandler
+	public void eventja(BlockDispenseEvent e) {
+		if (!tr.isrunworld(ac.getName(), e.getBlock().getWorld().getName()))
+			return;
+
+		if (e.getBlock().getType() == Material.DROPPER) {
+			Dropper dropper = (Dropper) e.getBlock().getState();
+			Material toSet;
+
+			switch (e.getItem().getType()) {
+			case SEEDS:
+				toSet = Material.CROPS;
+				break;
+			case PUMPKIN_SEEDS:
+				toSet = Material.PUMPKIN_STEM;
+				break;
+
+			case MELON_SEEDS:
+				toSet = Material.MELON_STEM;
+				break;
+
+			case POTATO_ITEM:case POTATO:
+				toSet = Material.POTATO;
+				break;
+
+			case CARROT_ITEM:case CARROT:
+				toSet = Material.CARROT;
+				break;
+
+			case NETHER_WARTS:
+
+				toSet = Material.NETHER_WARTS;
+				break;
+
+			default:
+				return;
+
+			}
+
+			Inventory inv = dropper.getInventory();
+
+			//dprint.r.printAll("yap");
+			
+			int search = 12;
+			Block block = e.getBlock().getRelative(0, -1, 0);
+
+			for (int x = -search; x <= search; x++) {
+				Block rera = block.getRelative(x, 0, 0);
+				if (rera.getType() == Material.SOIL || rera.getType() == Material.SOUL_SAND) {
+					Block upper = rera.getRelative(0, 1, 0);
+
+					e.setCancelled(true);
+					if (upper.getType() == Material.AIR) {
+
+					
+						
+						int slot = inv.first(e.getItem().getType());
+					
+						if (slot == -1) continue;
+						
+						
+						ItemStack eo = inv.getItem(slot);
+						
+						eo.setAmount(eo.getAmount() - 1);
+						inv.setItem(slot, eo);
+						dropper.update(true);
+						upper.setType(toSet);
+						return;
+						
+					}
+
+
+				}
+			}
+
+			for (int x = -search; x <= search; x++) {
+				Block rera = block.getRelative(0, x, 0);
+				if (rera.getType() == Material.SOIL || rera.getType() == Material.SOUL_SAND) {
+					Block upper = rera.getRelative(0, 1, 0);
+
+					e.setCancelled(true);
+					if (upper.getType() == Material.AIR) {
+
+					
+						
+						int slot = inv.first(e.getItem().getType());
+					
+						if (slot == -1) continue;
+						
+						
+						ItemStack eo = inv.getItem(slot);
+						
+						eo.setAmount(eo.getAmount() - 1);
+						inv.setItem(slot, eo);
+						dropper.update(true);
+						upper.setType(toSet);
+						return;
+						
+					}
+
+
+				}
+			}
+
+			for (int x = -search; x <= search; x++) {
+				Block rera = block.getRelative(0, 0, x);
+				if (rera.getType() == Material.SOIL || rera.getType() == Material.SOUL_SAND) {
+					Block upper = rera.getRelative(0, 1, 0);
+
+					e.setCancelled(true);
+					if (upper.getType() == Material.AIR) {
+
+					
+						
+						int slot = inv.first(e.getItem().getType());
+					
+						if (slot == -1) continue;
+						
+						
+						ItemStack eo = inv.getItem(slot);
+						
+						eo.setAmount(eo.getAmount() - 1);
+						inv.setItem(slot, eo);
+						dropper.update(true);
+						upper.setType(toSet);
+						return;
+						
+					}
+
+				}
+			}
+
+		}
+
+	}
+
 	@EventHandler
 	public void eventja(BlockPistonExtendEvent e) {
-		if (!api_skyblock.isrunworld(e.getBlock().getWorld().getName())) {
+		if (!tr.isrunworld(ac.getName(), e.getBlock().getWorld().getName()))
 			return;
-		}
 
 		Block block = e.getBlock();
 		// search sign
 		int search = 1;
-		for (int x = -search  ; x <= search ; x ++ )
-			for (int y = -search  ; y <= search ; y ++ )
-				for (int z = -search  ; z <= search ; z ++ ) {
-					Block bo = e.getBlock().getRelative(x,y,z);
-					if (bo.getType() == Material.SIGN_POST || bo.getType() == Material.WALL_SIGN ) {
+		for (int x = -search; x <= search; x++)
+			for (int y = -search; y <= search; y++)
+				for (int z = -search; z <= search; z++) {
+					Block bo = e.getBlock().getRelative(x, y, z);
+					if (bo.getType() == Material.SIGN_POST || bo.getType() == Material.WALL_SIGN) {
 						Sign sign = (Sign) bo.getState();
 						if (sign.getLine(0).equalsIgnoreCase("[dewbreak]")) {
 							block.getRelative(e.getDirection()).breakNaturally();
-							
+
 						}
 					}
-					
+
 				}
-					
+
 	}
-	
+
 	@EventHandler
 	public void eventja(EntityExplodeEvent event) throws InterruptedException {
 
@@ -2293,7 +2427,8 @@ public class DigEventListener2 implements Listener {
 
 			if (dew.checkpermissionarea(event.getEntity().getLocation().getBlock(), br,
 					"HangingBreakByEntity") == true) {
-			//	br.sendMessage("ptdew&dewdd : " + tr.gettr("don't_break_hanging_picture_not_yours"));
+				// br.sendMessage("ptdew&dewdd : " +
+				// tr.gettr("don't_break_hanging_picture_not_yours"));
 
 				event.setCancelled(true);
 				return;
@@ -2308,12 +2443,11 @@ public class DigEventListener2 implements Listener {
 
 		if (!tr.isrunworld(ac.getName(), event.getEntity().getWorld().getName()))
 			return;
-		
-		
+
 		if (dew.checkpermissionarea(event.getEntity().getLocation().getBlock()) == true) {
 			event.setCancelled(true);
 		}
-		
+
 		if (event.getCause() == RemoveCause.EXPLOSION == true) {
 			if (dew.checkpermissionarea(event.getEntity().getLocation().getBlock()) == true) {
 				event.setCancelled(true);
@@ -2339,7 +2473,7 @@ public class DigEventListener2 implements Listener {
 
 				if (dist < 10000)
 					if (dew.checkpermissionarea(event.getEntity().getLocation().getBlock(), pl, "break") == true) {
-					//	pl.sendMessage(tr.gettr("don't_destroy_hanging_picture_not_yours"));
+						// pl.sendMessage(tr.gettr("don't_destroy_hanging_picture_not_yours"));
 						event.setCancelled(true);
 						return;
 					}
@@ -2369,7 +2503,8 @@ public class DigEventListener2 implements Listener {
 
 		Player br = event.getPlayer();
 		if (dew.checkpermissionarea(event.getPlayer().getLocation().getBlock(), br, "HangingPlaceEvent") == true) {
-			//br.sendMessage("ptdew&dewdd : " + tr.gettr("don't_place_hanging_picture_not_yours"));
+			// br.sendMessage("ptdew&dewdd : " +
+			// tr.gettr("don't_place_hanging_picture_not_yours"));
 
 			event.setCancelled(true);
 		}
@@ -2380,33 +2515,34 @@ public class DigEventListener2 implements Listener {
 	public void eventja(EntityDamageEvent e) {
 		if (!tr.isrunworld(ac.getName(), e.getEntity().getWorld().getName()))
 			return;
-		
-		if (e.getEntity() instanceof EntityPlayer) {
-		Player br = (Player) e.getEntity();
-			if (dew.checkpermissionarea(br.getLocation().getBlock(), br, "EntityDamageEvent") == true) {
-			//br.sendMessage("ptdew&dewdd : " + tr.gettr("don't_place_hanging_picture_not_yours"));
 
-			e.setCancelled(true);
-		}
+		if (e.getEntity() instanceof EntityPlayer) {
+			Player br = (Player) e.getEntity();
+			if (dew.checkpermissionarea(br.getLocation().getBlock(), br, "EntityDamageEvent") == true) {
+				// br.sendMessage("ptdew&dewdd : " +
+				// tr.gettr("don't_place_hanging_picture_not_yours"));
+
+				e.setCancelled(true);
+			}
 		}
 	}
-	
+
 	@EventHandler
 	public void eventja(PlayerInteractEntityEvent e) {
-		
+
 		if (!tr.isrunworld(ac.getName(), e.getPlayer().getWorld().getName()))
 			return;
 
 		Player br = e.getPlayer();
 		if (dew.checkpermissionarea(e.getPlayer().getLocation().getBlock(), br, "HangingPlaceEvent") == true) {
-		//	br.sendMessage("ptdew&dewdd : " + tr.gettr("don't_interact_not_your"));
+			// br.sendMessage("ptdew&dewdd : " +
+			// tr.gettr("don't_interact_not_your"));
 
 			e.setCancelled(true);
 		}
 
-		
 	}
-	
+
 	@EventHandler
 	public void eventja(InventoryOpenEvent event) {
 		if (!tr.isrunworld(ac.getName(), event.getPlayer().getWorld().getName()))
@@ -2503,8 +2639,6 @@ public class DigEventListener2 implements Listener {
 
 	}
 
-	
-
 	@EventHandler
 	public void eventja(ItemDespawnEvent event) {
 		if (!tr.isrunworld(ac.getName(), event.getEntity().getWorld().getName()))
@@ -2519,8 +2653,6 @@ public class DigEventListener2 implements Listener {
 			dew.loadgiftfile();
 		}
 
-		
-		
 		lo2 = dew.giftblock.getLocation();
 
 		ItemStack abx = event.getEntity().getItemStack();
@@ -2787,12 +2919,15 @@ public class DigEventListener2 implements Listener {
 
 		boolean goodc1 = false;
 		goodc1 = dew.checkpermissionarea(block, player, "right");
-		
-		/*if (event.getAction().equals(Action.RIGHT_CLICK_BLOCK) && event.getClickedBlock().equals(Material.ITEM_FRAME)
-				&& dew.checkpermissionarea(block, player, "playerInteractEvent") == true){
-			
-			event.setCancelled(true);
-		}*/
+
+		/*
+		 * if (event.getAction().equals(Action.RIGHT_CLICK_BLOCK) &&
+		 * event.getClickedBlock().equals(Material.ITEM_FRAME) &&
+		 * dew.checkpermissionarea(block, player, "playerInteractEvent") ==
+		 * true){
+		 * 
+		 * event.setCancelled(true); }
+		 */
 
 		if (goodc1 == true) {
 			event.setCancelled(true);
@@ -2946,8 +3081,6 @@ public class DigEventListener2 implements Listener {
 				player.sendMessage(tr.gettr("on_main_playerjoin_tell_him_this_word"));
 			}
 		}, 100);
-		
-		
 
 		if (api_admin.dewddadmin.is2admin(player) == false && api_admin.dewddadmin.is2moderator(player) == false
 				&& api_admin.dewddadmin.is2vip(player) == false) {
@@ -3168,7 +3301,7 @@ public class DigEventListener2 implements Listener {
 
 			} // b1 pro
 			else // dprint.r.printAll(block2.getTypeId() + "");
-				if (block2.getTypeId() == 0) {
+			if (block2.getTypeId() == 0) {
 
 				int proid = dew.checkpermissionarea(block2, true);
 				if (proid == -1)

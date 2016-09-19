@@ -118,21 +118,21 @@ public class DigEventListener2 implements Listener {
 			switch (b.getType()) {
 			case PUMPKIN:
 			case MELON_BLOCK:
+				return;
 			case BROWN_MUSHROOM:
 			case RED_MUSHROOM:
 				break;
 			case COBBLESTONE:
 				// dprint.r.printAll("0 autocut");
-
-				break;
+				return;
 
 			case NETHER_WARTS:
 				if (b.getData() != 3)
 					return;
 
 				b.breakNaturally();
-				b.setType(Material.NETHER_WARTS);
-				b.setData((byte) 0);
+				/*b.setType(Material.NETHER_WARTS);
+				b.setData((byte) 0);*/
 
 				for (Entity en : b.getWorld().getEntities()) {
 					if (en == null)
@@ -160,19 +160,19 @@ public class DigEventListener2 implements Listener {
 				switch (b.getType()) {
 				case CROPS:
 					b.breakNaturally();
-					b.setType(Material.CROPS);
-					b.setData((byte) 0);
+				/*	b.setType(Material.CROPS);
+					b.setData((byte) 0);*/
 					break;
 				case CARROT:
 					b.breakNaturally();
-					b.setType(Material.CARROT);
-					b.setData((byte) 0);
+				/*	b.setType(Material.CARROT);
+					b.setData((byte) 0);*/
 					break;
 
 				case POTATO:
 					b.breakNaturally();
-					b.setType(Material.POTATO);
-					b.setData((byte) 0);
+					/*b.setType(Material.POTATO);
+					b.setData((byte) 0);*/
 					break;
 
 				}

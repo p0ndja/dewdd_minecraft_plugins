@@ -404,28 +404,7 @@ public class DigEventListener2 implements Listener {
 
 		public void run() {
 			if (pr.isOnline() == false) {
-				// switch player
-				if (Bukkit.getOnlinePlayers().size() == 0) {
-					return;
-				}
-
-				int ga = 0;
-				while ( ga <= 0 || ga >= Bukkit.getOnlinePlayers().size()) {
-
-					ga = rnd.nextInt();
-					
-					if (Bukkit.getOnlinePlayers().size() <= 0) {
-						break;
-					}
-				
-
-				}
-				
-				if (Bukkit.getOnlinePlayers().size() <= 0) {
-					return;
-				}
-				
-					pr = (Player) Bukkit.getOnlinePlayers().toArray()[ga];
+			return;
 			}
 
 			int ranid = 0;
