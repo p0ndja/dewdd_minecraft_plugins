@@ -22,11 +22,11 @@ import org.bukkit.block.Dropper;
 import org.bukkit.block.Hopper;
 import org.bukkit.block.Sign;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import com.sk89q.worldedit.WorldEdit;
 import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
 import com.sk89q.worldguard.protection.ApplicableRegionSet;
 
@@ -452,88 +452,7 @@ public class dewset extends dewset_interface {
 						if ((this.amountloop == 3) && this.player
 								.hasPermission(dewset_interface.pmainalsocopyinventoryblockwhenyouusedewset)) {
 
-							switch (hostBlock.getType()) {
-							case CHEST:
-							case TRAPPED_CHEST:
-
-								Chest hostChest = (Chest) hostBlock.getState();
-								Chest setChest = (Chest) setBlock.getState();
-
-								for (ItemStack itm : hostChest.getInventory().getContents()) {
-									if (itm == null) {
-										continue;
-									}
-
-									setChest.getInventory().addItem(itm);
-
-									continue;
-
-								}
-
-								setChest.update(true);
-								dewset.this.saveHistory(CoreProtect, this.player, hostBlock, setBlock, true);
-								break;
-							case DISPENSER:
-
-								Dispenser hostDispenser = (Dispenser) hostBlock.getState();
-								Dispenser setDispenser = (Dispenser) setBlock.getState();
-
-								for (ItemStack itm : hostDispenser.getInventory().getContents()) {
-									if (itm == null) {
-										continue;
-									}
-
-									setDispenser.getInventory().addItem(itm);
-									continue;
-
-								}
-
-								setDispenser.update(true);
-								dewset.this.saveHistory(CoreProtect, this.player, hostBlock, setBlock, true);
-								break;
-
-							case HOPPER:
-								Hopper hostHopper = (Hopper) hostBlock.getState();
-								Hopper setHopper = (Hopper) setBlock.getState();
-
-								for (ItemStack itm : hostHopper.getInventory().getContents()) {
-									if (itm == null) {
-										continue;
-									}
-
-									setHopper.getInventory().addItem(itm);
-									continue;
-
-								}
-
-								setHopper.update(true);
-								dewset.this.saveHistory(CoreProtect, this.player, hostBlock, setBlock, true);
-								break;
-
-							case DROPPER:
-
-								Dropper hostDropper = (Dropper) hostBlock.getState();
-								Dropper setDropper = (Dropper) setBlock.getState();
-
-								for (ItemStack itm : hostDropper.getInventory().getContents()) {
-									if (itm == null) {
-										continue;
-									}
-
-									setDropper.getInventory().addItem(itm);
-									continue;
-
-								}
-
-								setDropper.update(true);
-								dewset.this.saveHistory(CoreProtect, this.player, hostBlock, setBlock, true);
-								break;
-							
-							default:
-								dewset.this.saveHistory(CoreProtect, this.player, hostBlock, setBlock, true);
-								break;
-								
-							}
+							copyInventory(hostBlock, setBlock, player, CoreProtect);
 							
 
 						}
@@ -573,6 +492,114 @@ public class dewset extends dewset_interface {
 		}
 	}
 
+	
+	public void copyInventory(Block hostBlock , Block setBlock ,Player player , CoreProtectAPI coreProtect) {
+		switch (hostBlock.getType()) {
+		case CHEST:
+		case TRAPPED_CHEST:
+
+			Chest hostChest = (Chest) hostBlock.getState();
+			Chest setChest = (Chest) setBlock.getState();
+			
+			Inventory hostInv = hostChest.getInventory();
+			Inventory setInv = setChest.getInventory();
+
+			for (int lop = 0 ; lop < hostInv.getSize(); lop ++) {
+				ItemStack itm = hostInv.getItem(lop);
+				if (itm == null) {
+					continue;
+				}
+
+				setInv.setItem(lop,itm);
+
+				continue;
+
+			}
+
+		
+			setChest.update(true);
+			dewset.this.saveHistory(coreProtect,player, hostBlock, setBlock, true);
+			
+			break;
+		case DISPENSER:
+
+			Dispenser hostDispenser = (Dispenser) hostBlock.getState();
+			Dispenser setDispenser = (Dispenser) setBlock.getState();
+			
+			 hostInv = hostDispenser.getInventory();
+			 setInv = setDispenser.getInventory();
+
+			for (int lop = 0 ; lop < hostInv.getSize(); lop ++) {
+				ItemStack itm = hostInv.getItem(lop);
+				if (itm == null) {
+					continue;
+				}
+
+				setInv.setItem(lop,itm);
+
+				continue;
+
+			}
+
+			setDispenser.update(true);
+			dewset.this.saveHistory(coreProtect, player, hostBlock, setBlock, true);
+			break;
+
+		case HOPPER:
+			Hopper hostHopper = (Hopper) hostBlock.getState();
+			Hopper setHopper = (Hopper) setBlock.getState();
+
+			hostInv = hostHopper.getInventory();
+			 setInv = setHopper.getInventory();
+
+			for (int lop = 0 ; lop < hostInv.getSize(); lop ++) {
+				ItemStack itm = hostInv.getItem(lop);
+				if (itm == null) {
+					continue;
+				}
+
+				setInv.setItem(lop,itm);
+
+				continue;
+
+			}
+
+			setHopper.update(true);
+			dewset.this.saveHistory(coreProtect, player, hostBlock, setBlock, true);
+			break;
+
+		case DROPPER:
+
+			Dropper hostDropper = (Dropper) hostBlock.getState();
+			Dropper setDropper = (Dropper) setBlock.getState();
+
+			hostInv = hostDropper.getInventory();
+			 setInv = setDropper.getInventory();
+
+			for (int lop = 0 ; lop < hostInv.getSize(); lop ++) {
+				ItemStack itm = hostInv.getItem(lop);
+				if (itm == null) {
+					continue;
+				}
+
+				setInv.setItem(lop,itm);
+
+				continue;
+
+			}
+
+			setDropper.update(true);
+			dewset.this.saveHistory(coreProtect, player, hostBlock, setBlock, true);
+			break;
+		
+		default:
+			dewset.this.saveHistory(coreProtect, player, hostBlock, setBlock, true);
+			break;
+			
+		}
+		
+	}
+	
 	class dewset_copy_mom implements Runnable {
 		private Player player;
 
@@ -2090,7 +2117,7 @@ public class dewset extends dewset_interface {
 				return;
 			}
 
-			CoreProtectAPI CoreProtect = dewset.getCoreProtect();
+			CoreProtectAPI coreProtect = dewset.getCoreProtect();
 
 			boolean arxx = !this.player.hasPermission(dewset_interface.pmaininfinite);
 			boolean perDelete = this.player.hasPermission(dewset_interface.pmaindelete);
@@ -2267,7 +2294,7 @@ public class dewset extends dewset_interface {
 									}
 								}
 
-								dewset.this.saveHistory(CoreProtect, this.player, hostBlock, setBlock, false);
+								dewset.this.saveHistory(coreProtect, this.player, hostBlock, setBlock, false);
 
 								// dprint.r.printAll ("comple " + xlx + "," +
 								// ylx + "," + zlx + " mx " + mx + "," + my +
@@ -2276,85 +2303,11 @@ public class dewset extends dewset_interface {
 								if ((this.amount1 == 3) && this.player
 										.hasPermission(dewset_interface.pmainalsocopyinventoryblockwhenyouusedewset)) {
 
-									switch (hostBlock.getType()) {
-									case CHEST:
-									case TRAPPED_CHEST:
-
-										Chest hostChest = (Chest) hostBlock.getState();
-										Chest setChest = (Chest) setBlock.getState();
-
-										for (ItemStack itm : hostChest.getInventory().getContents()) {
-											if (itm == null) {
-												continue;
-											}
-
-											setChest.getInventory().addItem(itm);
-											continue;
-
-										}
-
-										setChest.update(true);
-										dewset.this.saveHistory(CoreProtect, this.player, hostBlock, setBlock, true);
-										break;
-									case DISPENSER:
-
-										Dispenser hostDispenser = (Dispenser) hostBlock.getState();
-										Dispenser setDispenser = (Dispenser) setBlock.getState();
-
-										for (ItemStack itm : hostDispenser.getInventory().getContents()) {
-											if (itm == null) {
-												continue;
-											}
-
-											setDispenser.getInventory().addItem(itm);
-											continue;
-
-										}
-
-										setDispenser.update(true);
-										dewset.this.saveHistory(CoreProtect, this.player, hostBlock, setBlock, true);
-										break;
-
-									case HOPPER:
-										Hopper hostHopper = (Hopper) hostBlock.getState();
-										Hopper setHopper = (Hopper) setBlock.getState();
-
-										for (ItemStack itm : hostHopper.getInventory().getContents()) {
-											if (itm == null) {
-												continue;
-											}
-
-											setHopper.getInventory().addItem(itm);
-											continue;
-
-										}
-
-										setHopper.update(true);
-										dewset.this.saveHistory(CoreProtect, this.player, hostBlock, setBlock, true);
-										break;
-
-									case DROPPER:
-
-										Dropper hostDropper = (Dropper) hostBlock.getState();
-										Dropper setDropper = (Dropper) setBlock.getState();
-
-										for (ItemStack itm : hostDropper.getInventory().getContents()) {
-											if (itm == null) {
-												continue;
-											}
-
-											setDropper.getInventory().addItem(itm);
-											continue;
-
-										}
-
-										setDropper.update(true);
-										dewset.this.saveHistory(CoreProtect, this.player, hostBlock, setBlock, true);
-										break;
-									}
+									copyInventory(hostBlock, setBlock, player, coreProtect);
+									
 
 								} else {
-									dewset.this.saveHistory(CoreProtect, this.player, hostBlock, setBlock, true);
+									dewset.this.saveHistory(coreProtect, this.player, hostBlock, setBlock, true);
 
 								}
 
