@@ -31,6 +31,7 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.block.BlockBurnEvent;
 import org.bukkit.event.block.BlockFromToEvent;
 import org.bukkit.event.block.BlockGrowEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
@@ -706,6 +707,37 @@ public class DigEventListener2 implements Listener {
 				 */
 			}
 
+		}
+
+	}
+	
+	@EventHandler
+	public void eventja(BlockBurnEvent event) {
+
+		if (!tr.isrunworld(ac.getName(), event.getBlock().getWorld().getName()))
+			return;
+
+		Block ac = event.getBlock();
+		int getid = api_skyblock.getprotectid(event.getBlock().getLocation().getBlock());
+		
+		if (getid > -1 || event.getBlock().getTypeId() == 35) {
+
+			int d4 = 4;
+
+			for (int ex = ac.getX() - d4; ex <= ac.getX() + d4; ex++) {
+				for (int ey = ac.getY() - d4; ey <= ac.getY() + d4; ey++) {
+					for (int ez = ac.getZ() - d4; ez <= ac.getZ() + d4; ez++) {
+						Block ag = ac.getWorld().getBlockAt(ex, ey, ez);
+						// dprint.r.printC (ag.getTypeId());
+						if (ag.getType() == Material.FIRE) {
+							ag.setType(Material.AIR);
+						}
+					}
+				}
+			}
+
+			// event.getEntity().setFireTicks(1);
+			event.setCancelled(true);
 		}
 
 	}
