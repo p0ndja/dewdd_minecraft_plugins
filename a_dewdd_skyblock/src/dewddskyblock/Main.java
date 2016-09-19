@@ -13,14 +13,13 @@ import api_skyblock.api_skyblock;
 import dewddtran.tr;
 
 public class Main extends JavaPlugin {
-	Logger				log;
-	DigEventListener2	ax	= new DigEventListener2();
+	Logger log;
+	DigEventListener2 ax = new DigEventListener2();
 
 	@Override
 	public void onDisable() {
 		getServer().getPluginManager().disablePlugin(this);
-		dprint.r.printAll("ptdew&dewdd : " + tr.gettr("unloaded_plugin")
-				+ " dewdd skyblock");
+		dprint.r.printAll("ptdew&dewdd : " + tr.gettr("unloaded_plugin") + " dewdd skyblock");
 	}
 
 	@Override
@@ -30,11 +29,10 @@ public class Main extends JavaPlugin {
 
 		ax.ac = this;
 		ax.dew = new api_skyblock();
-		ax.dew.ac = this;
+		api_skyblock.ac = this;
 
 		getServer().getPluginManager().registerEvents(ax, this);
-		dprint.r.printAll("ptdew&dewdd : " + tr.gettr("loaded_plugin")
-				+ " dewdd skyblock");
+		dprint.r.printAll("ptdew&dewdd : " + tr.gettr("loaded_plugin") + " dewdd skyblock");
 
 	}
 

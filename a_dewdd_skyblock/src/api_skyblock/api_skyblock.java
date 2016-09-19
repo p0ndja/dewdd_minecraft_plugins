@@ -133,18 +133,15 @@ public class api_skyblock {
 					}
 				}
 
-				/*if (checkrs == true) {
-					// check top and down y section
-					// I don't need to replace old skyblock anymore
-
-					for (int i = 0; i < 256; i++) {
-
-						if (player.getWorld().getBlockAt(x, i, z).getType() != Material.AIR) {
-							checkrs = false;
-							break;
-						}
-					}
-				}*/
+				/*
+				 * if (checkrs == true) { // check top and down y section // I
+				 * don't need to replace old skyblock anymore
+				 * 
+				 * for (int i = 0; i < 256; i++) {
+				 * 
+				 * if (player.getWorld().getBlockAt(x, i, z).getType() !=
+				 * Material.AIR) { checkrs = false; break; } } }
+				 */
 
 				if (checkrs == false) {
 					buildcomplete = false;
@@ -314,193 +311,6 @@ public class api_skyblock {
 
 	}
 
-	public void nextMission(int rsID) {
-		printToAllPlayerOnRS(rsID, (getMissionHeader(rs[rsID].mission) + " " + tr.gettr("mission_complete")));
-
-		//dprint.r.printAll("0 calling apply reward");
-		applyReward(rsID);
-
-		printToAllPlayerOnRS(rsID, tr.gettr("next_mission"));
-
-		rs[rsID].mission++;
-		
-		printToAllPlayerOnRS(rsID, (getMissionHeader(rs[rsID].mission) + " " + tr.gettr("mission_complete")));
-
-		
-		saversprotectfile();
-
-	}
-
-	public void giveItemToAllPlayerInRS(int rsID, ItemStack itm) {
-		for (int i = 0; i < RSMaxPlayer; i++) {
-			Player player = Bukkit.getPlayer(rs[rsID].p[i]);
-
-			if (player == null) {
-				continue;
-			}
-
-			player.getInventory().addItem(itm);
-		}
-
-	}
-
-	public Block searchSpaceCube(Block startPoint, int radiusCubeNeed, int rad) {
-		int x = startPoint.getX();
-		int y = startPoint.getY();
-		int z = startPoint.getZ();
-
-		// rad = 100;
-
-		boolean foundx = false;
-		Block b;
-
-		int timeSearch = 0;
-		do {
-			
-			timeSearch ++;
-			if (timeSearch > 100) {
-				rad ++;
-			}
-			
-			
-			int x2 = x + (rnd.nextInt(rad * 2) - rad);
-			int y2 = y +( rnd.nextInt(rad * 2) - rad);
-			int z2 = z + (rnd.nextInt(rad * 2) - rad);
-
-			b = startPoint.getWorld().getBlockAt(x2, y2, z2);
-foundx = true;
-			for (int x3 = x2; x3 <= x2 +radiusCubeNeed; x3++) {
-			for (int y3 = y2; y3 <= y2 + radiusCubeNeed; y3++) {
-			for (int z3 = z2; z3 <= y2 +radiusCubeNeed; z3++) {
-						Block bSpace = b.getWorld().getBlockAt(x3, y3, z3);
-						if (bSpace.getType() != Material.AIR) {
-							foundx = false;
-							break;
-						}
-
-					}
-
-					if (foundx == false) {
-						break;
-					}
-
-				}
-
-				if (foundx == false) {
-					break;
-				}
-
-			}
-
-		} while (foundx == false);
-
-		return b;
-
-	}
-
-	public Block getBlockMiddleRS(int rsID) {
-		
-		Block b = Bukkit.getWorld("world").getBlockAt(rs[rsID].x, rs[rsID].y, rs[rsID].z);
-
-		return b;
-	}
-
-	public void applyReward(int rsID) {
-
-		//dprint.r.printAll("appyreward " + rsID + " mission " + rs[rsID].mission);
-		switch (rs[rsID].mission) {
-		case 0: // get cobble stone
-
-			//dprint.r.printAll("nope");
-
-			// ItemStack itm = new ItemStack(Material.IRON_AXE , 1);
-
-			// giveItemToAllPlayerInRS(rsID, itm.getData().toItemStack(1));
-
-			Block bo = getBlockMiddleRS(rsID);
-			Block bo2 = searchSpaceCube(bo, 5, 5);
-			
-			for (int i = 0; i < 5 ; i ++ ) {
-				for (int i2 = 0; i2 < 5 ; i2 ++ ) {
-					for (int i3 = 0; i3 < 5 ; i3 ++ ) {
-						
-						Block bo3 = bo2.getRelative(i, i2, i3);
-						if (bo3.getType() != Material.AIR) {
-							dprint.r.printAll(tr.gettr("error while applyReward lv 0 block is != air"));
-							break;
-						}
-						
-						if (rnd.nextInt(100) > 80) {
-						bo3.setType(Material.STONE);
-						}
-						
-					}	
-				}
-			}
-			
-			dprint.r.printAll(tr.gettr("generated_small_island_at") + " " + bo2.getX() + "," + bo2.getY() + "," + bo2.getZ());
-			dprint.r.printAll( tr.gettr("got_reward_lv_" + rs[rsID].mission));
-
-			break;
-		case 1:
-
-			printToAllPlayerOnRS(rsID, tr.gettr("got_reward_lv_" + rs[rsID].mission));
-
-			break;
-		case 2:
-
-			printToAllPlayerOnRS(rsID, tr.gettr("got_reward_lv_" + rs[rsID].mission));
-
-			break;
-		default:
-
-			printToAllPlayerOnRS(rsID, tr.gettr("got_reward_lv_" + rs[rsID].mission));
-
-			break;
-		}
-	}
-
-	public void printToAllPlayerOnRS(int rsID, String message) {
-		for (int i = 0; i < RSMaxPlayer; i++) {
-			Player player = Bukkit.getPlayer(rs[rsID].p[i]);
-			if (player == null) {
-				continue;
-			}
-
-			player.sendMessage(message);
-		}
-	}
-
-	public String getMissionHeader(int mission) {
-		String header = "skyblock_mission_header_";
-
-		String aa = "";
-		switch (mission) {
-		case 0: // get cobble stone
-			aa = tr.gettr(header + mission);
-
-			break;
-		case 1:
-
-			aa = tr.gettr(header + mission);
-			break;
-		case 2:
-			aa = tr.gettr(header + mission);
-			break;
-		default:
-			aa = tr.gettr(header + "default");
-			break;
-		}
-
-		return aa;
-	}
-
-	public void startMissionNotificationLoopShowing() {
-		Bukkit.getScheduler().cancelTasks(ac);
-
-		Bukkit.getScheduler().scheduleSyncRepeatingTask(ac, new missionNotification(), 1, 2400);
-	}
-
 	class missionNotification implements Runnable {
 
 		@Override
@@ -526,12 +336,6 @@ foundx = true;
 
 	}
 
-	public String getFullMissionHeadAndCurLevel(int mission) {
-		String header = getMissionHeader(mission);
-		String aa = tr.gettr("is_cur_level_mission_showing_") + " " + mission + " " + header;
-		return aa;
-	}
-
 	public class rsdata {
 		public int x;
 		public int y;
@@ -544,6 +348,18 @@ foundx = true;
 		public long autoCutLastTime = 0;
 
 	}
+
+	public static String poveride = "dewdd.skyblock.overide";
+
+	public static String flag_everyone = "<everyone>";
+
+	public static int RSMaxPlayer = 20;
+
+	public static rsdata rs[] = new rsdata[100];
+
+	public static int rsMax = 0;
+
+	public static JavaPlugin ac = null;
 
 	public static boolean cando(Block block, Player player, String mode) {
 		if ((player.hasPermission(poveride)) == true) {
@@ -586,59 +402,6 @@ foundx = true;
 
 	}
 
-	public static int getplayerinslot(String player, int getid) {
-		for (int lop = 0; lop < RSMaxPlayer; lop++) {
-			if (rs[getid].p[lop].equalsIgnoreCase(player)) {
-				return lop;
-			}
-		}
-
-		return -1;
-	}
-
-	long lastcri = 0; // last checkrateis don't allow to
-
-	// check if it is running
-	Random rnd = new Random();
-
-	int maxdelaycri = 60000;
-	public int maxautocut = 5;
-	cridata cri[];
-	int crimax = 0;
-	public String lastmessage = "";
-
-	Block[] cs = null;
-
-	int csmax = 0;
-
-	int csnow = 0;
-
-	int csid = 0;
-
-	long lastshow = 0;
-
-	public String pskyblock = "dewdd.skyblock.skyblock";
-
-	public static String poveride = "dewdd.skyblock.overide";
-
-	public String flag_explode = "<!explode>";
-	public String flag_monster = "<!monster>";
-	public String flag_pvp = "<pvp>";
-
-	public String flag_autocut = "<autocut>";
-	public String flag_autoabsorb = "<autoabsorb>";
-	public static String flag_everyone = "<everyone>";
-
-	public static int RSMaxPlayer = 20;
-
-	public String folder_name = "plugins" + File.separator + "dewdd_skyblock";
-
-	public static rsdata rs[] = new rsdata[100];
-
-	public static int rsMax = 0;
-
-	public static JavaPlugin ac = null;
-
 	public static int getplayerinslot(String player, Block block) {
 
 		int getid = getprotectid(block);
@@ -648,6 +411,16 @@ foundx = true;
 
 		for (int lop = 0; lop < RSMaxPlayer; lop++) {
 			if (rs[getid].p[lop].equalsIgnoreCase(player)) {
+				return lop;
+			}
+		}
+
+		return -1;
+	}
+
+	public static int getplayerinslot(String player, int rsID) {
+		for (int lop = 0; lop < RSMaxPlayer; lop++) {
+			if (rs[rsID].p[lop].equalsIgnoreCase(player)) {
 				return lop;
 			}
 		}
@@ -674,6 +447,37 @@ foundx = true;
 		return tr.isrunworld(ac.getName(), worldName);
 	}
 
+	long lastcri = 0; // last checkrateis don't allow to
+
+	// check if it is running
+	Random rnd = new Random();
+
+	int maxdelaycri = 60000;
+	public int maxautocut = 5;
+	cridata cri[];
+	int crimax = 0;
+	public String lastmessage = "";
+
+	Block[] cs = null;
+
+	int csmax = 0;
+
+	int csnow = 0;
+
+	int csid = 0;
+
+	long lastshow = 0;
+
+	public String pskyblock = "dewdd.skyblock.skyblock";
+
+	public String flag_explode = "<!explode>";
+
+	public String flag_monster = "<!monster>";
+	public String flag_pvp = "<pvp>";
+	public String flag_autocut = "<autocut>";
+
+	public String flag_autoabsorb = "<autoabsorb>";
+	public String folder_name = "plugins" + File.separator + "dewdd_skyblock";
 	long lastcreate = 0;
 
 	long lastclean = 0;
@@ -690,6 +494,91 @@ foundx = true;
 
 	}
 
+	public void applyReward(int rsID) {
+
+		// dprint.r.printAll("appyreward " + rsID + " mission " +
+		// rs[rsID].mission);
+		switch (rs[rsID].mission) {
+		case 0: // get cobble stone
+
+			// dprint.r.printAll("nope");
+
+			// ItemStack itm = new ItemStack(Material.IRON_AXE , 1);
+
+			// giveItemToAllPlayerInRS(rsID, itm.getData().toItemStack(1));
+
+			Block bo = getBlockMiddleRS(rsID);
+			Block bo2 = searchSpaceCube(bo, 5, 5);
+
+			for (int i = 0; i < 5; i++) {
+				for (int i2 = 0; i2 < 5; i2++) {
+					for (int i3 = 0; i3 < 5; i3++) {
+
+						Block bo3 = bo2.getRelative(i, i2, i3);
+						if (bo3.getType() != Material.AIR) {
+							dprint.r.printAll(tr.gettr("error while applyReward lv 0 block is != air"));
+							break;
+						}
+
+						if (rnd.nextInt(100) > 80) {
+							bo3.setType(Material.STONE);
+						}
+
+					}
+				}
+			}
+
+		
+			printToAllPlayerOnRS (rsID,tr.gettr("generated_small_island_at") 
+					+ " " + bo2.getX() + "," + bo2.getY() + "," + bo2.getZ());
+			
+			printToAllPlayerOnRS(rsID,tr.gettr("got_reward_lv_" + rs[rsID].mission));
+
+			break;
+		case 1:
+
+			 bo = getBlockMiddleRS(rsID);
+			 bo2 = searchSpaceCube(bo, 5, 5);
+
+			for (int i = 0; i < 5; i++) {
+				for (int i2 = 0; i2 < 5; i2++) {
+					for (int i3 = 0; i3 < 5; i3++) {
+
+						Block bo3 = bo2.getRelative(i, i2, i3);
+						if (bo3.getType() != Material.AIR) {
+							dprint.r.printAll(tr.gettr("error while applyReward lv 0 block is != air"));
+							break;
+						}
+
+						if (rnd.nextInt(100) > 80) {
+							bo3.setType(Material.GRASS);
+						}
+
+					}
+				}
+			}
+
+		
+			printToAllPlayerOnRS (rsID,tr.gettr("generated_small_island_at") 
+					+ " " + bo2.getX() + "," + bo2.getY() + "," + bo2.getZ());
+			
+			printToAllPlayerOnRS(rsID,tr.gettr("got_reward_lv_" + rs[rsID].mission));
+
+
+			break;
+		case 2:
+
+			printToAllPlayerOnRS(rsID, tr.gettr("got_reward_lv_" + rs[rsID].mission));
+
+			break;
+		default:
+
+			printToAllPlayerOnRS(rsID, tr.gettr("got_reward_lv_" + rs[rsID].mission));
+
+			break;
+		}
+	}
+
 	public void createskyblockrs(Player player) {
 		createskyblockrs ab = new createskyblockrs(player);
 
@@ -703,6 +592,43 @@ foundx = true;
 		double t3 = Math.pow(t1 + t2, 0.5);
 		int t4 = (int) t3;
 		return t4;
+	}
+
+	public Block getBlockMiddleRS(int rsID) {
+
+		Block b = Bukkit.getWorld("world").getBlockAt(rs[rsID].x, rs[rsID].y, rs[rsID].z);
+
+		return b;
+	}
+
+	public String getFullMissionHeadAndCurLevel(int mission) {
+		String header = getMissionHeader(mission);
+		String aa = tr.gettr("is_cur_level_mission_showing_") + " " + mission + " " + header;
+		return aa;
+	}
+
+	public String getMissionHeader(int mission) {
+		String header = "skyblock_mission_header_";
+
+		String aa = "";
+		switch (mission) {
+		case 0: // get cobble stone
+			aa = tr.gettr(header + mission);
+
+			break;
+		case 1:
+
+			aa = tr.gettr(header + mission);
+			break;
+		case 2:
+			aa = tr.gettr(header + mission);
+			break;
+		default:
+			aa = tr.gettr(header + "default");
+			break;
+		}
+
+		return aa;
 	}
 
 	public int getOWNIslandID(Player player, boolean rebuild) {
@@ -728,6 +654,19 @@ foundx = true;
 		}
 
 		return rsMax - 1; // rsmax -1 ; (
+	}
+
+	public void giveItemToAllPlayerInRS(int rsID, ItemStack itm) {
+		for (int i = 0; i < RSMaxPlayer; i++) {
+			Player player = Bukkit.getPlayer(rs[rsID].p[i]);
+
+			if (player == null) {
+				continue;
+			}
+
+			player.getInventory().addItem(itm);
+		}
+
 	}
 
 	public boolean is8_10block(int impo) {
@@ -810,6 +749,33 @@ foundx = true;
 		}
 	}
 
+	public void nextMission(int rsID) {
+		printToAllPlayerOnRS(rsID, (getMissionHeader(rs[rsID].mission) + " " + tr.gettr("mission_complete")));
+
+		// dprint.r.printAll("0 calling apply reward");
+		applyReward(rsID);
+
+		printToAllPlayerOnRS(rsID, tr.gettr("next_mission"));
+
+		rs[rsID].mission++;
+
+		printToAllPlayerOnRS(rsID, (getMissionHeader(rs[rsID].mission) + " ..."));
+
+		saversprotectfile();
+
+	}
+
+	public void printToAllPlayerOnRS(int rsID, String message) {
+		for (int i = 0; i < RSMaxPlayer; i++) {
+			Player player = Bukkit.getPlayer(rs[rsID].p[i]);
+			if (player == null) {
+				continue;
+			}
+
+			player.sendMessage(message);
+		}
+	}
+
 	public int random16() {
 		int g = randomG.nextInt(360);
 		g -= 180;
@@ -864,5 +830,64 @@ foundx = true;
 			e.printStackTrace();
 		}
 
+	}
+
+	public Block searchSpaceCube(Block startPoint, int radiusCubeNeed, int rad) {
+		int x = startPoint.getX();
+		int y = startPoint.getY();
+		int z = startPoint.getZ();
+
+		// rad = 100;
+
+		boolean foundx = false;
+		Block b;
+
+		int timeSearch = 0;
+		do {
+
+			timeSearch++;
+			if (timeSearch > 100) {
+				rad++;
+			}
+
+			int x2 = x + (rnd.nextInt(rad * 2) - rad);
+			int y2 = y + (rnd.nextInt(rad * 2) - rad);
+			int z2 = z + (rnd.nextInt(rad * 2) - rad);
+
+			b = startPoint.getWorld().getBlockAt(x2, y2, z2);
+			foundx = true;
+			for (int x3 = x2; x3 <= x2 + radiusCubeNeed; x3++) {
+				for (int y3 = y2; y3 <= y2 + radiusCubeNeed; y3++) {
+					for (int z3 = z2; z3 <= y2 + radiusCubeNeed; z3++) {
+						Block bSpace = b.getWorld().getBlockAt(x3, y3, z3);
+						if (bSpace.getType() != Material.AIR) {
+							foundx = false;
+							break;
+						}
+
+					}
+
+					if (foundx == false) {
+						break;
+					}
+
+				}
+
+				if (foundx == false) {
+					break;
+				}
+
+			}
+
+		} while (foundx == false);
+
+		return b;
+
+	}
+
+	public void startMissionNotificationLoopShowing() {
+		Bukkit.getScheduler().cancelTasks(ac);
+
+		Bukkit.getScheduler().scheduleSyncRepeatingTask(ac, new missionNotification(), 1, 2400);
 	}
 }
