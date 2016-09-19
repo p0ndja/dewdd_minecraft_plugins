@@ -128,6 +128,7 @@ public class DigEventListener2 implements Listener {
 
 					Chest chest = (Chest) Bukkit.getWorld(posi.worldName).getBlockAt(posi.x, posi.y, posi.z).getState();
 
+					
 					p.openInventory(chest.getInventory());
 				} catch (Exception eee) {
 					p.sendMessage(eee.getMessage());
@@ -211,7 +212,7 @@ public class DigEventListener2 implements Listener {
 				
 				
 				if (api_private.DewddPrivate.hasProtect(b3)) {
-					if (api_private.DewddPrivate.cando(b3, p)) {
+					if (api_private.DewddPrivate.cando(b3, p) &&  api_private.DewddPrivate.nearPrivateSign(b3)) {
 						addNewInventory(b3.getLocation(), inv.get(getid(p.getName())),
 								p.getName());
 
@@ -360,7 +361,7 @@ public class DigEventListener2 implements Listener {
 		Position posi = tmp.position.get(tmp.now);
 		Block thatBlock = Bukkit.getWorld(posi.worldName).getBlockAt(posi.x, posi.y, posi.z);
 
-		if (api_private.DewddPrivate.hasProtect(thatBlock)) {
+		if (api_private.DewddPrivate.hasProtect(thatBlock) &&  api_private.DewddPrivate.nearPrivateSign(thatBlock)) {
 			if (!api_private.DewddPrivate.cando(thatBlock, p)) {
 				tmp.position.remove(tmp.now);
 				saveinventoryfile(p.getName());
@@ -656,7 +657,7 @@ public class DigEventListener2 implements Listener {
 			if (b.getType() == Material.CHEST) {
 
 				if (api_private.DewddPrivate.hasProtect(b)) {
-					if (api_private.DewddPrivate.cando(b, e.getPlayer())) {
+					if (api_private.DewddPrivate.cando(b, e.getPlayer())  && api_private.DewddPrivate.nearPrivateSign(b)) {
 						addNewInventory(b.getLocation(), inv.get(getid(e.getPlayer().getName())),
 								e.getPlayer().getName());
 

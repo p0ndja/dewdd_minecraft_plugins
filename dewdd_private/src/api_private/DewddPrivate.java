@@ -13,6 +13,40 @@ public class DewddPrivate {
 
 	public static int signprotectr = 2;
 	// public static double buy1blockmoney = 0.1; // 0.7;
+	
+	public static boolean nearPrivateSign(Block block) {
+
+		for (int xb = -1 ; xb <= 1 ; xb ++) {
+			for (int yb = -1 ; yb <= 1 ; yb ++) {
+				for (int zb = -1 ; zb <= 1 ; zb ++) {
+					
+					if (!((xb == 1 && yb == 0 && zb == 0) ||
+							(xb == -1 && yb == 0 && zb == 0)||
+							(xb == 0 && yb == 0 && zb == 1) ||
+							(xb == 0 && yb == 0 && zb == -1)||
+							(xb == 0  && yb == 1 && zb == 0)  ||
+							(xb == 0 && yb == -1 && zb == 0))) {
+						continue;
+					}
+
+					if (block.getRelative(xb, yb, zb).getTypeId() == 63
+							|| block.getRelative(xb, yb, zb).getTypeId() == 68) {
+
+						Sign sign = (Sign) block.getRelative(xb, yb, zb).getState();
+						if (sign.getLine(0).toLowerCase().endsWith("[dewdd]") == true
+								|| sign.getLine(0).toLowerCase().endsWith("[private]") == true
+								|| sign.getLine(0).equalsIgnoreCase("[protection]") == true) {
+							return true;
+
+						}
+					}
+
+				}
+			}
+		}
+
+		return false;
+	}
 
 	public static boolean hasProtect(Block block) {
 
