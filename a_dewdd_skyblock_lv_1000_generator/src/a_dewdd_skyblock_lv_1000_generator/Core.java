@@ -728,6 +728,13 @@ public class Core {
 				} else {
 					sb.index = getIndexFromKeyAlBlockInGame(m[0] + ":" + m[1]);
 					sb.timeToGet = convertStringToTime(m[3]);
+					
+					if (m.length == 5) {
+						sb.allItemYouCanFind = Integer.parseInt(m[4]);
+					}
+					else {
+						sb.allItemYouCanFind = 0;
+					}
 					// rs[rsMax - 1].mission = 0;
 
 					sellAsList.add(sb);

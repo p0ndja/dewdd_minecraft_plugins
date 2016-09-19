@@ -135,7 +135,7 @@ class HybridOverride extends Hybrid {
 			}
 			
 			d.pl(" >>> need duplicate " + duplicate);
-			duplicate = 0;
+		//	duplicate = 0;
 
 			for (int j = 0; j < curLV.rewardSize; j++) {
 				AllBlockInGameType reward = Main.co.allBlockInGameAsList.get( curLV.rewardIndex[j]);
@@ -152,7 +152,7 @@ class HybridOverride extends Hybrid {
 					if (Main.co.allBlockInGameAsList.get(k).theName.equalsIgnoreCase(reward.theName)) {
 						if (rewardSlotUsedIt[k] == true) {
 							d.pl(" *** ** reward dupli " + reward.theName + ":" + reward.data);
-							duplicate++;
+							//duplicate++;
 						}
 						rewardSlotUsedIt[k] = true;
 						break;
@@ -162,7 +162,7 @@ class HybridOverride extends Hybrid {
 
 			}
 			
-			d.pl(" >>> reward duplicate " + duplicate);
+			//d.pl(" >>> reward duplicate " + duplicate);
 		}
 		
 		
@@ -174,7 +174,7 @@ class HybridOverride extends Hybrid {
 			}
 
 			if (rewardSlotUsedIt[i] == true) {
-				countTrue++;
+				//countTrue++;
 			}
 
 		}
@@ -185,7 +185,7 @@ class HybridOverride extends Hybrid {
 			d.pl("maxUnique " + countTrue);
 		}
 
-		if (countTrue < Main.co.allBlockInGameAsList.size() * 2) {
+		if (countTrue < Main.co.allBlockInGameAsList.size() ) {
 			d.pl(" >>> reward duplicate " + duplicate);
 			d.pl("countTrue < Max Unique Item " + countTrue + "/" + (Main.co.allBlockInGameAsList.size() * 2));
 			return countTrue;
@@ -254,37 +254,31 @@ class HybridOverride extends Hybrid {
 		a = ps.allMyInventory.get("GRASS:0");
 		a.curAmount = 50;
 
-		// grass , dirt
+		
 
+		// get all money
+		ps.money = 0;
+		for (int i = 0; i < Main.co.sellAsList.size() ; i ++ ) {
+			SellableType se = Main.co.sellAsList.get(i);
+			SellableType seTmpSe = tmpSell.get(i);
+			
+			d.pl("sell " + se.allItemYouCanFind + " * " + seTmpSe.sellPerPrice + " index " + se.index);
+			
+			if (se.allItemYouCanFind > 0 ) {
+				double tmpMoney  = 0;
+				tmpMoney = se.allItemYouCanFind * seTmpSe.sellPerPrice;
+				ps.money += tmpMoney;
+				continue;
+				
+			}
+		}
+		
+		d.pl("all money you have " + ps.money);
+		
 		boolean isGameDone = false;
 		while (isGameDone == false) {
 			
-			// d.pl("curSecond " + ps.curSecond);
-			ps.letPlantAllThingAsItCan();
-
-			// glow all plant
-
-			for (Farm f : ps.farmMap.values()) {
-				for (int i = 0; i < f.sizeFarm; i++) {
-					f.countTick[i]++;
-
-					SellableType tmpTimeToGlow = Main.co.sell.get(f.itemIdData);
-					if (tmpTimeToGlow == null) {
-						d.pl("ERROR > fitness   tmpTimeToGlow == null ");
-						// Exception e = new Exception();
-						return 0;
-
-					} else {
-						if (f.countTick[i] >= tmpTimeToGlow.timeToGet) {
-							// now can be harvest
-							f.countTick[i] = 0;
-							ps.allMyInventory.get(f.itemIdData).curAmount++;
-
-						}
-					}
-
-				}
-			}
+			
 
 			ps.curSecond++;
 			
