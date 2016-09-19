@@ -54,7 +54,10 @@ public class Core {
 	
 	public static String sellablePath = File.separator + "ramdisk" + File.separator + "sellableblock.txt";
 	public static String tmpSellPath = File.separator + "ramdisk" + File.separator + "ptdew_dewdd_sell.txt";
+	public static String tmpAllShopPath = File.separator + "ramdisk" + File.separator + "ptdew_dewdd_allshop.txt";
 
+	public static String tmpLVPath = File.separator + "ramdisk" + File.separator + "ptdew_dewdd_lv.txt";
+	
 	public static String missionPath = File.separator + "ramdisk" + File.separator + "missionblock.txt";
 	public static int dnaSize = 3300;
 
@@ -68,7 +71,7 @@ public class Core {
 	public static int maxShopSize = 10;
 
 	public static int minShopSize = 3;
-	public static int swapMultipy = 10;
+	public static int swapMultipy = 100;
 
 	public static double SellMaxCost = 100;
 
@@ -878,6 +881,49 @@ public class Core {
 		return tmp2;
 	}
 	
+
+	public void save_tmpAllShop(LinkedList<AllShop> tmpAllShop) {
+
+
+		String filena = tmpAllShopPath;
+		File fff = new File(filena);
+
+		FileWriter fwriter;
+		try {
+			fff.createNewFile();
+
+		 d.pl("ptdew&dewdd: Start saving " + filena);
+			fwriter = new FileWriter(fff);
+
+			for (int y = 0; y < tmpAllShop.size(); y++) {
+				AllShop sty = tmpAllShop.get(y);
+				// price , size
+				
+				String wr = "" + sty.playPrice + " " + sty.size;
+				fwriter.write(wr + System.getProperty("line.separator"));
+				
+				for (int z = 0 ; z < sty.size ; z ++ ) {
+					
+					wr = "" + sty.item[z] + ":" + sty.data[z] + " " + sty.amount[z];
+					fwriter.write(wr + System.getProperty("line.separator"));
+					
+				}
+				
+				
+		
+			}
+
+			fwriter.close();
+			d.pl("ptdew&dewdd:saved " + filena);
+			return;
+
+		} catch (IOException e) {
+			// Auto-generated catch block
+			e.printStackTrace();
+		}
+
+	}
+	
 	public void save_tmpSell(LinkedList<SellableType> tmpSell) {
 
 
@@ -912,4 +958,60 @@ public class Core {
 		}
 
 	}
+	
+	
+
+	public void save_tmpLV(LinkedList<LV1000Type> tmpLV) {
+
+
+		String filena = tmpLVPath;
+		File fff = new File(filena);
+
+		FileWriter fwriter;
+		try {
+			fff.createNewFile();
+
+		 d.pl("ptdew&dewdd: Start saving " + filena);
+			fwriter = new FileWriter(fff);
+
+			for (int y = 0; y < tmpLV.size(); y++) {
+				LV1000Type sty = tmpLV.get(y);
+				
+				// price , size
+				
+				String wr = "" + sty.needSize + " " + sty.rewardSize;
+				fwriter.write(wr + System.getProperty("line.separator"));
+				
+				for (int z = 0 ; z < sty.needSize ; z ++ ) {
+					AllBlockInGameType ooo = Core.allBlockInGameAsList[sty.needIndex[z]];
+					
+					wr = "" + ooo.getIDData() + " " + sty.needAmount[z];
+					
+					fwriter.write(wr + System.getProperty("line.separator"));
+					
+				}
+				
+				
+				for (int z = 0 ; z < sty.rewardSize ; z ++ ) {
+					AllBlockInGameType ooo = Core.allBlockInGameAsList[sty.rewardIndex[z]];
+					
+					wr = "" + ooo.getIDData() + " " + sty.rewardAmount[z];
+					
+					fwriter.write(wr + System.getProperty("line.separator"));
+					
+				}
+		
+			}
+
+			fwriter.close();
+			d.pl("ptdew&dewdd:saved " + filena);
+			return;
+
+		} catch (IOException e) {
+			// Auto-generated catch block
+			e.printStackTrace();
+		}
+
+	}
+	
 }

@@ -47,16 +47,25 @@ public class Main {
 		HybridOverride hy = new HybridOverride();
 
 		hy.setChromosomeLength(Core.dnaSize);
-		hy.setPopulationSize(populationSize);
+		
 		hy.setRunCount(1000000);
 
 		// set chromosome here
 
 		LinkedList<Chromosome> seo = hy.loadAndSortTheBestFromRamdisk();
 
-		if (args.length == 1) {
+		
 			if (args[0].equalsIgnoreCase("evu")) {
-
+				
+				
+				if (args.length == 1) {
+					hy.setPopulationSize(populationSize);
+				}
+				else {
+					hy.setPopulationSize(Integer.parseInt(args[1]));
+					
+				}
+				
 				hy.setAllChromosomeGen1(seo);
 				hy.prepareToRunGA();
 
@@ -79,9 +88,11 @@ public class Main {
 				Core code = new Core();
 				code.dnaDecoder(seo.get(0).dna, tmpAllShop, tmpSell, tmpLV);
 				code.save_tmpSell(tmpSell);
+				code.save_tmpAllShop(tmpAllShop);
+				code.save_tmpLV(tmpLV);
 				
 			}
-		}
+		
 		// hy.run();
 	}
 
