@@ -1188,7 +1188,7 @@ public class DigEventListener2 implements Listener {
 			}
 			
 			// dewsetCircle
-			if (m[0].equalsIgnoreCase("setSphere")) {
+			if (m[0].equalsIgnoreCase("setSphere") ) {
 
 				if (m.length == 1) {
 					ArrayList<IDDataType> item = new ArrayList<IDDataType>();

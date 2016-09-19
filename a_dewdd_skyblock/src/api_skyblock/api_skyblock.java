@@ -244,7 +244,7 @@ startTime = System.currentTimeMillis();
 						SkyLVType cri = new SkyLVType();
 
 						cri.id = Integer.parseInt(m[0]);
-						cri.data = Byte.parseByte(m[1]);
+						cri.data = Byte.,,,,parseByte(m[1]);
 						cri.targetamount = Integer.parseInt(m[2]);
 						cri.nowamount = 0;
 

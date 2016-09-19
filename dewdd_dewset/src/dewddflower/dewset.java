@@ -2705,6 +2705,8 @@ public class dewset extends dewset_interface {
 					IDDataType.arrayListToString(item) + " >_< " + 
 					IDDataType.arrayListToString(itemSearch));
 
+			boolean arxx = !player.hasPermission(pmaininfinite);
+			
 			for (Block blb : getselectblock(getid, player)) {
 
 				/*
@@ -2738,6 +2740,7 @@ public class dewset extends dewset_interface {
 					continue;
 				}
 				
+				if (arxx)
 				if (decreseitem1(player, id, data, true) == false) {
 					player.sendMessage(dprint.r.color("ptdew&dewdd : " + tr.gettr("don't_have_enough_item")));
 					return;
@@ -3762,6 +3765,8 @@ public class dewset extends dewset_interface {
 
 			addItemIfItemIsZero(item, player);
 			Block blockmid = player.getWorld().getBlockAt((int) midtx, (int) midty, (int) midtz);
+			
+			boolean arxx = !player.hasPermission(pmaininfinite);
 
 			while (xlx <= mx) {
 				while (ylx <= my) {
@@ -3811,7 +3816,7 @@ public class dewset extends dewset_interface {
 							continue;
 						}
 						
-						
+						if (arxx)
 						if (decreseitem1(player, id, data, true) == false) {
 							player.sendMessage(dprint.r.color("ptdew&dewdd : " + tr.gettr("don't_have_enough_item")));
 							return;
@@ -5181,7 +5186,9 @@ public class dewset extends dewset_interface {
 	// riceblockiron
 
 	public void dewsetFullSphere(Player player, ArrayList<IDDataType> item, ArrayList<IDDataType> itemSearch) {
-		new dewsetFullSphere_c(player, item, itemSearch);
+		dewsetFullSphere_c abx = new dewsetFullSphere_c(player, item, itemSearch);
+		Bukkit.getScheduler().scheduleSyncDelayedTask(ac, abx);
+
 	}
 
 	public void dewsetLight(Player player, ArrayList<IDDataType> item) {

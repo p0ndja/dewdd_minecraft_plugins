@@ -732,8 +732,9 @@ public class DigEventListener2 implements Listener {
 			}
 
 			if (message.equalsIgnoreCase("clearmon") == true || message.equalsIgnoreCase("cm") == true) {
-
-				for (Entity ent : Bukkit.getWorld("world").getEntities()) {
+				
+				for (World wow : Bukkit.getWorlds())
+				for (Entity ent : wow.getEntities()) {
 					if (!(ent instanceof LivingEntity))
 						continue;
 					LivingEntity en = (LivingEntity) ent;
