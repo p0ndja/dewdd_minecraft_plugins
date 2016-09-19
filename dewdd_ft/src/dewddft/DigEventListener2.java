@@ -413,12 +413,19 @@ public class DigEventListener2 implements Listener {
 				}
 
 				int ga = 0;
-				while (ga <= 0 || ga >= Bukkit.getOnlinePlayers().length) {
+				while ( ga <= 0 || ga >= Bukkit.getOnlinePlayers().length) {
 
 					ga = rnd.nextInt();
-
+					
+					if (Bukkit.getOnlinePlayers().length <= 0) {
+						break;
+					}
 				
 
+				}
+				
+				if (Bukkit.getOnlinePlayers().length <= 0) {
+					return;
 				}
 				
 					pr = Bukkit.getOnlinePlayers().clone()[ga];
