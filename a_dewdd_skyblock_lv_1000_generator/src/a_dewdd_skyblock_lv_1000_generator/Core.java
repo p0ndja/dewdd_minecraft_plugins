@@ -208,8 +208,7 @@ public class Core {
 			LV1000Type l = new LV1000Type();
 
 			l.needAmount = new int[amountUniqueItemPerLV.amount[curLV]];
-			l.needItem = new String[amountUniqueItemPerLV.amount[curLV]];
-			l.needData = new byte[amountUniqueItemPerLV.amount[curLV]];
+			l.needIndex = new int[amountUniqueItemPerLV.amount[curLV]];
 			l.needSize = 0;
 
 			d.pl("decode lv need " + curLV + " = " + amountUniqueItemPerLV.amount[curLV] + " cur chro " + curChro
@@ -219,8 +218,7 @@ public class Core {
 			for (int j = 0; j < amountUniqueItemPerLV.amount[curLV] && cur < allBlockInGameAsList.size(); j++) {
 				AllBlockInGameType eof = allBlockInGameAsList.get(rUnique.index[cur]);
 
-				l.needItem[j] = eof.theName;
-				l.needData[j] = eof.data;
+				l.needIndex[j] =rUnique.index[cur];
 				l.needAmount[j] = (int) Math.round(decodeRandomGive01_() * eof.maxStack);
 				if (l.needAmount[j] <= 0) {
 					l.needAmount[j] = 1;
@@ -259,9 +257,8 @@ public class Core {
 
 			e.rewardSize = 0;
 
-			e.rewardData = new byte[amountReward];
 			e.rewardAmount = new int[amountReward];
-			e.rewardItem = new String[amountReward];
+			e.rewardIndex = new int[amountReward];
 
 			d.pl("decode lv reward " + i + " = " + amountReward + " cur chro " + curChro);
 
@@ -270,8 +267,7 @@ public class Core {
 
 				int index = (int) (g);
 
-				e.rewardData[j] = allBlockInGameAsList.get(index).data;
-				e.rewardItem[j] = allBlockInGameAsList.get(index).theName;
+				e.rewardIndex[j] = index;
 				e.rewardAmount[j] = (int) Math.round(decodeRandomGive01_() * allBlockInGameAsList.get(index).maxStack);
 
 			}

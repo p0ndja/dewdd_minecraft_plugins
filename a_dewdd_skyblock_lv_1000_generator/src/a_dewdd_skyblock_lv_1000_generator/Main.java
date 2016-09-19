@@ -63,7 +63,9 @@ class HybridOverride extends Hybrid {
 				
 				
 				if (printPls == true) {
-					d.pl("need slot " + j + " = " + tmpsubLV.needItem[j] + ":" + tmpsubLV.needData[j] + ":"
+					AllBlockInGameType eco = Main.co.allBlockInGameAsList.get(tmpsubLV.needIndex[j]);
+					
+					d.pl("need slot " + j + " = " + eco.theName + ":" + eco.data + ":"
 							+ tmpsubLV.needAmount[j]);
 				}
 				
@@ -72,8 +74,13 @@ class HybridOverride extends Hybrid {
 			}
 
 			for (int j = 0; j < tmpLV.get(i).rewardSize; j++) {
+				LV1000Type tmpsubLV = tmpLV.get(i);
+				
 				if (printPls == true) {
-					d.pl("reward slot " + j + " = " + tmpLV.get(i).rewardItem[j] + ":" + tmpLV.get(i).rewardData[j]
+					AllBlockInGameType eco = Main.co.allBlockInGameAsList.get(tmpsubLV.rewardIndex[j]);
+					
+					
+					d.pl("reward slot " + j + " = " + eco.theName + ":" + eco.data
 							+ ":" + tmpLV.get(i).rewardAmount[j]);
 				}
 
@@ -98,20 +105,25 @@ class HybridOverride extends Hybrid {
 			if (printPls == true) {
 				d.pl("tmpLV ID " + i);
 			}
-
-			for (int j = 0; j < tmpLV.get(i).needSize; j++) {
+	LV1000Type curLV = tmpLV.get(i);
+	
+			for (int j = 0; j < curLV.needSize; j++) {
+				AllBlockInGameType need = Main.co.allBlockInGameAsList.get( curLV.needIndex[j]);
+				
 				if (printPls == true) {
-					d.pl("need slot " + j + " = " + tmpLV.get(i).needItem[j] + ":" + tmpLV.get(i).needData[j] + ":"
-							+ tmpLV.get(i).needAmount[j]);
+					
+				
+					d.pl("need slot " + j + " = " + need.theName + ":" + need.data + ":"
+							+ curLV.needAmount[j]);
 				}
 
 				for (int k = 0; k < Main.co.allBlockInGameAsList.size(); k++) {
 					
-					if (Main.co.allBlockInGameAsList.get(k).data == tmpLV.get(i).needData[j])
-					if (Main.co.allBlockInGameAsList.get(k).theName.equalsIgnoreCase(tmpLV.get(i).needItem[j])) {
+					if (Main.co.allBlockInGameAsList.get(k).data == need.data)
+					if (Main.co.allBlockInGameAsList.get(k).theName.equalsIgnoreCase(need.theName)) {
 
 						if (needSlotUsedIt[k] == true) {
-							d.pl(" **  need dupli " + tmpLV.get(i).needItem[j] + ":" + tmpLV.get(i).needData[j]);
+							d.pl(" **  need dupli " + need.theName + ":" + need.data);
 							duplicate++;
 						}
 						needSlotUsedIt[k] = true;
@@ -125,19 +137,21 @@ class HybridOverride extends Hybrid {
 			d.pl(" >>> need duplicate " + duplicate);
 			duplicate = 0;
 
-			for (int j = 0; j < tmpLV.get(i).rewardSize; j++) {
+			for (int j = 0; j < curLV.rewardSize; j++) {
+				AllBlockInGameType reward = Main.co.allBlockInGameAsList.get( curLV.rewardIndex[j]);
+				
 
 				if (printPls == true) {
-					d.pl("reward slot " + j + " = " + tmpLV.get(i).rewardItem[j] + ":" + tmpLV.get(i).rewardData[j]
-							+ ":" + tmpLV.get(i).rewardAmount[j]);
+					d.pl("reward slot " + j + " = " + reward.theName + ":" + reward.data
+							+ ":" + curLV.rewardAmount[j]);
 				}
 
 				for (int k = 0; k < Main.co.allBlockInGameAsList.size(); k++) {
 					
-					if (Main.co.allBlockInGameAsList.get(k).data == tmpLV.get(i).rewardData[j])
-					if (Main.co.allBlockInGameAsList.get(k).theName.equalsIgnoreCase(tmpLV.get(i).rewardItem[j])) {
+					if (Main.co.allBlockInGameAsList.get(k).data == reward.data)
+					if (Main.co.allBlockInGameAsList.get(k).theName.equalsIgnoreCase(reward.theName)) {
 						if (rewardSlotUsedIt[k] == true) {
-							d.pl(" *** ** reward dupli " + tmpLV.get(i).rewardItem[j] + ":" + tmpLV.get(i).rewardData[j]);
+							d.pl(" *** ** reward dupli " + reward.theName + ":" + reward.data);
 							duplicate++;
 						}
 						rewardSlotUsedIt[k] = true;
