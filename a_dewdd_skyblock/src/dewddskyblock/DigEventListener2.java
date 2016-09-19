@@ -43,9 +43,9 @@ import org.bukkit.event.entity.ItemDespawnEvent;
 import org.bukkit.event.hanging.HangingBreakByEntityEvent;
 import org.bukkit.event.hanging.HangingBreakEvent;
 import org.bukkit.event.hanging.HangingBreakEvent.RemoveCause;
-import org.bukkit.event.hanging.HangingEvent;
 import org.bukkit.event.hanging.HangingPlaceEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerBucketEmptyEvent;
 import org.bukkit.event.player.PlayerBucketFillEvent;
@@ -59,12 +59,15 @@ import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.event.world.ChunkLoadEvent;
 import org.bukkit.event.world.ChunkPopulateEvent;
 import org.bukkit.event.world.ChunkUnloadEvent;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.util.Vector;
 
 import api_skyblock.Constant;
+import api_skyblock.LV1000Type;
 import api_skyblock.api_skyblock;
 import dewddtran.tr;
 import net.minecraft.server.v1_7_R4.EntityPlayer;
@@ -742,7 +745,7 @@ public class DigEventListener2 implements Listener {
 		if (e.getEntity() instanceof EntityPlayer) {
 			Player br = (Player) e.getEntity();
 			if (api_skyblock.cando(br.getLocation().getBlock(), br, "entitydamageevent") == false) {
-				
+
 				e.setCancelled(true);
 			}
 
@@ -887,7 +890,6 @@ public class DigEventListener2 implements Listener {
 		}
 	}
 
-	
 	@EventHandler
 	public void eventja(HangingBreakByEntityEvent e) {
 
@@ -902,7 +904,7 @@ public class DigEventListener2 implements Listener {
 			Player br = (Player) e.getRemover();
 
 			if (api_skyblock.cando(e.getEntity().getLocation().getBlock(), br, "HangingBreakByEntity") == false) {
-				//br.sendMessage(dprint.r.color(tr.gettr("don't_breakbyentity_hanging_picture_not_yours")));
+				// br.sendMessage(dprint.r.color(tr.gettr("don't_breakbyentity_hanging_picture_not_yours")));
 
 				e.setCancelled(true);
 				return;
@@ -915,12 +917,85 @@ public class DigEventListener2 implements Listener {
 		}
 	}
 
-	
+	public void updateLVInventory(Inventory inv, Player player) {
+		int idx = dew.getprotectid(player.getLocation().getBlock());
+		int id = dew.getplayerinslot(player.getName(), idx);
+
+		if (id == -1) {
+			return;
+		}
+
+		// add item
+
+		inv.clear();
+		LV1000Type lv = dew.lv1000.get(dew.rs[idx].mission);
+
+		int curSlot = 0;
+		for (int i = 0; i < lv.needSize; i++) {
+
+			ItemStack itm = new ItemStack(lv.getMaterial(lv.needNameData[i]),
+
+					lv.needAmount[i], lv.getData(lv.needNameData[i]));
+
+			itm.addUnsafeEnchantment(Enchantment.DAMAGE_UNDEAD, 1);
+
+			ItemMeta mm = itm.getItemMeta();
+			mm.setDisplayName(lv.needNameData[i] + " NEED");
+
+			itm.setItemMeta(mm);
+
+			inv.setItem(curSlot, itm);
+			curSlot++;
+		}
+
+		curSlot = 53;
+
+		for (int i = 0; i < lv.rewardSize; i++) {
+
+			ItemStack itm = new ItemStack(lv.getMaterial(lv.rewardNameData[i]),
+
+					lv.rewardAmount[i], lv.getData(lv.rewardNameData[i]));
+
+			itm.addUnsafeEnchantment(Enchantment.DIG_SPEED, 1);
+
+			ItemMeta mm = itm.getItemMeta();
+			mm.setDisplayName(lv.rewardNameData[i] + " as reward");
+
+			itm.setItemMeta(mm);
+
+			inv.setItem(curSlot, itm);
+			curSlot--;
+		}
+
+		// update inventory
+
+	}
+
+	@EventHandler
+	public void eventja(InventoryOpenEvent e) {
+
+	}
+
 	@EventHandler
 	public void eventja(InventoryClickEvent e) {
-		
+Inventory inv = e.getClickedInventory();
+			if (inv == null) {
+				return;
+			}
+		if (inv.getName().equalsIgnoreCase("sky lv")) {
+			
+
+			if (e.getSlot() >= 0 && e.getSlot() <= 10) {
+				e.setCancelled(true);
+			}
+
+			if (e.getSlot() >= 44 && e.getSlot() <= 54) {
+				e.setCancelled(true);
+			}
+
+		}
 	}
-	
+
 	@EventHandler
 	public void eventja(HangingBreakEvent e) {
 		if (!api_skyblock.isrunworld(e.getEntity().getWorld().getName())) {
@@ -933,7 +1008,7 @@ public class DigEventListener2 implements Listener {
 
 			if (api_skyblock.cando(br.getLocation().getBlock(), br, "HangingBreakEvent") == false) {
 				e.setCancelled(true);
-				//br.sendMessage(dprint.r.color(tr.gettr("don't_break_hanging_picture_not_yours")));
+				// br.sendMessage(dprint.r.color(tr.gettr("don't_break_hanging_picture_not_yours")));
 			}
 
 		} else {
@@ -956,7 +1031,7 @@ public class DigEventListener2 implements Listener {
 
 		Player br = e.getPlayer();
 		if (api_skyblock.cando(e.getPlayer().getLocation().getBlock(), br, "HangingPlaceEvent") == false) {
-			//br.sendMessage(dprint.r.color(tr.gettr("don't_place_hanging_picture_not_yours")));
+			// br.sendMessage(dprint.r.color(tr.gettr("don't_place_hanging_picture_not_yours")));
 
 			e.setCancelled(true);
 		}
@@ -1456,6 +1531,12 @@ public class DigEventListener2 implements Listener {
 
 					player.sendMessage(dprint.r.color(dew.getFullMissionHeadAndCurLevel(dew.rs[getid].mission)));
 					dew.printToAllPlayerOnRS(getid, Constant.getMissionHeader(dew.rs[getid].mission));
+
+					Inventory inv = Bukkit.createInventory(null, 54, "sky lv");
+					updateLVInventory(inv, player);
+
+					player.openInventory(inv);
+
 				}
 
 				else if (m[1].equalsIgnoreCase("owner")) {
@@ -1691,6 +1772,7 @@ public class DigEventListener2 implements Listener {
 				} else if (m[1].equalsIgnoreCase("reload") == true) {
 
 					dew.loadRSProtectFile();
+					dew.loadLVFile();
 				}
 		}
 

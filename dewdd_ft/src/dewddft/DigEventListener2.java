@@ -253,7 +253,7 @@ public class DigEventListener2 implements Listener {
 					e.printStackTrace();
 				}
 
-				dprint.r.printC("ft waiting ac != null");
+				dprint.r.printAll("ft waiting ac != null");
 
 			}
 
@@ -498,7 +498,7 @@ public class DigEventListener2 implements Listener {
 								}
 
 								en.setTarget(en2);
-								dprint.r.printC("mon kill " + en.getLocation().getBlockX() + ","
+								dprint.r.printAll("mon kill " + en.getLocation().getBlockX() + ","
 										+ en.getLocation().getBlockY() + "," + en.getLocation().getBlockZ() + " to " +
 
 								en2.getLocation().getBlockX() + "," + en2.getLocation().getBlockY() + ","
@@ -563,7 +563,7 @@ public class DigEventListener2 implements Listener {
 
 							en.setTarget(en2);
 
-							dprint.r.printC("mon kill human" + en.getLocation().getBlockX() + ","
+							dprint.r.printAll("mon kill human" + en.getLocation().getBlockX() + ","
 									+ en.getLocation().getBlockY() + "," + en.getLocation().getBlockZ() + " to " +
 
 							en2.getLocation().getBlockX() + "," + en2.getLocation().getBlockY() + ","
@@ -813,7 +813,7 @@ public class DigEventListener2 implements Listener {
 
 				itm = new ItemStack(Material.getMaterial(ash.item[j]), ash.amount[j], ash.data[j]);
 				ex = itm.getItemMeta();
-				ex.setDisplayName("Shop " + (i + id) + " > " + ash.playPrice);
+				ex.setDisplayName( Material.getMaterial(ash.item[j]) + ":" + ash.data[j] + " Shop " + (i + id) + " > " + ash.playPrice);
 				itm.setItemMeta(ex);
 
 				inv.setItem(curPosition + j, itm);
@@ -1361,7 +1361,7 @@ public class DigEventListener2 implements Listener {
 			e.printStackTrace();
 		}
 
-		dprint.r.printC("reloaded free item file" + filena);
+		dprint.r.printAll("reloaded free item file" + filena);
 
 	}
 

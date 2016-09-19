@@ -19,6 +19,7 @@ public class Constant {
 	public static String rsProtect_filename = "ptdew_dewdd_rs_protect.txt";
 
 	public static String rsGenerateListBlock_filename = "ptdew_dewdd_rs_generatelistblock.txt";
+	public static String rsLV_filename =  "ptdew_dewdd_lv.txt";
 	
 	public static String poveride = "dewdd.skyblock.overide";
 	public static String presetlv = "dewdd.skyblock.resetlv";

@@ -12,10 +12,8 @@ import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
 import java.util.Random;
-import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Future;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -585,6 +583,8 @@ public class api_skyblock {
 
 		return -1;
 	}
+	
+	public static ArrayList<LV1000Type> lv1000 = new ArrayList<LV1000Type>();
 
 	public static int getprotectid(Block block) {
 		// must check world
@@ -618,10 +618,91 @@ public class api_skyblock {
 
 	int amount = 0; // recusive
 					// count
+	
+	
+
+	
+	public void loadLVFile() {
+		String worldf = Constant.rsLV_filename;
+
+		File dir = new File(Constant.folder_name);
+		dir.mkdir();
+
+		String filena = Constant.folder_name + File.separator + worldf;
+		File fff = new File(filena);
+
+		try {
+
+			
+			lv1000.clear();
+
+			fff.createNewFile();
+
+			System.out.println("ptdeW&DewDD skyblock , lv loading : " + filena);
+			// Open the file that is the first
+			// command line parameter
+			FileInputStream fstream = new FileInputStream(filena);
+			// Get the object of DataInputStream
+			DataInputStream in = new DataInputStream(fstream);
+			BufferedReader br = new BufferedReader(new InputStreamReader(in));
+			String strLine;
+			// Read File Line By Line
+
+			// sthae
+			// aosthoeau
+			// * save
+
+			String m[];
+
+			while ((strLine = br.readLine()) != null) {
+				LV1000Type lvo = new LV1000Type();
+				
+				
+				
+				m = strLine.split("\\s+");
+				
+				lvo.needSize = Integer.parseInt(m[0]);
+				lvo.rewardSize = Integer.parseInt(m[1]);
+				
+				for (int i = 0; i < lvo.needSize ; i ++ ){
+					strLine = br.readLine();
+					
+					
+					String bem[] = strLine.split(" ");
+					
+					lvo.needNameData[i] = bem[0];
+					lvo.needAmount[i] = Integer.parseInt(bem[1]);
+					
+					
+				}
+				
+				for (int i = 0; i < lvo.rewardSize ; i ++ ){
+strLine = br.readLine();
+					
+					
+					String bem[] = strLine.split(" ");
+					lvo.rewardNameData[i] = bem[0];
+					lvo.rewardAmount[i] = Integer.parseInt(bem[1]);
+					
+					
+				}
+				
+
+				lv1000.add(lvo);
+
+			}
+
+			System.out.println("ptdew&DewDD skyblock : lv loaded " + filena);
+
+			in.close();
+		} catch (Exception e) {// Catch exception if any
+			System.err.println("Error load " + filena + " " + e.getMessage());
+		}
+	}
 
 	public api_skyblock() {
 		loadRSProtectFile();
-
+		loadLVFile();
 	}
 
 	public void applyReward(int rsID) {
