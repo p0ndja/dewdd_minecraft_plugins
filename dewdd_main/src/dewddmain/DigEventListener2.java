@@ -145,7 +145,11 @@ public class DigEventListener2 implements Listener {
 					if (ent.getType() == org.bukkit.entity.EntityType.DROPPED_ITEM) {
 						Location lo2 = dew.giftblock.getLocation();
 
-						lo2.setWorld(Bukkit.getWorld("world"));
+						ent.teleport(lo2);
+
+						
+						
+						/*lo2.setWorld(Bukkit.getWorld("world"));
 						if (player.getWorld().getName().equalsIgnoreCase("world") == true) {
 
 							ent.teleport(lo2);
@@ -154,7 +158,7 @@ public class DigEventListener2 implements Listener {
 
 							ent.remove();
 
-						}
+						}*/
 
 					}
 
