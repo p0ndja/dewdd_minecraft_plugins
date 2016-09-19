@@ -51,7 +51,7 @@ public class Core {
 	public static String sellablePath = File.separator + "ramdisk" + File.separator + "sellableblock.txt";
 
 	public static String missionPath = File.separator + "ramdisk" + File.separator + "missionblock.txt";
-	public static int dnaSize = 3200;
+	public static int dnaSize = 3300;
 
 	public static int maxItemForCompleteMission = 10;
 	public static int minItemForCompleteMission = 3;
@@ -182,13 +182,19 @@ public class Core {
 				ab.data[j] = abigt.data;
 				ab.amount[j] = abigt.curAmount;
 
-				//curItemIndex++;
-				if (curItemIndex == allBlockInGameAsList.size()) {
-					break;
+				if (ab.item[j].equalsIgnoreCase("RAW_BEEF")) {
+					if (ab.data[j] > 0) {
+						d.pl("raw_Beff data > 0");
+					}
 				}
+				
+				curItemIndex++;
+				/*if (curItemIndex == allBlockInGameAsList.size()) {
+					break;
+				}*/
 			}
 			
-			curItemIndex += tmpType.amount[i];
+			//curItemIndex += tmpType.amount[i];
 
 			tmpType.outputAllShop.add(ab);
 
@@ -435,7 +441,13 @@ public class Core {
 			int cur = para.index[paraItemsInShop.outputAllItemInShop.size()];
 
 			bo.theName = allBlockInGameAsList.get(cur).theName;
-			bo.data = allBlockInGameAsList.get(para.index[cur]).data;
+			bo.data = allBlockInGameAsList.get(cur).data;
+			
+			if (bo.theName.equalsIgnoreCase("RAW_BEEF")) {
+				if (bo.data > 0) {
+					d.pl("raw_BEEF DATA > 0 ");
+				}
+			}
 			// ........
 
 			double rendomStack01 = decodeRandomGive01_();
@@ -663,6 +675,13 @@ public class Core {
 				AllBlockInGameType miss = new AllBlockInGameType();
 				miss.theName = m[0];
 				miss.data = Byte.parseByte(m[1]);
+				
+				if (miss.theName.equalsIgnoreCase("RAW_BEEF")) {
+					if (miss.data > 0){
+						d.pl("raw_beef load data > 0");
+					}
+				}
+				
 				miss.maxStack = Integer.parseInt(m[2]);
 				miss.isBlock = Boolean.parseBoolean(m[3]);
 

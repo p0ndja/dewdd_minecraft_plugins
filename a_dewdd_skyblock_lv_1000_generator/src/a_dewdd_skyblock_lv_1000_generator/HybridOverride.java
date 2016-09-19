@@ -320,7 +320,7 @@ public class HybridOverride extends Hybrid {
 				
 				
 				if (notFill == true) {
-					d.pl("not fill = true");
+					//d.pl("not fill = true");
 					
 					
 					// random bought item
@@ -350,7 +350,10 @@ public class HybridOverride extends Hybrid {
 					AllBlockInGameType itm = 
 							Main.co.allBlockInGameAsList.get(curLV.needIndex[ranbuy]);
 					
+					d.pl("searching this item in shop " + itm.getIDData());
 					
+					
+					boolean foundInShop = false;
 					for (int c = 0 ; c < tmpAllShop.size() ; c ++ ) {
 						AllShop ex = tmpAllShop.get(c);
 						
@@ -360,6 +363,7 @@ public class HybridOverride extends Hybrid {
 							}
 							if (ex.item[c2].equalsIgnoreCase(itm.theName)) {
 								if (ex.data[c2] == itm.data) {
+									foundInShop = true;
 									// buy this item
 									
 									if (ps.money >= ex.playPrice) {
@@ -395,6 +399,21 @@ public class HybridOverride extends Hybrid {
 							}
 						}
 						
+						d.pl("foundInShop " + foundInShop);
+						if (foundInShop == false) {
+							// print all item in shop
+							for (int i = 0; i < tmpAllShop.size() ; i ++ ) {
+								AllShop shp = tmpAllShop.get(i);
+								for (int j = 0 ; j < shp.size ; j ++ ) {
+									
+									d.pl(i + "/" + j +"  = " +  shp.item[j] + ":" + shp.data[j] + " ? searching " + itm.getIDData());
+									if (  (shp.item + ":" + shp.data).equalsIgnoreCase(itm.getIDData()) ) {
+										d.pl("found it !!");
+										break;
+									}
+								}
+							}
+						}
 						
 						
 					} // loop all shop
@@ -405,7 +424,7 @@ public class HybridOverride extends Hybrid {
 			}
 
 			
-			if (notFill == true) {
+			if (notFill == false) {
 				curLVLoop ++;
 			}
 			ps.curSecond++;
