@@ -31,6 +31,18 @@ import li.Constant_Protect;
 import li.LXRXLZRZType;
 
 public class api_skyblock {
+	public Block gethFirstBlockHigh(Block block) {
+		for (int i = 255 ;  i >= 0 ; i --) {
+			
+			Block rela = block.getWorld().getBlockAt(block.getX(),i,block.getZ());
+			if (rela.getType() != Material.AIR) {
+				return rela.getRelative(0,2,0);
+			}
+		}
+		
+		return null;
+	}
+
 
 	class AdjustProtect implements Runnable {
 		private Block midBlockX0Z0;
@@ -45,7 +57,8 @@ public class api_skyblock {
 			this.player = player;
 
 		}
-
+		
+		
 		public AdjustProtect(Block midBlockX0Z0, Player player, int curI, RSData tmprs[], int curNewID) {
 			this.midBlockX0Z0 = midBlockX0Z0;
 			this.player = player;
@@ -1019,8 +1032,8 @@ public class api_skyblock {
 			break;
 		}
 	}
-
-	public boolean checkIsThatAreBlockOrNot(Block midBlockX0Z0, Player player) {
+	
+	public boolean checkIsThatAreBlockOrNot_old(Block midBlockX0Z0, Player player) {
 		int count = 0;
 		boolean thereBlock = false;
 
@@ -1071,6 +1084,42 @@ public class api_skyblock {
 
 		}
 
+		return thereBlock;
+	}
+
+	public boolean checkIsThatAreBlockOrNot(Block midBlockX0Z0, Player player) {
+		int count = 0;
+		boolean thereBlock = false;
+
+		int search = 10;
+		for (int x = -search; x <= search; x++) {
+			for (int y = 40; y <= 256; y++) {
+
+				for (int z = -search; z <= search; z++) {
+
+					Block bbo = midBlockX0Z0.getWorld().getBlockAt(midBlockX0Z0.getX() + x, y, midBlockX0Z0.getZ() + z);
+
+					if (bbo.getType() != Material.AIR) {
+
+						player.sendMessage(bbo.getX() + "," + bbo.getY() + "," + bbo.getZ() + " = "
+								+ bbo.getType().name() + ":" + bbo.getData());
+						thereBlock = true;
+						break;
+					}
+				}
+
+				if (thereBlock == true) {
+					break;
+				}
+			}
+
+			if (thereBlock == true) {
+				break;
+			}
+
+		}
+
+		
 		return thereBlock;
 	}
 
@@ -1204,11 +1253,13 @@ public class api_skyblock {
 		}
 	}
 
-	public void loadRSProtectFile() {
+	public static void loadRSProtectFile() {
 		String worldf = Constant.rsProtect_filename;
 
 		File dir = new File(Constant.folder_name);
 		dir.mkdir();
+		System.out.println(dir.getAbsolutePath());
+		
 
 		String filena = Constant.folder_name + File.separator + worldf;
 		File fff = new File(filena);
@@ -1331,10 +1382,145 @@ public class api_skyblock {
 
 			in.close();
 		} catch (Exception e) {// Catch exception if any
-			dprint.r.printAll("Error load " + filena + e.getMessage());
+			dprint.r.printAll("Error load " + filena + e.getMessage() );
+			e.printStackTrace();
 		}
 	}
 
+	public static void loadRSProtectFile2() {
+		String worldf = Constant.rsProtect_filename;
+
+		File dir = new File(Constant.folder_name);
+		dir.mkdir();
+		System.out.println(dir.getAbsolutePath());
+		
+
+		String filena = Constant.folder_name + File.separator + worldf;
+		File fff = new File(filena);
+
+		try {
+
+			rs = new RSData[Constant.rsBuffer];
+			for (int lop = 0; lop < Constant.rsBuffer; lop++) {
+				rs[lop] = new RSData();
+			}
+			rsMax = 0;
+
+			fff.createNewFile();
+
+			System.out.println("ptdeW&DewDD Skyblock : " + filena);
+			// Open the file that is the first
+			// command line parameter
+			FileInputStream fstream = new FileInputStream(filena);
+			// Get the object of DataInputStream
+			DataInputStream in = new DataInputStream(fstream);
+			BufferedReader br = new BufferedReader(new InputStreamReader(in));
+			String strLine;
+			// Read File Line By Line
+
+			// sthae
+			// aosthoeau
+			// * save
+			String m[];
+
+			while ((strLine = br.readLine()) != null) {
+
+				m = strLine.split("\\s+");
+				// Print the content on the console
+				rsMax++;
+				rs[rsMax - 1].x = Integer.parseInt(m[0]);
+				rs[rsMax - 1].y = Integer.parseInt(m[1]);
+				rs[rsMax - 1].z = Integer.parseInt(m[2]);
+				rs[rsMax - 1].p = new String[RSMaxPlayer];
+
+				for (int i = 0; i < RSMaxPlayer; i++) {
+					rs[rsMax - 1].p[i] = m[i + 3];
+
+				}
+
+				if (m.length >= 24) {
+					int bb = (int) Double.parseDouble(m[23]);
+
+					// bb = 0;
+					rs[rsMax - 1].mission = (bb);
+
+				}
+				if (m.length == 25) {
+					long bb = Long.parseLong(m[24]);
+
+					// bb = 0;
+					rs[rsMax - 1].lastUsed = (bb);
+				}
+
+				// rs[rsMax - 1].mission = 0;
+
+			}
+
+			// rename All Duplicate owner
+			for (int i = 0; i < rsMax; i++) {
+				boolean fou = false;
+
+				for (int j = 0; j < rsMax; j++) {
+					if (j == i) {
+						continue;
+					}
+
+					if (rs[i].p[0].equalsIgnoreCase(rs[j].p[0])) {
+						fou = true;
+						break;
+					}
+				}
+
+				if (fou == true) { // duplicate
+					// rename it
+					Random rnd = new Random();
+					String abc = "dupi" + rnd.nextInt(10000);
+
+					// search
+
+					boolean kfou = false;
+
+					do {
+						abc = "dupi" + rnd.nextInt(10000);
+						kfou = false;
+
+						for (int k = 0; k < rsMax; k++) {
+							if (rs[k].p[0].equalsIgnoreCase(abc)) {
+								kfou = true;
+								break;
+							}
+
+						}
+
+					} while (kfou == true);
+
+					System.out.println("duplicate rs owner name > " + rs[i].p[0] + " renamed to " + abc);
+					rs[i].p[0] = abc;
+				}
+
+			}
+
+			System.out.println("ptdew&DewDD Skyblock: Loaded " + filena);
+
+			for (int i = rsMax - 1; i >= 0; i--) {
+
+				for (int j = 0; j < i; j++) {
+
+					if (rs[i].x == rs[j].x && rs[i].z == rs[j].z) {
+						System.out.println("duplicate x y on id " + j + " and " + i);
+						continue;
+					}
+				}
+
+			}
+
+			in.close();
+		} catch (Exception e) {// Catch exception if any
+			System.out.println("Error load " + filena + e.getMessage() );
+			e.printStackTrace();
+		}
+	}
+	
 	public synchronized void nextMission(int rsID, int cur) {
 		printToAllPlayerOnRS(rsID, ((rs[rsID].mission) + " " + tr.gettr("mission_complete")));
 

@@ -8,6 +8,7 @@ package dewddskyblock;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Random;
 
@@ -73,6 +74,7 @@ import org.bukkit.util.Vector;
 
 import api_skyblock.Constant;
 import api_skyblock.LV1000Type;
+import api_skyblock.RSData;
 import api_skyblock.api_skyblock;
 import dewddtran.tr;
 import li.Constant_Protect;
@@ -80,11 +82,36 @@ import li.LXRXLZRZType;
 import net.minecraft.server.v1_8_R3.EntityPlayer;
 
 public class DigEventListener2 implements Listener {
-
+	
+	public static void main(String[] abc) {
+			
+		
+			api_skyblock.loadRSProtectFile2();
+			ArrayList <RSData> ori = new ArrayList<RSData>();
+			
+			
+				int count = 0;
+			for (int i = 0 ; i < api_skyblock.rsMax; i ++ ) {
+				RSData rs = api_skyblock.rs[i];
+				
+				if (rs.x >=0 && rs.x<= 6000 && rs.z >= 0 && rs.z <= 6000) {
+					count ++;
+				System.out.println((rs.x - 150) + "," + 0 + "," + (rs.z - 150 )+ " to " 
+				+ (rs.x +149)+ "," + 0 + "," + (rs.z +149) + " original " + rs.x + "," + rs.y + "," + rs.z  + " " + count);
+				 
+				}
+				
+				ori.add(rs);
+				
+			}
+			
+		}
 	class AutoAbsorb implements Runnable {
 		private Block b;
 		private int pid;
 		private ItemStack sid;
+		
+		
 
 		public AutoAbsorb(Block b, int pid, ItemStack sid) {
 			this.b = b;
@@ -1652,7 +1679,14 @@ public class DigEventListener2 implements Listener {
 					Block block = player.getWorld().getBlockAt(api_skyblock.rs[idid].x, api_skyblock.rs[idid].y + 10,
 							api_skyblock.rs[idid].z);
 					block.getChunk().load();
-					player.teleport(block.getLocation());
+					
+					Block thetop = dew.gethFirstBlockHigh(block);
+					if (thetop == null) {
+						player.sendMessage(dprint.r.color(tr.gettr("can't warp to this sky island cuz there are no middle block to stand")));
+						return;
+					}
+					player.teleport(thetop.getLocation());
+					
 					player.sendMessage(dprint.r.color("teleported you to (" + block.getX() + "," + block.getY() + ","
 							+ block.getZ() + ") of " + api_skyblock.rs[idid].p[0]));
 					return;
@@ -1664,7 +1698,14 @@ public class DigEventListener2 implements Listener {
 					Block block = player.getWorld().getBlockAt(api_skyblock.rs[idid].x, api_skyblock.rs[idid].y + 10,
 							api_skyblock.rs[idid].z);
 					block.getChunk().load();
-					player.teleport(block.getLocation());
+					
+					Block thetop = dew.gethFirstBlockHigh(block);
+					if (thetop == null) {
+						player.sendMessage(dprint.r.color(tr.gettr("can't warp to this sky island cuz there are no middle block to stand")));
+						return;
+					}
+					player.teleport(thetop.getLocation());
+					
 					player.sendMessage(dprint.r.color("teleported you to (" + block.getX() + "," + block.getY() + ","
 							+ block.getZ() + ") of " + api_skyblock.rs[idid].p[0]));
 					return;
@@ -1731,7 +1772,12 @@ public class DigEventListener2 implements Listener {
 								Block block = player.getWorld().getBlockAt(api_skyblock.rs[lop2].x,
 										api_skyblock.rs[lop2].y + 10, api_skyblock.rs[lop2].z);
 								block.getChunk().load();
-								player.teleport(block.getLocation());
+								Block thetop = dew.gethFirstBlockHigh(block);
+								if (thetop == null) {
+									player.sendMessage(dprint.r.color(tr.gettr("can't warp to this sky island cuz there are no middle block to stand")));
+									return;
+								}
+								player.teleport(thetop.getLocation());
 								player.sendMessage(dprint.r.color("teleported you to (" + block.getX() + ","
 										+ block.getY() + "," + block.getZ() + ") of " + api_skyblock.rs[lop2].p[0]));
 

@@ -28,6 +28,7 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockBurnEvent;
 import org.bukkit.event.block.BlockDamageEvent;
+import org.bukkit.event.block.BlockPhysicsEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.block.SignChangeEvent;
 import org.bukkit.event.entity.CreatureSpawnEvent;
@@ -1376,6 +1377,8 @@ public class DigEventListener2 implements Listener {
 
 	public HashMap<String, ShowCurStandProtect> showCurStandProtect = new HashMap<String, ShowCurStandProtect>();
 
+	private boolean toggleBlockPhysics = true;
+
 	// Chat Event.class
 	// BlockBreakEvent
 
@@ -1413,6 +1416,14 @@ public class DigEventListener2 implements Listener {
 
 		String m[] = event.getMessage().split(" ");
 		// deleterecursive x1 z1 x2 z2 id data
+		
+		
+		if (m[0].equalsIgnoreCase("toggleBlockPhysics")) {
+			toggleBlockPhysics = !toggleBlockPhysics;
+			dprint.r.printAll("toggleBlockPhysics = " + toggleBlockPhysics);
+		}
+		
+		
 		if (m[0].equalsIgnoreCase("deleterecursive")) {
 
 			if (m.length == 1) {
@@ -1564,6 +1575,13 @@ public class DigEventListener2 implements Listener {
 
 	}
 
+	
+	@EventHandler
+	public void eventja(BlockPhysicsEvent event) {
+		if (toggleBlockPhysics == false) {
+			event.setCancelled(true);
+		}
+	}
 	@EventHandler
 	public void eventja(BlockDamageEvent event) {
 
