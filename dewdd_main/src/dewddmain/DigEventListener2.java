@@ -14,9 +14,7 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
-import org.bukkit.block.Dropper;
 import org.bukkit.block.Sign;
-import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.CreatureType;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
@@ -29,9 +27,6 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockBurnEvent;
 import org.bukkit.event.block.BlockDamageEvent;
-import org.bukkit.event.block.BlockDispenseEvent;
-import org.bukkit.event.block.BlockFromToEvent;
-import org.bukkit.event.block.BlockPistonExtendEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.block.SignChangeEvent;
 import org.bukkit.event.entity.CreatureSpawnEvent;
@@ -63,7 +58,6 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.event.server.ServerCommandEvent;
 import org.bukkit.event.world.ChunkUnloadEvent;
-import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.potion.PotionEffectType;
@@ -1606,7 +1600,9 @@ public class DigEventListener2 implements Listener {
 					
 				}
 				
+				
 			}
+			
 		}
 		
 
@@ -1626,22 +1622,16 @@ public class DigEventListener2 implements Listener {
 		Player player = event.getPlayer();
 		// check host block
 
-		if (player.getItemInHand().getTypeId() == 335) {
-			player.sendMessage("" + block.getTypeId() + ":" + block.getData());
+		if (player.getItemInHand().getType() == Material.MILK_BUCKET) {
+			player.sendMessage("" + block.getType().name() + ":" + block.getData());
 			event.setCancelled(true);
 		}
 
-		if (block.getTypeId() == 52 && api_admin.dewddadmin.is2admin(player) == false) {
-			player.sendMessage("ptdew&dewdd : " + tr.gettr("only_admin_can_destroy_52"));
+		if (block.getType() == Material.MOB_SPAWNER && api_admin.dewddadmin.is2admin(player) == false) {
+			player.sendMessage("ptdew&dewdd : " + tr.gettr("only_admin_can_destroy_spawner"));
 			event.setCancelled(true);
 		}
 
-		// player.s endMessage("ptdew&dewdd : " + block.getTypeId() + "," +
-		// block.getData());
-
-		int digX = block.getX();
-		int digY = block.getY();
-		int digZ = block.getZ();
 
 		boolean goodc1 = false;
 		goodc1 = dew.checkpermissionarea(block, player, "delete");
@@ -1651,36 +1641,16 @@ public class DigEventListener2 implements Listener {
 			event.setCancelled(true);
 		} else {
 
-			/*
-			 * if (player.getItemInHand().getTypeId() == 323) { if
-			 * (block.getTypeId() == 63 || block.getTypeId() == 68 ||
-			 * block.getTypeId() == 323) { dew.dewsignthai(block, player);
-			 * event.setCancelled(true); return; } }
-			 */
-
-			if (player.getItemInHand() != null) {
-				if (player.getItemInHand().getEnchantmentLevel(Enchantment.LOOT_BONUS_BLOCKS) > 4) {
-					player.getItemInHand().removeEnchantment(Enchantment.LOOT_BONUS_BLOCKS);
-					player.getItemInHand().addUnsafeEnchantment(Enchantment.LOOT_BONUS_BLOCKS, 4);
-				}
-				if (player.getItemInHand().getEnchantmentLevel(Enchantment.LOOT_BONUS_MOBS) > 4) {
-					player.getItemInHand().removeEnchantment(Enchantment.LOOT_BONUS_MOBS);
-					player.getItemInHand().addUnsafeEnchantment(Enchantment.LOOT_BONUS_MOBS, 4);
-				}
-				if (player.getItemInHand().getEnchantmentLevel(Enchantment.DURABILITY) > 6) {
-					player.getItemInHand().removeEnchantment(Enchantment.DURABILITY);
-				}
-
-			}
+			
 
 			if (api_admin.dewddadmin.is2moderator(player) == true) {
-				block.setTypeId(0);
+				block.setType(Material.AIR);
 				event.setCancelled(true);
 				return;
 			}
 
 			if (api_admin.dewddadmin.is2admin(player) == true)
-				if (player.getItemInHand().getTypeId() == 68) {
+				if (player.getItemInHand().getType() == Material.ACTIVATOR_RAIL) {
 					event.setCancelled(true);
 					dprint.r.printAll("starting protect rail..");
 					dew.protectrail(block, player);
@@ -1690,127 +1660,14 @@ public class DigEventListener2 implements Listener {
 
 			// dew.cutwoodsub(event.getBlock(), event.getPlayer(), true);
 
-			switch (block.getTypeId()) {
-			case 14:
-			case 15:
-			case 16:
-			case 13:
-			case 21:
-			case 73:
-			case 56:
-			case 17:
-			case 5:
-
-				player.addPotionEffect(
-						PotionEffectType.FAST_DIGGING.createEffect(dew.randomG.nextInt(500), dew.randomG.nextInt(100)),
-						false);
-				break;
-			}
+		
 
 			player = event.getPlayer();
 
 			// remove protect
 
-			Block signblock = block.getTypeId() == 68 || block.getTypeId() == 63 ? block : null;
+			
 
-			if (signblock == null) {
-				for (int sx = -1; sx <= 1; sx++) {
-					for (int sy = -1; sy <= 1; sy++) {
-						for (int sz = -1; sz <= 1; sz++)
-							if (block.getRelative(sx, sy, sz).getTypeId() == 63
-									|| block.getRelative(sx, sy, sz).getTypeId() == 68) {
-								signblock = block.getRelative(sx, sy, sz);
-							}
-					}
-				}
-			}
-
-			if (signblock != null)
-				if (signblock.getTypeId() == 63 || signblock.getTypeId() == 68) {
-					Sign sign = (Sign) signblock.getState();
-					if (sign.getLine(0).equalsIgnoreCase("[dewbuy]") == true
-							|| sign.getLine(0).equalsIgnoreCase("[dewhome]") == true) {
-						// check protect
-						int idid = dew.checkpermissionarea(signblock, true);
-						if (idid > -1) {
-							// some one hoome
-							boolean ishost = dew.havethisnameinthishome(
-									dew.getworldid(player.getLocation().getWorld().getName()), idid, player.getName());
-							if (ishost == false) {
-								player.sendMessage(tr.gettr("can't_delete_sign_block_cuz_not_your_zone")
-										+ dew.dewsignname[dew
-												.getworldid(player.getLocation().getWorld().getName())][idid][0]
-										+ "' home");
-								event.setCancelled(true);
-								return;
-							} else {
-								player.sendMessage(tr.gettr("removing_your_zone"));
-								dew.dewbuydelete(player);
-
-							}
-
-						}
-
-					}
-
-				}
-
-			int ex = 0;
-			int ey = 0;
-			int ez = 0;
-			int d4 = 1;
-
-			World world = block.getWorld();
-			boolean allowa = player.getInventory().getHelmet() == null;
-			if (allowa == false) {
-				allowa = player.getInventory().getHelmet().getTypeId() == 49;
-
-				for (ex = digX - d4; ex <= digX + d4; ex++) {
-					for (ey = digY - d4; ey <= digY + d4; ey++) {
-						for (ez = digZ - d4; ez <= digZ + d4; ez++) {
-							block = world.getBlockAt(ex, ey, ez);
-							if (block.getTypeId() == 10 || block.getTypeId() == 11)
-								if (allowa == true) {
-									player.sendMessage(
-											"ptdew&dewdd : " + tr.gettr("obsidian_head_can't_break_near_lava"));
-									event.setCancelled(true);
-									break;
-								}
-						}
-					}
-				}
-			}
-
-			// un fall block
-			world = block.getWorld();
-			allowa = player.getInventory().getBoots() == null;
-			if (allowa == false) {
-				allowa = player.getInventory().getBoots().getTypeId() == 309;
-				ex = digX;
-				ey = 0;
-				ez = digZ;
-				d4 = 1;
-				int counthigh = 0;
-
-				for (ey = digY - 1; ey >= digY - 24; ey--) {
-
-					block = world.getBlockAt(ex, ey, ez);
-					if (block.getTypeId() == 0) {
-						if (allowa == true) {
-							counthigh++;
-						}
-					} else {
-						break;
-					}
-				}
-
-				if (counthigh >= 10) {
-					event.setCancelled(true);
-				}
-
-			}
-
-			// call fixtool
 
 			if (player.getItemInHand() != null)
 				if (player.getItemInHand().getItemMeta() != null)
@@ -1869,8 +1726,8 @@ public class DigEventListener2 implements Listener {
 					for (int ez = ac.getZ() - d4; ez <= ac.getZ() + d4; ez++) {
 						Block ag = ac.getWorld().getBlockAt(ex, ey, ez);
 						// dprint.r.printC (ag.getTypeId());
-						if (ag.getTypeId() == 51) {
-							ag.setTypeId(0);
+						if (ag.getType() == Material.FIRE) {
+							ag.setType(Material.AIR);
 						}
 					}
 				}
@@ -1903,12 +1760,11 @@ public class DigEventListener2 implements Listener {
 				return;
 			} else { // have permission
 
-				if (player.getItemInHand().getTypeId() == 288 && block.getTypeId() == 7) {
+				if (player.getItemInHand().getType() == Material.FEATHER ) {
 					block.breakNaturally();
 				}
 
-				// player.sendMessage("iteminhand= " +
-				// player.getItemInHand().getTypeId());
+			
 
 				if (player.getItemInHand() != null)
 					if (player.getItemInHand().getItemMeta() != null)
@@ -1961,23 +1817,15 @@ public class DigEventListener2 implements Listener {
 						if (dew.randomG.nextInt(100) < player.getLevel()
 								&& api_admin.dewddadmin.is2moderator(player) == false && player.getLevel() < 101) {
 
-							if (dew.isprotectitemid(block.getTypeId()) == true)
+							if (dew.isprotectitemid(block.getType()) == true)
 								return;
 
-							switch (player.getItemInHand().getTypeId()) {
-							case 0:
-							case 276:
-							case 268:
-							case 267:
-							case 272:
-								return;
-							default:
-
+							
 								block.breakNaturally(player.getItemInHand());
 								player.getItemInHand()
 										.setDurability((short) (player.getItemInHand().getDurability() + (short) 1));
-								break;
-							}
+				
+							
 
 						} // free break
 
@@ -2321,39 +2169,7 @@ public class DigEventListener2 implements Listener {
 		}
 		
 
-		/*boolean vinear = false;
-		int exe = dew.randomG.nextInt(100);
-		if (exe < 10) {
-			vinear = false;
-
-			for (Player vi : event.getEntity().getWorld().getPlayers())
-				if (api_admin.dewddadmin.is2vip(vi) == true)
-					if (vi.getLocation().distance(event.getEntity().getLocation()) <= 50) {
-						vinear = true;
-						break;
-					}
-
-			if (vinear == true) {
-				event.setCancelled(true);
-				return;
-			}
-
-			
-		} else {
-			vinear = false;
-			for (Player vi : event.getEntity().getWorld().getPlayers())
-				if (api_admin.dewddadmin.is2vip(vi) == true)
-					if (vi.getLocation().distance(event.getEntity().getLocation()) <= 50) {
-					
-						vinear = true;
-						break;
-					}
-
-			if (vinear == true) {
-				event.setCancelled(true);
-				return;
-			}
-		}*/
+		
 
 	}
 
@@ -2501,17 +2317,13 @@ public class DigEventListener2 implements Listener {
 		Block block2 = null;
 		int dx = 3;
 
-		/*
-		 * dprint.r.printA((int)event.getItem().getLocation().getX() + "," +
-		 * (int) event.getItem().getLocation().getY() + "," + (int)
-		 * event.getItem().getLocation().getZ());
-		 */
+	
 
 		for (x = -dx; x <= dx; x++) {
 			for (y = -dx; y <= dx; y++) {
 				for (z = -dx; z <= dx; z++) {
 					block2 = event.getItem().getLocation().getBlock().getRelative(x, y, z);
-					if (block2.getTypeId() == 63 || block2.getTypeId() == 68) {
+					if (block2.getType() == Material.SIGN_POST || block2.getType() == Material.WALL_SIGN) {
 						Sign sign = (Sign) block2.getState();
 						if (sign.getLine(0).equalsIgnoreCase("dewhopper")) {
 							sign.setLine(0, "[dewhopper]");
@@ -2542,7 +2354,7 @@ public class DigEventListener2 implements Listener {
 			for (y = -dx; y <= dx; y++) {
 				for (z = -dx; z <= dx; z++) {
 					block2 = event.getItem().getLocation().getBlock().getRelative(x, y, z);
-					if (block2.getTypeId() == 63 || block2.getTypeId() == 68) {
+					if (block2.getType() == Material.SIGN_POST || block2.getType() == Material.WALL_SIGN) {
 						Sign sign = (Sign) block2.getState();
 						if (sign.getLine(0).equalsIgnoreCase("dewhopperx")) {
 							sign.setLine(0, "[dewhopperx]");
@@ -2551,13 +2363,13 @@ public class DigEventListener2 implements Listener {
 
 						if (sign.getLine(0).equalsIgnoreCase("[dewhopperx]") == true) {
 
-							int tx = Integer.parseInt(sign.getLine(1)); // ID
+							String tx = (sign.getLine(1)); // ID
 							int ty = Byte.parseByte(sign.getLine(2)); // data
 
 							if (event.getItem().getItemStack() == null)
 								return;
 
-							if (event.getItem().getItemStack().getTypeId() == tx) {
+							if (event.getItem().getItemStack().getType().name().equalsIgnoreCase( tx)) {
 								// dprint.r.printA("seem id");
 								// dprint.r.printA("data = " +
 								// event.getItem().getItemStack().getData().getData());
@@ -2613,38 +2425,6 @@ public class DigEventListener2 implements Listener {
 		if (!tr.isrunworld(ac.getName(), event.getEntity().getWorld().getName()))
 			return;
 
-		int ix = 0;
-		if (ix == 0)
-			return;
-
-		/*
-		 * if (dew.checkpermissionarea(event.getLocation().getBlock()) == true)
-		 * { for (Player pd : Bukkit.getOnlinePlayers()) if
-		 * (api_admin.dewddadmin.issubsubadminname(pd.getName()) == true) if
-		 * (dew.havethisnameinthishome(dew.getworldid(event
-		 * .getEntity().getWorld().getName()), dew .checkpermissionarea(
-		 * event.getLocation().getBlock(), true), pd .getName()) == true) {
-		 * 
-		 * // dprint.r.printAll("ptdew&dewdd : Not allow ItemSpawnEvent cuz '"
-		 * // + pd.getName() + "' are there in server"); // dprint.r.printAll(
-		 * "ptdew&dewdd : ไม่อณุญาตให้สิ่งของเกิดขึ้นในเขตโพเทคนี้ เพราะสตาฟคนนี้ อยู่ในเซิฟเวอร์"
-		 * ); event.setCancelled(true); break; } }
-		 */
-
-		/*
-		 * for (Player pd : Bukkit.getOnlinePlayers()) { if
-		 * (pd.getWorld().getName()
-		 * .equalsIgnoreCase(event.getLocation().getWorld().getName()) == false)
-		 * { continue; } if
-		 * (api_admin.dewddadmin.issubsubadminname(pd.getName()) == false) {
-		 * continue; }
-		 * 
-		 * if (pd.getLocation().distance(event.getLocation()) <= 30) {
-		 * 
-		 * event.setCancelled(true); return; }
-		 * 
-		 * }
-		 */
 	}
 
 	@EventHandler
@@ -2781,8 +2561,7 @@ public class DigEventListener2 implements Listener {
 		}
 
 		if (api_admin.dewddadmin.is2moderator(player) == true) {
-			player.getItemInHand().setTypeId(0);
-			player.sendMessage("ptdew&dewdd : " + tr.gettr("staff_can't_drop_item"));
+			player.getItemInHand().setType(Material.AIR);
 			event.setCancelled(true);
 		}
 
@@ -2854,14 +2633,14 @@ public class DigEventListener2 implements Listener {
 			}
 
 		Block block = event.getClickedBlock();
-		if (player.getItemInHand().getTypeId() == 6 && act == Action.LEFT_CLICK_BLOCK) {
+		if (player.getItemInHand().getType() == Material.SAPLING && act == Action.LEFT_CLICK_BLOCK) {
 			dew.dewps_list(player);
 			event.setCancelled(true);
 
 			return;
 		}
 
-		if (block.getTypeId() == 63 || block.getTypeId() == 68) {
+		if (block.getType() == Material.WALL_SIGN || block.getType() == Material.SIGN_POST) {
 			Sign sd = (Sign) block.getState();
 			if (sd.getLine(0).toLowerCase().endsWith("[buy]") || sd.getLine(0).toLowerCase().endsWith("[sell]")
 					|| sd.getLine(0).toLowerCase().endsWith("[trade]") || sd.getLine(0).toLowerCase().endsWith("[free]")
@@ -2881,14 +2660,7 @@ public class DigEventListener2 implements Listener {
 		boolean goodc1 = false;
 		goodc1 = dew.checkpermissionarea(block, player, "right");
 
-		/*
-		 * if (event.getAction().equals(Action.RIGHT_CLICK_BLOCK) &&
-		 * event.getClickedBlock().equals(Material.ITEM_FRAME) &&
-		 * dew.checkpermissionarea(block, player, "playerInteractEvent") ==
-		 * true){
-		 * 
-		 * event.setCancelled(true); }
-		 */
+		
 
 		if (goodc1 == true) {
 			event.setCancelled(true);
@@ -2903,18 +2675,7 @@ public class DigEventListener2 implements Listener {
 
 		
 
-			/*
-			 * if (player.getItemInHand().getTypeId() == 276 &&
-			 * player.getInventory().first(49) > -1) { World world =
-			 * player.getWorld(); Location loca = player.getEyeLocation();
-			 * 
-			 * if (dew.checkpermissionarea(block) == false) {
-			 * world.createExplosion(loca, 3); event.setCancelled(true); }
-			 * 
-			 * }
-			 */
-
-			if (player.getItemInHand().getTypeId() == 290 && act == Action.LEFT_CLICK_BLOCK) {
+			if (player.getItemInHand().getType() == Material.WOOD_HOE && act == Action.LEFT_CLICK_BLOCK) {
 				// set x1y1z1
 				int getid = dew.getfreeselect(player);
 				dew.selectx1[getid] = block.getX();
@@ -2933,7 +2694,7 @@ public class DigEventListener2 implements Listener {
 				return;
 			}
 
-			if (player.getItemInHand().getTypeId() == 290 && act == Action.RIGHT_CLICK_BLOCK) {
+			if (player.getItemInHand().getType() == Material.WOOD_HOE && act == Action.RIGHT_CLICK_BLOCK) {
 				// set x1y1z1
 
 				int getid = dew.getfreeselect(player);
@@ -2952,7 +2713,7 @@ public class DigEventListener2 implements Listener {
 				event.setCancelled(true);
 			}
 
-			if (player.getItemInHand().getTypeId() == 276 // diamondsword
+			if (player.getItemInHand().getType() == Material.DIAMOND_SWORD // diamondsword
 					&& act == Action.RIGHT_CLICK_BLOCK) {
 				// set x1y1z1
 
@@ -2960,19 +2721,10 @@ public class DigEventListener2 implements Listener {
 				dew.selectblock[getid] = block;
 				dew.selectworldname[getid] = block.getWorld().getName();
 
-				player.sendMessage("ptdew&dewdd : " + tr.gettr("diamondsword_seted_dewa_block") + " ("
-						+ dew.selectblock[getid].getX() + "," + dew.selectblock[getid].getY() + ","
-						+ dew.selectblock[getid].getZ() + ")");
-				// event.setCancelled(true);
+			
 			}
 
-			/*
-			 * if (player.getItemInHand().getTypeId() == 351 &&
-			 * player.getItemInHand().getData().getData() == 15 && act ==
-			 * Action.RIGHT_CLICK_BLOCK) { switch (block.getTypeId()) { case
-			 * 142: case 141: case 59: case 104: case 105: dew.seedglow(block,
-			 * player); } }
-			 */
+		
 
 		} // else
 
