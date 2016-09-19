@@ -8,4 +8,5 @@ public class useful {
 		int randomNum = min + (int) (Math.random() * ((max - min) + 1));
 		return randomNum;
 	}
+	
 }

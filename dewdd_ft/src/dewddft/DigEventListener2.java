@@ -341,42 +341,8 @@ public class DigEventListener2 implements Listener {
 			} else if (give.equalsIgnoreCase("giveitem")) {
 				
 				for (Player pr : Bukkit.getOnlinePlayers()) {
-					if (pr.getGameMode() == GameMode.CREATIVE){
-						if (!pr.hasPermission("essentials.gamemode")) {
-							pr.kickPlayer(tr.gettr("banned cuz you can be game mode but not Admin Or GameMode Group"));
-							pr.setBanned(true);
-				
-							continue;
-						}
-					}
 					
-					if (pr.isFlying() && pr.getGameMode() != GameMode.SPECTATOR){
-						if (!pr.hasPermission("essentials.fly")) {
-							int moneyNeed = (int) tr.gettrint("CONFIG_FLY_WITHOUT_PERMISSION_PRICE_USE_EACH_MINUTES");
-							
-							try {
-								if (Economy.hasEnough(pr.getName(), moneyNeed)) {
-									Economy.subtract(pr.getName(), moneyNeed);
-								}
-								else {
-									pr.setFlying(false);
-									pr.setAllowFlight(false);
-									//pr.kickPlayer(tr.gettr("kick_cuz can fly but not vip"));
-									//continue;
-								}
-							} catch (UserDoesNotExistException e) {
-								// TODO Auto-generated catch block
-								e.printStackTrace();
-							} catch (NoLoanPermittedException e) {
-								// TODO Auto-generated catch block
-								e.printStackTrace();
-							}
-							
-						
-						}
-					}
-					
-					
+		
 					
 					
 					// check that player have item name
@@ -1416,7 +1382,7 @@ public class DigEventListener2 implements Listener {
 
 		for (int l = 0; l < maxl; l++) {
 			giveft a = new giveft(inv[l].s2, inv[l].s3);
-			Bukkit.getScheduler().scheduleSyncRepeatingTask(ac, a, inv[l].s1, inv[l].s1);
+			Bukkit.getScheduler().scheduleSyncRepeatingTask(ac, a, 0, inv[l].s1);
 		}
 
 	}

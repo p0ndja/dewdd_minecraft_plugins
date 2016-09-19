@@ -63,6 +63,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.potion.PotionEffectType;
 
 import dewddflower.MainLib;
+import dewddflower.dewset;
 import dewddtran.tr;
 import li.Constant_Protect;
 import li.IDDataType;
@@ -498,7 +499,7 @@ public class DigEventListener2 implements Listener {
 			// check host block
 
 			boolean goodc1 = false;
-			goodc1 = MainLib.cando_all(block, player, "damage");
+			goodc1 = dew.dew.cando_all(block, player, "damage");
 			if (goodc1 == false) { // don't have permission
 
 				event.setCancelled(true);
@@ -510,54 +511,12 @@ public class DigEventListener2 implements Listener {
 						block.breakNaturally();
 				}
 
-				if (player.getItemInHand() != null)
-					if (player.getItemInHand().getItemMeta() != null)
-						if (player.getItemInHand().getItemMeta().getDisplayName() != null) {
-							String itName[] = player.getItemInHand().getItemMeta().getDisplayName().split(" ");
-
-							// player.sendMessage("itName " + itName[0] + " " +
-							// itName[1]);
-
-							if (!player.hasPermission(dew.puseitem55)) {
-								player.sendMessage(
-										dprint.r.color(tr.gettr("you don't have permission ") + dew.puseitem55));
-
-								return;
-							}
-
-							if (itName.length == 3) {
-								if (itName[0].equalsIgnoreCase("55")) {
-
-									dew.amountRecursiveCount = 0;
-
-									int ig1 = block.getTypeId();
-									byte ig2 = block.getData();
-
-									// player.sendMessage("ptdew&dewdd : 55
-									// runing..." + ig1 + ":" + ig2);
-									dew.item55delete(block, player, ig1, ig2, Integer.parseInt(itName[1]),
-											Integer.parseInt(itName[2]), 20);
-									// player.sendMessage("ptdew&dewdd : 55
-									// done...");
-								}
-
-							}
-						}
-
 				if (player.getItemInHand().getTypeId() == Material.REDSTONE_TORCH_OFF.getId()
 						|| player.getItemInHand().getTypeId() == Material.REDSTONE_TORCH_ON.getId())
 					if (block.getTypeId() == 54) {
 						// auto give item for all player on server
 						dew.redtorchchest(block, player);
 					}
-
-				if (player.getItemInHand().getType() == Material.TORCH) {
-					ArrayList<IDDataType> item = new ArrayList<IDDataType>();
-					IDDataType tmp1 = new IDDataType(50, (byte) 0);
-					item.add(tmp1);
-
-					dew.dewsetLightAround(player, item);
-				}
 
 				
 
@@ -594,7 +553,7 @@ public class DigEventListener2 implements Listener {
 
 		boolean goodc1 = false;
 
-		goodc1 = MainLib.cando_all(block, player, "build");
+		goodc1 = dew.dew.cando_all(block, player, "build");
 
 		if (goodc1 == false) {
 			event.setCancelled(true);

@@ -32,7 +32,10 @@ import li.IDDataType;
 import li.LXRXLZRZType;
 
 public class MainLib extends dewset_interface {
-
+	
+	public dewset dew  = new dewset();
+	
+	
 	public boolean decreseitem1(Player player, int itemid, int itemdata, boolean forcetruedata) {
 		ItemStack itm = null;
 		int lenl = 0;
@@ -332,7 +335,7 @@ public class MainLib extends dewset_interface {
 				 * if (checkpermissionarea(block)== false) { not protect area
 				 * continue; }
 				 */
-				if (dewset.cando_all(block, player, "build") == false) {
+				if (dew.cando_all(block, player, "build") == false) {
 					// build
 					continue;
 				}
@@ -467,7 +470,7 @@ public class MainLib extends dewset_interface {
 				 * if (checkpermissionarea(block)== false) { not protect area
 				 * continue; }
 				 */
-				if (dewset.cando_all(block, player, "build") == false) {
+				if (dew.cando_all(block, player, "build") == false) {
 					// build
 					continue;
 				}
@@ -826,7 +829,7 @@ public class MainLib extends dewset_interface {
 
 				b = blockList.get(index);
 
-				if (dewset.cando_all(b, player, "right") == false) {
+				if (dew.cando_all(b, player, "right") == false) {
 					continue;
 				}
 
