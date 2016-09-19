@@ -26,6 +26,7 @@ import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerExpChangeEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.server.ServerCommandEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -65,11 +66,11 @@ class Dewminecraft {
 
 			if (autostrnow > -1) {
 				for (World wor : Bukkit.getWorlds()) {
-					// wor.save();
+					 wor.save();
 					for (Player pla : wor.getPlayers()) {
 						randomInt = randomGenerator.nextInt(9);
 						pla.sendMessage("§" + randomInt + "ptdew&dewdd : " + autostr.get(autostrnow));
-						// pla.saveData();
+						 pla.saveData();
 					}
 				}
 			}
@@ -175,6 +176,20 @@ public class DigEventListener2 implements Listener {
 		runpro(event.getMessage());
 	}
 
+
+	@EventHandler
+	public void eventja(PlayerQuitEvent event) {
+		Player player = event.getPlayer();
+		
+		for (World wor : Bukkit.getWorlds()) {
+			 wor.save();
+			for (Player pla : wor.getPlayers()) {
+				//randomInt = randomGenerator.nextInt(9);
+			//	pla.sendMessage("§" + randomInt + "ptdew&dewdd : " + autostr.get(autostrnow));
+				 pla.saveData();
+			}
+		}
+	}
 	
 	@EventHandler
 	public void eventja(PlayerJoinEvent event) {
@@ -187,6 +202,16 @@ public class DigEventListener2 implements Listener {
 				player.sendMessage(tr.gettr("on_automessage_playerjoin_tell_him_this_word"));
 			}
 		}, 100);
+		
+		
+		for (World wor : Bukkit.getWorlds()) {
+			 wor.save();
+			for (Player pla : wor.getPlayers()) {
+				//randomInt = randomGenerator.nextInt(9);
+			//	pla.sendMessage("§" + randomInt + "ptdew&dewdd : " + autostr.get(autostrnow));
+				 pla.saveData();
+			}
+		}
 	}
 	
 	@EventHandler

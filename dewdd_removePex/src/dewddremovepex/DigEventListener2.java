@@ -169,8 +169,10 @@ public class DigEventListener2 implements Listener {
 			for (Player pr : Bukkit.getOnlinePlayers()) {
 				if (pr.getGameMode() == GameMode.CREATIVE) {
 					if (!pr.hasPermission("essentials.gamemode")) {
+						pr.setGameMode(GameMode.SURVIVAL);
+						
 						pr.kickPlayer(tr.gettr("banned cuz you can be game mode but not Admin Or GameMode Group"));
-						pr.setBanned(true);
+						//pr.setBanned(true);
 
 						continue;
 					}
