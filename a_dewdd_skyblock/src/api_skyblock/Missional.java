@@ -6,7 +6,8 @@ public enum  Missional {
 	LV_1_Break_STONE,
 	LV_2_USE_BONE_MEAL,
 	LV_3_DROP_TOUCH,
-	LV_4_Place_y1
+	LV_4_Place_y1,
+	LV_5_ZOMBIE_ATTACK_1
 	
 	;
 	
@@ -18,7 +19,7 @@ public enum  Missional {
 	
 
 	public static Missional idToMission(int m) {
-		int id = -1;
+		
 		
 		Missional a = null;
 		
@@ -38,6 +39,9 @@ public enum  Missional {
 		case 4:
 			a = Missional.LV_4_Place_y1;
 			break;
+		case 5:
+			a = Missional.LV_5_ZOMBIE_ATTACK_1;
+			break;
 		
 		
 		default:
@@ -52,7 +56,6 @@ public enum  Missional {
 	public static int getID(Missional m) {
 		int id = -1;
 		
-		int maxest = 5;
 		
 		switch (m) {
 		case LV_0_COBBLESTONE_MACHINE:
@@ -70,6 +73,10 @@ public enum  Missional {
 		case LV_4_Place_y1:
 			id = 4;
 			break;
+		case LV_5_ZOMBIE_ATTACK_1:
+			id = 5;
+			break;
+			
 		default:
 			id = 5;
 			break;

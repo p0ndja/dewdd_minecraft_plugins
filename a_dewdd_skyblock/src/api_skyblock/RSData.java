@@ -7,7 +7,8 @@ public class RSData {
 
 	public Missional mission = Missional.LV_0_COBBLESTONE_MACHINE;
 	
-	public int tmpValue1 = 0;
+	public int tmpForCountingBone1 = 0;
+	public int tmpLongForRememberLastTime = 0; 
 
 	public String p[] = null;
 	public int autoCutCount = 0;

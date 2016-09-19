@@ -2,6 +2,8 @@ package api_skyblock;
 
 import java.io.File;
 
+import dewddtran.tr;
+
 public class Constant {
 
 	public static String pskyblock = "dewdd.skyblock.skyblock";
@@ -20,6 +22,59 @@ public class Constant {
 	public static String flag_everyone = "<everyone>";
 	public static int LV_2_USE_BONE_MEAL_AMOUNT = 45;
 	public static int LV_3_DROP_TOUCH_AMOUNT = 64;
+	public static String getMissionHeader(Missional mission) {
+		String header = "skyblock_mission_header_";
+	
+		String aa = "";
+		switch (mission) {
+		case LV_0_COBBLESTONE_MACHINE: // get cobble stone
+			aa = tr.gettr(header + mission);
+	
+			break;
+		case LV_1_Break_STONE:
+	
+			aa = tr.gettr(header + mission);
+			break;
+		case LV_2_USE_BONE_MEAL:
+			aa = tr.gettr(header + mission);
+			break;
+		case LV_3_DROP_TOUCH:
+			aa = tr.gettr(header + mission);
+			break;
+			
+		case LV_4_Place_y1:
+			aa = tr.gettr(header + mission);
+			break;
+			
+		case LV_5_ZOMBIE_ATTACK_1:
+			aa = tr.gettr(header + mission);
+			break;
+			
+			
+		
+			
+	
+		default:
+			aa = tr.gettr(header + "default");
+			break;
+		}
+	
+		return aa;
+	}
+	public static boolean is8_10block(int impo) {
+	
+		switch (impo) {
+	
+		case 8:
+		case 9:
+		case 10:
+		case 11:
+	
+			return true;
+		default:
+			return false;
+		}
+	}
 
 }
 

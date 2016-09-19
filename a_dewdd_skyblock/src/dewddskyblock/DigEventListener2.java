@@ -9,6 +9,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
 import org.bukkit.block.Sign;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.CreatureType;
@@ -57,7 +58,6 @@ import api_skyblock.Constant;
 import api_skyblock.Missional;
 import api_skyblock.api_skyblock;
 import dewddtran.tr;
-import sun.util.resources.CalendarData;
 
 public class DigEventListener2 implements Listener {
 
@@ -305,6 +305,107 @@ public class DigEventListener2 implements Listener {
 		}
 	}
 
+	public int countNearlyCreature(EntityType en, Block startBlock, int radius) {
+
+		int count = 0;
+
+		for (Entity enn : startBlock.getWorld().getEntities()) {
+			if (enn == null) {
+				continue;
+			}
+
+			if (enn.getType() == en) {
+				// check radius
+				if (enn.getLocation().distance(startBlock.getLocation()) <= radius) {
+					count++;
+				}
+
+			}
+		}
+
+		return count;
+	}
+
+	public Block readBlockFromSign(Block signBlock) {
+
+		Sign sign = (Sign) signBlock.getState();
+		int x = Integer.parseInt(sign.getLine(1));
+		int y = Integer.parseInt(sign.getLine(2));
+		int z = Integer.parseInt(sign.getLine(3));
+
+		Block cd = signBlock.getWorld().getBlockAt(x, y, z);
+		return cd;
+	}
+
+	class MissionRepeatChecker implements Runnable {
+
+		@Override
+		public void run() {
+			for (int i = 0; i < dew.rsMax; i++) {
+
+				for (Player player : Bukkit.getOnlinePlayers()) {
+					if (player == null) {
+						continue;
+					}
+
+					// dprint.r.printAll("misionrepeat i = " + i);
+
+					int search = dew.getplayerinslot(player.getName(), i);
+					if (search == -1) {
+						continue;
+					}
+
+					if (dew.getplayerinslot(player.getName(), player.getLocation().getBlock()) == -1) {
+						continue;
+					}
+					// check his mission
+
+					if (dew.rs[i].mission == Missional.LV_5_ZOMBIE_ATTACK_1) {
+
+						/*
+						 * dprint.r.printAll("misionrepeat lv 5 = " + i + " } "
+						 * + dew.rs[i].x + ", " + 1 + ", " + dew.rs[i].z);
+						 */
+						// read sign
+
+						Block bo = player.getWorld().getBlockAt(dew.rs[i].x, 1, dew.rs[i].z);
+
+						if (bo.getType() == Material.SIGN_POST) {
+							// dprint.r.printAll("misionrepeat lv signpost");
+
+							Block cd = readBlockFromSign(bo);
+
+							// dprint.r.printAll("misionrepeat lv 5 = " + x +
+							// "," + y + "," + z);
+
+							if (cd.getType() == Material.NETHERRACK) {
+								cd.getRelative(BlockFace.UP).setType(Material.FIRE);
+								player.getWorld().setTime(16000);
+
+								// search monster
+
+								int count = countNearlyCreature(EntityType.ZOMBIE, cd, 10);
+								if (count <= 5) {
+									player.getWorld().spawnCreature(cd.getRelative(0, 5, 0).getLocation(),
+											EntityType.ZOMBIE);
+
+								}
+
+							}
+
+						}
+
+					}
+
+					break;
+
+				}
+
+			}
+		}
+
+	}
+
 	class delay extends Thread {
 
 		@Override
@@ -322,6 +423,10 @@ public class DigEventListener2 implements Listener {
 			}
 
 			dew.startMissionNotificationLoopShowing();
+
+			MissionRepeatChecker ee = new MissionRepeatChecker();
+
+			Bukkit.getScheduler().scheduleSyncRepeatingTask(ac, ee, 1, 60);
 		}
 	}
 
@@ -392,7 +497,10 @@ public class DigEventListener2 implements Listener {
 			if (gx > -1) {
 
 				// check mission
-				if (api_skyblock.rs[getid].mission == Missional.LV_1_Break_STONE) {
+
+				switch (api_skyblock.rs[getid].mission) {
+
+				case LV_1_Break_STONE:
 
 					// search nearest stone
 					Block bd = Bukkit.getWorld("world").getBlockAt(api_skyblock.rs[getid].x, api_skyblock.rs[getid].y,
@@ -400,6 +508,26 @@ public class DigEventListener2 implements Listener {
 
 					LV1DestroyStone ee = new LV1DestroyStone(bd, getid);
 					Bukkit.getScheduler().scheduleSyncDelayedTask(ac, ee);
+					break;
+
+				case LV_5_ZOMBIE_ATTACK_1:
+
+					// search nearest stone
+					bd = Bukkit.getWorld("world").getBlockAt(api_skyblock.rs[getid].x, api_skyblock.rs[getid].y,
+							api_skyblock.rs[getid].z);
+
+					Block signBlock = block.getWorld().getBlockAt(dew.rs[getid].x, 1, dew.rs[getid].z);
+
+					if (signBlock.getType() == Material.SIGN_POST) {
+
+						Block nether = readBlockFromSign(signBlock);
+						
+						CallNextMission oo = new CallNextMission(getid);
+						Bukkit.getScheduler().scheduleSyncDelayedTask(ac, oo);
+
+					}
+
+					break;
 
 				}
 			}
@@ -486,11 +614,12 @@ public class DigEventListener2 implements Listener {
 				case LV_2_USE_BONE_MEAL: // bone
 
 					if (player.getItemInHand().getType() == Material.INK_SACK) {
-						api_skyblock.rs[getid].tmpValue1++;
-						dew.printToAllPlayerOnRS(getid, tr.gettr("bone_meal_use_counting_=")
-								+ api_skyblock.rs[getid].tmpValue1 + "/" + Constant.LV_2_USE_BONE_MEAL_AMOUNT);
+						api_skyblock.rs[getid].tmpForCountingBone1++;
+						dew.printToAllPlayerOnRS(getid,
+								tr.gettr("bone_meal_use_counting_=") + api_skyblock.rs[getid].tmpForCountingBone1 + "/"
+										+ Constant.LV_2_USE_BONE_MEAL_AMOUNT);
 
-						if (api_skyblock.rs[getid].tmpValue1 >= Constant.LV_2_USE_BONE_MEAL_AMOUNT) {
+						if (api_skyblock.rs[getid].tmpForCountingBone1 >= Constant.LV_2_USE_BONE_MEAL_AMOUNT) {
 
 							CallNextMission ee = new CallNextMission(getid);
 							Bukkit.getScheduler().scheduleSyncDelayedTask(ac, ee);
@@ -498,18 +627,18 @@ public class DigEventListener2 implements Listener {
 					}
 
 					break;
-				
+
 				case LV_4_Place_y1:
-					
+
 					if (block.getY() == 1) {
-						
+
 						CallNextMission ee = new CallNextMission(getid);
 						Bukkit.getScheduler().scheduleSyncDelayedTask(ac, ee);
-						
+
 					}
-					
+
 					break;
-					
+
 				// search nearest stone
 
 				}
@@ -889,15 +1018,14 @@ public class DigEventListener2 implements Listener {
 				player.sendMessage(dprint.r.color("/skyblock remove <player>"));
 				player.sendMessage(dprint.r.color("/skyblock list"));
 				player.sendMessage(dprint.r.color("/skyblock owner <player>"));
-				
 
 				player.sendMessage(dprint.r.color("/skyblock lv"));
 				player.sendMessage(dprint.r.color("/skyblock go <player>"));
-				
+
 				player.sendMessage("***************************");
 				player.sendMessage("Admin Section");
 				player.sendMessage(dprint.r.color("/skyblock resetlv <lv>"));
-				
+
 				player.sendMessage(dprint.r.color("/skyblock buyhere"));
 				player.sendMessage(dprint.r.color("/skyblock reload"));
 
@@ -967,9 +1095,7 @@ public class DigEventListener2 implements Listener {
 						player.sendMessage(dprint.r.color(tr.gettr("you_don't_have_permission") + Constant.pskyblock));
 						return;
 					}
-					
-					
-					 
+
 					int getid = api_skyblock.getprotectid(player.getLocation().getBlock());
 
 					if (getid == -1) {
@@ -977,24 +1103,21 @@ public class DigEventListener2 implements Listener {
 						return;
 
 					}
-					
-					
+
 					if (m.length == 2) {
 
-					api_skyblock.rs[getid].mission = Missional.LV_0_COBBLESTONE_MACHINE;
-					dprint.r.printAll(tr.gettr("reseted_lv_of_is_this_guys") + api_skyblock.rs[getid].p[0]);
+						api_skyblock.rs[getid].mission = Missional.LV_0_COBBLESTONE_MACHINE;
+						dprint.r.printAll(tr.gettr("reseted_lv_of_is_this_guys") + api_skyblock.rs[getid].p[0]);
 
-					dew.printToAllPlayerOnRS(getid, dew.getMissionHeader(dew.rs[getid].mission));
-					
-					}
-					else if (m.length == 3) {
+						dew.printToAllPlayerOnRS(getid, Constant.getMissionHeader(dew.rs[getid].mission));
+
+					} else if (m.length == 3) {
 						api_skyblock.rs[getid].mission = Missional.idToMission(Integer.parseInt(m[2]));
 						dprint.r.printAll(tr.gettr("reseted_lv_of_is_this_guys") + api_skyblock.rs[getid].p[0]);
 
-						dew.printToAllPlayerOnRS(getid, dew.getMissionHeader(dew.rs[getid].mission));
-						
-					}
-					else {
+						dew.printToAllPlayerOnRS(getid, Constant.getMissionHeader(dew.rs[getid].mission));
+
+					} else {
 						player.sendMessage(tr.gettr("/sky resetlv <lv>"));
 						return;
 					}
@@ -1102,7 +1225,7 @@ public class DigEventListener2 implements Listener {
 					}
 
 					player.sendMessage(dprint.r.color("LV = " + api_skyblock.rs[getid].mission.toID()));
-					dew.printToAllPlayerOnRS(getid, dew.getMissionHeader(dew.rs[getid].mission));
+					dew.printToAllPlayerOnRS(getid, Constant.getMissionHeader(dew.rs[getid].mission));
 				}
 
 				else if (m[1].equalsIgnoreCase("owner")) {

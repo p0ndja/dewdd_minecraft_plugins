@@ -15,17 +15,18 @@ import java.io.InputStreamReader;
 import java.util.Random;
 
 import org.bukkit.Bukkit;
-import org.bukkit.Chunk;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.Chest;
 import org.bukkit.block.Sign;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import dewddtran.tr;
+import net.minecraft.server.v1_7_R4.EntityCreature;
 
 public class api_skyblock {
 
@@ -78,15 +79,16 @@ public class api_skyblock {
 					}
 				}
 
-				/*
-				 * if (checkrs == true) { // check top and down y section // I
-				 * don't need to replace old skyblock anymore
-				 * 
-				 * for (int i = 0; i < 256; i++) {
-				 * 
-				 * if (player.getWorld().getBlockAt(x, i, z).getType() !=
-				 * Material.AIR) { checkrs = false; break; } } }
-				 */
+				if (checkrs == true) { // check top and down y section // I
+
+					for (int i = 0; i < 256; i++) {
+
+						if (player.getWorld().getBlockAt(x, i, z).getType() != Material.AIR) {
+							checkrs = false;
+							break;
+						}
+					}
+				}
 
 				if (checkrs == false) {
 					buildcomplete = false;
@@ -106,14 +108,11 @@ public class api_skyblock {
 					rs[newid].p[1] = Constant.flag_autocut;
 					rs[newid].p[2] = Constant.flag_autoabsorb;
 					rs[newid].mission = Missional.LV_0_COBBLESTONE_MACHINE;
-					// clean target chunk and build island
-					Chunk chunk = null;
+					player.getWorld().getBlockAt(x - 16, y, z - 16).getChunk().getX();
+					player.getWorld().getBlockAt(x - 16, y, z - 16).getChunk().getZ();
 
-					int minx = player.getWorld().getBlockAt(x - 16, y, z - 16).getChunk().getX() * 16;
-					int minz = player.getWorld().getBlockAt(x - 16, y, z - 16).getChunk().getZ() * 16;
-
-					int maxx = player.getWorld().getBlockAt(x + 16, y, z + 16).getChunk().getX() * 16;
-					int maxz = player.getWorld().getBlockAt(x + 16, y, z + 16).getChunk().getZ() * 16;
+					player.getWorld().getBlockAt(x + 16, y, z + 16).getChunk().getX();
+					player.getWorld().getBlockAt(x + 16, y, z + 16).getChunk().getZ();
 
 					// clear for skyblock
 					for (int nx = -60; nx <= 60; nx++) {
@@ -451,7 +450,7 @@ public class api_skyblock {
 
 			printToAllPlayerOnRS(rsID, tr.gettr("got_reward_lv_" + rs[rsID].mission));
 
-			rs[rsID].tmpValue1 = 0;
+			rs[rsID].tmpForCountingBone1 = 0;
 
 			break;
 		case LV_2_USE_BONE_MEAL:
@@ -601,7 +600,10 @@ public class api_skyblock {
 
 			// add mon
 
-			bo2 = searchSpaceCube(bo, 5, 5);
+			do {
+				bo2 = searchSpaceCube(bo, 5, 5);
+
+			} while (bo2.getRelative(-1, 0, 0).getType() == Material.AIR);
 
 			for (int i = 0; i < 5; i++) {
 				for (int i2 = 0; i2 <= 0; i2++) {
@@ -618,41 +620,77 @@ public class api_skyblock {
 					}
 				}
 			}
-			
-			
+
 			Block bo3 = bo2.getRelative(2, 1, 2);
 			bo3.setType(Material.NETHERRACK);
 			bo3.getRelative(BlockFace.UP).setType(Material.FIRE);
-			
-			
 
 			// add sign
 
 			bo.getWorld().getBlockAt(bo.getX(), 0, bo.getZ()).setType(Material.BEDROCK);
 
 			Block signAdder = bo.getWorld().getBlockAt(bo.getX(), 1, bo.getZ());
-			signAdder.setType(Material.WALL_SIGN);
+			signAdder.setType(Material.SIGN_POST);
 
 			Sign sign = (Sign) signAdder.getState();
 			sign.setLine(0, "" + rs[rsID].mission.toID());
-			sign.setLine( 1, "" + bo3.getX());
-			sign.setLine( 2, "" + bo3.getY());
-			sign.setLine( 3, "" + bo3.getZ());
+			sign.setLine(1, "" + bo3.getX());
+			sign.setLine(2, "" + bo3.getY());
+			sign.setLine(3, "" + bo3.getZ());
 			sign.update(true);
-			
-			
 
 			printToAllPlayerOnRS(rsID,
 					tr.gettr("generated_small_island_at") + " " + bo2.getX() + "," + bo2.getY() + "," + bo2.getZ());
 
 			// mon
 			bo2 = searchSpaceCube(bo, 5, 5);
-			
 
 			printToAllPlayerOnRS(rsID, tr.gettr("got_reward_lv_" + rs[rsID].mission));
 
 			break;
 
+		case LV_5_ZOMBIE_ATTACK_1:
+
+			bo = getBlockMiddleRS(rsID);
+			bo2 = searchSpaceCube(bo, 5, 5);
+
+			bo2.setType(Material.CHEST);
+
+			chest = (Chest) bo2.getState();
+
+			itm = new ItemStack(Material.LAVA_BUCKET, 1);
+			chest.getInventory().addItem(itm.getData().toItemStack(2));
+
+			itm = new ItemStack(Material.ICE, 1);
+			chest.getInventory().addItem(itm.getData().toItemStack(2));
+
+			itm = new ItemStack(Material.GRAVEL, 32);
+			chest.getInventory().addItem(itm.getData().toItemStack(32));
+
+			itm = new ItemStack(Material.SAND, 3);
+			chest.getInventory().addItem(itm.getData().toItemStack(17));
+
+			itm = new ItemStack(Material.FEATHER, 3);
+			chest.getInventory().addItem(itm.getData().toItemStack(10));
+
+			itm = new ItemStack(Material.NAME_TAG, 3);
+			chest.getInventory().addItem(itm.getData().toItemStack(1));
+
+			itm = new ItemStack(Material.MOSSY_COBBLESTONE, 3);
+			chest.getInventory().addItem(itm.getData().toItemStack(4));
+
+			itm = new ItemStack(Material.WEB, 3);
+			chest.getInventory().addItem(itm.getData().toItemStack(2));
+
+			bo2.getRelative(BlockFace.DOWN).setType(Material.LAPIS_ORE);
+			bo2.getRelative(0, -1, 1).setType(Material.TORCH);
+
+			printToAllPlayerOnRS(rsID,
+					tr.gettr("generated_small_island_at") + " " + bo2.getX() + "," + bo2.getY() + "," + bo2.getZ());
+
+			printToAllPlayerOnRS(rsID, tr.gettr("got_reward_lv_" + rs[rsID].mission));
+
+			break;
 		default:
 
 			printToAllPlayerOnRS(rsID, tr.gettr("got_reward_lv_" + rs[rsID].mission));
@@ -684,43 +722,8 @@ public class api_skyblock {
 	}
 
 	public String getFullMissionHeadAndCurLevel(Missional mission) {
-		String header = getMissionHeader(mission);
+		String header = Constant.getMissionHeader(mission);
 		String aa = tr.gettr("is_cur_level_mission_showing_") + " " + mission + " " + header;
-		return aa;
-	}
-
-	public String getMissionHeader(Missional mission) {
-		String header = "skyblock_mission_header_";
-
-		String aa = "";
-		switch (mission) {
-		case LV_0_COBBLESTONE_MACHINE: // get cobble stone
-			aa = tr.gettr(header + mission);
-
-			break;
-		case LV_1_Break_STONE:
-
-			aa = tr.gettr(header + mission);
-			break;
-		case LV_2_USE_BONE_MEAL:
-			aa = tr.gettr(header + mission);
-			break;
-		case LV_3_DROP_TOUCH:
-			aa = tr.gettr(header + mission);
-			break;
-			
-		case LV_4_Place_y1:
-			aa = tr.gettr(header + mission);
-			break;
-			
-			
-			
-
-		default:
-			aa = tr.gettr(header + "default");
-			break;
-		}
-
 		return aa;
 	}
 
@@ -760,21 +763,6 @@ public class api_skyblock {
 			player.getInventory().addItem(itm);
 		}
 
-	}
-
-	public boolean is8_10block(int impo) {
-
-		switch (impo) {
-
-		case 8:
-		case 9:
-		case 10:
-		case 11:
-
-			return true;
-		default:
-			return false;
-		}
 	}
 
 	public void loadRSProtectFile() {
@@ -844,7 +832,7 @@ public class api_skyblock {
 	}
 
 	public synchronized void nextMission(int rsID) {
-		printToAllPlayerOnRS(rsID, (getMissionHeader(rs[rsID].mission) + " " + tr.gettr("mission_complete")));
+		printToAllPlayerOnRS(rsID, (Constant.getMissionHeader(rs[rsID].mission) + " " + tr.gettr("mission_complete")));
 
 		// dprint.r.printAll("0 calling apply reward");
 		applyReward(rsID);
@@ -852,13 +840,13 @@ public class api_skyblock {
 		printToAllPlayerOnRS(rsID, tr.gettr("next_mission"));
 
 		dprint.r.printAdmin(tr.gettr("owner_of_island_name") + rs[rsID].p[0] + " " + tr.gettr("did_mission_complete")
-				+ " " + getMissionHeader(rs[rsID].mission));
+				+ " " + Constant.getMissionHeader(rs[rsID].mission));
 
 		int tmpID = Missional.getID(rs[rsID].mission);
 		tmpID++;
 		rs[rsID].mission = Missional.idToMission(tmpID);
 
-		printToAllPlayerOnRS(rsID, (getMissionHeader(rs[rsID].mission) + " ..."));
+		printToAllPlayerOnRS(rsID, (Constant.getMissionHeader(rs[rsID].mission) + " ..."));
 
 		saveRSProtectFile();
 
