@@ -500,7 +500,7 @@ public class DigEventListener2 implements Listener {
 
 				switch (api_skyblock.rs[getid].mission) {
 
-				case LV_1_Break_STONE:
+				case LV_1_BREAK_STONE:
 
 					// search nearest stone
 					Block bd = Bukkit.getWorld("world").getBlockAt(api_skyblock.rs[getid].x, api_skyblock.rs[getid].y,
@@ -628,7 +628,7 @@ public class DigEventListener2 implements Listener {
 
 					break;
 
-				case LV_4_Place_y1:
+				case LV_4_PLACE_Y1:
 
 					if (block.getY() == 1) {
 
@@ -1423,7 +1423,8 @@ public class DigEventListener2 implements Listener {
 			if (gx > -1) {
 
 				// check mission
-				if (api_skyblock.rs[getid].mission == Missional.LV_3_DROP_TOUCH) {
+				switch (api_skyblock.rs[getid].mission) {
+				case LV_3_DROP_TOUCH:
 					if (e.getItemDrop() != null) {
 						if (e.getItemDrop().getItemStack().getType() == Material.TORCH) {
 							if (e.getItemDrop().getItemStack().getAmount() >= Constant.LV_3_DROP_TOUCH_AMOUNT) {
@@ -1436,7 +1437,25 @@ public class DigEventListener2 implements Listener {
 							}
 						}
 					}
+					break;
+				case LV_6_DROP_WHEAT:
+					if (e.getItemDrop() != null) {
+						if (e.getItemDrop().getItemStack().getType() == Material.WHEAT) {
+							if (e.getItemDrop().getItemStack().getAmount() >= Constant.LV_6_DROP_WHEAT_AMOUNT) {
+								e.getItemDrop().getItemStack().setType(Material.LAPIS_ORE);
+								e.getItemDrop().getItemStack().setAmount(10);
+
+								CallNextMission ee = new CallNextMission(getid);
+								Bukkit.getScheduler().scheduleSyncDelayedTask(ac, ee);
+								return;
+							}
+						}
+					}
+					break;
 				}
+				
+					
+				
 			}
 
 		}

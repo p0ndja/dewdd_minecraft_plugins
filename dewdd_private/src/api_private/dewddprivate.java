@@ -68,7 +68,7 @@ public class dewddprivate {
 
 								if (player
 										.hasPermission("dewdd.private.overide") == true) {
-									printAll("ptdew&dewdd: admin "
+									/*printAll("ptdew&dewdd: admin "
 											+ player.getName()
 											+ " overide.. sign protection.. at "
 											+ block.getX() + "," + block.getY()
@@ -76,7 +76,7 @@ public class dewddprivate {
 									printAll("sign protected by ["
 											+ sign.getLine(1) + ","
 											+ sign.getLine(2) + ","
-											+ sign.getLine(3) + "]");
+											+ sign.getLine(3) + "]");*/
 
 									return false;
 								}

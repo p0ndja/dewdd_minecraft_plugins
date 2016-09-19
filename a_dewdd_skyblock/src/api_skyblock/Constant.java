@@ -22,6 +22,7 @@ public class Constant {
 	public static String flag_everyone = "<everyone>";
 	public static int LV_2_USE_BONE_MEAL_AMOUNT = 45;
 	public static int LV_3_DROP_TOUCH_AMOUNT = 64;
+	public static int LV_6_DROP_WHEAT_AMOUNT = 64;
 	public static String getMissionHeader(Missional mission) {
 		String header = "skyblock_mission_header_";
 	
@@ -31,7 +32,7 @@ public class Constant {
 			aa = tr.gettr(header + mission);
 	
 			break;
-		case LV_1_Break_STONE:
+		case LV_1_BREAK_STONE:
 	
 			aa = tr.gettr(header + mission);
 			break;
@@ -42,7 +43,7 @@ public class Constant {
 			aa = tr.gettr(header + mission);
 			break;
 			
-		case LV_4_Place_y1:
+		case LV_4_PLACE_Y1:
 			aa = tr.gettr(header + mission);
 			break;
 			

@@ -60,13 +60,23 @@ public class api_skyblock {
 			int x = 0;
 			int y = 0;
 			int z = 0;
+			
+			int searchRadius = 300;
+			int searchCount = 0;
+			
 
 			while (buildcomplete == false) {
+				searchCount ++;
+				
+				if (searchCount > 50) {
+					searchRadius += 50;
+				}
+				
 				// random x y z this is not near old rs list
 				buildcomplete = true;
 
-				x = rnd.nextInt(20) * 300 * (rnd.nextInt(1) == 1 ? 1 : -1);
-				z = rnd.nextInt(20) * 300 * (rnd.nextInt(1) == 1 ? 1 : -1);
+				x = rnd.nextInt(20) * searchRadius * (rnd.nextInt(1) == 1 ? 1 : -1);
+				z = rnd.nextInt(20) * searchRadius * (rnd.nextInt(1) == 1 ? 1 : -1);
 				y = rnd.nextInt(200) + 50;
 
 				boolean checkrs = true;
@@ -242,6 +252,8 @@ public class api_skyblock {
 					saveRSProtectFile();
 					buildcomplete = true;
 				}
+				
+				
 			} // loop build complete
 		}
 	}
@@ -422,7 +434,7 @@ public class api_skyblock {
 			printToAllPlayerOnRS(rsID, tr.gettr("got_reward_lv_" + rs[rsID].mission));
 
 			break;
-		case LV_1_Break_STONE:
+		case LV_1_BREAK_STONE:
 
 			bo = getBlockMiddleRS(rsID);
 			bo2 = searchSpaceCube(bo, 5, 5);
@@ -555,7 +567,7 @@ public class api_skyblock {
 
 			break;
 
-		case LV_4_Place_y1:
+		case LV_4_PLACE_Y1:
 
 			bo = getBlockMiddleRS(rsID);
 			bo2 = searchSpaceCube(bo, 5, 5);
@@ -684,6 +696,36 @@ public class api_skyblock {
 
 			bo2.getRelative(BlockFace.DOWN).setType(Material.LAPIS_ORE);
 			bo2.getRelative(0, -1, 1).setType(Material.TORCH);
+
+			printToAllPlayerOnRS(rsID,
+					tr.gettr("generated_small_island_at") + " " + bo2.getX() + "," + bo2.getY() + "," + bo2.getZ());
+
+			printToAllPlayerOnRS(rsID, tr.gettr("got_reward_lv_" + rs[rsID].mission));
+
+			break;
+			
+		case LV_6_DROP_WHEAT:
+
+			bo = getBlockMiddleRS(rsID);
+			bo2 = searchSpaceCube(bo, 5, 5);
+
+			for (int i = 0; i < 5; i++) {
+				for (int i2 = 0; i2 < 5; i2++) {
+					for (int i3 = 0; i3 < 5; i3++) {
+
+						 bo3 = bo2.getRelative(i, i2, i3);
+						if (bo3.getType() != Material.AIR) {
+							dprint.r.printAll(tr.gettr("error while applyReward lv 0 block is != air"));
+							break;
+						}
+
+						if (rnd.nextInt(3) > 90) {
+							bo3.setType(Material.GRAVEL);
+						}
+
+					}
+				}
+			}
 
 			printToAllPlayerOnRS(rsID,
 					tr.gettr("generated_small_island_at") + " " + bo2.getX() + "," + bo2.getY() + "," + bo2.getZ());
