@@ -19,30 +19,6 @@ public class HybridOverride extends HybridMultithreading {
 		Core code = new Core();
 		code.dnaDecoder(dna, tmpAllShop, tmpSell, tmpLV);
 
-		// check item
-		for (int a = 0; a < Core.allBlockInGameAsList.size(); a++) {
-			AllBlockInGameType edo = Core.allBlockInGameAsList.get(a);
-			boolean found = false;
-			for (int i = 0; i < tmpAllShop.size(); i++) {
-				AllShop as = tmpAllShop.get(i);
-				for (int j = 0; j < as.size; j++) {
-					if (as.item[j].equalsIgnoreCase(edo.theName)) {
-						if (as.data[j] == edo.data) {
-							found = true;
-							break;
-						}
-					}
-
-				}
-
-			}
-			if (found == false) {
-				d.pl("a " + a + " , " + edo.getIDData());
-				Exception exp = new Exception("error item lost");
-				exp.printStackTrace();
-				System.exit(0);
-			}
-		}
 
 		boolean printPls = false;
 
@@ -202,7 +178,7 @@ public class HybridOverride extends HybridMultithreading {
 		if (countTrue > maxUnUnique) {
 			maxUnUnique = countTrue;
 
-			d.pl("maxUnique " + countTrue);
+			if (printPls == true)d.pl("maxUnique " + countTrue);
 		}
 
 		if (countTrue < Core.allBlockInGameAsList.size()) {
@@ -282,14 +258,14 @@ public class HybridOverride extends HybridMultithreading {
 
 			double tmpMoney = 0;
 			tmpMoney = se.allItemYouCanFind * seTmpSe.sellPerPrice;
-			d.pl("sell " + se.allItemYouCanFind + " * " + seTmpSe.sellPerPrice + " = " + (tmpMoney) +
+			if (printPls == true)d.pl("sell " + se.allItemYouCanFind + " * " + seTmpSe.sellPerPrice + " = " + (tmpMoney) +
 
 			" index " + se.index);
 			ps.money += tmpMoney;
 
 		}
 
-		d.pl("all money you have " + ps.money);
+		if (printPls == true)d.pl("all money you have " + ps.money);
 
 		double psMaxMoney = ps.money;
 
@@ -300,14 +276,14 @@ public class HybridOverride extends HybridMultithreading {
 		boolean moneyNotFoundxD = false;
 
 		while (curLVLoop < tmpLV.size() && moneyNotFoundxD == false) {
-			d.pl("curLVLoop " + curLVLoop);
+if (printPls == true)d.pl("curLVLoop " + curLVLoop);
 			LV1000Type curLV = tmpLV.get(curLVLoop);
 
 			// bought = item to finish lv
 
 			boolean notFill = true;
 			while (notFill == true && moneyNotFoundxD == false) {
-				d.pl("not fill " + notFill + " , moneyNotFound " + moneyNotFoundxD);
+				if (printPls == true)d.pl("not fill " + notFill + " , moneyNotFound " + moneyNotFoundxD);
 				// check are there item not fill
 				notFill = false;
 
@@ -341,7 +317,7 @@ public class HybridOverride extends HybridMultithreading {
 
 					} while (ranbuy < 0);
 
-					d.pl("ranbuy done " + ranbuy);
+					if (printPls == true)d.pl("ranbuy done " + ranbuy);
 
 					// after got random not fill index
 					// trying to buy it
@@ -351,7 +327,7 @@ public class HybridOverride extends HybridMultithreading {
 					// search item in shop
 					AllBlockInGameType itm = Core.allBlockInGameAsList.get(curLV.needIndex[ranbuy]);
 
-					d.pl("searching this item in shop " + itm.getIDData());
+					if (printPls == true)d.pl("searching this item in shop " + itm.getIDData());
 
 					boolean foundInShop = false;
 					for (int c = 0; c < tmpAllShop.size(); c++) {
@@ -374,7 +350,7 @@ public class HybridOverride extends HybridMultithreading {
 										int betid = rnd.nextInt(ex.size);
 
 										ps.money -= ex.playPrice;
-										d.pl("beting " + betid + " , price " + ex.playPrice + " , money left "
+										if (printPls == true)d.pl("beting " + betid + " , price " + ex.playPrice + " , money left "
 												+ ps.money);
 
 										String itName = ex.item[betid] + ":" + ex.data[betid];
@@ -400,14 +376,14 @@ public class HybridOverride extends HybridMultithreading {
 
 					} // loop all shop
 
-					d.pl("foundInShop " + foundInShop);
+					if (printPls == true)d.pl("foundInShop " + foundInShop);
 					if (foundInShop == false) {
 						// print all item in shop
 						for (int i = 0; i < tmpAllShop.size(); i++) {
 							AllShop shp = tmpAllShop.get(i);
 							for (int j = 0; j < shp.size; j++) {
 
-								d.pl(i + "/" + j + "  = " + shp.item[j] + ":" + shp.data[j] + " ? searching "
+								if (printPls == true)d.pl(i + "/" + j + "  = " + shp.item[j] + ":" + shp.data[j] + " ? searching "
 										+ itm.getIDData());
 								if ((shp.item + ":" + shp.data).equalsIgnoreCase(itm.getIDData())) {
 									d.pl("found it !!");

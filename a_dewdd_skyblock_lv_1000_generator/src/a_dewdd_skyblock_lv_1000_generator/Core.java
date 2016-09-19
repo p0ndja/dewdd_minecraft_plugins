@@ -48,6 +48,8 @@ public class Core {
 		LinkedList<AllShop> outputAllShop;
 	}
 
+	public static boolean printpls = false;
+	
 	public static String sellablePath = File.separator + "ramdisk" + File.separator + "sellableblock.txt";
 
 	public static String missionPath = File.separator + "ramdisk" + File.separator + "missionblock.txt";
@@ -225,15 +227,7 @@ public class Core {
 		tmpType.outputAllShop.clear();
 
 		// count before convert
-		int tmpCount = 0;
-		for (int i = 0; i < tmpType.shopSlotMax; i++) {
-			for (int j = 0; j < tmpType.amount[i]; j++) {
-				tmpCount++;
-			}
-
-		}
-
-		d.pl("before convert tmpCount = " + tmpCount);
+		
 
 		// check is the last shop ( have enough item >= minshop)
 
@@ -258,15 +252,7 @@ public class Core {
 
 		}
 
-		tmpCount = 0;
-		for (int i = 0; i < tmpType.shopSlotMax; i++) {
-			for (int j = 0; j < tmpType.amount[i]; j++) {
-				tmpCount++;
-			}
-
-		}
-
-		d.pl("shift last shop  tmpCount = " + tmpCount);
+		
 
 		// to time convert to All Shop
 
@@ -304,7 +290,7 @@ public class Core {
 
 		// check that all item in shop has all item in game
 
-		d.pl("curItemIndex " + curItemIndex);
+		if (printpls) d.pl("curItemIndex " + curItemIndex);
 
 		// check item Lost Again
 		/*
@@ -324,7 +310,7 @@ public class Core {
 		 * exp.printStackTrace(); System.exit(0); } }
 		 */
 
-		d.pl("converted tmpShop to AllShop ");
+		if (printpls)d.pl("converted tmpShop to AllShop ");
 	}
 
 	public double decodeRandomGive01_() {
@@ -381,7 +367,7 @@ public class Core {
 			if (countItem > allBlockInGameAsList.size()) {
 				int tmb = (countItem - allBlockInGameAsList.size());
 
-				d.pl("decodeRandumSumAmount Shouldn't be here : " + tmb);
+				if (printpls) d.pl("decodeRandumSumAmount Shouldn't be here : " + tmb);
 
 				countItem = allBlockInGameAsList.size() - 1;
 				para.amount[countItem] = tmb;
@@ -512,19 +498,7 @@ public class Core {
 		} // mission
 
 		// count all item again
-		int cou = 0;
-		for (int i = 0; i < paraShopPrice.shopSlotMax; i++) {
-
-			for (int j = 0; j < paraShopPrice.amount[i]; j++) {
-				cou++;
-			}
-
-		}
-
-		d.pl("count paraShopPrice amount [] + + +  = " + cou + " / " + allBlockInGameAsList.size());
-		if (cou < allBlockInGameAsList.size()) {
-			d.pl("error ");
-		}
+		
 	}
 
 	public void dnaDecoder(double[] chromosome, LinkedList<AllShop> tmpAllShop, LinkedList<SellableType> tmpSell,
@@ -642,7 +616,7 @@ public class Core {
 		 * exp.printStackTrace(); System.exit(0); } }
 		 */
 
-		d.pl("abc");
+		if (printpls)d.pl("abc");
 		d.pl("end curChro " + curChro);
 	}
 
