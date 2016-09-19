@@ -30,6 +30,8 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockFromToEvent;
 import org.bukkit.event.block.BlockGrowEvent;
+import org.bukkit.event.block.BlockPistonEvent;
+import org.bukkit.event.block.BlockPistonExtendEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.block.SignChangeEvent;
 import org.bukkit.event.entity.CreatureSpawnEvent;
@@ -72,7 +74,7 @@ import api_skyblock.LV1000Type;
 import api_skyblock.RSData;
 import api_skyblock.api_skyblock;
 import dewddtran.tr;
-import net.minecraft.server.v1_7_R4.EntityPlayer;
+import net.minecraft.server.v1_8_R3.EntityPlayer;
 
 public class DigEventListener2 implements Listener {
 
@@ -1125,6 +1127,8 @@ public class DigEventListener2 implements Listener {
 			e.setCancelled(true);
 	}
 
+
+	
 	@EventHandler
 	public void eventja(PlayerBucketFillEvent e) {
 		if (!api_skyblock.isrunworld(e.getPlayer().getWorld().getName())) {

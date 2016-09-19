@@ -44,15 +44,12 @@ import org.bukkit.event.entity.EntityTargetEvent;
 import org.bukkit.event.entity.EntityTargetLivingEntityEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
-import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerFishEvent;
 import org.bukkit.event.player.PlayerFishEvent.State;
 import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.material.MaterialData;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.potion.PotionEffectType;
 
@@ -408,27 +405,27 @@ public class DigEventListener2 implements Listener {
 		public void run() {
 			if (pr.isOnline() == false) {
 				// switch player
-				if (Bukkit.getOnlinePlayers().length == 0) {
+				if (Bukkit.getOnlinePlayers().size() == 0) {
 					return;
 				}
 
 				int ga = 0;
-				while ( ga <= 0 || ga >= Bukkit.getOnlinePlayers().length) {
+				while ( ga <= 0 || ga >= Bukkit.getOnlinePlayers().size()) {
 
 					ga = rnd.nextInt();
 					
-					if (Bukkit.getOnlinePlayers().length <= 0) {
+					if (Bukkit.getOnlinePlayers().size() <= 0) {
 						break;
 					}
 				
 
 				}
 				
-				if (Bukkit.getOnlinePlayers().length <= 0) {
+				if (Bukkit.getOnlinePlayers().size() <= 0) {
 					return;
 				}
 				
-					pr = Bukkit.getOnlinePlayers().clone()[ga];
+					pr = (Player) Bukkit.getOnlinePlayers().toArray()[ga];
 			}
 
 			int ranid = 0;

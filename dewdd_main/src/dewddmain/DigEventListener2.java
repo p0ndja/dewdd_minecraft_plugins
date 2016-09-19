@@ -26,6 +26,7 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockBurnEvent;
 import org.bukkit.event.block.BlockDamageEvent;
 import org.bukkit.event.block.BlockFromToEvent;
+import org.bukkit.event.block.BlockPistonExtendEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.block.SignChangeEvent;
 import org.bukkit.event.entity.CreatureSpawnEvent;
@@ -61,9 +62,10 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.potion.PotionEffectType;
 
 import api_admin.dewddadmin;
+import api_skyblock.api_skyblock;
 import dewddflower.dewset;
 import dewddtran.tr;
-import net.minecraft.server.v1_7_R4.EntityPlayer;
+import net.minecraft.server.v1_8_R3.EntityPlayer;
 
 public class DigEventListener2 implements Listener {
 
@@ -418,7 +420,7 @@ public class DigEventListener2 implements Listener {
 						for (Material en : Material.values())
 							if (en.name().toLowerCase().indexOf(m2[0].toLowerCase()) > -1) {
 
-								dprint.r.printC("found material real name = " + en.name());
+								player.sendMessage(dprint.r.color("found material real name = " + en.name()));
 								itemid = Material.getMaterial(dew.getmaterialrealname(m2[0])).getId();
 								if (m2.length == 2) {
 									dataid = Byte.parseByte(m2[1]);
@@ -1376,6 +1378,8 @@ public class DigEventListener2 implements Listener {
 				  }
 				    dew = dewddflower.Main.ds;
 				    
+				    dew.loadmainfile();
+				    
 				    
 				    System.out.println("***** main dew = " + dew==null?"null":"not null" );
 				    System.out.println("***** main dewddflower.Main.ds = " + dewddflower.Main.ds==null?"null":"not null");
@@ -2171,6 +2175,32 @@ public class DigEventListener2 implements Listener {
 	}
 
 	// EntityExplodeEvent
+	
+	@EventHandler
+	public void eventja(BlockPistonExtendEvent e) {
+		if (!api_skyblock.isrunworld(e.getBlock().getWorld().getName())) {
+			return;
+		}
+
+		Block block = e.getBlock();
+		// search sign
+		int search = 1;
+		for (int x = -search  ; x <= search ; x ++ )
+			for (int y = -search  ; y <= search ; y ++ )
+				for (int z = -search  ; z <= search ; z ++ ) {
+					Block bo = e.getBlock().getRelative(x,y,z);
+					if (bo.getType() == Material.SIGN_POST || bo.getType() == Material.WALL_SIGN ) {
+						Sign sign = (Sign) bo.getState();
+						if (sign.getLine(0).equalsIgnoreCase("[dewbreak]")) {
+							block.getRelative(e.getDirection()).breakNaturally();
+							
+						}
+					}
+					
+				}
+					
+	}
+	
 	@EventHandler
 	public void eventja(EntityExplodeEvent event) throws InterruptedException {
 
