@@ -78,6 +78,7 @@ public class Core {
 	public static double ShopMaxCost = 100;
 
 	public static double maxMoney = 100000;
+	public static double moneyLeft = 1000;
 
 	public static int maxLV = 100;
 	public static HashMap<String, SellableType> sell = new HashMap<String, SellableType>();

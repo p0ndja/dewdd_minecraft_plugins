@@ -12,6 +12,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
 import java.util.Random;
 
 import org.bukkit.Bukkit;
@@ -39,9 +40,11 @@ import org.bukkit.event.block.BlockRedstoneEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityTargetEvent;
 import org.bukkit.event.entity.EntityTargetLivingEntityEvent;
+import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerFishEvent;
 import org.bukkit.event.player.PlayerFishEvent.State;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.potion.PotionEffectType;
@@ -264,7 +267,7 @@ public class DigEventListener2 implements Listener {
 
 			}
 
-			reloadpl();
+			reloadPL();
 		}
 	}
 
@@ -663,6 +666,9 @@ public class DigEventListener2 implements Listener {
 	public static sell_type	sell[];
 
 	public static int		sellmax;
+	
+	public static ArrayList<AllShop> allShop = new ArrayList<AllShop>();
+	
 
 	public Random			rnd			= new Random();
 
@@ -674,8 +680,9 @@ public class DigEventListener2 implements Listener {
 
 	String					pmonkill	= "dewdd.ft.monkill";
 
-	public String			folder_name	= "plugins" + File.separator
+	public static String			folder_name	= "plugins" + File.separator
 												+ "dewdd_ft";
+	public static AllShopCore allShopCore = new AllShopCore();
 
 	public DigEventListener2() {
 		delay abc = new delay();
@@ -793,6 +800,11 @@ public class DigEventListener2 implements Listener {
 
 		}
 	}
+	
+	
+	
+	
+	
 
 	@EventHandler
 	public void eventja(PlayerCommandPreprocessEvent e) {
@@ -802,6 +814,14 @@ public class DigEventListener2 implements Listener {
 
 		String m[] = e.getMessage().split("\\s+");
 		Player p = e.getPlayer();
+		
+		if (e.getMessage().equalsIgnoreCase("/dft shop")){
+		
+			Inventory myInventory = Bukkit.createInventory(null, InventoryType.PLAYER , "dew shop");
+			
+			p.openInventory(myInventory);
+			
+		}
 
 		if (m[0].equalsIgnoreCase("/dft")) {
 			if (m.length == 1) {
@@ -979,7 +999,7 @@ public class DigEventListener2 implements Listener {
 				}
 
 				else if (m[1].equalsIgnoreCase("reload")) {
-					reloadpl();
+					reloadPL();
 					p.sendMessage("reloaded");
 				}
 				else if (m[1].equalsIgnoreCase("list")) {
@@ -1183,7 +1203,7 @@ public class DigEventListener2 implements Listener {
 		}
 	}
 
-	public void loadinventoryfile() {
+	public void loadInventoryFile() {
 		String filena2 = "ptdew_dewdd_ft_list.txt";
 
 		File dir = new File(folder_name);
@@ -1239,7 +1259,7 @@ public class DigEventListener2 implements Listener {
 
 	}
 
-	public void loadselllist() {
+	public void loadSellList() {
 		String worldf = "ptdew_dewdd_sell.txt";
 
 		File dir = new File(folder_name);
@@ -1299,10 +1319,11 @@ public class DigEventListener2 implements Listener {
 		}
 	}
 
-	public void reloadpl() {
-		loadinventoryfile();
-		loadselllist();
+	public void reloadPL() {
+		loadInventoryFile();
+		loadSellList();
 		loadMissionBlockFile();
+		allShopCore.loadAllShop();
 		// clear all schude
 
 		Bukkit.getScheduler().cancelTasks(ac);

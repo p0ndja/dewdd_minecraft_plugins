@@ -562,7 +562,7 @@ public class HybridOverride extends Hybrid{
 			double tmpFitness = 0;
 
 			double fitCurLV = (-Math.abs(tmpLV.size() - curLVLoop)) * 100;
-			double fitMoneyLeft = -Math.abs(1000-ps.money);
+			double fitMoneyLeft = -Math.abs(Core.moneyLeft-ps.money);
 			double fitMaxMoney = -Math.abs(psMaxMoney - Core.maxMoney);
 			//fitMaxMoney = psMaxMoney;
 
@@ -581,8 +581,7 @@ public class HybridOverride extends Hybrid{
 			}
 
 			tmpFitness = fitCurLV + fitMoneyLeft + fitMaxMoney + fitAtTheEndItem;
-			tmpFitness = fitMoneyLeft + fitMaxMoney + fitAtTheEndItem;
-			tmpFitness =  fitCurLV   + fitAtTheEndItem + fitMoneyLeft;
+		
 
 			
 			d.pl("fitness " + tmpFitness + ", f curLV " + fitCurLV + " , f money left " + fitMoneyLeft
