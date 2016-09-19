@@ -248,7 +248,7 @@ public class DigEventListener2 implements Listener {
 									player.sendMessage(dprint.r.color(tr.gettr("overide_this_zone")));
 
 							if (m.length != 3) {
-								player.sendMessage(dprint.r.color("/skyblock owner <playername>"));
+								player.sendMessage(dprint.r.color("/fw owner <playername>"));
 								return;
 							}
 
@@ -258,7 +258,7 @@ public class DigEventListener2 implements Listener {
 
 							// check if he already has own protect
 
-							player.sendMessage(dprint.r.color(tr.gettr("this_skyblock_owner_is") + tmprs.p[0]));
+							player.sendMessage(dprint.r.color(tr.gettr("this_fw_owner_is") + tmprs.p[0]));
 							dew.savesignfile(worldid);
 							return;
 
@@ -269,7 +269,7 @@ public class DigEventListener2 implements Listener {
 
 						if (m.length != 3) {
 							player.sendMessage(dprint.r.color(
-									tr.gettr("not enought argument type this") + "/sky exitfromthishome <owner name>"));
+									tr.gettr("not enought argument type this") + "/fw exitfromthishome <owner name>"));
 							return;
 						}
 
@@ -301,7 +301,7 @@ public class DigEventListener2 implements Listener {
 							dew.savesignfile(worldid);
 
 							player.sendMessage(dprint.r
-									.color(tr.gettr("you exited from sky protect of ") + tmprs.p[0] + " id " + getid));
+									.color(tr.gettr("you exited from fw protect of ") + tmprs.p[0] + " id " + getid));
 
 						}
 
@@ -326,10 +326,10 @@ public class DigEventListener2 implements Listener {
 						}
 
 						if (m.length != 3) {
-							player.sendMessage(dprint.r.color("/skyblock add <playername>"));
+							player.sendMessage(dprint.r.color("/fw add <playername>"));
 							return;
 						}
-						// if found his skyblock teleport him
+						// if found his fw teleport him
 
 						// check free slot
 
@@ -343,7 +343,7 @@ public class DigEventListener2 implements Listener {
 							if (tmprs.p[i].equalsIgnoreCase("null")) {
 								tmprs.p[i] = m[2];
 								player.sendMessage(
-										dprint.r.color(tr.gettr("added") + m[2] + tr.gettr("to_your_skyblock")));
+										dprint.r.color(tr.gettr("added") + m[2] + tr.gettr("to_your_fw")));
 								dew.savesignfile(worldid);
 								return;
 							}
@@ -368,7 +368,7 @@ public class DigEventListener2 implements Listener {
 						}
 
 						if (m.length != 3) {
-							player.sendMessage(dprint.r.color("/skyblock remove <playername>"));
+							player.sendMessage(dprint.r.color("/fw remove <playername>"));
 							return;
 						}
 
@@ -376,7 +376,7 @@ public class DigEventListener2 implements Listener {
 							player.sendMessage(dprint.r.color(tr.gettr("you_can't_remove_your_name_from_your_zone")));
 							return;
 						}
-						// if found his skyblock teleport him
+						// if found his fw teleport him
 
 						// check free slot
 
@@ -384,7 +384,7 @@ public class DigEventListener2 implements Listener {
 							if (tmprs.p[i].equalsIgnoreCase(m[2])) {
 								tmprs.p[i] = "null";
 								player.sendMessage(
-										dprint.r.color(tr.gettr("removed") + m[2] + tr.gettr("from_your_skyblock")));
+										dprint.r.color(tr.gettr("removed") + m[2] + tr.gettr("from_your_fw")));
 								dew.savesignfile(worldid);
 								return;
 							}
@@ -423,10 +423,7 @@ public class DigEventListener2 implements Listener {
 
 			String[] m = message.split("\\s+");
 			m = message.split("\\s+");
-			if (message.equalsIgnoreCase("dewdd help") == true) {
-				player.sendMessage(">dewdd main");
-				canc = true;
-			}
+		
 
 			if (m[0].equalsIgnoreCase("showworldlist")) {
 				for (int lop = 0; lop < dewset.rsWorld.size(); lop++) {
@@ -435,11 +432,8 @@ public class DigEventListener2 implements Listener {
 				}
 			}
 
-			Block block = player.getLocation().getBlock();
-
-			if (m[0].equalsIgnoreCase("digx") == true) {
-				player.addPotionEffect(PotionEffectType.FAST_DIGGING.createEffect(6000, 100));
-			}
+			
+			
 
 			if (m[0].equalsIgnoreCase("showsignlist")) {
 				if (m.length == 1) {
@@ -465,7 +459,7 @@ public class DigEventListener2 implements Listener {
 
 			callFWMethod(m);
 
-			if (m[0].equalsIgnoreCase("cleardrop") == true || m[0].equalsIgnoreCase("cp") == true
+			if (m[0].equalsIgnoreCase("cleardrop") == true 
 					|| m[0].equalsIgnoreCase("cd") == true) {
 
 				for (Entity ent : player.getWorld().getEntities()) {
@@ -557,9 +551,9 @@ public class DigEventListener2 implements Listener {
 						continue;
 					}
 
-					if (it.getType().getMaxDurability() <= 0) {
+					/*if (it.getType().getMaxDurability() <= 0) {
 						continue;
-					}
+					}*/
 
 					nit2 = 0;
 					for (ItemStack it2 : player.getInventory().getContents()) {
@@ -575,10 +569,14 @@ public class DigEventListener2 implements Listener {
 						if (it2.getTypeId() != it.getTypeId()) {
 							continue;
 						}
-
-						if (it2.getType().getMaxDurability() <= 0) {
+						
+						if (it2.getData() != it.getData()) {
 							continue;
 						}
+
+						/*if (it2.getType().getMaxDurability() <= 0) {
+							continue;
+						}*/
 
 						if (nit2 <= nit) {
 							continue;
@@ -595,15 +593,7 @@ public class DigEventListener2 implements Listener {
 
 			}
 
-			if (message.equalsIgnoreCase("dewdd main") == true) {
-				player.sendMessage(
-						"ปลั๊กอิน main เป็นปลั๊กอินแรกของเรา   ตอนแรกสร้างขึ้นเพื่อเป็นระบบโพเทค ป้าย แต่มันทำงานช้า > จึงเปลี่ยนมาเป็น"
-								+ "โพเทค วงกลม  แต่มันกำหนดเขตยาก จึงเปลี่ยนมาเป็น โพเทคลูกบาศก์");
-				player.sendMessage("ปลั๊กอินนี้ มีรายละเอียดเยอะที่สุด  รายระเอียดมีเยอะลองเอง");
-				player.sendMessage(">>dewdd flower");
-
-				canc = true;
-			}
+		
 
 			if (message.equalsIgnoreCase("loadmainfile") == true) {
 				dprint.r.printAll("loading main file");
@@ -611,13 +601,7 @@ public class DigEventListener2 implements Listener {
 				dprint.r.printAll("loaded main file");
 			}
 
-			if (message.equalsIgnoreCase("dewdd flower") == true) {
-				player.sendMessage(">dewdd flower");
-				player.sendMessage(
-						"dewdd flower ระบบ ดอกไม้   เป็นการ  กำหนดเขตด้วย Wooden hoe  คลิกซ้ายที่หนึ่ง ขวาอีกที่  (เหมือนขวานไม้ world edit)");
 			
-				canc = true;
-			}
 
 			if (message.equalsIgnoreCase("pmain") == true) {
 
@@ -857,9 +841,7 @@ public class DigEventListener2 implements Listener {
 
 			// "dewadd="
 
-			if (api_admin.dewddadmin.is2admin(player.getPlayer()) == true
-					|| api_admin.dewddadmin.is2moderator(player.getPlayer()) == true) {
-				// clearmon
+		
 				if (message.equalsIgnoreCase("clear") == true) {
 					player.getInventory().clear();
 					player.sendMessage("ptdew&dewdd : " + tr.gettr("cleared_your_inventory"));
@@ -867,162 +849,10 @@ public class DigEventListener2 implements Listener {
 				}
 				// dewgoxxx
 
-				// player.sendMessage("'" + message.substring(0, 6) + "'");
 
-			}
+			
 
-			if (message.equalsIgnoreCase("clearmon") == true) {
-
-				for (Entity ent : player.getWorld().getEntities()) {
-
-					if (ent.getCustomName() == null) {
-						continue;
-					}
-
-					if (ent.getCustomName().equalsIgnoreCase("") == false) {
-						continue;
-					}
-
-					if (ent.getType() == org.bukkit.entity.EntityType.CREEPER) {
-						ent.remove();
-					}
-					if (ent.getType() == org.bukkit.entity.EntityType.SKELETON) {
-						ent.remove();
-					}
-					if (ent.getType() == org.bukkit.entity.EntityType.ZOMBIE) {
-						ent.remove();
-					}
-					if (ent.getType() == org.bukkit.entity.EntityType.SPIDER) {
-						ent.remove();
-					}
-					if (ent.getType() == org.bukkit.entity.EntityType.CAVE_SPIDER) {
-						ent.remove();
-					}
-					if (ent.getType() == org.bukkit.entity.EntityType.BLAZE) {
-						ent.remove();
-					}
-					if (ent.getType() == org.bukkit.entity.EntityType.ENDERMAN) {
-						ent.remove();
-					}
-					if (ent.getType() == org.bukkit.entity.EntityType.BAT) {
-						ent.remove();
-					}
-					if (ent.getType() == org.bukkit.entity.EntityType.SLIME) {
-						ent.remove();
-					}
-					if (ent.getType() == org.bukkit.entity.EntityType.GHAST) {
-						ent.remove();
-					}
-					if (ent.getType() == org.bukkit.entity.EntityType.ENDERMAN) {
-						ent.remove();
-					}
-					if (ent.getType() == org.bukkit.entity.EntityType.GIANT) {
-						ent.remove();
-					}
-					if (ent.getType() == org.bukkit.entity.EntityType.PIG_ZOMBIE) {
-						ent.remove();
-					}
-					if (ent.getType() == org.bukkit.entity.EntityType.WITCH) {
-						ent.remove();
-					}
-					if (ent.getType() == org.bukkit.entity.EntityType.MAGMA_CUBE) {
-						ent.remove();
-					}
-					if (ent.getType() == org.bukkit.entity.EntityType.WITHER) {
-						ent.remove();
-					}
-					if (ent.getType() == org.bukkit.entity.EntityType.ENDER_DRAGON) {
-						ent.remove();
-					}
-					if (ent.getType() == org.bukkit.entity.EntityType.SILVERFISH) {
-						ent.remove();
-					}
-
-				}
-				player.sendMessage("DewDD:ClearMon done");
-				canc = true;
-				return;
-
-			}
-
-			if (message.equalsIgnoreCase("pvp=false") == true) {
-				player.getWorld().setPVP(false);
-				player.sendMessage("disable-pvp");
-			}
-			if (message.equalsIgnoreCase("pvp=true") == true) {
-				player.getWorld().setPVP(true);
-				player.sendMessage("enable-pvp");
-			}
-
-			if (message.equalsIgnoreCase("clearpig") == true) {
-
-				for (Entity ent : player.getWorld().getEntities())
-					if (ent.getType() == org.bukkit.entity.EntityType.PIG) {
-						ent.remove();
-					}
-				player.sendMessage("ptdew&dewdd :Clearpig");
-				canc = true;
-				return;
-
-			}
-
-			if (message.equalsIgnoreCase("clearcow") == true) {
-
-				for (Entity ent : player.getWorld().getEntities())
-					if (ent.getType() == org.bukkit.entity.EntityType.COW) {
-						ent.remove();
-					}
-				player.sendMessage("ptdew&dewdd :Clearcow");
-				canc = true;
-				return;
-
-			}
-			if (message.equalsIgnoreCase("clearchicken") == true) {
-
-				for (Entity ent : player.getWorld().getEntities())
-					if (ent.getType() == org.bukkit.entity.EntityType.CHICKEN) {
-						ent.remove();
-					}
-				player.sendMessage("ptdew&dewdd :Clearchicken");
-				canc = true;
-				return;
-
-			}
-
-			if (message.equalsIgnoreCase("clearsheep") == true) {
-
-				for (Entity ent : player.getWorld().getEntities())
-					if (ent.getType() == org.bukkit.entity.EntityType.SHEEP) {
-						ent.remove();
-					}
-				player.sendMessage("ptdew&dewdd :ClearSHEEP");
-				canc = true;
-				return;
-
-			}
-			if (message.equalsIgnoreCase("clearvillager") == true) {
-
-				for (Entity ent : player.getWorld().getEntities())
-					if (ent.getType() == org.bukkit.entity.EntityType.VILLAGER) {
-						ent.remove();
-					}
-				player.sendMessage("ptdew&dewdd :ClearVillager");
-				canc = true;
-				return;
-
-			}
-
-			if (message.equalsIgnoreCase("clearminecart") == true) {
-
-				for (Entity ent : player.getWorld().getEntities())
-					if (ent.getType() == org.bukkit.entity.EntityType.MINECART) {
-						ent.remove();
-					}
-				player.sendMessage("ptdew&dewdd :Clearminecart");
-				canc = true;
-				return;
-
-			}
+			
 
 			// pt dew
 			if (api_admin.dewddadmin.is2admin(player.getPlayer()) == true) {
@@ -1524,49 +1354,8 @@ public class DigEventListener2 implements Listener {
 
 			String m[] = message.split("\\s+");
 
-			if (m[0].equalsIgnoreCase("dewreloadworldfile") == true) {
-				dewset.loadworldfile();
-				return;
-			}
-
-			// dewreloadsignfile
-			if (m[0].equalsIgnoreCase("dewreloadsignfile") == true) {
-				dewset.loadsignfile();
-				dprint.r.printAll("ptdew&dewdd : Reloaded Sign File");
-				return;
-			}
-
-			if (m[0].equalsIgnoreCase("drops") == true) {
-				int amo = 0;
-				for (World ww : Bukkit.getWorlds()) {
-					for (Entity amoq : ww.getEntities()) {
-						amoq.getType();
-						if (amoq.getType() == EntityType.DROPPED_ITEM) {
-							amo = amo + 1;
-						}
-
-					}
-					dprint.r.printAll("ptdew&dewdd : " + ww.getName() + ">" + amo);
-				}
-				dprint.r.printAll("ptdew&dewdd : " + tr.gettr("amount_of_dropped_item_in_this_server") + amo);
-
-				return;
-			}
-
-			if (m[0].equalsIgnoreCase("gotohell") == true) {
-				// search player
-				String goth = m[1];
-
-				for (Player gotb : Bukkit.getOnlinePlayers())
-					if (gotb.getName().toLowerCase().startsWith(goth) == true) {
-						Location lo1 = gotb.getLocation();
-						Location lo2 = lo1;
-						lo2.setWorld(Bukkit.getWorld("world_nether"));
-						dew.gotohell(gotb, lo1, lo2);
-						dprint.r.printC("gotohell : " + gotb.getName());
-						break;
-					}
-			}
+		    chatx  xxx = new chatx(message, null);
+		
 
 		}
 	}

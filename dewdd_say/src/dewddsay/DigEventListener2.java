@@ -64,17 +64,20 @@ public class DigEventListener2 implements Listener {
 
 				}
 			}
-
-			if (m[0].equalsIgnoreCase("flyspeed")) {
-				if (m.length == 1) {
-					player.sendMessage(dprint.r.color("flyspeed = " + player.getFlySpeed()));
-					return;
-				} else if (m.length == 2) {
-					player.setFlySpeed(Float.parseFloat(m[1]));
-					player.sendMessage(dprint.r.color("flyspeed = " + player.getFlySpeed()));
-					return;
+			
+			if (m[0].equalsIgnoreCase("ghost" )) {
+				if(player.getGameMode() == GameMode.SURVIVAL) {
+					player.setGameMode(GameMode.SPECTATOR);
 				}
+				else {
+					player.setGameMode(GameMode.SURVIVAL);
+				}
+					 
+			}
 
+	
+			if (m[0].equalsIgnoreCase("digx") == true) {
+				player.addPotionEffect(PotionEffectType.FAST_DIGGING.createEffect(6000, 100));
 			}
 
 			if (m[0].equalsIgnoreCase("cleananimal")) {
@@ -286,58 +289,7 @@ public class DigEventListener2 implements Listener {
 				return;
 			}
 
-			if (m[0].equalsIgnoreCase("dewdd help") == true) {
-				player.sendMessage(dprint.r.color(">dewdd say"));
-				canc = true;
-			}
-
-			if (m[0].equalsIgnoreCase("dewdd say") == true) {
-				player.sendMessage(
-						dprint.r.color("ปลั๊กอิน dewdd say เป็นที่รวมของ ระบบ คำพูด เพื่อซื้อพลังพิเศษต่างๆ"));
-				player.sendMessage(dprint.r.color("แค่พิมพ์คำพูดออกมา และมีตังค์ :)"));
-				player.sendMessage(dprint.r.color(".dewbuy  ซื้อโหมดการบิน"));
-				player.sendMessage(dprint.r.color(".555  บินได"));
-				player.sendMessage(dprint.r.color(".255  ไปชั้น 255"));
-				player.sendMessage(dprint.r.color(".unloadchunk   ปิดพื้นที่ทั้งหมดที่ไม่มีคนอยู่ใกล้"));
-				player.sendMessage(dprint.r.color(".loadchunk"));
-				player.sendMessage(dprint.r
-						.color(".cleardrop  ล้างของที่ตกอยู่ในแมพ ถ้าเป็นแมพ world มันจะโดนวาปไปที่ /warp newgift"));
-				player.sendMessage(dprint.r.color(".drops   แสดงปริมาณของที่ตกอยูในเซิฟ"));
-				player.sendMessage(dprint.r.color(".dg   ดูดของที่ตกอยู่ในแมพมารวมกัน"));
-				player.sendMessage(dprint.r.color(".on  หรือ .yes   ตาไม่มืด"));
-				player.sendMessage(dprint.r.color(".no หรือ .off   ตาบอด"));
-				player.sendMessage(dprint.r.color(".digspeed   อัพของให้ขุดเร็ว"));
-				player.sendMessage(dprint.r.color(".id   บอกหมายเลขสิ่งของในมือ"));
-
-				player.sendMessage(dprint.r.color(".water  ซื้อยาหายใจใต้น้ำ"));
-				player.sendMessage(dprint.r.color(".:)  แบ่งเงินให้คนในเซิฟคนละ 1%"));
-				player.sendMessage(dprint.r.color(".255  ไปชั้น 255"));
-				player.sendMessage(dprint.r.color(".night  ซื้อยามองกลางคืน"));
-				player.sendMessage(dprint.r.color(".head  ใส่หัว จำนวนของในช่องที่  1"));
-				player.sendMessage(dprint.r.color(".save   เซิฟข้อมูล"));
-
-				player.sendMessage(dprint.r.color(".bye bye   ลาก่อน"));
-				player.sendMessage(dprint.r.color(".harm   ทำให้ตัวเองเจ็บ"));
-				player.sendMessage(dprint.r.color(".lag   ทำให้ช้า"));
-				player.sendMessage(dprint.r.color(".antifire   ซื้อยากันไฟ"));
-				player.sendMessage(dprint.r.color(".anti   เกราะป้องกัน"));
-
-				player.sendMessage(dprint.r.color(".best  รักษาตัวเอง"));
-				player.sendMessage(dprint.r.color(".dig   ขุดเร็ว"));
-				player.sendMessage(dprint.r.color(".cry   อ่อนแอ"));
-				player.sendMessage(dprint.r.color(".jump   กระโดดสูง"));
-				player.sendMessage(dprint.r.color(".fast   เร็ว"));
-
-				player.sendMessage(dprint.r.color(".shy  อายจังเลย"));
-				player.sendMessage(dprint.r.color(".wak   โหดแล้วโว็ยยย"));
-				player.sendMessage(dprint.r.color(".what   ที่นี่ที่หนายยย"));
-				player.sendMessage(dprint.r.color(".wow   โอ้ เย้"));
-
-				player.sendMessage(dprint.r.color(".eiei   ดูดมอนมารวมกัน"));
-				player.sendMessage(dprint.r.color(".clearmon  ล้างมอน"));
-
-				canc = true;
-			}
+		
 
 			// 555
 
@@ -382,6 +334,14 @@ public class DigEventListener2 implements Listener {
 						LivingEntity en = (LivingEntity) ent;
 						if (en.getCustomName() != null)
 							continue;
+						
+						if (ent.getCustomName() == null) {
+							continue;
+						}
+
+						if (ent.getCustomName().equalsIgnoreCase("") == false) {
+							continue;
+						}
 
 						if (ent.getType() == org.bukkit.entity.EntityType.CREEPER) {
 							ent.remove();
@@ -525,7 +485,8 @@ public class DigEventListener2 implements Listener {
 
 				// ลาก่อน
 				if (m[0].equalsIgnoreCase("bye bye") == true || m[0].equalsIgnoreCase("good bye") == true
-						|| m[0].equalsIgnoreCase("see you") == true) {
+						|| m[0].equalsIgnoreCase("see you") == true || m[0].equalsIgnoreCase("bye") ||
+						m[0].equalsIgnoreCase("บาย")) {
 					player.setHealth(0);
 
 					dprint.r.printA("ptdew&dewdd: " + player.getName() + " อยากตาย ก็เลยตาย");
@@ -533,232 +494,16 @@ public class DigEventListener2 implements Listener {
 					return;
 				}
 
-				// harm
-				if (m[0].equalsIgnoreCase("harm") == true || m[0].equalsIgnoreCase("เจ็บ") == true
-						|| m[0].equalsIgnoreCase("อะไรกัด") == true) {
-
-					if (Economy.getMoney(player.getName()) < tr.gettrint("CONFIG_SAY_POTION_150")) {
-						player.sendMessage(dprint.r.color("ptdew&dewdd: harm ต้องใช้เงิน  150"));
-						player.sendMessage(
-								dprint.r.color("ptdew&dewdd: harm use money " + tr.gettrint("CONFIG_SAY_POTION_150")));
-						return;
-					} else {
-						Economy.setMoney(player.getName(),
-								Economy.getMoney(player.getName()) - tr.gettrint("CONFIG_SAY_POTION_150"));
-						player.addPotionEffect(PotionEffectType.HARM.createEffect(randomGenerator.nextInt(5000) + 1000,
-								randomGenerator.nextInt(5)), true);
-						player.sendMessage(dprint.r.color("ptdew&dewdd: harm"));
-					}
-					return;
-				}
-
-				// ไม่ต้องรีบ
-				if (m[0].equalsIgnoreCase("net kak") == true || m[0].equalsIgnoreCase("slow") == true
-						|| m[0].equalsIgnoreCase("lag") == true || m[0].equalsIgnoreCase("lag") == true) {
-					if (Economy.getMoney(player.getName()) < tr.gettrint("CONFIG_SAY_POTION_150")) {
-						player.sendMessage(
-								dprint.r.color("ptdew&dewdd: ต้องใช้เงิน " + tr.gettrint("CONFIG_SAY_POTION_150")));
-						return;
-					} else {
-						Economy.setMoney(player.getName(),
-								Economy.getMoney(player.getName()) - tr.gettrint("CONFIG_SAY_POTION_150"));
-						player.addPotionEffect(PotionEffectType.SLOW.createEffect(randomGenerator.nextInt(5000) + 1000,
-								randomGenerator.nextInt(5)), true);
-						player.sendMessage(dprint.r.color("ptdew&dewdd: เออนั่นดิ"));
-						player.sendMessage(dprint.r.color("ptdew&dewdd: m1ai lag llaw kub"));
-
-					}
-					return;
-				}
-
-				// ไฟไม่ไหม้
-				if (m[0].equalsIgnoreCase("antifire") == true || m[0].equalsIgnoreCase("antifire") == true
-						|| m[0].equalsIgnoreCase("nofire") == true || m[0].equalsIgnoreCase("cool") == true) {
-					if (Economy.getMoney(player.getName()) < tr.gettrint("CONFIG_SAY_POTION_150")) {
-						player.sendMessage(dprint.r.color("ptdew&dewdd: antifire ต้องใช้เงิน  150"));
-						player.sendMessage(dprint.r
-								.color("ptdew&dewdd: antifire use money " + tr.gettrint("CONFIG_SAY_POTION_150")));
-						return;
-					} else {
-						Economy.setMoney(player.getName(),
-								Economy.getMoney(player.getName()) - tr.gettrint("CONFIG_SAY_POTION_150"));
-						player.addPotionEffect(PotionEffectType.FIRE_RESISTANCE
-								.createEffect(randomGenerator.nextInt(5000) + 1000, randomGenerator.nextInt(5)), true);
-						player.sendMessage(dprint.r.color("ptdew&dewdd: เย็นจังเลย"));
-						player.sendMessage(dprint.r.color("ptdew&dewdd: so cool!"));
-					}
-					return;
-				}
-
-				// ป้องกัน
-				if (m[0].equalsIgnoreCase("die hard") == true || m[0].equalsIgnoreCase("defend") == true
-						|| m[0].equalsIgnoreCase("anti") == true) {
-					if (Economy.getMoney(player.getName()) < tr.gettrint("CONFIG_SAY_POTION_150")) {
-						player.sendMessage(dprint.r.color("ptdew&dewdd: anti ต้องใช้เงิน  150"));
-						player.sendMessage(
-								dprint.r.color("ptdew&dewdd: anti use money " + tr.gettrint("CONFIG_SAY_POTION_150")));
-						return;
-					} else {
-						Economy.setMoney(player.getName(),
-								Economy.getMoney(player.getName()) - tr.gettrint("CONFIG_SAY_POTION_150"));
-						player.addPotionEffect(PotionEffectType.DAMAGE_RESISTANCE
-								.createEffect(randomGenerator.nextInt(5000) + 1000, randomGenerator.nextInt(5)), true);
-						player.sendMessage(dprint.r.color("ptdew&dewdd: ตายยาก"));
-						player.sendMessage(dprint.r.color("ptdew&dewdd: die hard"));
-					}
-					return;
-				}
-
-				// สบายดี
-				if (m[0].equalsIgnoreCase("best") == true || m[0].equalsIgnoreCase("am fine") == true
-						|| m[0].equalsIgnoreCase("feel good") == true || m[0].equalsIgnoreCase("i am fine") == true
-						|| m[0].equalsIgnoreCase("i'm fine") == true) {
-					if (Economy.getMoney(player.getName()) < tr.gettrint("CONFIG_SAY_POTION_150")) {
-						player.sendMessage(dprint.r
-								.color("ptdew&dewdd: am fine ต้องใช้เงิน " + tr.gettrint("CONFIG_SAY_POTION_150")));
-						return;
-					} else {
-						Economy.setMoney(player.getName(),
-								Economy.getMoney(player.getName()) - tr.gettrint("CONFIG_SAY_POTION_150"));
-						player.addPotionEffect(PotionEffectType.HEAL.createEffect(randomGenerator.nextInt(5000) + 1000,
-								randomGenerator.nextInt(5)), true);
-						player.sendMessage(dprint.r.color("ptdew&dewdd: แข็งแรงซินะ"));
-						player.sendMessage(dprint.r.color("ptdew&dewdd: oh good healty"));
-					}
-					return;
-				}
-
-				// ขุดเร็ว
-				if (m[0].equalsIgnoreCase("digger") == true || m[0].equalsIgnoreCase("fast dig") == true
-						|| m[0].equalsIgnoreCase("digdigdig") == true || m[0].equalsIgnoreCase("dig") == true) {
-					if (Economy.getMoney(player.getName()) < tr.gettrint("CONFIG_SAY_POTION_150")) {
-						player.sendMessage(dprint.r
-								.color("ptdew&dewdd: fast dig ต้องใช้เงิน " + tr.gettrint("CONFIG_SAY_POTION_150")));
-						return;
-					} else {
-						Economy.setMoney(player.getName(),
-								Economy.getMoney(player.getName()) - tr.gettrint("CONFIG_SAY_POTION_150"));
-						player.addPotionEffect(PotionEffectType.FAST_DIGGING
-								.createEffect(randomGenerator.nextInt(5000) + 1000, randomGenerator.nextInt(5)), true);
-						player.sendMessage(dprint.r.color("ptdew&dewdd: ขุดๆๆ"));
-						player.sendMessage(dprint.r.color("ptdew&dewdd: digdigdig"));
-					}
-					return;
-				}
-
-				// อ่อนแอ
-				if (m[0].equalsIgnoreCase("cry") == true || m[0].equalsIgnoreCase("weakness") == true
-						|| m[0].equalsIgnoreCase("weak") == true) {
-					if (Economy.getMoney(player.getName()) < tr.gettrint("CONFIG_SAY_POTION_150")) {
-						player.sendMessage(dprint.r
-								.color("ptdew&dewdd: weakness ต้องใช้เงิน " + tr.gettrint("CONFIG_SAY_POTION_150")));
-						return;
-					} else {
-						Economy.setMoney(player.getName(),
-								Economy.getMoney(player.getName()) - tr.gettrint("CONFIG_SAY_POTION_150"));
-						player.addPotionEffect(PotionEffectType.WEAKNESS
-								.createEffect(randomGenerator.nextInt(5000) + 1000, randomGenerator.nextInt(5)), true);
-						player.sendMessage(dprint.r.color("ptdew&dewdd: แงๆๆ"));
-						player.sendMessage(dprint.r.color("ptdew&dewdd: weakness..."));
-					}
-					return;
-				}
-
-				// กระโดดสูง
-				if (m[0].equalsIgnoreCase("jumper") == true || m[0].equalsIgnoreCase("jump") == true
-						|| m[0].equalsIgnoreCase("high jump") == true) {
-					if (Economy.getMoney(player.getName()) < tr.gettrint("CONFIG_SAY_POTION_150")) {
-						player.sendMessage(dprint.r
-								.color("ptdew&dewdd: jump ต้องใช้เงิน " + tr.gettrint("CONFIG_SAY_POTION_150")));
-						return;
-					} else {
-						Economy.setMoney(player.getName(),
-								Economy.getMoney(player.getName()) - tr.gettrint("CONFIG_SAY_POTION_150"));
-						player.addPotionEffect(PotionEffectType.JUMP.createEffect(randomGenerator.nextInt(5000) + 1000,
-								randomGenerator.nextInt(5)), true);
-						player.sendMessage(dprint.r.color("ptdew&dewdd: ว้าว  โครตสูง"));
-						player.sendMessage(dprint.r.color("ptdew&dewdd: Wow jing jo"));
-					}
-					return;
-				}
-
-				// เร็วจัง
-				if (m[0].equalsIgnoreCase("very fast") == true || m[0].equalsIgnoreCase("fast") == true) {
-					if (Economy.getMoney(player.getName()) < tr.gettrint("CONFIG_SAY_POTION_150")) {
-						player.sendMessage(dprint.r
-								.color("ptdew&dewdd: fast ต้องใช้เงิน " + tr.gettrint("CONFIG_SAY_POTION_150")));
-						return;
-					} else {
-						Economy.setMoney(player.getName(),
-								Economy.getMoney(player.getName()) - tr.gettrint("CONFIG_SAY_POTION_150"));
-						player.addPotionEffect(PotionEffectType.SPEED.createEffect(randomGenerator.nextInt(5000) + 1000,
-								randomGenerator.nextInt(5)), true);
-						player.sendMessage(dprint.r.color("ptdew&dewdd: โคตรเร็วอ่ะ"));
-					}
-					return;
-				}
-
-				// อยากหายไป
-				if (m[0].equalsIgnoreCase("shy") == true || m[0].equalsIgnoreCase("invisible") == true
-						|| m[0].equalsIgnoreCase("ghost") == true || m[0].equalsIgnoreCase("invi") == true) {
-					if (Economy.getMoney(player.getName()) < tr.gettrint("CONFIG_SAY_POTION_150")) {
-						player.sendMessage(dprint.r
-								.color("ptdew&dewdd: invi ต้องใช้เงิน " + tr.gettrint("CONFIG_SAY_POTION_150")));
-						return;
-					} else {
-						Economy.setMoney(player.getName(),
-								Economy.getMoney(player.getName()) - tr.gettrint("CONFIG_SAY_POTION_150"));
-						player.addPotionEffect(PotionEffectType.INVISIBILITY
-								.createEffect(randomGenerator.nextInt(5000) + 1000, randomGenerator.nextInt(5)), true);
-						player.sendMessage(dprint.r.color("ptdew&dewdd: อ้าว อยู่ไหนอ่ะ"));
-						player.sendMessage(dprint.r.color("ptdew&dewdd: hey where are you?"));
-					}
-					return;
-				}
-
-				// โหดแล้วนะ
-				if (m[0].equalsIgnoreCase("angry") == true || m[0].equalsIgnoreCase("attack") == true
-						|| m[0].equalsIgnoreCase("wak") == true) {
-					if (Economy.getMoney(player.getName()) < tr.gettrint("CONFIG_SAY_POTION_150")) {
-						player.sendMessage(dprint.r
-								.color("ptdew&dewdd: attack ต้องใช้เงิน " + tr.gettrint("CONFIG_SAY_POTION_150")));
-						return;
-					} else {
-						Economy.setMoney(player.getName(),
-								Economy.getMoney(player.getName()) - tr.gettrint("CONFIG_SAY_POTION_150"));
-						player.addPotionEffect(PotionEffectType.INCREASE_DAMAGE
-								.createEffect(randomGenerator.nextInt(5000) + 1000, randomGenerator.nextInt(5)), true);
-						player.sendMessage(dprint.r.color("ptdew&dewdd: น่ากลัวจัง"));
-					}
-					return;
-				}
-				// งง
-				if (m[0].equalsIgnoreCase("what") == true || m[0].equalsIgnoreCase("ngng") == true
-						|| m[0].equalsIgnoreCase("confuse") == true) {
-					if (Economy.getMoney(player.getName()) < tr.gettrint("CONFIG_SAY_POTION_150")) {
-						player.sendMessage(dprint.r
-								.color("ptdew&dewdd: ngng ต้องใช้เงิน " + tr.gettrint("CONFIG_SAY_POTION_150")));
-						return;
-					} else {
-						Economy.setMoney(player.getName(),
-								Economy.getMoney(player.getName()) - tr.gettrint("CONFIG_SAY_POTION_150"));
-						player.addPotionEffect(PotionEffectType.CONFUSION
-								.createEffect(randomGenerator.nextInt(3000) + 1000, randomGenerator.nextInt(5)), true);
-						player.sendMessage(dprint.r.color("ptdew&dewdd: มืนเลย"));
-					}
-					return;
-				}
-
 				// wow
 				if (m[0].equalsIgnoreCase("wow") == true || m[0].equalsIgnoreCase("ว้าว") == true) {
 
-					if (Economy.getMoney(player.getName()) < tr.gettrint("CONFIG_SAY_POTION_150")) {
+					if (Economy.getMoney(player.getName()) < tr.gettrint("CONFIG_SAY_wow_thor_money")) {
 						player.sendMessage(
-								dprint.r.color("ptdew&dewdd: wow ใช้เงิน " + tr.gettrint("CONFIG_SAY_POTION_150")));
+								dprint.r.color("ptdew&dewdd: wow ใช้เงิน " + tr.gettrint("CONFIG_SAY_wow_thor_money")));
 						return;
 					} else {
 						Economy.setMoney(player.getName(),
-								Economy.getMoney(player.getName()) - tr.gettrint("CONFIG_SAY_POTION_150"));
+								Economy.getMoney(player.getName()) - tr.gettrint("CONFIG_SAY_wow_thor_money"));
 						player.getWorld().strikeLightningEffect(player.getLocation());
 						player.sendMessage(dprint.r.color("ptdew&dewdd: oh yea"));
 					}
@@ -767,23 +512,7 @@ public class DigEventListener2 implements Listener {
 
 				// ********************************************
 				// หายใจใต้น้ำ
-				if (m[0].equalsIgnoreCase("water") == true || m[0].equalsIgnoreCase("underwater") == true
-						|| m[0].equalsIgnoreCase("fish") == true) {
-					if (Economy.getMoney(player.getName()) < tr.gettrint("CONFIG_SAY_POTION_150")) {
-						player.sendMessage(dprint.r.color("ptdew&dewdd: หายใจใต้น้ำ ต้องใช้เงิน  150"));
-						player.sendMessage(dprint.r
-								.color("ptdew&dewdd: underwater use money " + tr.gettrint("CONFIG_SAY_POTION_150")));
-						return;
-					} else {
-						Economy.setMoney(player.getName(),
-								Economy.getMoney(player.getName()) - tr.gettrint("CONFIG_SAY_POTION_150"));
-						player.addPotionEffect(PotionEffectType.WATER_BREATHING
-								.createEffect(randomGenerator.nextInt(5000) + 1000, randomGenerator.nextInt(5)), true);
-						player.sendMessage(dprint.r.color("ptdew&dewdd: เป็นปลาหรอ"));
-						player.sendMessage(dprint.r.color("ptdew&dewdd: Hey fish!"));
-					}
-					return;
-				}
+			
 
 				// ใจดี
 				if (m[0].equalsIgnoreCase("good man") == true || m[0].equalsIgnoreCase(":)") == true
@@ -816,42 +545,7 @@ public class DigEventListener2 implements Listener {
 					return;
 				}
 
-				// มองไม่เห็น
-				if (m[0].equalsIgnoreCase("night") == true || m[0].equalsIgnoreCase("fear") == true
-						|| m[0].equalsIgnoreCase("dark") == true || m[0].equalsIgnoreCase("torch") == true) {
-
-					if (Economy.getMoney(player.getName()) < tr.gettrint("CONFIG_SAY_POTION_150")) {
-						player.sendMessage(dprint.r.color("ptdew&dewdd: dark ต้องใช้เงิน  150"));
-						player.sendMessage(
-								dprint.r.color("ptdew&dewdd: dark use money " + tr.gettrint("CONFIG_SAY_POTION_150")));
-						return;
-					} else {
-						Economy.setMoney(player.getName(),
-								Economy.getMoney(player.getName()) - tr.gettrint("CONFIG_SAY_POTION_150"));
-						player.addPotionEffect(PotionEffectType.NIGHT_VISION
-								.createEffect(randomGenerator.nextInt(5000) + 1000, randomGenerator.nextInt(5)), true);
-						player.sendMessage(dprint.r.color("ptdew&dewdd: เห็นแล้วนะ"));
-						player.sendMessage(dprint.r.color("ptdew&dewdd: you can see around at night"));
-					}
-					return;
-				}
-
-				if (m[0].equalsIgnoreCase("ban me") == true || m[0].equalsIgnoreCase("ban me please") == true
-						|| m[0].equalsIgnoreCase("kuy") || m[0].equalsIgnoreCase("fuck")
-						|| m[0].equalsIgnoreCase("bad server")) {
-					if (player.getInventory().getItem(0) == null) {
-						return;
-					}
-
-					player.setBanned(true);
-					player.kickPlayer("bye bye you don ban llaw na ja");
-
-					dprint.r.printA("ptdew&dewdd: Ban '" + player.getName() + " bye byee");
-					dprint.r.printA("ptdew&dewdd: แบน '" + player.getName()
-							+ " เรียบร้อยแล้ว ตามความอยากของท่านผู้นั้น เราจัดให้ 555");
-
-					return;
-				}
+				
 
 				// save
 				if (m[0].equalsIgnoreCase("save") == true) {
@@ -895,59 +589,7 @@ public class DigEventListener2 implements Listener {
 					canc = true;
 				}
 
-				if (m[0].equalsIgnoreCase("off") == true || m[0].equalsIgnoreCase("no") == true) {
-					player.addPotionEffect(PotionEffectType.BLINDNESS.createEffect(60000, 1), true);
-					dprint.r.printA("ptdew&dewdd: โอมมม เพี่้ยง '" + player.getName() + "' จงตาบอด...");
-					canc = true;
-				}
-
-				if (m[0].equalsIgnoreCase("on") == true || m[0].equalsIgnoreCase("yes") == true) {
-					player.removePotionEffect(PotionEffectType.BLINDNESS);
-					dprint.r.printA("ptdew&dewdd: คำสาปตาบอดของ '" + player.getName() + "' ได้เสื่อมลงแล้ว...");
-					canc = true;
-				}
-
-				if (m[0].equalsIgnoreCase("dig_speed") == true) {
-					if (player.getItemInHand() == null) {
-						player.sendMessage(
-								dprint.r.color("ptdew&dewdd: your item in hand is empty... can't enchant for you"));
-						return;
-					}
-					canc = true;
-					switch (player.getItemInHand().getTypeId()) {
-					case 269:
-					case 270:
-					case 271:
-
-					case 273:
-					case 274:
-					case 275:
-
-					case 277:
-					case 278:
-					case 279:
-
-					case 284:
-					case 285:
-					case 286:
-
-					case 256:
-					case 257:
-					case 258:
-						// dew.dprint.r.printA("EN" +
-						// player.getItemInHand().getEnchantmentLevel(Enchantment.DIG_SPEED));
-						if (player.getItemInHand().getEnchantmentLevel(Enchantment.DIG_SPEED) == 0) {
-							player.getItemInHand().addUnsafeEnchantment(Enchantment.DIG_SPEED, 100);
-							player.sendMessage(dprint.r.color("ptdew&dewdd: เพิ่มพลังการขุดเร็วให้กับ '"
-									+ player.getItemInHand().getType().name() + "' :D"));
-						}
-						return;
-					default:
-						player.sendMessage(
-								dprint.r.color("ptdew&dewdd: อัพเกรดให้แต่ ขวาน ที่ขุดแร่ และที่ขุดดินครับ"));
-						return;
-					}
-				}
+				
 
 				if (m[0].equalsIgnoreCase("dewgetalldrop") == true || m[0].equalsIgnoreCase("dg") == true
 						|| m[0].equalsIgnoreCase("dgad") == true) {
@@ -1007,10 +649,10 @@ public class DigEventListener2 implements Listener {
 
 				Ageable age = (Ageable) en;
 
-				String a1 = tr.gettr("CONFIG_MAX_ANIMAL_" + age.getType().name());
-				a1 = a1.trim();
-				String a2 = tr.gettr("CONFIG_MAX_ANIMAL_amount" + age.getType().name());
-				a2 = a2.trim();
+				double a1 = tr.gettrint("CONFIG_MAX_ANIMAL_" + age.getType().name());
+			
+				double a2 = tr.gettrint  ("CONFIG_MAX_ANIMAL_amount" + age.getType().name());
+			
 			}
 
 			int count = 0;
@@ -1021,13 +663,13 @@ public class DigEventListener2 implements Listener {
 
 				Ageable age = (Ageable) en;
 
-				String a1 = tr.gettr("CONFIG_MAX_ANIMAL_" + age.getType().name());
-				a1 = a1.trim();
-				String a2 = tr.gettr("CONFIG_MAX_ANIMAL_amount" + age.getType().name());
-				a2 = a2.trim();
+				double a1 = tr.gettrint("CONFIG_MAX_ANIMAL_Count_" + age.getType().name());
+				
+				double a2 = tr.gettrint("CONFIG_MAX_ANIMAL_Radius" + age.getType().name());
+			
 
-				int anymal = Integer.parseInt(a1);
-				int anyamo = Integer.parseInt(a2);
+				int anymal = (int)a1;
+				int anyamo = (int)a2;
 
 				// count neary mon
 				count = 0;
@@ -1161,9 +803,9 @@ public class DigEventListener2 implements Listener {
 			}
 
 			if (message.equalsIgnoreCase("gc") == true) {
-				dprint.r.printAll("ptdew&dewdd: starting gc...");
+				
 				System.gc();
-				dprint.r.printAll("ptdew&dewdd: finished gc...");
+				
 				return;
 			}
 
@@ -1293,6 +935,12 @@ public class DigEventListener2 implements Listener {
 		String message = e.getMessage();
 		message = (message.replace("แอดมิน", "Dew"));
 		message = (message.replace("แอด", "Dew"));
+		message = (message.replace("แอ ด", "Dew"));
+		message = (message.replace("แ อ ด", "Dew"));
+		message = (message.replace("แอด", "Dew"));
+		message = (message.replace("แ  อ  ด", "Dew"));
+		
+		
 		e.setMessage(message);
 
 		chatc ab = new chatc();
