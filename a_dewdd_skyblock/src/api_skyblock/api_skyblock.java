@@ -266,6 +266,12 @@ public class api_skyblock {
 
 			int searchRadius = 1;
 			int searchCount = 0;
+			
+			double thelx = tr.gettrint("sky random search lx");
+			double therx = tr.gettrint("sky random search rx");
+			double thelz = tr.gettrint("sky random search lz");
+			double therz = tr.gettrint("sky random search rz");
+			
 
 			while (buildcomplete == false) {
 				searchCount++;
@@ -279,6 +285,14 @@ public class api_skyblock {
 
 				x = rnd.nextInt(searchRadius) * 300 * (rnd.nextInt(2) == 1 ? 1 : -1);
 				z = rnd.nextInt(searchRadius) * 300 * (rnd.nextInt(2) == 1 ? 1 : -1);
+				
+				if (x < thelx || x > therx) {
+					continue;
+				}
+				if (z < thelz || z > therz) {
+					continue;
+				}
+				
 				y = rnd.nextInt(200) + 50;
 
 				dprint.r.printAll("searching..." + x + "," + y + "," + z);
