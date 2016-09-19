@@ -37,7 +37,6 @@ import org.bukkit.plugin.java.JavaPlugin;
 import com.earth2me.essentials.api.Economy;
 import com.earth2me.essentials.api.NoLoanPermittedException;
 import com.earth2me.essentials.api.UserDoesNotExistException;
-import com.sun.javafx.geom.Rectangle;
 
 import api_skyblock.api_skyblock;
 import dewddtran.tr;
@@ -6022,6 +6021,14 @@ public class dewset extends dewset_interface {
 		return t4;
 	}
 
+	public ArrayList<Integer> getAllHomeIDThatHaveMyName(String playerName, int worldid) {
+		ArrayList<Integer> tmp = new ArrayList<Integer>();
+
+		return null;
+	}
+
+	// riceblockiron
+
 	// fixtool itemstack and player
 	// getfreeselect
 	public int getfreeselect(Player player) {
@@ -6088,8 +6095,6 @@ public class dewset extends dewset_interface {
 		dprint.r.printC("ptdew&dewdd : " + tr.gettr("error_getfreeselect_return_-1"));
 		return -1;
 	}
-
-	// riceblockiron
 
 	public LinkedList<String> getmaterialrealname(String gname) {
 		LinkedList<String> ab = new LinkedList<String>();
@@ -6190,6 +6195,10 @@ public class dewset extends dewset_interface {
 
 	} // getselectblock
 
+	// sandmelon
+
+	// ironorefreeze
+
 	// getselectblock //" + tr.gettr("for") + "dewbuy check wa mee kee block
 	public int getselectblockforbuy(int getid, Player player) {
 
@@ -6246,10 +6255,6 @@ public class dewset extends dewset_interface {
 
 	} // getselectblock
 
-	// sandmelon
-
-	// ironorefreeze
-
 	public int getwallid() {
 		int g = 0;
 		Random rn = new Random();
@@ -6259,12 +6264,6 @@ public class dewset extends dewset_interface {
 		}
 
 		return g;
-	}
-
-	public ArrayList<Integer> getAllHomeIDThatHaveMyName(String playerName, int worldid) {
-		ArrayList<Integer> tmp = new ArrayList<Integer>();
-
-		return null;
 	}
 
 	public int getworldid(String wowo) {
@@ -6787,23 +6786,6 @@ public class dewset extends dewset_interface {
 		return false;
 	}
 
-	public void teleportPlayerToProtectID(int id, Player player) {
-		int worldid = getworldid(player.getWorld().getName());
-
-		LXRXLZRZType ee = new LXRXLZRZType(dewsignx1[worldid][id], dewsigny1[worldid][id], dewsignz1[worldid][id],
-
-				dewsignx2[worldid][id], dewsigny2[worldid][id], dewsignz2[worldid][id]);
-		int mid[] = ee.getmiddle();
-
-		Location lox = player.getWorld().getBlockAt(mid[0], mid[1], mid[2]).getLocation();
-
-		player.getWorld().loadChunk((int) lox.getX(), (int) lox.getZ());
-		player.teleport(lox);
-		player.sendMessage("ptdew&dewdd : " + tr.gettr("teleported_your_to_zone_id") + id);
-
-	}
-	// randomplaynote
-
 	public Block protochest(Block block, int d4, String sorttype) {
 		Block temp = null;
 		Sign sign2 = null;
@@ -7124,5 +7106,22 @@ public class dewset extends dewset_interface {
 
 		}
 	}
+
+	public void teleportPlayerToProtectID(int id, Player player) {
+		int worldid = getworldid(player.getWorld().getName());
+
+		LXRXLZRZType ee = new LXRXLZRZType(dewsignx1[worldid][id], dewsigny1[worldid][id], dewsignz1[worldid][id],
+
+				dewsignx2[worldid][id], dewsigny2[worldid][id], dewsignz2[worldid][id]);
+		int mid[] = ee.getmiddle();
+
+		Location lox = player.getWorld().getBlockAt(mid[0], mid[1], mid[2]).getLocation();
+
+		player.getWorld().loadChunk((int) lox.getX(), (int) lox.getZ());
+		player.teleport(lox);
+		player.sendMessage("ptdew&dewdd : " + tr.gettr("teleported_your_to_zone_id") + id);
+
+	}
+	// randomplaynote
 
 } // dew minecraft

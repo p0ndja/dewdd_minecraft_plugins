@@ -63,7 +63,6 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.potion.PotionEffectType;
 
 import api_admin.dewddadmin;
-import api_skyblock.api_skyblock;
 import dewddflower.dewset;
 import dewddtran.tr;
 import li.Constant_Protect;
@@ -514,8 +513,6 @@ public class DigEventListener2 implements Listener {
 
 			} // check home
 
-		
-
 			if (message.equalsIgnoreCase("dewextend") == true || message.equalsIgnoreCase("de") == true) {
 				dew.dewextend(player);
 				canc = true;
@@ -596,22 +593,20 @@ public class DigEventListener2 implements Listener {
 			// d40123
 
 			// "dewadd="
-			
 
 			if (m[0].equalsIgnoreCase("fw") || m[0].equalsIgnoreCase("flower") || m[0].equalsIgnoreCase("flower")) {
-				
+
 				int worldid = dew.getworldid(player.getWorld().getName());
 
 				if (m.length == 1) {
 					player.sendMessage(dprint.r.color("/flower buy"));
 					player.sendMessage(dprint.r.color("/flower buyzone"));
 					player.sendMessage(dprint.r.color("/flower buydelete"));
-					
-					
+
 					player.sendMessage(dprint.r.color("/flower home <id>"));
 					player.sendMessage(dprint.r.color("/flower add <player>"));
 					player.sendMessage(dprint.r.color("/flower addat <slot> <player>"));
-					
+
 					player.sendMessage(dprint.r.color("/flower remove <player>"));
 					player.sendMessage(dprint.r.color("/flower list"));
 					player.sendMessage(dprint.r.color("/flower owner <player>"));
@@ -624,45 +619,40 @@ public class DigEventListener2 implements Listener {
 					player.sendMessage(dprint.r.color("/flower max"));
 
 					return;
-				}
-				else  {
-					if (m[1].equalsIgnoreCase("home") == true ) {
+				} else {
+					if (m[1].equalsIgnoreCase("home") == true) {
 						if (m.length == 2) {
 							player.sendMessage(dprint.r.color("/fw home <id>"));
-						
-							
-							for (int i = 0 ; i < dew.dewsignmax[worldid] ; i ++ )  {
-								for (int j = 0 ; j < dew.dewsignnamemax ; j++) {
-									
-									if ( dew.dewsignname[worldid][i][j].equalsIgnoreCase(player.getName())) {
-										
-										player.sendMessage(dprint.r.color( "" + i ));
+
+							for (int i = 0; i < dew.dewsignmax[worldid]; i++) {
+								for (int j = 0; j < dew.dewsignnamemax; j++) {
+
+									if (dew.dewsignname[worldid][i][j].equalsIgnoreCase(player.getName())) {
+
+										player.sendMessage(dprint.r.color("" + i));
 										break;
 									}
-								
+
 								}
-								
+
 							}
-						}
-						else if (m.length == 3) {
+						} else if (m.length == 3) {
 							int id = Integer.parseInt(m[2]);
 							dew.teleportPlayerToProtectID(id, player);
 						}
-						
+
 						return;
 					}
 
-					
-					
 					// dewbuy
-					if (m[1].equalsIgnoreCase("buy") == true ) {
+					if (m[1].equalsIgnoreCase("buy") == true) {
 						dew.dewbuy(player);
 						canc = true;
 						return;
 					}
 
 					// dewbuyzone
-					if (m[1].equalsIgnoreCase("buyzone") == true ) {
+					if (m[1].equalsIgnoreCase("buyzone") == true) {
 						dew.dewbuyzone(player, player.getLocation().getBlock());
 						canc = true;
 						return;
@@ -672,8 +662,7 @@ public class DigEventListener2 implements Listener {
 						dew.dewbuydelete(player);
 						return;
 					}
-					
-					
+
 					if (m[1].equalsIgnoreCase("add") == true) {
 						dew.dewps_add(message, player);
 						return;
@@ -691,17 +680,14 @@ public class DigEventListener2 implements Listener {
 						dew.dewps_list(player);
 						return;
 					}
-					
+
 					if (m[1].equalsIgnoreCase("flag") == true) {
 						player.sendMessage(
 								dprint.r.color(tr.gettr("fw add these flag to your zone to activate something")));
-							
-						player.sendMessage(
-								dprint.r.color("/fw <add> <flag>"));
-						player.sendMessage(
-								dprint.r.color("/fw <remove> <flag>"));
-						
-						
+
+						player.sendMessage(dprint.r.color("/fw <add> <flag>"));
+						player.sendMessage(dprint.r.color("/fw <remove> <flag>"));
+
 						tr.showFlagToPlayer(player);
 						return;
 					}
@@ -715,7 +701,8 @@ public class DigEventListener2 implements Listener {
 						}
 
 						if (player.hasPermission(dew.pmaindewbuychangehost) == false) {
-							player.sendMessage("ptdew&dewdd : " + tr.gettr("need_permission_change_host") + dew.pmaindewbuychangehost);
+							player.sendMessage("ptdew&dewdd : " + tr.gettr("need_permission_change_host")
+									+ dew.pmaindewbuychangehost);
 							return;
 						}
 
@@ -735,14 +722,14 @@ public class DigEventListener2 implements Listener {
 						dew.dewsignname[dew.getworldid(player.getWorld().getName())][xyz][0] = nameToAdd;
 						player.sendMessage("ptdew&dewdd : " + tr.gettr("this_zone_protected_by") + " ...");
 						for (int ici = 0; ici < dew.dewsignnamemax; ici++) {
-							player.sendMessage(
-									ici + " = " + dew.dewsignname[dew.getworldid(player.getWorld().getName())][xyz][ici]);
+							player.sendMessage(ici + " = "
+									+ dew.dewsignname[dew.getworldid(player.getWorld().getName())][xyz][ici]);
 						}
 						dew.savesignfile(-1, dew.getworldid(player.getWorld().getName()));
 
 						return;
 					}
-					
+
 					if (m[1].equalsIgnoreCase("goid") == true) {
 						if (m.length != 3) {
 							player.sendMessage("/fw goid <protect id>");
@@ -767,10 +754,10 @@ public class DigEventListener2 implements Listener {
 						}
 
 						dew.teleportPlayerToProtectID(gotox, player);
-						
+
 						return;
 					}
-					
+
 					if (m[1].equalsIgnoreCase("gorandom") == true) {
 						int gotox = rnd.nextInt(dew.dewsignmax[worldid]);
 
@@ -790,22 +777,25 @@ public class DigEventListener2 implements Listener {
 						}
 
 						dew.teleportPlayerToProtectID(gotox, player);
-						
+
 						return;
 					}
 
 					if (m[1].equalsIgnoreCase("max") == true) {
-						player.sendMessage(dprint.r.color(tr.gettr("fw protected zone max of this world is ") + dew.dewsignmax[worldid]));
+						player.sendMessage(dprint.r
+								.color(tr.gettr("fw protected zone max of this world is ") + dew.dewsignmax[worldid]));
 						return;
 					}
-					
+
 					if (m[1].equalsIgnoreCase("addat") == true) {
 						/*
-						 * if (api_admin.dewddadmin.is2moderator(player.getName()) ==
-						 * true) { player.sendMessage(
+						 * if
+						 * (api_admin.dewddadmin.is2moderator(player.getName())
+						 * == true) { player.sendMessage(
 						 * "ptdew&dewdd : staff can't allow another player to your home zone"
 						 * ); player.sendMessage(
-						 * "ptdew&dewdd : staff ห้ามเพิ่มคนเข้าบ้าน ห้ามใช้คำสั่งนี้" );
+						 * "ptdew&dewdd : staff ห้ามเพิ่มคนเข้าบ้าน ห้ามใช้คำสั่งนี้"
+						 * );
 						 * 
 						 * return; }
 						 */
@@ -849,9 +839,10 @@ public class DigEventListener2 implements Listener {
 						// change name 2
 						// add staff but not admin or staff
 						/*
-						 * if (api_admin.dewddadmin.issubsubadminname(str11) == true &&
-						 * api_admin.dewddadmin.is2admin(player) == false &&
-						 * api_admin.dewddadmin.is2moderator(player) == false) {
+						 * if (api_admin.dewddadmin.issubsubadminname(str11) ==
+						 * true && api_admin.dewddadmin.is2admin(player) ==
+						 * false && api_admin.dewddadmin.is2moderator(player) ==
+						 * false) {
 						 * 
 						 * player.sendMessage("ptdew&dewdd : " +
 						 * tr.gettr("Member_can't_add_staff_to_your_zone") +
@@ -865,18 +856,19 @@ public class DigEventListener2 implements Listener {
 						 */
 						// add member but is staff
 						/*
-						 * if (api_admin.dewddadmin.issubsubadminname(str11) == false &&
-						 * api_admin.dewddadmin.isadminname(str11) == false &&
-						 * api_admin.dewddadmin.is2moderator(player) == true) { if
-						 * (str11.equalsIgnoreCase(Constant_Protect.flag_sell) == true)
-						 * { dprint.r.printAll("ptdew&dewdd : staff " + player.getName()
-						 * + " try to add <sell> to protect"); return; }
-						 * player.sendMessage("ptdew&dewdd : " +
+						 * if (api_admin.dewddadmin.issubsubadminname(str11) ==
+						 * false && api_admin.dewddadmin.isadminname(str11) ==
+						 * false && api_admin.dewddadmin.is2moderator(player) ==
+						 * true) { if
+						 * (str11.equalsIgnoreCase(Constant_Protect.flag_sell)
+						 * == true) { dprint.r.printAll("ptdew&dewdd : staff " +
+						 * player.getName() + " try to add <sell> to protect");
+						 * return; } player.sendMessage("ptdew&dewdd : " +
 						 * tr.gettr("staff_can't_add_member_to_your_zone") +
 						 * dew.dewsignname[dew.getworldid(player
 						 * .getWorld().getName())][xyz][0]); player.sendMessage(
-						 * "ptdew&dewdd : สตาฟห้ามเพิ่มคนธรมมดาเข้าบ้านของคุณนะ > " +
-						 * dew.dewsignname[dew.getworldid(player
+						 * "ptdew&dewdd : สตาฟห้ามเพิ่มคนธรมมดาเข้าบ้านของคุณนะ > "
+						 * + dew.dewsignname[dew.getworldid(player
 						 * .getWorld().getName())][xyz][0]);
 						 * 
 						 * return; }
@@ -887,21 +879,19 @@ public class DigEventListener2 implements Listener {
 						player.sendMessage("ptdew&dewdd : " + tr.gettr("this_zone_protected_by"));
 
 						for (int ici = 0; ici < dew.dewsignnamemax; ici++) {
-							player.sendMessage(
-									ici + " = " + dew.dewsignname[dew.getworldid(player.getWorld().getName())][xyz][ici]);
+							player.sendMessage(ici + " = "
+									+ dew.dewsignname[dew.getworldid(player.getWorld().getName())][xyz][ici]);
 						}
 
 						dew.savesignfile(-1, dew.getworldid(player.getWorld().getName()));
 						return;
 					}
 
-					
 					// ***************************************
 					// ***************************************
 
-					
-			}
-			
+				}
+
 				if (api_admin.dewddadmin.is2admin(player.getPlayer()) == true
 						|| api_admin.dewddadmin.is2moderator(player.getPlayer()) == true) {
 					// clearmon
@@ -913,14 +903,13 @@ public class DigEventListener2 implements Listener {
 					// dewgoxxx
 
 					// player.sendMessage("'" + message.substring(0, 6) + "'");
-					
-				
-			}
+
+				}
 
 				if (message.equalsIgnoreCase("clearmon") == true) {
 
 					for (Entity ent : player.getWorld().getEntities()) {
-						
+
 						if (ent.getCustomName().equalsIgnoreCase("") == false) {
 							continue;
 						}
@@ -1654,15 +1643,14 @@ public class DigEventListener2 implements Listener {
 			if (m[0].equalsIgnoreCase("deleterecursive")) {
 
 				if (event.getPlayer().isOp() == true) {
-				
 
 					int x1 = Integer.parseInt(m[1]);
 					int z1 = Integer.parseInt(m[2]);
 
 					int x2 = Integer.parseInt(m[3]);
 					int z2 = Integer.parseInt(m[4]);
-					
-						LXRXLZRZType lll = new LXRXLZRZType(x1,0,z1, x2,255,z2);
+
+					LXRXLZRZType lll = new LXRXLZRZType(x1, 0, z1, x2, 255, z2);
 
 					Material id = event.getPlayer().getItemInHand().getType();
 					byte data = Byte.parseByte(m[6]);
@@ -2883,7 +2871,7 @@ public class DigEventListener2 implements Listener {
 							int price = Integer.parseInt(dew.dewsignname[curWorldID][curStandID][1]);
 
 							p.sendMessage(dprint.r.color(tr.gettr("this zone sell as price") + price));
-							p.sendMessage(dprint.r.color(tr.gettr("if you wanna buy it type") + "/dewbuyzone"));
+							p.sendMessage(dprint.r.color(tr.gettr("if you wanna buy it type") + "/fw buyzone"));
 
 						} else {
 							p.sendMessage(dprint.r.color(

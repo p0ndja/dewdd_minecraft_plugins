@@ -11,7 +11,6 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import dewddtran.tr;
 
-
 public class Main extends JavaPlugin {
 	Logger log;
 	DigEventListener2 ax = new DigEventListener2();

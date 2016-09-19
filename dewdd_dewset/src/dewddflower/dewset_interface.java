@@ -38,10 +38,10 @@ public abstract class dewset_interface extends dewsetdatabase {
 
 	public abstract boolean dewps_add(String message, Player player);
 
+	public abstract boolean dewps_goid(Player player, int id);
+
 	public abstract boolean dewps_list(Player player);
 
 	public abstract boolean dewps_remove(String message, Player player);
-
-	public abstract boolean dewps_goid(Player player, int id) ;
 
 }

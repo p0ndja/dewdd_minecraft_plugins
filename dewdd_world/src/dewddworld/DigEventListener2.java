@@ -128,45 +128,6 @@ public class DigEventListener2 implements Listener {
 			}
 		}
 	}
-	
-	class unloadChunk implements Runnable {
-		
-		public unloadChunk() {
-		   Bukkit.getScheduler().scheduleSyncDelayedTask(ac, this, 60);
-		}
-
-		@Override
-		public void run() {
-			dprint.r.printC("ptdew&dewdd: unloading all chunk with no player");
-		
-			
-			for (World wx : Bukkit.getWorlds()) {
-					boolean worldHasPlayer = false;
-
-				for (Chunk cj : wx.getLoadedChunks()) {
-					worldHasPlayer = false;
-
-					for (Player pj : wx.getPlayers()) {
-						if (Math.pow((Math.pow(((cj.getX() * 16) - pj.getLocation().getBlockX()), 2))
-								+ (Math.pow(((cj.getZ() * 16) - pj.getLocation().getBlockZ()), 2)), 0.5)
-
-						<= 2000) {
-							worldHasPlayer = true;
-							break;
-						}
-
-					}
-
-					if (worldHasPlayer == false) {
-						cj.unload(true);
-						dprint.r.printC("ptdew&dewdd: unloaded chunk at (" + cj.getX() * 16 + ","
-								+ cj.getZ() * 16 + ")");
-					}
-
-				}
-			}
-		}
-	}
 
 	class runworldc implements Runnable {
 		Player player = null;
@@ -327,11 +288,10 @@ public class DigEventListener2 implements Listener {
 
 				return;
 			}
-			
-			
+
 			if (m[0].equalsIgnoreCase("unloadchunk") == true) {
 				unloadChunk uc = new unloadChunk();
-			
+
 				return;
 			}
 
@@ -351,11 +311,48 @@ public class DigEventListener2 implements Listener {
 
 				}
 
-			
 				return;
 			}
 			// ****************************8
 
+		}
+	}
+
+	class unloadChunk implements Runnable {
+
+		public unloadChunk() {
+			Bukkit.getScheduler().scheduleSyncDelayedTask(ac, this, 60);
+		}
+
+		@Override
+		public void run() {
+			dprint.r.printC("ptdew&dewdd: unloading all chunk with no player");
+
+			for (World wx : Bukkit.getWorlds()) {
+				boolean worldHasPlayer = false;
+
+				for (Chunk cj : wx.getLoadedChunks()) {
+					worldHasPlayer = false;
+
+					for (Player pj : wx.getPlayers()) {
+						if (Math.pow((Math.pow(((cj.getX() * 16) - pj.getLocation().getBlockX()), 2))
+								+ (Math.pow(((cj.getZ() * 16) - pj.getLocation().getBlockZ()), 2)), 0.5)
+
+						<= 2000) {
+							worldHasPlayer = true;
+							break;
+						}
+
+					}
+
+					if (worldHasPlayer == false) {
+						cj.unload(true);
+						dprint.r.printC(
+								"ptdew&dewdd: unloaded chunk at (" + cj.getX() * 16 + "," + cj.getZ() * 16 + ")");
+					}
+
+				}
+			}
 		}
 	}
 
@@ -403,7 +400,7 @@ public class DigEventListener2 implements Listener {
 	@EventHandler
 	public void eventja(PlayerCommandPreprocessEvent event) {
 		runworld(event.getPlayer(), event.getMessage().substring(1));
-		
+
 	}
 
 	@EventHandler
@@ -547,8 +544,7 @@ public class DigEventListener2 implements Listener {
 	public void eventja(PlayerQuitEvent event) {
 		unloadChunk uc = new unloadChunk();
 	}
-	
-	
+
 	@EventHandler
 	public void eventja(PlayerTeleportEvent event) {
 		unloadChunk uc = new unloadChunk();

@@ -26,7 +26,6 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import dewddtran.tr;
-import dprint.*;
 import li.Constant_Protect;
 import li.LXRXLZRZType;
 
@@ -525,7 +524,7 @@ public class api_skyblock {
 	}
 
 	public static LXRXLZRZType getPositionLXRXLZRZ() {
-		LXRXLZRZType ee = new LXRXLZRZType(rs[0].x, rs[0].y , rs[0].z,rs[0].x ,rs[0].y,rs[0].z);
+		LXRXLZRZType ee = new LXRXLZRZType(rs[0].x, rs[0].y, rs[0].z, rs[0].x, rs[0].y, rs[0].z);
 
 		ee.lx = rs[0].x;
 		ee.rx = rs[0].x;
@@ -1194,7 +1193,6 @@ public class api_skyblock {
 					// bb = 0;
 					rs[rsMax - 1].lastUsed = (bb);
 				}
-				
 
 				// rs[rsMax - 1].mission = 0;
 

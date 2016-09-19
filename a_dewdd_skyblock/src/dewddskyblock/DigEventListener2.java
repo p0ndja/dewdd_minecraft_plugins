@@ -602,7 +602,7 @@ public class DigEventListener2 implements Listener {
 	}
 
 	public String sky_c_inv_name = "sky c";
-	
+
 	public JavaPlugin ac = null;
 
 	public api_skyblock dew = null;
@@ -1413,15 +1413,11 @@ public class DigEventListener2 implements Listener {
 				} else if (m[1].equalsIgnoreCase("flag")) {
 					player.sendMessage(
 							dprint.r.color(tr.gettr("skyblock add these flag to your zone to activate something")));
-						
-					player.sendMessage(
-							dprint.r.color("/sky <add> <flag>"));
-					player.sendMessage(
-							dprint.r.color("/sky <remove> <flag>"));
-					
-					
+
+					player.sendMessage(dprint.r.color("/sky <add> <flag>"));
+					player.sendMessage(dprint.r.color("/sky <remove> <flag>"));
+
 					tr.showFlagToPlayer(player);
-					
 
 				} else if (m[1].equalsIgnoreCase("buyhere")) {
 					// for buy these zone
