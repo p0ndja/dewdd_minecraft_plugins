@@ -1,0 +1,281 @@
+starting_loading_file  กำลังโหลดปลั๊กอิน
+tree_check_protect_and_not_found  ต้นไม : บล็อคนี้ไม่มีโพเทคของระบบ Main
+tps_below_than_17  เซิฟเวอร์กำลังแลค
+what_the_hell  สงสัยฝันไป !!@#
+unloaded_plugin  ปิดปลั๊กอิน
+starting  กำลังเริ่ม
+recall  recall
+done  done
+loaded_plugin  โหลดปลั๊กอินสำเร็จ
+loaded_file  โหลดไฟล์สำเร็จ
+complete  สำเร็จ
+please_set_block_1  กรุณาใช้ Wooden hoe เลือกบล็อค 1 (ด้วยการคลิกซ้าย)
+dewa_diamond_sword_null  dewa ต้องใช้ ดาบเพชรคลิกขวาบางบล็อคเพื่อกำหนดทิศทาง
+don't_have_enough_item  ของไม่พอ
+you_don't_have_permission_for_delete  คุณไม่มีสิทธิใช้คำสั่งลบ
+loaded_skywar_file  โหลดไฟล์ skywar เสร็จ
+ok_you_can_chat_now  คุณพูดได้แล้ว
+admin_invisible_mode_off  เลิกหายตัว
+please_drop_item_before_item  โยนของก่อนพูด
+teleported_to_skyblock  วาปไปยัง skyblock
+this_is_hardcore_skyblock  นี่คือ rs skyblock
+searching_freezone_for_build_skyblock  กำลังค้นหาที่ว่าง เพื่อสร้างเกาะให้
+added  เพิ่มแล้ว
+to_your_skyblock  ไปยังเกาะของคุณ
+use_money  ใช้เงิน
+admin_invisible_mode_on  หายตัว
+you_have_more_than_1_home_so_choose_it  คุณมีบ้านหลายบ้านต้องใส่ชื่อเจ้าของบ้านเพิ่มต่อท้าย
+host_is  เจ้าของคือ
+not_you  ไม่ใช่คุณ
+already_added_this_name_so_not_work  มีชื่อนี้อยู่แล้วเพิ่มไม่ได้
+it_is_not_a_block  ไม่ใช่บล็อค
+this_world_is_not_skyblock  โลกนี้ไม่ใช่โลก skyblock
+error_argument_1_what_the_hell_item  ไอเทมอะไรเนี่ยไม่รู้จัก
+argument_1_what_the_hell_item  ไม่รู้จักไอเทม
+diamondsword_seted_dewa_block  ใช้ดาบเพชรเลือกบล็อคเสร็จแล้ว ใช่ร่วมกับคำสั่ง /dewa
+this_is_not_your_zone  นี่ไม่ใช่เขตของคุณ
+search  ค้นหา
+can't_go_to_skywar_world_empty_your_inven  วาปไปโลก skywar ไม่ได้ เก็บของทั้งหมดก่อนไป
+auto_sort_chest_2_is_not_chest  เรียงของในกล่องไม่ได้เพราะมันไม่ใช่กล่อง
+can_be_creative_mode_not_admin  ได้เป็นเกมโหมดแต่ไม่ได้เป็นแอดมิน
+gift_not_found_item  gift ไม่เจอไอเทม
+don't_break_hanging_picture_not_yours  ห้ามทำลายรูปในเขตคนอื่น
+gived_item  ให้ของแล้ว
+argument_2_is_radius  ตัวแปรที่สองคือ รัศมี
+don't_have_permission_for_access_delete_command  คุณไม่มีสิทธิใช้คำสั่งลบ
+cleared_your_inventory  ล้างกระเป๋าแล้ว
+don't_spam_this_command  อย่าพิมพ์คำสั่งนี้รัวๆ
+already_in_fly_mode_not_work  คุณอยู่ในโหมดบินอยู่แล้ว
+CONFIG_SAY_POTION_150  40
+CONFIG_EIEI_PRICE  500
+healed_your_weapon  รักษาสิ่งของในตัวแล้ว
+CONFIG_FIXTOOL_MULTIPLY  1
+you_got_money  คุณได้เงินจากการออนไลน์ครบเวลา
+teleported_to_skywar_id_blueprint  วาปไปยังแมพต้นแบบเลขที่
+force_runnow_find_player  บังคับเกมเริ่มทันที ค้นหาผู้เล่น
+skywar_have_full_player  skywar ผู้เล่นเต็ม
+loading_skywar  กำลังโหลด skywar
+random_position  สุ่มพิกัด
+found_spawner  เจอจุดเกิด
+has_been_teleported_to_skywar_id  ได้ถูกวาปไป skywar เลขที่
+skywar_has_been_started  skywar ได้เริ่มต้นแล้ว
+waiting_teleporting  กำลังรอคอยการวาป
+skywar_don't_allow_ender_chest  skywar ไม่ให้เปิด Ender chest
+for  for
+dewa_diamond_axis_=  dewa แกนของ diamond =
+_done_  _done_
+dewa_diamondsword_null_mean_upper  dewa ไม่เจอ บล็อคที่เลือกด้วย ดาบเพชรแปลว่า ขึ้นฟ้า
+gotohell_need_argument_target  ส่งผู้เล่นไปลงนรกต้องการชือผู้เล่น
+only_admin_can_destroy_52  มีแต่แอดมินเท่านั้นที่ทำลายกรงได้
+removed  เอาออกไปแล้ว
+from_your_skyblock  จากเกาะของคุณ
+this_protected_don't_have_this_name  เขตนี้ไม่มีชื่อนี้
+you_don't_have_any_skyblock_create_it_or_join_friend  คุณไม่มีเกาะอยู่เลย สร้างมัน ไม่ก็ไปอยู่กับคนอื่น
+this_world_is_not_skywar  โลกนี้ไม่ใช่โลก skywar
+canfly_now  บินได้แล้ว
+not_you!  ไม่ใช่คุณ !
+overide_this_zone  สิทธัพิเศษในเขตนี้
+this_item_not_allow_for_dewset  ของชิ้นนี้ระบบ dewset ไม่ยอมรับ
+CONFIG_GET_EXP_GET_MONEY  0.99
+error_while_loading_file  error ระหว่างโหลดไฟล์
+not_found_skyblock_of  ไม่พบเกาะของ
+you_can't_remove_your_name_from_your_zone  ห้ามลบชื่อตัวเองออกจากเกาะ
+this_skyblock_owner_is  เกาะนี้เจ้าของคือ
+CONFIG_DEWFLY_PRICE  10000
+this_zone_don't_have_any_protect  พื้นที่นี้ไม่มีโพเทค
+gotohell_only_admin  คำส่งคนไปลงนรกใช้ได้แต่ยศแอดมิน
+amount  จำนวน
+gift_you_got_item_10_times_enough  คุณได้ของมากพอแล้ว
+please_set_block_2  กรุณาใช้จอบไม้คลิกขวาเลือกบล็อคที่สอง
+CONFIG_PORA_MULTIPLY  1
+CONFIG_DURA_MULTIPLY  1
+CONFIG_DEWSUPER_MULTIPLY  1
+autorespawn_skywar  เกิดใหม่ที่โลก skywar
+what_the_hell_item  ของชิ้นนี้คีออะไร
+this_skyblock_deleted_cuz_ofline_too_long_time  เกาะนี้ไม่มีคนออนไลน์นานเกิน จึงโดนลบ
+list_of_offline_players_too_long_time  นี่คือรายชื่อผู้เล่นที่ไม่ได้เข้าเซิฟเป็นเวลานาน
+amount_all_is  จำนวนทั้งหมดคือ
+seting_npc_name  กำลังตั้งชื่อ NPC
+set_complete  ตั้งเสร็จแล้ว
+not_your_zone  ไม่ใช่เขตคุณ
+you_don't_have_permission  คุณไม่มีสิทธิ
+setted_passenger_is_you  ขี่ขอแล้ว
+error_can't_ride_who_riding_you  ไม่อาจขี่คอคนที่เขาขี่คอคุณอยู่
+canpickupitems_set_to  เปลี่ยนค่า การยอมให้เก็บของได้แล้ว
+seting_livingentity_name  กำลังต้ังชื่อสัตว์เลี้ยง
+CONFIG_MAX_ANIMAL_CHICKEN  30
+CONFIG_MAX_ANIMAL_SHEEP  30
+CONFIG_MAX_ANIMAL_COW  30
+CONFIG_MAX_ANIMAL_PIG  30
+CONFIG_MAX_ANIMAL_VILLAGER  30
+CONFIG_MAX_ANIMAL_MUSHROOM_COW  30
+CONFIG_MAX_ANIMAL_HORSE  30
+CONFIG_MAX_ANIMAL_amountCHICKEN  50
+CONFIG_MAX_ANIMAL_amountSHEEP  50
+CONFIG_MAX_ANIMAL_amountVILLAGER  50
+CONFIG_MAX_ANIMAL_amountPIG  50
+CONFIG_MAX_ANIMAL_amountMUSHROOM_COW  50
+CONFIG_MAX_ANIMAL_amountCOW  50
+CONFIG_MAX_ANIMAL_amountHORSE  50
+CONFIG_MAX_ANIMAL_OCELOT  30
+CONFIG_MAX_ANIMAL_amountOCELOT  50
+removed_animal_this_type  ลบสัตว์ชนิดนี้แล้ว
+CONFIG_MAX_ANIMAL_WOLF  30
+CONFIG_MAX_ANIMAL_amountWOLF  50
+starting_checkpercent_of_is  กำลังเริ่มการตรวจสอบความก้าวหน้าของเกาะ
+counting_amo_block  กำลังนับจำนวนบล็อค
+amo_of_block_of_this_island_is_loop1  จำนวนบล็อคจากการค้นหารอบแรก
+starting_searching_loop2  กำลังเริ่มต้นค้นหารอบที่สอง
+amo_of_block_of_this_island_is_loop2  จำนวนบล็อคท้ังหมดของเกาะนี้
+starting_calc_rate_of_is  กำลังคำนวนคะแนนของเกาะ
+eachper  %สูงสุดของแต่ละชนิดบล็อค
+sorting_rank_is  กำลังเริ่มต้นเรียงลำดับ
+sorted_rank_amount_is  เรียงลำดับเสร็จแล้ว
+sum_per_rate_of_island  ความก้าวหน้าของเกาะนี้ คือ
+you_need_to_wait_for_  คุณต้องรอ
+second  วินาที
+scaning_block  กำลังค้นหาบล็อค
+top20_of_rate_island_is  20 รายชื่อเกาะที่มีความก้าวหน้าสูงสุด
+loaded_drate_file  โหลดไฟล์รายการบล็อคเสร็จแล้ว
+starting_count_percent  กำลังเริ่มนับ %
+percent_of_processing_is  กระบวนการประเมินคะแนนทำงานเสร็จไปแล้ว
+calc_percent_of_each_block_complete  การคำนวน % ของแต่ละบล็อคสำเร็จ
+starting_showing_percent_of_each_block_type  เริ่มต้นแสดง % ของแต่ละบล็อค
+counting_rate_is  กำลังค้นหาจำนวนบล็อคที่ติดๆกัน
+starting_call_calc_rate_is_functino_of_this_island  กำลังเรียกฟังค์ชั่นคำนวนความก้าวหน้าของเกาะ
+not_enough_spawner_place_call_admin  จุดเกิดไม่พอแจ้งแอดมิน
+listed_of_runworld  รายชื่อของปลั๊กอินที่ถูกห้ามในโลกที่กำหนด
+generating_runworld_file  กำลังสร้างไฟล์รายชื่อโลกที่ปลั๊กอินจะไม่ทำงาน
+starting_save_file  เริ่มต้นบันทึกไฟล์
+saved_file  บันทึกเสร็จแล้ว
+converting_runworld_file_data  แปลงข้อมูลจำกัดปลั๊กอินในบางโลก
+loaded_runworld_file_data  โหลดไฟล์จำกัดปลั๊กอินในบางโลกสำเร็จ
+percent_of_is_of_this  ความก้าวหน้าของเกาะนี้คือ
+lastplayer_teleperted_back_to_skywar  คนชนะได้ถูกวาปกลับ skywar
+this_area_don't_have_protect  ตรงนี้ไม่มีโพเทค
+don't_place_hanging_picture_not_yours  อย่าวางรูปในเขตคนอื่น
+found_space  found_space
+created_sign  created_sign
+running  running
+this_zone_don't_have_protect  พื้นที่นี้ไม่มีโพเทค
+can_not_skynew_if_have_item  สร้างเกาะใหม่ไม่ได้ ถ้ามียังมีของในกระเป๋า ทิ้งของให้หมด แล้วลองใหม่
+staff_can't_drop_item  staff_can't_drop_item
+buy  buy
+dewbuy_have_enough_money_please_wait  fw buy กำลังซื้อเขต
+dewbuy_before_add_sign_world  fw buy before add sign world
+sign_max  จำนวนโพเทคทั้งหมด
+dewbuy_after_add_sign_world  fw buy_after_add_sign_world
+dewbuy_class_is_ok  fw buy สำเร็จ d
+tree_thiszoneprotectedby  ต้นไม้ เขตนี้เจ้าของคือ
+don't_have_enough_money  เงินไม่พอ
+home_id_is  home_id_is
+dewbuydelete_this_zone_don't_have_protection  fw buydelete เขตนี้ไม่มีโพเทค
+item_on_hand_is_radius  จำนวนของในมือ คือรัศมี
+list_is_null  list_is_null
+overide_adding_skywar  overide_adding_skywar
+good_luck_createlsdone  ขอให้โชคดี เกาะลอยฟ้าได้ถูกสร้างแล้ว
+if_you_want_to_back_to_is_type  ถ้าคุณต้องการวาปกลับพิมพ์
+is_cur_level_mission_showing_  เลเวลเกาะ
+you_dont_have_anyskyblock  คุณไม่มีเกาะลอยฟ้า
+type_this_command_for_create_new_skyblock  พิมพ์คำสั่งนี้เพื่อสร้างเกาะ /sky new
+skyblock_mission_header_default  ภารกิจนี้ยังไม่ได้กำหนด
+mission_complete  ผ่านภารกิจ ดีใจจัง :)
+next_mission  ภารกิจต่อไป
+generated_small_island_at  สร้างเกาะเล็กๆเสร็จละที่ตำแหน่ง
+reseted_c_of_is_this_guys  รีเซ็ตเลเวลเกาะแล้วของคนชื่อ
+error_while_applyReward_c_0_block_is_!=error  พบบล็อคระหว่างให้รางวัลภาคกิจที่ 0
+bone_meal_use_counting_=  ใช้ปุ๋ยกับบล็อคหญ้าไปแล้วเท่านี้ครั้ง >
+skyblock_mission_header_c_3_DROP_TOUCH  ภารกิจ โยนคบไฟ 64 อันในครั้งเดียว
+skyblock_mission_header_c_0_COBBLESTONE_MACHINE  ภารกิจ ขุดบล็อคหินหยาบหนึ่งบล็อค
+got_reward_c_c_0_COBBLESTONE_MACHINE  รางวัลคือ กลุ่มเกาะก้อนหิน
+skyblock_mission_header_c_1_Break_STONE  ภารกิจ ขุดหิน stone
+got_reward_c_c_1_Break_STONE  คุณได้รางวัลเป็นเกาะดินเล็กๆ
+skyblock_mission_header_c_2_USE_BONE_MEAL  ภารกิจ ใช้ปุ๋ยกับบล็อคหญ้า 45 ครั้ง
+got_reward_c_c_2_USE_BONE_MEAL  คุณได้รางวัล เป็นกล่องมีของข้างในอยู่ไกลๆพร้อมไฟหนึ่งดวง xD
+owner_of_island_name  เจ้าของเกาะ
+did_mission_complete  ทำภารกิจนี้สำเร็จ >
+got_reward_c_c_3_DROP_TOUCH  ได้รางวัลเป็นแร่เหล็ก
+you_dont_have_anysky  คุณยังไม่มีเกาะใดๆเลย
+type_this_command_for_create_new_sky  สร้างเกาะซิ พิมพ์ /sky new
+to_your_sky  ไปยังเกาะ
+skyblock_mission_header_c_4_Place_y1  ภารกิจ ต่อบล็อคลงไปชั้นล่างสุดของแมพ
+got_reward_c_c_4_Place_y1  คุณได้รางวัล คือเกาะแร่ขนาดย่อมๆ ได้เวลาขุดๆ
+skyblock_mission_header_c_5_ZOMBIE_ATTACK_1  ภารกิจ ทำลายบล็อคที่น่ากลัวที่สุด !@#!@
+got_reward_c_c_5_ZOMBIE_ATTACK_1  เย้ คุณรอดจากการบุกของฝูง zombie รางวัลคืออยู่ในกล่องที่อยู่บนแร่เพชร
+skyblock_mission_header_c_6_DROP_WHEAT  ภารกิจ โยนข้าว 64 ฟางเถอะครับจะได้ไม่เป็นภาระของลูกหลาน
+got_reward_c_c_6_DROP_WHEAT  จะเอารางวัลหรอ มองฟ้าซิ
+got_reward_c_c_NULL  got_reward_c_c_NULL
+error_while_applyReward_c_0_block_is_!=_air  error_while_applyReward_c_0_block_is_!=_air
+amount_of_unique_island_is  จำนวนเกาะที่ไม่ซ้ำกันคือ
+owner_of_this_island_name  เจ้าของเกาะแห่งนี้ชื่อ
+skyblock_mission_header_c_0_BREAK_COBBLESTONE  ภารกิจขุด cobblestone
+got_reward_c_c_0_BREAK_COBBLESTONE  คุณได้รางวัลคือเกาะหิน
+on_skyblock_playerjoin_tell_him_this_word  ประกาศจากแอดมิน คุยกันที่ facebook : dewddminecraft
+on_main_playerjoin_tell_him_this_word  เพิ่มระบบ Dew Shop พิมพ์ /dft shop ไว้ซื้อของ :) , /sky c เอาของที่ระบบต้องการ NEED ใส่ลงไปให้ครบ ปิดกระเป๋าจะได้รางวัล , วิธีขายของดูที่สปาว
+need_argument_player_or_flag  ต้องการชื่อผู้เล่นหรือ flag
+your_friend_name  เพื่อนคุณชื่อ
+allow_monster_spawn_at_your_zone  ยอมให้มอนเกิดในเกาะคุณ
+allow_to_hit_player  ยอมให้ตีกันได้
+stop_lava_and_water_flowing  หยุดลาวาและน้ำไหล
+not_allow_lava_and_water_flowing_to_your_zone  ไม่ยอมให้ลาวาหรือน้ำไหลเข้าสู่โพเทคของคุณ
+allow_everyone_rightclick  ยอมให้ทุกคนคลิกขวา
+explain_sell_flag  explain_sell_flag
+explain_sell_flag_2  explain_sell_flag_2
+not_allow_hit_animal  ไม่ยอมให้ตีสัตว์
+not_allow_another_right_click_at_hopper  ไม่ยอมให้คนอื่นคลิกขวาที่ hopper
+override_to_delete_this_island_protect_owner_is  สิทธิพิเศษ ลบโพเทคเกาะนี้ เจ้าของเดิมคือ
+can_not_deleteskyprotect_if_have_item  ไม่ยอมให้ลบโพเทค skyblock ถ้ายังมีของในตัว
+can't_give_owner_to_this_guy  ไม่สามารถให้ความเป็นเจ้าของแก่คนนี้
+cuz_he_already_owner_another_island  เพราะว่า เขาเป็นเจ้าของเกาะอื่นอยู่แล้ว
+skyblock_mission_header_3  skyblock_mission_header_3
+sorttype_name_must_not_null  sorttype ต้องไม่เป็น null
+don't_interact_not_your  don't_interact_not_your
+don't_breakbyentity_hanging_picture_not_yours  ห้ามตีกรอบรูปที่ไม่ใช่ของคุณ
+dew_shop_you_bought_item_name  คุณซื้อไอเทม
+money_left  เหลือเงิน
+dew_shop_not_enoght_money_to_bet  เงินไม่พอจะซื้อของ
+dew_shop_you_don't_have_space_inventory_can't_buy  กระเป๋าเต็มซื้อไม่ได้
+cur_c_is  เลเวลเกาะคือ
+you_can't_deleteisland_cuz_owner_here_is  ลบเกาะนี้ไม่ได้ คุณไม่ใช่เจ้าของ
+sky_c_got_all_item_to_completed_cur_c_  ได้ของครบแล้ว ผ่านภารกิจจ้า
+dewbuy_not_complete_need_money  fw buy ซื้อไม่ได้เงินไม่พอ
+teleported_your_to_zone_id  วาปคุณไปในเขตที่
+gave_item_to_you  ให้ไอเทมแก่คุณ
+home_id  home id
+this_zone_protected_by  พื้นที่นี้ปกป้องโดย
+search_home_id  ค้นหา home id
+enter_to_sky_protect_of_  เข้าสู่โพเทคสกายบล็อคของ
+enter_to_main_protect_of_  เข้าสู่โพเทคของ
+exit_from_main_protect_of_  ออกจากโพเทคของ
+this_zone_sell_as_price  พื้นที่นี้ขายในราคา
+if_you_wanna_buy_it_type  ถ้าคุณต้องการซื้อพิมพ์
+dewbuyzone_thiszonepriceis  fw buyzone พื้นที่นี้ราคา
+skyblock_add_these_flag_to_your_zone_to_activate_something  เพิ่ม flag เหล่านี้เข้าสู่เขตโพเทคของคุณเพืึอเปิดปิดการทำงานบางอย่าง
+flag_<autoabsorb>_meaning  หมายถึง ของทุกอย่างในเกาะที่ไม่มีใครเก็บ จะโดนวาปแล้วตกมาจากฟ้ากลางเกาะ
+flag_<autocut>_meaning  หมายถึง พืชผักต่างๆถ้าโตเต็มที่มันจะตัดตัวเอง (ยกเว้น ฟักทองและแตงโม)
+flag_<everyone>_meaning  หมายถึง ยอมให้คนอื่นๆ คลิกขวาที่เกาะได้
+flag_<!explode>_meaning  หมายถึง ป้องกันบล็อคเสียหายจากแรงระเบิด
+flag_<!monster>_meaning  หมายถึง ห้ามมอนสเตอร์เกิดในเกาะ
+flag_<disable>_meaning  หมายถึง ปิดระบบโพเทคทั้งเกาะ
+flag_<pvp>_meaning  หมายถึง ห้าม pvp กัน
+exit_from_sky_protect_of_  ออกจากโพเทคสกายบล็อคของ
+this_zone_someone_bought_it  พื้นที่นี้บางคนซื้อไปแล้ว
+don't_have_your_name_on_this_protect  ไม่มีชื่อคุณในเขตโพเทคนี้
+save_teleport_completed  save จุด teleport เสร็จแล้ว ต่อไปหาที่ดีๆพิมพ์ /dewloadteleport
+this_zone_is_protected_you_can't_build  พื้นที่นี้เป็นของใครบางคน คุณไม่มีสิทธิ์สร้างได้
+list_of_sky_protect_name_like_your_search_name  รายชื่อเจ้าของเกาะ ที่คาดว่า คล้ายกับสิ่งที่คุณกำลังค้นหา
+you_don't_have_permission_  you_don't_have_permission_
+you_can't_exit_from_your_own_protect_if_you_want_try_another_command_such_as_delete_or_owner  คุณไม่อาจถอนตัวออกจากเกาะตัวเองได้เพราะคุณเป็นเจ้าของ ถ้าต้องการโอนเจ้าของให้คนอื่น /sky owner <name> หรือ ต้องการลบโพเทคเกาะ /sky delete
+not_enought_argument_type_this  ใส่ตัวแปรไม่ครบ
+you_exited_from_sky_protect_of_  ออกจากโพเทคสกายบล็อคของ
+cur_lv_is  cur_lv_is
+explain_sell_Constant_Protect.flag_2  เขตโพเทคไหนที่มี owner เป็น <sell> และสมาชิกหมายเลขสองเป็นราคา แปลว่าเปิดให้คนอื่นมาซื้อเขตนี้ได้
+not_found_this_potioneffecttype  ไม่พบยาชื่อนี้
+fw_add_these_flag_to_your_zone_to_activate_something  /fw add <flag> เพิ่ม Flag เหล่านี้เข้าสู่โพเทคของคุณเพื่อเปิดการทำงานบางอย่าง
+flag_<!protectanimal>_meaning  flag <!protectanimal> แปลว่า ให้คนอื่นตีสัตว์ในเกาะได้
+fw_protected_zone_max_of_this_world_is_  จำนวน fw โพเทคทั้งหมดในโลกนี้คือ
+this_name_already_added_can't_add  this_name_already_added_can't_add
+you_need_to_type_/dewsaveteleport_first  คุณต้องพิมพ์คำสั่งนี้ > /dewsaveteleport เพื่อบันทึกจุดวาปก่อน
+dewbuyzone_thiszone_not_for_sell  dewbuyzone_thiszone_not_for_sell
+moved  moved
+not_found_npc not_found_npc

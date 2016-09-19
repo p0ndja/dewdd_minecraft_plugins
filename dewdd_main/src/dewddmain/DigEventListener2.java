@@ -58,11 +58,14 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.event.server.ServerCommandEvent;
 import org.bukkit.event.world.ChunkUnloadEvent;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.potion.PotionEffectType;
 
 import api_admin.dewddadmin;
+import dewddflower.RSData;
+import dewddflower.RSWorld;
 import dewddflower.dewset;
 import dewddtran.tr;
 import li.Constant_Protect;
@@ -98,8 +101,9 @@ public class DigEventListener2 implements Listener {
 			}
 
 			if (m[0].equalsIgnoreCase("showworldlist")) {
-				for (int lop = 0; lop < dew.dewworldlistmax; lop++) {
-					player.sendMessage(lop + " = " + dew.dewworldlist[lop]);
+				for (int lop = 0; lop < dew.rsWorld.size(); lop++) {
+					RSWorld tmpworld = dew.rsWorld.get(lop);
+					player.sendMessage(lop + " = " + tmpworld.worldName);
 				}
 			}
 
@@ -112,29 +116,26 @@ public class DigEventListener2 implements Listener {
 			if (m[0].equalsIgnoreCase("showsignlist")) {
 				if (m.length == 1) {
 					// load protect id
-					int xyz = dew.getProtectid(block);
-					if (xyz == -1) {
-						player.sendMessage(tr.gettr("this_zone_don't_have_protect"));
+					RSWorld worldid = dew.getWorld(player.getWorld().getName());
+					if (worldid == null) {
+						player.sendMessage(dprint.r.color(tr.gettr("this world don't have fw protect")));
 						return;
 					}
 
-					player.sendMessage("xyz = " + dew.dewsignx1[dew.getworldid(player.getWorld().getName())][xyz] + ","
-							+ dew.dewsigny1[dew.getworldid(player.getWorld().getName())][xyz] + ","
-							+ dew.dewsignz1[dew.getworldid(player.getWorld().getName())][xyz] + " to "
-							+ dew.dewsignx2[dew.getworldid(player.getWorld().getName())][xyz] + ","
-							+ dew.dewsigny2[dew.getworldid(player.getWorld().getName())][xyz] + ","
-							+ dew.dewsignz2[dew.getworldid(player.getWorld().getName())][xyz]);
-					// show all informations
-					for (int lop = 0; lop < dew.dewsignnamemax; lop++) {
-						player.sendMessage(
-								lop + " = " + dew.dewsignname[dew.getworldid(player.getWorld().getName())][xyz][lop]);
+					for (int lop = 0; lop < worldid.rs.size(); lop++) {
+						RSData rs = worldid.rs.get(lop);
+
+						player.sendMessage(dew.getPositionSignAsString(worldid, rs));
+						for (int lop2 = 0; lop2 < dew.FWMaxPlayer; lop2++) {
+							player.sendMessage(lop2 + " = " + rs.p[lop2]);
+						}
 					}
 
 				}
-				for (int lop = 0; lop < dew.dewworldlistmax; lop++) {
-					player.sendMessage(lop + " = " + dew.dewworldlist[lop]);
-				}
+
 			}
+
+			callFWMethod(m);
 
 			if (m[0].equalsIgnoreCase("cleardrop") == true || m[0].equalsIgnoreCase("cp") == true
 					|| m[0].equalsIgnoreCase("cd") == true) {
@@ -315,7 +316,6 @@ public class DigEventListener2 implements Listener {
 
 			if (message.equalsIgnoreCase("pmain") == true) {
 
-			
 				player.sendMessage(dprint.r
 						.color(dew.pmaindelete + " " + Boolean.toString(player.hasPermission(dew.pmaindelete))));
 				player.sendMessage(dprint.r.color(dew.pmaindewbuychangehost + " "
@@ -345,10 +345,7 @@ public class DigEventListener2 implements Listener {
 
 			// ***********************
 
-		
-
 			int idc = dew.getfreeselect(player);
-			
 
 			// cleardrop
 
@@ -368,12 +365,12 @@ public class DigEventListener2 implements Listener {
 
 			// savesignfile
 			if (message.equalsIgnoreCase("dewsavesignfile") == true) {
-				dew.savesignfile(-1, dew.getworldid(player.getWorld().getName()));
+				RSWorld tmpworld = dew.getWorld(player.getWorld().getName());
+
+				dew.savesignfile(-1, tmpworld);
 				player.sendMessage("ptdew&dewdd : Saved Sign File");
 				return;
 			}
-
-			
 
 			dew.linkurl(player, message);
 
@@ -429,75 +426,6 @@ public class DigEventListener2 implements Listener {
 					}
 
 				}
-
-			if (message.equalsIgnoreCase("checkhome") == true) {
-
-				int co = 0;
-
-				for (int wla = 0; wla < dew.dewworldlistmax + 1; wla++) {
-					for (int ie = 0; ie < dew.dewsignmax[wla]; ie++) {
-						dprint.r.printAll("" + ie);
-						if (ie != dew.getworldid(player.getLocation().getWorld().getName())) {
-							continue;
-						}
-
-						boolean stafffound = false;
-						boolean memberfound = false;
-
-						for (String whoin : dew.dewsignname[wla][ie]) {
-							co++;
-
-							// dprint.r.printAll(whoin);
-							/*
-							 * if (api_admin.dewddadmin.issubsubadminname(whoin)
-							 * == true) { stafffound = true; dprint.r.printAll(
-							 * "staff found +" + whoin);
-							 * 
-							 * }
-							 */
-
-							/*
-							 * if (api_admin.dewddadmin.issubsubadminname(whoin)
-							 * == false &&
-							 * api_admin.dewddadmin.isadminname(whoin) == false
-							 * && whoin.startsWith("<") == false &&
-							 * whoin.equalsIgnoreCase(Constant_Protect.
-							 * flag_everyone) == false &&
-							 * whoin.equalsIgnoreCase("null") == false) {
-							 * memberfound = true; dprint.r.printAll(
-							 * "member = " + whoin); }
-							 */
-						}
-
-						// dprint.r.printAll(Boolean.toString(stafffound) + ", "
-						// +
-						// Boolean.toString(memberfound) );
-						if (stafffound == true && memberfound == true) {
-							player.sendMessage("/* id home = " + ie);
-							player.sendMessage("this home staff live with member!!!");
-							player.sendMessage("world = " + wla);
-
-							for (String ab : dew.dewsignname[wla][ie]) {
-								player.sendMessage(ab);
-							}
-
-							player.sendMessage("xyz1=" + dew.dewsignx1[wla][ie] + "," + dew.dewsigny1[wla][ie] + ","
-									+ dew.dewsignz1[wla][ie]);
-							player.sendMessage("xyz2=" + dew.dewsignx2[wla][ie] + "," + dew.dewsigny2[wla][ie] + ","
-									+ dew.dewsignz2[wla][ie]);
-							player.sendMessage("*/");
-							return;
-						}
-
-					} // all sign in world
-				}
-				dprint.r.printAll("" + co);
-
-				dprint.r.printAll("check home done");
-				canc = true;
-				return;
-
-			} // check home
 
 			if (message.equalsIgnoreCase("dewextend") == true || message.equalsIgnoreCase("de") == true) {
 				dew.dewextend(player);
@@ -580,448 +508,167 @@ public class DigEventListener2 implements Listener {
 
 			// "dewadd="
 
-			if (m[0].equalsIgnoreCase("fw") || m[0].equalsIgnoreCase("flower") || m[0].equalsIgnoreCase("flower")) {
-
-				int worldid = dew.getworldid(player.getWorld().getName());
-
-				if (m.length == 1) {
-					player.sendMessage(dprint.r.color("/flower buy"));
-					player.sendMessage(dprint.r.color("/flower buyzone"));
-					player.sendMessage(dprint.r.color("/flower buydelete"));
-
-					player.sendMessage(dprint.r.color("/flower home <id>"));
-					player.sendMessage(dprint.r.color("/flower add <player>"));
-					player.sendMessage(dprint.r.color("/flower addat <slot> <player>"));
-
-					player.sendMessage(dprint.r.color("/flower remove <player>"));
-					player.sendMessage(dprint.r.color("/flower list"));
-					player.sendMessage(dprint.r.color("/flower owner <player>"));
-					player.sendMessage(dprint.r.color("/flower exitFromThisHome <owner name>"));
-
-					player.sendMessage(dprint.r.color("/flower goid <id>"));
-					player.sendMessage(dprint.r.color("/flower gorandom"));
-					player.sendMessage(dprint.r.color("/flower flag"));
-
-					player.sendMessage(dprint.r.color("/flower max"));
-
+			if (api_admin.dewddadmin.is2admin(player.getPlayer()) == true
+					|| api_admin.dewddadmin.is2moderator(player.getPlayer()) == true) {
+				// clearmon
+				if (message.equalsIgnoreCase("clear") == true) {
+					player.getInventory().clear();
+					player.sendMessage("ptdew&dewdd : " + tr.gettr("cleared_your_inventory"));
 					return;
-				} else {
-					if (m[1].equalsIgnoreCase("home") == true) {
-						if (m.length == 2) {
-							player.sendMessage(dprint.r.color("/fw home <id>"));
+				}
+				// dewgoxxx
 
-							for (int i = 0; i < dew.dewsignmax[worldid]; i++) {
-								for (int j = 0; j < dew.dewsignnamemax; j++) {
+				// player.sendMessage("'" + message.substring(0, 6) + "'");
 
-									if (dew.dewsignname[worldid][i][j].equalsIgnoreCase(player.getName())) {
+			}
 
-										player.sendMessage(dprint.r.color("" + i));
-										break;
-									}
+			if (message.equalsIgnoreCase("clearmon") == true) {
 
-								}
+				for (Entity ent : player.getWorld().getEntities()) {
 
-							}
-						} else if (m.length == 3) {
-							int id = Integer.parseInt(m[2]);
-							dew.teleportPlayerToProtectID(id, player);
-						}
-
-						return;
+					if (ent.getCustomName().equalsIgnoreCase("") == false) {
+						continue;
 					}
 
-					// dewbuy
-					if (m[1].equalsIgnoreCase("buy") == true) {
-						dew.dewbuy(player);
-						canc = true;
-						return;
+					if (ent.getType() == org.bukkit.entity.EntityType.CREEPER) {
+						ent.remove();
 					}
-
-					// dewbuyzone
-					if (m[1].equalsIgnoreCase("buyzone") == true) {
-						dew.dewbuyzone(player, player.getLocation().getBlock());
-						canc = true;
-						return;
+					if (ent.getType() == org.bukkit.entity.EntityType.SKELETON) {
+						ent.remove();
 					}
-
-					if (m[1].equalsIgnoreCase("buydelete") == true) {
-						dew.dewbuydelete(player);
-						return;
+					if (ent.getType() == org.bukkit.entity.EntityType.ZOMBIE) {
+						ent.remove();
 					}
-
-					if (m[1].equalsIgnoreCase("add") == true) {
-						dew.fw_add(message, player);
-						return;
+					if (ent.getType() == org.bukkit.entity.EntityType.SPIDER) {
+						ent.remove();
 					}
-
-					// "dewremove="
-
-					// "dewadd="
-					if (m[1].equalsIgnoreCase("remove") == true) {
-						dew.fw_remove(message, player);
-						return;
+					if (ent.getType() == org.bukkit.entity.EntityType.CAVE_SPIDER) {
+						ent.remove();
 					}
-
-					if (m[1].equalsIgnoreCase("list") == true) {
-						dew.fw_list(player);
-						return;
+					if (ent.getType() == org.bukkit.entity.EntityType.BLAZE) {
+						ent.remove();
 					}
-
-					if (m[1].equalsIgnoreCase("flag") == true) {
-						player.sendMessage(
-								dprint.r.color(tr.gettr("fw add these flag to your zone to activate something")));
-
-						player.sendMessage(dprint.r.color("/fw <add> <flag>"));
-						player.sendMessage(dprint.r.color("/fw <remove> <flag>"));
-
-						tr.showFlagToPlayer(player);
-						return;
+					if (ent.getType() == org.bukkit.entity.EntityType.ENDERMAN) {
+						ent.remove();
 					}
-
-					// allow 1
-
-					if (m[1].equalsIgnoreCase("owner") == true) {
-						if (m.length != 3) {
-							player.sendMessage("/fw owner <name>");
-							return;
-						}
-
-						if (player.hasPermission(dew.pmaindewbuychangehost) == false) {
-							player.sendMessage("ptdew&dewdd : " + tr.gettr("need_permission_change_host")
-									+ dew.pmaindewbuychangehost);
-							return;
-						}
-
-						String nameToAdd = m[2];
-
-						int xyz = dew.getProtectid(player.getLocation().getBlock());
-
-						dprint.r.printC("ptdew&dewdd : /fw owner <name> = '" + nameToAdd + "'");
-						System.out.println("ptdew&dewdd : /fw owner " + tr.gettr("home_id") + " id = '" + xyz + "'");
-
-						if (xyz == -1) {
-							player.sendMessage("ptdew&dewdd : " + tr.gettr("this_zone_don't_have_protect"));
-							return;
-						}
-
-						// change name 2
-						dew.dewsignname[dew.getworldid(player.getWorld().getName())][xyz][0] = nameToAdd;
-						player.sendMessage("ptdew&dewdd : " + tr.gettr("this_zone_protected_by") + " ...");
-						for (int ici = 0; ici < dew.dewsignnamemax; ici++) {
-							player.sendMessage(ici + " = "
-									+ dew.dewsignname[dew.getworldid(player.getWorld().getName())][xyz][ici]);
-						}
-						dew.savesignfile(-1, dew.getworldid(player.getWorld().getName()));
-
-						return;
+					if (ent.getType() == org.bukkit.entity.EntityType.BAT) {
+						ent.remove();
 					}
-
-					if (m[1].equalsIgnoreCase("goid") == true) {
-						if (m.length != 3) {
-							player.sendMessage("/fw goid <protect id>");
-							return;
-						}
-
-						dew.fw_goid(player, Integer.parseInt(m[2]));
-						return;
+					if (ent.getType() == org.bukkit.entity.EntityType.SLIME) {
+						ent.remove();
 					}
-
-					if (m[1].equalsIgnoreCase("gorandom") == true) {
-						int gotox = rnd.nextInt(dew.dewsignmax[worldid]);
-
-						if (dew.getworldid(player.getWorld().getName()) == -1) {
-							player.sendMessage("ptdew&dewdd : " + tr.gettr("this_world_don't_have_protect"));
-
-							return;
-						}
-
-						player.sendMessage("/fw gorandom '" + gotox + "'" + "/"
-								+ (dew.dewsignmax[dew.getworldid(player.getWorld().getName())] - 1));
-
-						if (gotox < -1 || gotox > dew.dewsignmax[dew.getworldid(player.getWorld().getName())] - 1) {
-							player.sendMessage("ptdew&dewdd : dewgo   -1 < ? < "
-									+ (dew.dewsignmax[dew.getworldid(player.getWorld().getName())] - 1));
-							return;
-						}
-
-						dew.teleportPlayerToProtectID(gotox, player);
-
-						return;
+					if (ent.getType() == org.bukkit.entity.EntityType.GHAST) {
+						ent.remove();
 					}
-
-					if (m[1].equalsIgnoreCase("max") == true) {
-						player.sendMessage(dprint.r
-								.color(tr.gettr("fw protected zone max of this world is ") + dew.dewsignmax[worldid]));
-						return;
+					if (ent.getType() == org.bukkit.entity.EntityType.ENDERMAN) {
+						ent.remove();
 					}
-
-					if (m[1].equalsIgnoreCase("addat") == true) {
-						/*
-						 * if
-						 * (api_admin.dewddadmin.is2moderator(player.getName())
-						 * == true) { player.sendMessage(
-						 * "ptdew&dewdd : staff can't allow another player to your home zone"
-						 * ); player.sendMessage(
-						 * "ptdew&dewdd : staff ห้ามเพิ่มคนเข้าบ้าน ห้ามใช้คำสั่งนี้"
-						 * );
-						 * 
-						 * return; }
-						 */
-
-						if (m.length != 4) {
-							player.sendMessage("/fw addat <slot> <name>");
-							return;
-						}
-
-						int homeslot = Integer.parseInt(m[2]);
-						if (homeslot < 2 || homeslot > dew.dewsignnamemax) {
-							player.sendMessage("homeslot = 1 < ? < " + dew.dewsignnamemax);
-							return;
-						}
-						player.sendMessage("homeslot = " + homeslot);
-
-						String nameToAdd = m[3];
-						int xyz = dew.getProtectid(player.getLocation().getBlock());
-
-						// id of home
-
-						dprint.r.printC("ptdew&dewdd : /fw addat " + homeslot + " name = '" + nameToAdd + "'");
-						System.out.println("ptdew&dewdd : /fw addat " + homeslot + " seacrh home id = '" + xyz + "'");
-
-						if (xyz == -1) {
-							player.sendMessage("ptdew&dewdd : " + tr.gettr("this_zone_don't_have_protect"));
-
-							return;
-						}
-
-						// check host
-						if (dew.dewsignname[dew.getworldid(player.getWorld().getName())][xyz][0]
-								.equalsIgnoreCase(player.getName()) == false
-								&& player.hasPermission(dew.pmaindewbuymodifymember) == false) {
-							player.sendMessage("ptdew&dewdd : " + tr.gettr("this_zone_host_is")
-									+ dew.dewsignname[dew.getworldid(player.getWorld().getName())][xyz][0]);
-
-							return;
-						}
-
-						// change name 2
-						// add staff but not admin or staff
-						/*
-						 * if (api_admin.dewddadmin.issubsubadminname(str11) ==
-						 * true && api_admin.dewddadmin.is2admin(player) ==
-						 * false && api_admin.dewddadmin.is2moderator(player) ==
-						 * false) {
-						 * 
-						 * player.sendMessage("ptdew&dewdd : " +
-						 * tr.gettr("Member_can't_add_staff_to_your_zone") +
-						 * dew.dewsignname[dew.getworldid(player
-						 * .getWorld().getName())][xyz][0]); player.sendMessage(
-						 * "ptdew&dewdd : ผู้เล่นธรรมดา ห้ามเพิ่มสตาฟเข้าบ้านของคุณนะ > "
-						 * + dew.dewsignname[dew.getworldid(player
-						 * .getWorld().getName())][xyz][0]);
-						 * 
-						 * return; }
-						 */
-						// add member but is staff
-						/*
-						 * if (api_admin.dewddadmin.issubsubadminname(str11) ==
-						 * false && api_admin.dewddadmin.isadminname(str11) ==
-						 * false && api_admin.dewddadmin.is2moderator(player) ==
-						 * true) { if
-						 * (str11.equalsIgnoreCase(Constant_Protect.flag_sell)
-						 * == true) { dprint.r.printAll("ptdew&dewdd : staff " +
-						 * player.getName() + " try to add <sell> to protect");
-						 * return; } player.sendMessage("ptdew&dewdd : " +
-						 * tr.gettr("staff_can't_add_member_to_your_zone") +
-						 * dew.dewsignname[dew.getworldid(player
-						 * .getWorld().getName())][xyz][0]); player.sendMessage(
-						 * "ptdew&dewdd : สตาฟห้ามเพิ่มคนธรมมดาเข้าบ้านของคุณนะ > "
-						 * + dew.dewsignname[dew.getworldid(player
-						 * .getWorld().getName())][xyz][0]);
-						 * 
-						 * return; }
-						 */
-
-						dew.dewsignname[dew.getworldid(player.getWorld().getName())][xyz][homeslot - 1] = nameToAdd;
-
-						player.sendMessage("ptdew&dewdd : " + tr.gettr("this_zone_protected_by"));
-
-						for (int ici = 0; ici < dew.dewsignnamemax; ici++) {
-							player.sendMessage(ici + " = "
-									+ dew.dewsignname[dew.getworldid(player.getWorld().getName())][xyz][ici]);
-						}
-
-						dew.savesignfile(-1, dew.getworldid(player.getWorld().getName()));
-						return;
+					if (ent.getType() == org.bukkit.entity.EntityType.GIANT) {
+						ent.remove();
 					}
-
-					// ***************************************
-					// ***************************************
+					if (ent.getType() == org.bukkit.entity.EntityType.PIG_ZOMBIE) {
+						ent.remove();
+					}
+					if (ent.getType() == org.bukkit.entity.EntityType.WITCH) {
+						ent.remove();
+					}
+					if (ent.getType() == org.bukkit.entity.EntityType.MAGMA_CUBE) {
+						ent.remove();
+					}
+					if (ent.getType() == org.bukkit.entity.EntityType.WITHER) {
+						ent.remove();
+					}
+					if (ent.getType() == org.bukkit.entity.EntityType.ENDER_DRAGON) {
+						ent.remove();
+					}
+					if (ent.getType() == org.bukkit.entity.EntityType.SILVERFISH) {
+						ent.remove();
+					}
 
 				}
+				player.sendMessage("DewDD:ClearMon done");
+				canc = true;
+				return;
 
-				if (api_admin.dewddadmin.is2admin(player.getPlayer()) == true
-						|| api_admin.dewddadmin.is2moderator(player.getPlayer()) == true) {
-					// clearmon
-					if (message.equalsIgnoreCase("clear") == true) {
-						player.getInventory().clear();
-						player.sendMessage("ptdew&dewdd : " + tr.gettr("cleared_your_inventory"));
-						return;
+			}
+
+			if (message.equalsIgnoreCase("pvp=false") == true) {
+				player.getWorld().setPVP(false);
+				player.sendMessage("disable-pvp");
+			}
+			if (message.equalsIgnoreCase("pvp=true") == true) {
+				player.getWorld().setPVP(true);
+				player.sendMessage("enable-pvp");
+			}
+
+			if (message.equalsIgnoreCase("clearpig") == true) {
+
+				for (Entity ent : player.getWorld().getEntities())
+					if (ent.getType() == org.bukkit.entity.EntityType.PIG) {
+						ent.remove();
 					}
-					// dewgoxxx
+				player.sendMessage("ptdew&dewdd :Clearpig");
+				canc = true;
+				return;
 
-					// player.sendMessage("'" + message.substring(0, 6) + "'");
+			}
 
-				}
+			if (message.equalsIgnoreCase("clearcow") == true) {
 
-				if (message.equalsIgnoreCase("clearmon") == true) {
-
-					for (Entity ent : player.getWorld().getEntities()) {
-
-						if (ent.getCustomName().equalsIgnoreCase("") == false) {
-							continue;
-						}
-
-						if (ent.getType() == org.bukkit.entity.EntityType.CREEPER) {
-							ent.remove();
-						}
-						if (ent.getType() == org.bukkit.entity.EntityType.SKELETON) {
-							ent.remove();
-						}
-						if (ent.getType() == org.bukkit.entity.EntityType.ZOMBIE) {
-							ent.remove();
-						}
-						if (ent.getType() == org.bukkit.entity.EntityType.SPIDER) {
-							ent.remove();
-						}
-						if (ent.getType() == org.bukkit.entity.EntityType.CAVE_SPIDER) {
-							ent.remove();
-						}
-						if (ent.getType() == org.bukkit.entity.EntityType.BLAZE) {
-							ent.remove();
-						}
-						if (ent.getType() == org.bukkit.entity.EntityType.ENDERMAN) {
-							ent.remove();
-						}
-						if (ent.getType() == org.bukkit.entity.EntityType.BAT) {
-							ent.remove();
-						}
-						if (ent.getType() == org.bukkit.entity.EntityType.SLIME) {
-							ent.remove();
-						}
-						if (ent.getType() == org.bukkit.entity.EntityType.GHAST) {
-							ent.remove();
-						}
-						if (ent.getType() == org.bukkit.entity.EntityType.ENDERMAN) {
-							ent.remove();
-						}
-						if (ent.getType() == org.bukkit.entity.EntityType.GIANT) {
-							ent.remove();
-						}
-						if (ent.getType() == org.bukkit.entity.EntityType.PIG_ZOMBIE) {
-							ent.remove();
-						}
-						if (ent.getType() == org.bukkit.entity.EntityType.WITCH) {
-							ent.remove();
-						}
-						if (ent.getType() == org.bukkit.entity.EntityType.MAGMA_CUBE) {
-							ent.remove();
-						}
-						if (ent.getType() == org.bukkit.entity.EntityType.WITHER) {
-							ent.remove();
-						}
-						if (ent.getType() == org.bukkit.entity.EntityType.ENDER_DRAGON) {
-							ent.remove();
-						}
-						if (ent.getType() == org.bukkit.entity.EntityType.SILVERFISH) {
-							ent.remove();
-						}
-
+				for (Entity ent : player.getWorld().getEntities())
+					if (ent.getType() == org.bukkit.entity.EntityType.COW) {
+						ent.remove();
 					}
-					player.sendMessage("DewDD:ClearMon done");
-					canc = true;
-					return;
+				player.sendMessage("ptdew&dewdd :Clearcow");
+				canc = true;
+				return;
 
-				}
+			}
+			if (message.equalsIgnoreCase("clearchicken") == true) {
 
-				if (message.equalsIgnoreCase("pvp=false") == true) {
-					player.getWorld().setPVP(false);
-					player.sendMessage("disable-pvp");
-				}
-				if (message.equalsIgnoreCase("pvp=true") == true) {
-					player.getWorld().setPVP(true);
-					player.sendMessage("enable-pvp");
-				}
+				for (Entity ent : player.getWorld().getEntities())
+					if (ent.getType() == org.bukkit.entity.EntityType.CHICKEN) {
+						ent.remove();
+					}
+				player.sendMessage("ptdew&dewdd :Clearchicken");
+				canc = true;
+				return;
 
-				if (message.equalsIgnoreCase("clearpig") == true) {
+			}
 
-					for (Entity ent : player.getWorld().getEntities())
-						if (ent.getType() == org.bukkit.entity.EntityType.PIG) {
-							ent.remove();
-						}
-					player.sendMessage("ptdew&dewdd :Clearpig");
-					canc = true;
-					return;
+			if (message.equalsIgnoreCase("clearsheep") == true) {
 
-				}
+				for (Entity ent : player.getWorld().getEntities())
+					if (ent.getType() == org.bukkit.entity.EntityType.SHEEP) {
+						ent.remove();
+					}
+				player.sendMessage("ptdew&dewdd :ClearSHEEP");
+				canc = true;
+				return;
 
-				if (message.equalsIgnoreCase("clearcow") == true) {
+			}
+			if (message.equalsIgnoreCase("clearvillager") == true) {
 
-					for (Entity ent : player.getWorld().getEntities())
-						if (ent.getType() == org.bukkit.entity.EntityType.COW) {
-							ent.remove();
-						}
-					player.sendMessage("ptdew&dewdd :Clearcow");
-					canc = true;
-					return;
+				for (Entity ent : player.getWorld().getEntities())
+					if (ent.getType() == org.bukkit.entity.EntityType.VILLAGER) {
+						ent.remove();
+					}
+				player.sendMessage("ptdew&dewdd :ClearVillager");
+				canc = true;
+				return;
 
-				}
-				if (message.equalsIgnoreCase("clearchicken") == true) {
+			}
 
-					for (Entity ent : player.getWorld().getEntities())
-						if (ent.getType() == org.bukkit.entity.EntityType.CHICKEN) {
-							ent.remove();
-						}
-					player.sendMessage("ptdew&dewdd :Clearchicken");
-					canc = true;
-					return;
+			if (message.equalsIgnoreCase("clearminecart") == true) {
 
-				}
+				for (Entity ent : player.getWorld().getEntities())
+					if (ent.getType() == org.bukkit.entity.EntityType.MINECART) {
+						ent.remove();
+					}
+				player.sendMessage("ptdew&dewdd :Clearminecart");
+				canc = true;
+				return;
 
-				if (message.equalsIgnoreCase("clearsheep") == true) {
-
-					for (Entity ent : player.getWorld().getEntities())
-						if (ent.getType() == org.bukkit.entity.EntityType.SHEEP) {
-							ent.remove();
-						}
-					player.sendMessage("ptdew&dewdd :ClearSHEEP");
-					canc = true;
-					return;
-
-				}
-				if (message.equalsIgnoreCase("clearvillager") == true) {
-
-					for (Entity ent : player.getWorld().getEntities())
-						if (ent.getType() == org.bukkit.entity.EntityType.VILLAGER) {
-							ent.remove();
-						}
-					player.sendMessage("ptdew&dewdd :ClearVillager");
-					canc = true;
-					return;
-
-				}
-
-				if (message.equalsIgnoreCase("clearminecart") == true) {
-
-					for (Entity ent : player.getWorld().getEntities())
-						if (ent.getType() == org.bukkit.entity.EntityType.MINECART) {
-							ent.remove();
-						}
-					player.sendMessage("ptdew&dewdd :Clearminecart");
-					canc = true;
-					return;
-
-				}
 			}
 
 			// pt dew
@@ -1063,10 +710,7 @@ public class DigEventListener2 implements Listener {
 					return;
 				}
 
-				
-
 				// hide
-				
 
 				// getalldrop
 
@@ -1077,6 +721,343 @@ public class DigEventListener2 implements Listener {
 			// *****************************************
 
 		} // sync
+
+		private void callFWMethod(String[] m) {
+
+			RSWorld worldid = dew.getWorld(player.getWorld().getName());
+			Block block = player.getLocation().getBlock();
+			int getid = dew.getProtectid(block, worldid);
+			RSData tmprs;
+			if (getid == -1) {
+				tmprs = null;
+			}
+			else {
+			 tmprs = worldid.rs.get(getid);
+			}
+			int meInSlot = 0;
+			if (getid == -1) {
+				meInSlot = -1;
+			} else {
+				meInSlot = dew.getplayerinslot(player.getName(), getid, worldid);
+			}
+
+			if (m[0].equalsIgnoreCase("fw") || m[0].equalsIgnoreCase("flower")) {
+
+				if (m.length == 1) {
+					player.sendMessage(dprint.r.color("/fw new"));
+					player.sendMessage(dprint.r.color("/fw home [name]"));
+					player.sendMessage(dprint.r.color("/fw add <player>"));
+					player.sendMessage(dprint.r.color("/fw remove <player>"));
+					player.sendMessage(dprint.r.color("/fw list"));
+					player.sendMessage(dprint.r.color("/fw owner <player>"));
+					player.sendMessage(dprint.r.color("/fw exitFromThisHome <owner name>"));
+
+					player.sendMessage(dprint.r.color("/fw c"));
+					player.sendMessage(dprint.r.color("/fw go <player>"));
+					player.sendMessage(dprint.r.color("/fw goid <id>"));
+					player.sendMessage(dprint.r.color("/fw gorandom"));
+					player.sendMessage(dprint.r.color("/fw flag"));
+
+					player.sendMessage(dprint.r.color("/fw delete"));
+					player.sendMessage(dprint.r.color("/fw buyhere"));
+
+					player.sendMessage(dprint.r.color("/fw max"));
+
+					return;
+
+				} else if (m.length == 2 || m.length == 3)
+					if (m[1].equalsIgnoreCase("max")) {
+						player.sendMessage(dprint.r.color(tr.gettr("amount_of_protect") + worldid.rs.size()));
+						return;
+					} else if (m[1].equalsIgnoreCase("flag")) {
+						player.sendMessage(
+								dprint.r.color(tr.gettr("fw add these flag to your zone to activate something")));
+
+						player.sendMessage(dprint.r.color("/fw <add> <flag>"));
+						player.sendMessage(dprint.r.color("/fw <remove> <flag>"));
+
+						tr.showFlagToPlayer(player);
+						return;
+
+					}
+
+					else if (m[1].equalsIgnoreCase("goid")) {
+						// go
+
+						if (m.length != 3) {
+							player.sendMessage(dprint.r.color("/fw goid <id>"));
+							player.sendMessage(dprint.r.color("/fw goid <0 to " + (worldid.rs.size() - 1) + ">"));
+
+							return;
+						}
+
+						int idid = Integer.parseInt(m[2]);
+						if (idid < 0 || idid >= worldid.rs.size()) {
+							player.sendMessage(dprint.r.color("/fw goid <0 to " + (worldid.rs.size() - 1) + ">"));
+
+							return;
+						}
+
+						RSData tmprstogo = worldid.rs.get(idid);
+
+						LXRXLZRZType ee = new LXRXLZRZType(tmprstogo.x1, tmprstogo.y1, tmprstogo.z1, tmprstogo.x2,
+								tmprstogo.y2, tmprstogo.z2);
+						int mid[] = ee.getmiddle();
+
+						Block blockToGo = player.getWorld().getBlockAt(mid[0], mid[1], mid[2]);
+
+						blockToGo.getChunk().load();
+						player.teleport(blockToGo.getLocation());
+						player.sendMessage(dprint.r.color("teleported you to (" + blockToGo.getX() + ","
+								+ blockToGo.getY() + "," + blockToGo.getZ() + ") of " + tmprstogo.p[0]));
+						return;
+					} else if (m[1].equalsIgnoreCase("gorandom")) {
+						// go
+
+						int idid = rnd.nextInt(worldid.rs.size());
+						RSData tmprstogo = worldid.rs.get(idid);
+
+						LXRXLZRZType ee = new LXRXLZRZType(tmprstogo.x1, tmprstogo.y1, tmprstogo.z1, tmprstogo.x2,
+								tmprstogo.y2, tmprstogo.z2);
+						int mid[] = ee.getmiddle();
+
+						Block blockToGo = player.getWorld().getBlockAt(mid[0], mid[1], mid[2]);
+						blockToGo.getChunk().load();
+						player.teleport(blockToGo.getLocation());
+						player.sendMessage(dprint.r.color("teleported you to (" + blockToGo.getX() + ","
+								+ blockToGo.getY() + "," + blockToGo.getZ() + ") of " + tmprstogo.p[0]));
+						return;
+					}
+
+					else if (m[1].equalsIgnoreCase("home")) {
+						if (m.length != 3) {
+							player.sendMessage(dprint.r.color("need 3 arguments   /fw home <player>"));
+
+							for (int lop2 = 0; lop2 < worldid.rs.size(); lop2++) {
+								if (dew.getplayerinslot(player.getName(), lop2, worldid) == -1) {
+									continue;
+								}
+
+								player.sendMessage(dprint.r.color("/fw home " + lop2));
+
+							}
+
+							return;
+						}
+
+						int lop2 = Integer.parseInt(m[2]);
+
+						RSData tmprstowarp = worldid.rs.get(lop2);
+						LXRXLZRZType ee = new LXRXLZRZType(tmprstowarp.x1, tmprstowarp.y1, tmprstowarp.z1,
+								tmprstowarp.x2, tmprstowarp.y2, tmprstowarp.z2);
+						int mid[] = ee.getmiddle();
+
+						Block blocktowarp = player.getWorld().getBlockAt(mid[0], mid[1], mid[2]);
+
+						blocktowarp.getChunk().load();
+						player.teleport(blocktowarp.getLocation());
+						player.sendMessage(dprint.r.color("teleported you to (" + blocktowarp.getX() + ","
+								+ blocktowarp.getY() + "," + blocktowarp.getZ() + ") of " + tmprstowarp.p[0]));
+
+						return;
+
+					}
+
+					else if (m[1].equalsIgnoreCase("owner")) {
+
+						if (getid == -1) {
+							player.sendMessage(dprint.r.color(tr.gettr("this_zone_don't_have_protect")));
+							return;
+						} else {
+							// check host
+							boolean ch = tmprs.p[0].equalsIgnoreCase(player.getName());
+
+							if (ch == false)
+								if (player.hasPermission(dew.pmainoveride) == false) {
+									player.sendMessage(
+											dprint.r.color(tr.gettr("host_is") + tmprs.p[0] + tr.gettr("not_you!")));
+
+									return;
+								} else
+									player.sendMessage(dprint.r.color(tr.gettr("overide_this_zone")));
+
+							if (m.length != 3) {
+								player.sendMessage(dprint.r.color("/skyblock owner <playername>"));
+								return;
+							}
+
+							// check that player online
+
+							// check if he already has own protect
+
+							player.sendMessage(dprint.r.color(tr.gettr("this_skyblock_owner_is") + tmprs.p[0]));
+							dew.savesignfile(-1, worldid);
+							return;
+
+						}
+					}
+
+					else if (m[1].equalsIgnoreCase("exitFromThisHome")) {
+
+						if (m.length != 3) {
+							player.sendMessage(dprint.r.color(
+									tr.gettr("not enought argument type this") + "/sky exitfromthishome <owner name>"));
+							return;
+						}
+
+						if (getid == -1) {
+							player.sendMessage(dprint.r.color(tr.gettr("this_zone_don't_have_any_protect")));
+							return;
+						} else {
+							// check host
+
+							if (meInSlot == -1) {
+								player.sendMessage(dprint.r.color(tr.gettr("don't have your name on this protect")));
+								return;
+							}
+
+							// ....
+
+							boolean ch = tmprs.p[0].equalsIgnoreCase(player.getName());
+
+							if (ch == true) {
+								player.sendMessage(dprint.r.color(tr.gettr(
+										"you_can't_exit_from_your_own_protect_if_you_want_try_another command such as delete or owner")));
+								return;
+
+							}
+
+							// ....
+							// remove my name
+							tmprs.p[meInSlot] = "null";
+							dew.savesignfile(-1, worldid);
+
+							player.sendMessage(dprint.r
+									.color(tr.gettr("you exited from sky protect of ") + tmprs.p[0] + " id " + getid));
+
+						}
+
+					} else if (m[1].equalsIgnoreCase("add")) {
+
+						if (getid == -1) {
+							player.sendMessage(dprint.r.color(tr.gettr("this_zone_don't_have_any_protect")));
+							return;
+						} else {
+							// check host
+							boolean ch = tmprs.p[0].equalsIgnoreCase(player.getName());
+
+							if (ch == false)
+								if (player.hasPermission(dew.pmainoveride) == false) {
+									player.sendMessage(
+											dprint.r.color(tr.gettr("host_is") + tmprs.p[0] + tr.gettr("not_you")));
+
+									return;
+								} else
+									player.sendMessage(dprint.r.color(tr.gettr("overide_this_zone")));
+
+						}
+
+						if (m.length != 3) {
+							player.sendMessage(dprint.r.color("/skyblock add <playername>"));
+							return;
+						}
+						// if found his skyblock teleport him
+
+						// check free slot
+
+						for (int i = 1; i < dew.FWMaxPlayer; i++)
+							if (tmprs.p[i].equalsIgnoreCase(m[2])) {
+								player.sendMessage(dprint.r.color(tr.gettr("already_added_this_name_so_not_work")));
+								return;
+							}
+
+						for (int i = 1; i < dew.FWMaxPlayer; i++)
+							if (tmprs.p[i].equalsIgnoreCase("null")) {
+								tmprs.p[i] = m[2];
+								player.sendMessage(
+										dprint.r.color(tr.gettr("added") + m[2] + tr.gettr("to_your_skyblock")));
+								dew.savesignfile(-1, worldid);
+								return;
+							}
+
+					} else if (m[1].equalsIgnoreCase("remove")) {
+
+						if (getid == -1) {
+							player.sendMessage(dprint.r.color(tr.gettr("this_zone_don't_have_protect")));
+							return;
+						} else {
+							// check host
+							boolean ch = tmprs.p[0].equalsIgnoreCase(player.getName());
+
+							if (ch == false)
+								if (player.hasPermission(dew.pmainoveride) == false) {
+									player.sendMessage(
+											dprint.r.color(tr.gettr("host_is") + tmprs.p[0] + tr.gettr("not_you")));
+									return;
+								} else
+									player.sendMessage(dprint.r.color(tr.gettr("overide_this_zone")));
+
+						}
+
+						if (m.length != 3) {
+							player.sendMessage(dprint.r.color("/skyblock remove <playername>"));
+							return;
+						}
+
+						if (m[2].equalsIgnoreCase(player.getName())) {
+							player.sendMessage(dprint.r.color(tr.gettr("you_can't_remove_your_name_from_your_zone")));
+							return;
+						}
+						// if found his skyblock teleport him
+
+						// check free slot
+
+						for (int i = 1; i < dew.FWMaxPlayer; i++)
+							if (tmprs.p[i].equalsIgnoreCase(m[2])) {
+								tmprs.p[i] = "null";
+								player.sendMessage(
+										dprint.r.color(tr.gettr("removed") + m[2] + tr.gettr("from_your_skyblock")));
+								dew.savesignfile(-1, worldid);
+								return;
+							}
+
+						player.sendMessage(dprint.r.color(tr.gettr("this_protected_don't_have_this_name") + m[2]));
+						return;
+					} else if (m[1].equalsIgnoreCase("list")) {
+
+						if (getid == -1) {
+							player.sendMessage(dprint.r.color(tr.gettr("this_zone_don't_have_any_protect")));
+							return;
+						}
+
+						player.sendMessage(dprint.r.color("protect id ") + getid + " , position "
+								+ dew.getPositionSignAsString(worldid, tmprs));
+
+						for (int i = 0; i < dew.FWMaxPlayer; i++)
+							if (tmprs.p[i].equalsIgnoreCase("null") == false) {
+								player.sendMessage(dprint.r.color("Member " + i + " = " + tmprs.p[i]));
+
+							}
+					} else if (m[1].equalsIgnoreCase("buy") == true) {
+						dew.dewbuy(player);
+						canc = true;
+						return;
+					}
+
+					// dewbuyzone
+					else if (m[1].equalsIgnoreCase("buyzone") == true) {
+						dew.dewbuyzone(player, player.getLocation().getBlock());
+						canc = true;
+						return;
+					}
+
+					else if (m[1].equalsIgnoreCase("buydelete") == true) {
+						dew.dewbuydelete(player);
+						return;
+					}
+			}
+
+		}
 	}
 
 	class chatz extends Thread {
@@ -1521,7 +1502,7 @@ public class DigEventListener2 implements Listener {
 	class ShowCurStandProtect {
 		public Player player;
 		public int lastStandProtectID = -1;
-		public int worldID = 0;
+		public RSWorld worldID;
 	}
 
 	dewset dew;
@@ -1627,8 +1608,7 @@ public class DigEventListener2 implements Listener {
 
 		Block block = event.getBlock();
 		Player player = event.getPlayer();
-		
-		
+
 		// check host block
 
 		if (player.getItemInHand().getType() == Material.MILK_BUCKET) {
@@ -1654,15 +1634,6 @@ public class DigEventListener2 implements Listener {
 				event.setCancelled(true);
 				return;
 			}
-
-			if (api_admin.dewddadmin.is2admin(player) == true)
-				if (player.getItemInHand().getType() == Material.ACTIVATOR_RAIL) {
-					event.setCancelled(true);
-					dprint.r.printAll("starting protect rail..");
-					dew.protectrail(block, player);
-					dprint.r.printAll("starting protect rail..");
-
-				}
 
 			// dew.cutwoodsub(event.getBlock(), event.getPlayer(), true);
 
@@ -1718,7 +1689,9 @@ public class DigEventListener2 implements Listener {
 			return;
 
 		Block ac = event.getBlock();
-		if (dew.getProtectid(event.getBlock()) > -1 || event.getBlock().getTypeId() == 35) {
+		RSWorld worldid = dew.getWorld(ac.getLocation().getWorld().getName());
+		int getid = dew.getProtectid(event.getBlock(), worldid);
+		if (getid > -1 || event.getBlock().getTypeId() == 35) {
 
 			int d4 = 4;
 
@@ -1920,8 +1893,6 @@ public class DigEventListener2 implements Listener {
 		if (event.getCreatureType() == null)
 			return;
 
-		
-
 		event.getEntity().addPotionEffect(
 				PotionEffectType.JUMP.createEffect(dew.randomG.nextInt(3000), dew.randomG.nextInt(10)));
 
@@ -1940,64 +1911,17 @@ public class DigEventListener2 implements Listener {
 		if (event.getCreatureType() == CreatureType.RABBIT)
 			return;
 
-		
+		RSWorld worldid = dew.getWorld(event.getLocation().getWorld().getName());
+		int getid = dew.getProtectid(event.getEntity().getLocation().getBlock(), worldid);
+		if (getid > -1) {
+			int flagMonFound = dew.getplayerinslot(Constant_Protect.flag_monster, getid, worldid);
 
-		if (dew.getProtectid(event.getEntity().getLocation().getBlock()) > -1)
-			if (dew.getProtectid(event.getEntity().getLocation().getBlock()) != -1)
-				if (dew.havethisnameinthishome(dew.getworldid(event.getEntity().getWorld().getName()),
-						dew.getProtectid(event.getEntity().getLocation().getBlock()),
-						Constant_Protect.flag_monster) == true) {
-					event.setCancelled(true);
-					return;
-				}
-
-		/*for (Player xo : Bukkit.getOnlinePlayers()) {
-			if (xo.getInventory().getHelmet() == null) {
-				continue;
+			if (flagMonFound > -1) {
+				event.setCancelled(true);
+				return;
 			}
-			if (xo.getInventory().getHelmet().getTypeId() == 397) {
-				Location loc = xo.getLocation();
-				loc.setWorld(xo.getWorld());
-				loc.setY(loc.getY() + 3);
-				loc.setX(loc.getX() + 3);
-				// search high
-				int counthigh = 0;
-				Block bd = null;
 
-				for (int loo = -1; loo >= -24; loo--) {
-					bd = event.getEntity().getWorld().getBlockAt(loc.getBlockX(), loc.getBlockY(), loc.getBlockZ())
-							.getRelative(0, (int) (loc.getY() + counthigh), 3);
-
-					if (bd.getTypeId() == 0) {
-						counthigh++;
-					} else {
-						break;
-					}
-
-					if (counthigh > 8) {
-						break;
-					}
-				}
-
-				bd = event.getEntity().getWorld().getBlockAt(loc.getBlockX(), loc.getBlockY(), loc.getBlockZ())
-						.getRelative(0, (int) loc.getY(), 3);
-				if (counthigh <= 8 && bd.getLightLevel() <= 7 && rnd.nextInt() > 20) {
-					event.getEntity().teleport(loc);
-				}
-			}
-		}*/
-
-		// dew.randomplaynote(event.getEntity().getLocation());
-
-		// dprint.r.printC("xyz="+
-		// event.getEntity().getLocation().toString());
-		
-		/*
-		 * if (event.getEntity().getType() == EntityType.CREEPER) { if
-		 * (dew.randomG.nextInt(1000) < 40) {
-		 * event.getEntity().getWorld().strikeLightning(
-		 * event.getEntity().getLocation()); } }
-		 */
+		}
 
 		LivingEntity abc = event.getEntity();
 		if (abc == null)
@@ -2097,6 +2021,20 @@ public class DigEventListener2 implements Listener {
 					PotionEffectType.WATER_BREATHING.createEffect(dew.randomG.nextInt(3000), dew.randomG.nextInt(10)));
 		}
 
+		if (dew.randomG.nextInt(100) > 47) {
+			event.getEntity().addPotionEffect(PotionEffectType.DAMAGE_RESISTANCE.createEffect(dew.randomG.nextInt(3000),
+					dew.randomG.nextInt(10)));
+		}
+
+		if (dew.randomG.nextInt(100) > 34) {
+			event.getEntity().addPotionEffect(
+					PotionEffectType.HEALTH_BOOST.createEffect(dew.randomG.nextInt(3000), dew.randomG.nextInt(10)));
+		}
+
+		if (dew.randomG.nextInt(100) > 60) {
+			event.getEntity().addPotionEffect(
+					PotionEffectType.REGENERATION.createEffect(dew.randomG.nextInt(3000), dew.randomG.nextInt(10)));
+		}
 	}
 
 	@EventHandler
@@ -2108,8 +2046,9 @@ public class DigEventListener2 implements Listener {
 		if (!tr.isrunworld(ac.getName(), event.getEntity().getWorld().getName()))
 			return;
 
-		if (event.getEntity().getType() == EntityType.ENDERMAN &&
-				dew.getProtectid(event.getBlock()) > -1) {
+		if (event.getEntity().getType() == EntityType.ENDERMAN
+				&& dew.getProtectid(event.getBlock(), dew.getWorld(event.getBlock().getWorld().getName())) > -1) {
+
 			event.setCancelled(true);
 			return;
 		}
@@ -2145,23 +2084,22 @@ public class DigEventListener2 implements Listener {
 	@EventHandler
 	public void eventja(EntityExplodeEvent event) throws InterruptedException {
 
-		/*
-		 * if (event.getEntity().getLocation().getWorld().getName().
-		 * equalsIgnoreCase ("world")==false) { return; }
-		 */
 		if (!tr.isrunworld(ac.getName(), event.getEntity().getWorld().getName()))
 			return;
 
 		Block block = event.getLocation().getBlock();
 		// event.setCancelled(true);
 
-		int hasProtect = dew.getProtectid(block);
-		if (hasProtect == -1) {
+		RSWorld worldid = dew.getWorld(block.getWorld().getName());
+		int getid = dew.getProtectid(block, worldid);
+
+		if (getid == -1) {
 			return;
 		}
 
-		if (dew.havethisnameinthishome(dew.getworldid(block.getWorld().getName()), hasProtect,
-				Constant_Protect.flag_explode)) {
+		int hasFlagExplode = dew.getplayerinslot(Constant_Protect.flag_explode, getid, worldid);
+
+		if (hasFlagExplode > -1) {
 			event.setCancelled(true);
 		}
 
@@ -2198,8 +2136,7 @@ public class DigEventListener2 implements Listener {
 		if (event.getRemover().getType() == EntityType.PLAYER) {
 			Player br = (Player) event.getRemover();
 
-			if (dew.cando(event.getEntity().getLocation().getBlock(), br,
-					"HangingBreakByEntity") == true) {
+			if (dew.cando(event.getEntity().getLocation().getBlock(), br, "HangingBreakByEntity") == true) {
 				// br.sendMessage("ptdew&dewdd : " +
 				// tr.gettr("don't_break_hanging_picture_not_yours"));
 
@@ -2217,19 +2154,19 @@ public class DigEventListener2 implements Listener {
 		if (!tr.isrunworld(ac.getName(), event.getEntity().getWorld().getName()))
 			return;
 
-		if (dew.getProtectid(event.getEntity().getLocation().getBlock()) > -1) {
-			event.setCancelled(true);
-		}
+		Block b = event.getEntity().getLocation().getBlock();
+
+		RSWorld worldid = dew.getWorld(b.getWorld().getName());
+		int getid = dew.getProtectid(b, worldid);
 
 		if (event.getCause() == RemoveCause.EXPLOSION == true) {
-			if (dew.getProtectid(event.getEntity().getLocation().getBlock()) > -1) {
+			if (getid > -1) {
 				event.setCancelled(true);
 				return;
 			}
 		} else {
 
-			int homeid = dew.getProtectid(event.getEntity().getLocation().getBlock());
-			if (homeid > -1) {
+			if (getid > -1) {
 				// check near player
 
 				double dist = 10000;
@@ -2246,22 +2183,9 @@ public class DigEventListener2 implements Listener {
 
 				if (dist < 10000)
 					if (dew.cando(event.getEntity().getLocation().getBlock(), pl, "break") == true) {
-						// pl.sendMessage(tr.gettr("don't_destroy_hanging_picture_not_yours"));
 						event.setCancelled(true);
 						return;
 					}
-
-				// always remove if there are staff
-				/*
-				 * for (int c = 0; c < dew.dewsignnamemax; c++) if
-				 * (api_admin.dewddadmin .issubsubadminname(dew.dewsignname[dew
-				 * .getworldid(event.getEntity().getLocation()
-				 * .getWorld().getName())][homeid][c]) == true) {
-				 * 
-				 * event.getEntity().remove(); return;
-				 * 
-				 * }
-				 */
 
 			}
 
@@ -2511,7 +2435,6 @@ public class DigEventListener2 implements Listener {
 		ar.start();
 
 		dprint.r.printC(event.getMessage());
-		
 
 	}
 
@@ -2546,7 +2469,6 @@ public class DigEventListener2 implements Listener {
 		dew.randomplaynote(event.getPlayer().getLocation());
 
 		int idc = dew.getfreeselect(player);
-		
 
 		if (api_admin.dewddadmin.is2moderator(player) == true) {
 			player.getItemInHand().setType(Material.AIR);
@@ -2622,7 +2544,7 @@ public class DigEventListener2 implements Listener {
 
 		Block block = event.getClickedBlock();
 		if (player.getItemInHand().getType() == Material.SAPLING && act == Action.LEFT_CLICK_BLOCK) {
-			dew.fw_list(player);
+			// dew.fw_list(player);
 			event.setCancelled(true);
 
 			return;
@@ -2731,7 +2653,6 @@ public class DigEventListener2 implements Listener {
 		}
 
 		int idc = dew.getfreeselect(player);
-		
 
 		if (api_admin.dewddadmin.is2admin(player) == true) {
 			event.setJoinMessage("");
@@ -2751,38 +2672,37 @@ public class DigEventListener2 implements Listener {
 		if (!tr.isrunworld(ac.getName(), e.getPlayer().getWorld().getName()))
 			return;
 		Player player = e.getPlayer();
-		
-		/*if (player.isOp() ) {
-			
-			
-			int xx =  player.getLocation().getDirection().getBlockX();
-			
-			int yy =  player.getLocation().getDirection().getBlockY();
-			int zz =  player.getLocation().getDirection().getBlockZ();
-			
-			player.getPlayer().sendMessage("velo " + xx + "," +
-			yy+ "," + 
-			zz);
-			
-			Block cd = player.getLocation().getBlock().getRelative(xx, yy, zz);
-			cd.setTypeId(4);
-			
 
-		}*/
-		
-	
-		//.getPlayer().sendMessage("velo " +  e.getPlayer().getVelocity());
+		/*
+		 * if (player.isOp() ) {
+		 * 
+		 * 
+		 * int xx = player.getLocation().getDirection().getBlockX();
+		 * 
+		 * int yy = player.getLocation().getDirection().getBlockY(); int zz =
+		 * player.getLocation().getDirection().getBlockZ();
+		 * 
+		 * player.getPlayer().sendMessage("velo " + xx + "," + yy+ "," + zz);
+		 * 
+		 * Block cd = player.getLocation().getBlock().getRelative(xx, yy, zz);
+		 * cd.setTypeId(4);
+		 * 
+		 * }
+		 */
+
+		// .getPlayer().sendMessage("velo " + e.getPlayer().getVelocity());
 
 		if (rnd.nextInt(100) > 75) {
 
 			Player p = e.getPlayer();
+			RSWorld curworldid = dew.getWorld(p.getWorld().getName());
 
 			ShowCurStandProtect i = showCurStandProtect.get(p.getName());
 			if (i == null) {
 				i = new ShowCurStandProtect();
 				i.player = p;
 				i.lastStandProtectID = -1;
-				i.worldID = dew.getworldid(p.getWorld().getName());
+				i.worldID = curworldid;
 
 				showCurStandProtect.put(p.getName(), i);
 
@@ -2790,43 +2710,41 @@ public class DigEventListener2 implements Listener {
 
 			} else {
 
-				int curStandID = dew.getProtectid(p.getLocation().getBlock());
-				int curWorldID = dew.getworldid(p.getLocation().getWorld().getName());
+				int curStandID = dew.getProtectid(p.getLocation().getBlock(), curworldid);
 
 				if (curStandID == -1) { // no protect
 					if (i.lastStandProtectID != -1) { // has protect
 
-						p.sendMessage(dprint.r.color(tr.gettr("exit from main protect of ")
-								+ dew.dewsignname[i.worldID][i.lastStandProtectID][0] + " id " + i.lastStandProtectID
-								+ " world " + i.worldID));
+						RSData tmprs = curworldid.rs.get(curStandID);
+						p.sendMessage(dprint.r.color(tr.gettr("exit from main protect of ") + tmprs.p[0] + " id "
+								+ i.lastStandProtectID + " world " + i.worldID));
 
 						i.lastStandProtectID = curStandID; // be -1
-						i.worldID = 0;
+						i.worldID = curworldid;
 
 						return;
 					}
 
 				} else { // cur has protect
 							// cur there are protect
-					if (curStandID == i.lastStandProtectID && curWorldID == i.worldID) {
+					if (curStandID == i.lastStandProtectID && curworldid == i.worldID) {
 
 					} else {
-
-						if (dew.dewsignname[curWorldID][curStandID][0].equalsIgnoreCase(Constant_Protect.flag_sell)) {
-							int price = Integer.parseInt(dew.dewsignname[curWorldID][curStandID][1]);
+						RSData tmprs = curworldid.rs.get(curStandID);
+						if (tmprs.p[0].equalsIgnoreCase(Constant_Protect.flag_sell)) {
+							int price = Integer.parseInt(tmprs.p[1]);
 
 							p.sendMessage(dprint.r.color(tr.gettr("this zone sell as price") + price));
 							p.sendMessage(dprint.r.color(tr.gettr("if you wanna buy it type") + "/fw buyzone"));
 
 						} else {
-							p.sendMessage(dprint.r.color(
-									tr.gettr("enter to main protect of ") + dew.dewsignname[curWorldID][curStandID][0]
-											+ " id " + curStandID + " world " + curWorldID));
+							p.sendMessage(dprint.r.color(tr.gettr("enter to main protect of ") + tmprs.p[0] + " id "
+									+ curStandID + " world " + curworldid.worldName));
 
 						}
 
 						i.lastStandProtectID = curStandID;
-						i.worldID = curWorldID;
+						i.worldID = curworldid;
 						return;
 
 					}
@@ -2835,7 +2753,6 @@ public class DigEventListener2 implements Listener {
 			}
 
 		}
-
 	}
 
 	@EventHandler
@@ -2844,11 +2761,9 @@ public class DigEventListener2 implements Listener {
 			return;
 
 		int idc = dew.getfreeselect(event.getPlayer());
-		
 
 		dew.saveworld();
 		Player player = event.getPlayer();
-		
 
 		event.setQuitMessage("");
 		System.gc();

@@ -326,7 +326,8 @@ public class DigEventListener2 implements Listener {
 
 		@Override
 		public void run() {
-			//dprint.r.printC("ptdew&dewdd: unloading all chunk with no player");
+			// dprint.r.printC("ptdew&dewdd: unloading all chunk with no
+			// player");
 
 			for (World wx : Bukkit.getWorlds()) {
 				boolean worldHasPlayer = false;
@@ -347,8 +348,8 @@ public class DigEventListener2 implements Listener {
 
 					if (worldHasPlayer == false) {
 						cj.unload(true);
-						dprint.r.printC(
-								"ptdew&dewdd: unloaded chunk at (" + cj.getX() * 16 + "," + cj.getZ() * 16 + ")" + " world " + cj.getWorld().getName());
+						dprint.r.printC("ptdew&dewdd: unloaded chunk at (" + cj.getX() * 16 + "," + cj.getZ() * 16 + ")"
+								+ " world " + cj.getWorld().getName());
 					}
 
 				}

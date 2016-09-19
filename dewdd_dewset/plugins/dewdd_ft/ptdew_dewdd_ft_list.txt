@@ -1,0 +1,2 @@
+60000 money 40
+2000 giveitem 1

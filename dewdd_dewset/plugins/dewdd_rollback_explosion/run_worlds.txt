@@ -1,0 +1,6 @@
+old_1 600
+old_2 600
+flat 600
+world 600
+survival 600
+rs 600

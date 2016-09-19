@@ -4,4 +4,4 @@ version: 1
 author: dewtx29@gmail.com
 database: false
 load: STARTUP
-depend: [dewddadmin, dewddprint, dewddprivate, dewddskyblock, dewddtran]
+depend: [dewddadmin, dewddprint, dewddskyblock, dewddtran]

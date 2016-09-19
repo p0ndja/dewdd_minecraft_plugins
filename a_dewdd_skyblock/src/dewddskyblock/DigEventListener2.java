@@ -710,7 +710,7 @@ public class DigEventListener2 implements Listener {
 		}
 
 	}
-	
+
 	@EventHandler
 	public void eventja(BlockBurnEvent event) {
 
@@ -719,7 +719,7 @@ public class DigEventListener2 implements Listener {
 
 		Block ac = event.getBlock();
 		int getid = api_skyblock.getProtectid(event.getBlock().getLocation().getBlock());
-		
+
 		if (getid > -1 || event.getBlock().getTypeId() == 35) {
 
 			int d4 = 4;
@@ -926,7 +926,7 @@ public class DigEventListener2 implements Listener {
 
 		if (e.getCreatureType() == CreatureType.WOLF)
 			return;
-		
+
 		if (e.getCreatureType() == CreatureType.RABBIT)
 			return;
 

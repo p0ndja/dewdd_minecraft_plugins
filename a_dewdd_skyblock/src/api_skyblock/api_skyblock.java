@@ -69,8 +69,8 @@ public class api_skyblock {
 
 			}
 
-			while ( curI < rsMax) {
-				
+			while (curI < rsMax) {
+
 				Block bo = midBlockX0Z0.getWorld().getBlockAt(rs[curI].x, rs[curI].y, rs[curI].z);
 
 				boolean thereBlock = checkIsThatAreBlockOrNot(bo, player);
@@ -80,39 +80,39 @@ public class api_skyblock {
 					tmprs[curNewID] = rs[curI].copyIt();
 
 					curNewID++;
-					dprint.r.printAll("curI " + curI +  " /curNewID " + curNewID + " stil hastBlock");
-					
-					curI ++;
+					dprint.r.printAll("curI " + curI + " /curNewID " + curNewID + " stil hastBlock");
+
+					curI++;
 				} else {
 					// delete protec
-					dprint.r.printAll("curI " + curI +  " /curNewID " + curNewID + " nope");
-					
+					dprint.r.printAll("curI " + curI + " /curNewID " + curNewID + " nope");
+
 					curI++;
 
 				}
-				
+
 				for (Chunk chu : Bukkit.getWorld("world").getLoadedChunks()) {
 					if (chu == null) {
 						continue;
 					}
 					chu.unload(true);
 				}
-				
+
 				AdjustProtect abc = new AdjustProtect(bo, player, curI, tmprs, curNewID);
-				Bukkit.getScheduler().scheduleSyncDelayedTask(ac, abc,1);
-				
+				Bukkit.getScheduler().scheduleSyncDelayedTask(ac, abc, 1);
+
 				return;
 
 			}
-			
+
 			if (curI == rsMax) {
 
-			// copyBack
-			rsMax = curNewID;
-			for (int i = 0; i < curNewID; i++) {
-				rs[i] = tmprs[i].copyIt();
-			}
-			
+				// copyBack
+				rsMax = curNewID;
+				for (int i = 0; i < curNewID; i++) {
+					rs[i] = tmprs[i].copyIt();
+				}
+
 			}
 
 			// player.sendMessage("thereBlock " + thereBlock);

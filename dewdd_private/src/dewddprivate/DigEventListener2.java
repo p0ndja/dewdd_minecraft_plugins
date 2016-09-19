@@ -329,7 +329,7 @@ public class DigEventListener2 implements Listener {
 
 	}
 
-	@EventHandler
+	/*@EventHandler
 	public void eventja(BlockBreakEvent event) {
 		if (!tr.isrunworld(ac.getName(), event.getPlayer().getWorld().getName())) {
 			return;
@@ -347,9 +347,9 @@ public class DigEventListener2 implements Listener {
 		if (goodc1 == true) {
 			event.setCancelled(true);
 		}
-	}
+	}*/
 
-	@EventHandler
+	/*@EventHandler
 	public void eventja(BlockPlaceEvent event) {
 		if (!tr.isrunworld(ac.getName(), event.getPlayer().getWorld().getName())) {
 			return;
@@ -367,7 +367,7 @@ public class DigEventListener2 implements Listener {
 		if (goodc1 == true) {
 			event.setCancelled(true);
 		}
-	}
+	}*/
 
 	@EventHandler
 	public void eventja(PlayerCommandPreprocessEvent event) {
@@ -386,6 +386,8 @@ public class DigEventListener2 implements Listener {
 		if (!tr.isrunworld(ac.getName(), event.getPlayer().getWorld().getName())) {
 			return;
 		}
+		
+		
 
 		Action act;
 		act = event.getAction();
@@ -402,14 +404,14 @@ public class DigEventListener2 implements Listener {
 		if (block.getTypeId() == 27 || block.getTypeId() == 66) {
 			return;
 		}
-		boolean goodc1 = false;
+		/*boolean goodc1 = false;
 		goodc1 = api_private.dewddprivate.checkpermissionareasign(block, player);
 
 		// call check
 		if (goodc1 == true) {
 
 			event.setCancelled(true);
-		}
+		}*/
 
 		int getid = getfreeselect(player.getName());
 		nn.lastblock[getid] = event.getClickedBlock();
@@ -420,6 +422,7 @@ public class DigEventListener2 implements Listener {
 
 		Sign s = (Sign) nn.lastblock[getid].getState();
 		if (s.getLine(0).endsWith("[dewdd]") == true || s.getLine(0).endsWith("[private]") == true) {
+			
 			s.setLine(0, dprint.r.color("[dewdd]"));
 			s.update();
 
@@ -431,6 +434,11 @@ public class DigEventListener2 implements Listener {
 
 			}
 
+		}
+		
+		if (s.getLine(0).endsWith("[dewdd]") == true || s.getLine(0).endsWith("[private]") == true) {
+			
+			 nn.lastblock[getid].breakNaturally();
 		}
 
 	}
@@ -444,11 +452,11 @@ public class DigEventListener2 implements Listener {
 
 		Player player = event.getPlayer();
 
-		if (event.getLine(0).equalsIgnoreCase("") == true && event.getLine(1).equalsIgnoreCase("") == true
+		/*if (event.getLine(0).equalsIgnoreCase("") == true && event.getLine(1).equalsIgnoreCase("") == true
 				&& event.getLine(2).equalsIgnoreCase("") == true && event.getLine(3).equalsIgnoreCase("") == true) {
 			event.setLine(0, dprint.r.color("[dewdd]"));
 			event.setLine(1, player.getName());
-		}
+		}*/
 
 		if (event.getLine(0).toLowerCase().endsWith("[dewdd]") == true
 				|| event.getLine(0).toLowerCase().endsWith("[private]") == true

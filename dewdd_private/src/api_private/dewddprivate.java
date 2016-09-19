@@ -14,7 +14,7 @@ public class dewddprivate {
 
 	public static int signprotectr = 2;
 	// public static double buy1blockmoney = 0.1; // 0.7;
-
+/*
 	public static boolean checkpermissionareasign(Block block) {
 
 		for (int xb = (0 - signprotectr); xb <= (0 + signprotectr); xb++) {
@@ -58,7 +58,7 @@ public class dewddprivate {
 									&& (sign.getLine(3).equalsIgnoreCase(player.getName()) == false)) {
 
 								if (player.hasPermission("dewdd.private.overide") == true) {
-									/*
+									
 									 * printAll("ptdew&dewdd: admin " +
 									 * player.getName() +
 									 * " overide.. sign protection.. at " +
@@ -67,7 +67,7 @@ public class dewddprivate {
 									 * "sign protected by [" + sign.getLine(1) +
 									 * "," + sign.getLine(2) + "," +
 									 * sign.getLine(3) + "]");
-									 */
+									 
 
 									return false;
 								}
@@ -85,21 +85,6 @@ public class dewddprivate {
 		}
 
 		return false;
-	}
-
-	public static void printA(String abc) {
-		for (Player pla : Bukkit.getOnlinePlayers()) {
-			pla.sendMessage(abc);
-		}
-	}
-
-	public static void printAll(String abc) {
-		printA(abc);
-		printC(abc);
-	}
-
-	public static void printC(String abc) {
-		System.out.println(abc);
-	}
+	}*/
 
 }

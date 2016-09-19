@@ -1,0 +1,33 @@
+739 54 1179 790 74 1242 2 warriororpt name:wolf        
+727 49 1030 781 82 1076 3 warriorpt name:3air        
+860 81 775 912 105 820 4 panhi name:4snow        
+861 103 921 905 136 962 2 panhi name:3sa        
+816 76 914 853 108 956 4 coderanger name:2v2pur        
+821 74 840 850 96 873 4 xkillerdead Creepsie DJ999 name:4fall      
+908 109 868 943 139 902 3 panhi name:3magician        
+967 46 757 1007 74 803 4 warriorpt name:2v2camping        
+979 48 466 1021 66 515 4 warriorpt name:4snowwar        
+1172 37 768 1280 89 866 4 warriorpt name:2v2cus        
+812 105 627 868 121 656 3 dj999 name:3horse        
+689 68 700 728 93 757 4 aumbasic name:2v2defend        
+624 81 861 648 101 883 2 ptdew name:2axe        
+699 78 862 736 101 902 2 rocknix boomerang2 name:2gold       
+684 86 823 703 107 844 3 ptdew name:3style        
+779 67 732 799 76 745 2 ptdew name:2diger        
+733 66 609 793 126 669 2 boomerang2 name:2Boom        
+767 83 902 810 111 933 4 urikpro64 name:4snowman        
+695 125 861 744 153 905 2 play_low ghost09177 name:2play_low       
+816 136 975 837 156 994 2 ptdew name:2waterwar        
+798 126 902 844 160 957 4 ghost09177 name:4funnyface        
+729 178 996 784 228 1036 3 ptdew name:3rblock        
+852 126 1033 913 157 1122 4 ptdew sarge_johnor panhi name:intheforest      
+617 121 709 670 152 758 4 bugbunny name:4sep        
+635 72 980 666 96 1032 2 warrionpt name:2lavawater        
+800 100 708 886 129 744 6 molkimas name:6cus        
+537 96 1025 590 125 1078 4 ptdew aumbasic name:4aumtnt       
+749 141 828 777 170 863 4 momat name:4woolc        
+946 117 1107 988 156 1154 4 panhi Sarge_Johnor name:sarge_maze       
+796 128 758 854 147 805 4 boomerang2 name:4regen        
+614 93 773 674 153 833 4 bugbunny name:4tntfall        
+684 -10 728 824 130 868 9 ptdew <right> name:spawn panhi sarge_johnor     
+956 128 942 989 189 984 3 panhi Sarge_Johnor        name:punyahome

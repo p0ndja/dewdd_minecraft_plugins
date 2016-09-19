@@ -1,0 +1,3 @@
+-30 256 -30 30 1 30 ptdew candle1230 tonakab null null null null null null null null null null null null null null null <pvp> <everyone> 
+57 238 17 71 252 31 ptdew <everyone> <monster> null null null null null null null null null null null null null null null null null 
+-74 173 89 -14 233 149 ptdew urikpro64 <everyone> <monster> null null null null null null null null null null null null null null null null 
