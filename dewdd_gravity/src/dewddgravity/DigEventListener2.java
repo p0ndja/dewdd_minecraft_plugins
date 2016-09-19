@@ -17,6 +17,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.block.BlockPhysicsEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
@@ -51,10 +52,12 @@ class Gravity implements Runnable {
 
 	public boolean isThisBlockHasRoot(Block cur, Block start) {
 		Block b2 = null;
-		cur.setType(Material.STAINED_GLASS_PANE);
+		//cur.setType(Material.STAINED_GLASS_PANE);
 
-		Random rnd = new Random();
-		cur.setData((byte) rnd.nextInt(15));
+		//Random rnd = new Random();
+		//cur.setData((byte) rnd.nextInt(15));
+		
+		
 		/*
 		 * if (root.amount > 10) { root.amount -- ; return; }
 		 */
@@ -103,13 +106,19 @@ class Gravity implements Runnable {
 					if (Gravity.needBlock(b2) == false) {
 						continue;
 					}
-
-					return isThisBlockHasRoot(b2, start);
+					
+					boolean ret =  isThisBlockHasRoot(b2, start);
+					if (ret == true) {
+						return true;
+					}
+					else {
+						continue;
+					}
 
 				} else {
 
 					if (Gravity.needBlock(b2) == false) {
-						return false;
+						return true;
 					} else {
 						return true;
 					}
@@ -248,8 +257,8 @@ class Gravity implements Runnable {
 			Block cur = list.get(l);
 			// cur.setType(Material.LOG);
 			// cur.setData((byte) rnd.nextInt(4));
-			cur.setType(Material.STAINED_GLASS);
-			cur.setData((byte) rnd.nextInt(15));
+		/*	cur.setType(Material.STAINED_GLASS);
+			cur.setData((byte) rnd.nextInt(15));*/
 
 			for (int x = -r; x <= r; x++) {
 				for (int z = -r; z <= r; z++) {
@@ -312,11 +321,11 @@ class Gravity implements Runnable {
 class TheJobType {
 	private LinkedList<Location> loc = new LinkedList<Location>();
 
-	public synchronized int getSize() {
+	public  int getSize() {
 		return loc.size();
 	}
 
-	public synchronized void put(Location loc) {
+	public  void put(Location loc) {
 		Block blo = loc.getBlock();
 		if (blo == null) {
 			return;
@@ -382,7 +391,7 @@ class MainLoop implements Runnable {
 
 		int done = 0;
 
-		while (done <= 100 && jobs.getSize() > 0) {
+		while (done <= 10 && jobs.getSize() > 0) {
 			// dprint.r.printAll("done size " + done + " , " + jobs.getSize());
 
 			Location loc = jobs.get();
@@ -395,9 +404,12 @@ class MainLoop implements Runnable {
 				}
 
 				Gravity noop = new Gravity(blo, null, 1);
-				done++;
+				
 
 			}
+			
+			done++;
+			
 		}
 
 		if (jobs.getSize() > 0) {
@@ -443,26 +455,40 @@ public class DigEventListener2 implements Listener {
 
 	@EventHandler
 	public void eventja(PlayerInteractEvent e) {
+		/*if (!tr.isrunworld(ac.getName(), e.getBlock().getWorld().getName()))
+			return;
+		
+		
+		Block block = e.getBlock();
+		Block b2 = null;
 
-		/*
-		 * Block block = e.getPlayer().getLocation().getBlock(); Block b2 =
-		 * null;
-		 * 
-		 * int r = Gravity.r; int counter = 0;
-		 * 
-		 * for (int x = -r; x <= r; x++) { for (int y = -r; y <= r; y++) { for
-		 * (int z = -r; z <= r; z++) { counter++; b2 = block.getRelative(x, y,
-		 * z);
-		 * 
-		 * if (b2.getType() == Material.AIR) { continue; }
-		 * 
-		 * // Gravity noop = new Gravity(b2, null, block, counter * // 25);
-		 * MainLoop.jobs.put(b2.getLocation());
-		 * 
-		 * } }
-		 * 
-		 * }
-		 */
+		int r = Gravity.r;
+		int counter = 0;
+		
+		if (MainLoop.jobs.getSize() > 100) {
+			return;
+		}
+
+		for (int x = -r; x <= r; x++) {
+			for (int y = -r; y <= r; y++) {
+				for (int z = -r; z <= r; z++) {
+					counter++;
+
+					b2 = block.getRelative(x, y, z);
+
+					
+					 * if (b2.getType() == Material.AIR) { continue; }
+					 
+					// Gravity noop = new Gravity(b2, null, block, counter *
+					// 25);
+					
+					MainLoop.jobs.put(b2.getLocation());
+
+				}
+			}
+
+		}
+*/
 	}
 
 	@EventHandler
@@ -474,7 +500,7 @@ public class DigEventListener2 implements Listener {
 		Block block = e.getBlock();
 		Block b2 = null;
 
-		int r = Gravity.r;
+		int r = Gravity.stick;
 		int counter = 0;
 
 		for (int x = -r; x <= r; x++) {
@@ -501,7 +527,7 @@ public class DigEventListener2 implements Listener {
 	@EventHandler
 	public void eventja(AsyncPlayerChatEvent e) {
 		if (e.getMessage().equalsIgnoreCase("gravity")) {
-			e.getPlayer().sendMessage("0.2");
+			e.getPlayer().sendMessage("0.3");
 		}
 
 	}
@@ -515,7 +541,7 @@ public class DigEventListener2 implements Listener {
 		Block block = e.getBlock();
 		Block b2 = null;
 
-		int r = Gravity.r;
+		int r = Gravity.stick;
 		int counter = 0;
 		for (int x = -r; x <= r; x++) {
 			for (int y = -r; y <= r; y++) {
