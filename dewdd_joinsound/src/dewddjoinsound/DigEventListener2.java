@@ -5,37 +5,78 @@
  */
 package dewddjoinsound;
 
-import java.io.File;
+import java.io.BufferedReader;
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.Socket;
 
-import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.plugin.java.JavaPlugin;
-import javafx.scene.media.Media;
-import javafx.scene.media.MediaPlayer;
 
 public class DigEventListener2 implements Listener {
 	JavaPlugin ac = null;
+Socket clientSocket = null;
+DataOutputStream outToServer = null;
+String sentence = "...";
+
+
+class reconnectc implements Runnable {
+	@Override
+	public void run() {
+		// TODO Auto-generated method stub
+
+
+		BufferedReader inFromUser = new BufferedReader(new InputStreamReader(System.in));
+		
+		try {
+			clientSocket = new Socket("localhost", 6789);
+			 outToServer = new DataOutputStream(clientSocket.getOutputStream());
+			BufferedReader inFromServer = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
+			//sentence = inFromUser.readLine();
+			outToServer.writeBytes("just join" + '\n');
+			
+			
+			//System.out.println("FROM SERVER: " + modifiedSentence);
+			//clientSocket.close();
+
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}	
+	}
+}
+public void reconnect() {
+	reconnectc abc = new reconnectc();
+	Thread abx = new Thread(abc);
+	abx.start();
+}
+	public DigEventListener2() {
+		reconnect();
+
+	}
 
 	@EventHandler
 	public void eventja(AsyncPlayerChatEvent event) {
-		Player player = event.getPlayer();
+		event.getPlayer();
 
 	}
 
 	@EventHandler
 	public void eventja(PlayerJoinEvent event) {
-
-		String bip = File.separator + "mi" + File.separator + "lobby" + File.separator + "plugins" + File.separator
-				+ "dewdd_joinsound" + File.separator + "join.wav";
-
-		
-		Media hit = new Media(bip);
-		MediaPlayer mediaPlayer = new MediaPlayer(hit);
-		mediaPlayer.play();
-		
+		try {
+			outToServer.writeBytes(sentence + '\n');
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			reconnect();
+		}
+		catch (NullPointerException e) {
+			reconnect();
+		}
 	}
 
 } // class
