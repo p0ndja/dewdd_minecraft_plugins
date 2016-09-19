@@ -12,6 +12,7 @@ import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Queue;
 import java.util.Random;
@@ -1010,7 +1011,7 @@ public class dewset extends dewset_interface {
 					+ "," + dewsigny1[getworldid(player.getWorld().getName())][getid] + ","
 					+ dewsignz1[getworldid(player.getWorld().getName())][getid] + " to "
 
-			+ "," + dewsignx2[getworldid(player.getWorld().getName())][getid] + ","
+					+ "," + dewsignx2[getworldid(player.getWorld().getName())][getid] + ","
 					+ dewsigny2[getworldid(player.getWorld().getName())][getid] + ","
 					+ dewsignz2[getworldid(player.getWorld().getName())][getid]));
 
@@ -3559,8 +3560,8 @@ public class dewset extends dewset_interface {
 		private int searchSpace = 1;
 		private long reTime = 0;
 
-		public item55deletec(Block block, Player player, int id, byte dat, int maxRecursive, 
-				int searchSpace,long reTime) {
+		public item55deletec(Block block, Player player, int id, byte dat, int maxRecursive, int searchSpace,
+				long reTime) {
 			this.block = block;
 			this.player = player;
 			this.id = id;
@@ -3573,11 +3574,12 @@ public class dewset extends dewset_interface {
 		@Override
 		public void run() {
 
-			//dprint.r.printC("55 starter  > " + id + ":" + dat + " < " + block.getTypeId()  + ":" + block.getData());
+			// dprint.r.printC("55 starter > " + id + ":" + dat + " < " +
+			// block.getTypeId() + ":" + block.getData());
 
-			
-			/*if (block.getTypeId() != id && block.getData() != dat)
-				return;*/
+			/*
+			 * if (block.getTypeId() != id && block.getData() != dat) return;
+			 */
 
 			/*
 			 * try { if (Economy.getMoney(player.getName()) < 100) return; }
@@ -3585,8 +3587,7 @@ public class dewset extends dewset_interface {
 			 * 
 			 * e1.printStackTrace(); }
 			 */
-			
-			
+
 			if (checkpermissionarea(block, player, "delete") == true)
 				return;
 
@@ -3599,37 +3600,37 @@ public class dewset extends dewset_interface {
 			 * 
 			 * e.printStackTrace(); }
 			 */if (amountRecursiveCount > maxRecursive) {
-			    return;
+				return;
 			}
 
+			if (block.getTypeId() == id && block.getData() == dat) {
 
-			if (block.getTypeId() ==  id && block.getData() == dat) {
-			
-			
-			block.breakNaturally();
-			amountRecursiveCount++;
+				block.breakNaturally();
+				amountRecursiveCount++;
 			}
-			
+
 			Block b2 = null;
 
 			for (int x = -searchSpace; x <= searchSpace; x++) {
 				for (int y = -searchSpace; y <= searchSpace; y++) {
 					for (int z = -searchSpace; z <= searchSpace; z++) {
-						
+
 						b2 = block.getRelative(x, y, z);
 
-
-					//	dprint.r.printC("b2 " + b2.getX() + "," + b2.getY() + "," + b2.getZ() + " > " + id + ":" + dat + " < " + b2.getTypeId()  + ":" + b2.getData());
+						// dprint.r.printC("b2 " + b2.getX() + "," + b2.getY() +
+						// "," + b2.getZ() + " > " + id + ":" + dat + " < " +
+						// b2.getTypeId() + ":" + b2.getData());
 
 						if (b2.getTypeId() == id && b2.getData() == dat) {
-							
-					/*		player.sendMessage( dprint.r.color(
-									"maxRecursive : " + amountRecursiveCount + "/" + maxRecursive
-									));
 
-							*/
+							/*
+							 * player.sendMessage( dprint.r.color(
+							 * "maxRecursive : " + amountRecursiveCount + "/" +
+							 * maxRecursive ));
+							 * 
+							 */
 
-							item55delete(b2, player, id, dat, maxRecursive,searchSpace,reTime + 40);
+							item55delete(b2, player, id, dat, maxRecursive, searchSpace, reTime + 40);
 
 						}
 					}
@@ -5242,56 +5243,143 @@ public class dewset extends dewset_interface {
 
 	// riceblockiron
 
+	public void searchRecursiveBlock(ArrayList<Block> blockList, Block curBlock, Material searchMaterial,
+			Byte searchData) {
+		int search = 3;
+
+		/*
+		 * dprint.r.printAll(curBlock.getX() + "," + curBlock.getY() + "," +
+		 * curBlock.getZ() + " = " + curBlock.getType().name() + ":" +
+		 * curBlock.getData());
+		 */
+
+		if (curBlock.getType() == searchMaterial)
+			if (curBlock.getData() == searchData || searchData == -29) {
+
+				boolean found = false;
+				for (int i = 0; i < blockList.size(); i++) {
+					Block bo = blockList.get(i);
+					if (bo.getX() == curBlock.getX() && bo.getY() == curBlock.getY() && bo.getZ() == curBlock.getZ())
+
+						found = true;
+					break;
+
+				}
+
+				if (found == false) {
+
+					blockList.add(curBlock);
+					// dprint.r.printAll("gift " + curBlock.getX() + "," +
+					// curBlock.getY() + "," + curBlock.getZ());
+				}
+			}
+
+		Block tm;
+		for (int x = -search; x <= search; x++)
+			for (int y = -search; y <= search; y++)
+				for (int z = -search; z <= search; z++) {
+
+					tm = curBlock.getRelative(x, y, z);
+					if (tm == null) {
+						continue;
+					}
+
+					if (tm.getType() == searchMaterial)
+						if (tm.getData() == searchData || searchData == -29) {
+
+							// check Block
+							boolean sea = false;
+							for (int i = 0; i < blockList.size(); i++) {
+								Block te = blockList.get(i);
+								if (te.getX() == tm.getX() && te.getY() == tm.getY() && te.getZ() == tm.getZ()) {
+									sea = true;
+									break;
+								}
+							}
+
+							if (sea == false) {
+
+								searchRecursiveBlock(blockList, tm, searchMaterial, searchData);
+
+								continue;
+							}
+
+						}
+
+				}
+
+	}
+
 	public void gift(Player player, int a1, byte a2) {
 		int moveyet = 0;
 		boolean okok = false;
 
 		Block b = null;
-		for (int x = giftblock.getX() - 50; x <= giftblock.getX() + 50; x++) {
 
-			for (int z = giftblock.getZ() - 50; z <= giftblock.getZ() + 50; z++) {
+		ArrayList<Block> blockList = new ArrayList<Block>();
+		blockList.clear();
 
-				for (int y = giftblock.getY() - 70; y <= giftblock.getY() + 70; y++) {
-					if (y < 0 || y > 254) {
+		for (int y = -10; y <= +10; y++)
+			for (int z = -10; z <= +10; z++)
+				for (int x = -10; x <= +10; x++) {
+
+					Block curBlock = giftblock.getRelative(x, y, z);
+					searchRecursiveBlock(blockList, curBlock, Material.CHEST, (byte) -29);
+					searchRecursiveBlock(blockList, curBlock, Material.TRAPPED_CHEST, (byte) -29);
+				}
+
+		for (int y = -10; y <= +10; y++)
+			for (int z = -10; z <= +10; z++)
+				for (int x = -10; x <= +10; x++) {
+
+					Block curBlock = player.getLocation().getBlock().getRelative(x, y, z);
+					searchRecursiveBlock(blockList, curBlock, Material.CHEST, (byte) -29);
+					searchRecursiveBlock(blockList, curBlock, Material.TRAPPED_CHEST, (byte) -29);
+				}
+
+		player.sendMessage("blockList.size() == " + blockList.size() + "  , gift position " + giftblock.getX() + ","
+				+ giftblock.getY() + "," + giftblock.getZ());
+
+		for (int index = 0; index < blockList.size(); index++) {
+
+			b = blockList.get(index);
+
+			if (checkpermissionarea(b, player, "right") == true) {
+				continue;
+			}
+
+			if (b.getTypeId() == Material.CHEST.getId() || b.getTypeId() == Material.TRAPPED_CHEST.getId()) {
+				Chest c = (Chest) b.getState();
+
+				for (ItemStack ic : c.getInventory().getContents()) {
+					if (ic == null) {
 						continue;
 					}
 
-					b = giftblock.getWorld().getBlockAt(x, y, z);
-
-					if (b.getTypeId() == Material.CHEST.getId() || b.getTypeId() == Material.TRAPPED_CHEST.getId()) {
-						Chest c = (Chest) b.getState();
-
-						for (ItemStack ic : c.getInventory().getContents()) {
-							if (ic == null) {
-								continue;
-							}
-
-							okok = false;
-							if (ic.getTypeId() == a1)
-								if (a2 == -29) {
-									okok = true;
-								} else if (a2 == ic.getData().getData()) {
-									okok = true;
-								}
-
-							if (moveyet > 10) {
-								player.sendMessage(dprint.r
-										.color("ptdew&dewdd : " + tr.gettr("gift_you_got_item_10_times_enough")));
-								return;
-							}
-
-							if (okok == true) {
-								ItemStack gj = new ItemStack(ic);
-								player.getLocation().getWorld().dropItem(player.getLocation(), gj);
-								moveyet++;
-								c.getInventory().remove(ic);
-								c.update();
-								player.sendMessage(dprint.r.color(moveyet + " ... " + gj.getTypeId() + ":"
-										+ gj.getData() + tr.gettr("amount") + " = " + gj.getAmount()));
-							}
-
+					okok = false;
+					if (ic.getTypeId() == a1)
+						if (a2 == -29) {
+							okok = true;
+						} else if (a2 == ic.getData().getData()) {
+							okok = true;
 						}
+
+					if (moveyet > 10) {
+						player.sendMessage(
+								dprint.r.color("ptdew&dewdd : " + tr.gettr("gift_you_got_item_10_times_enough")));
+						return;
 					}
+
+					if (okok == true) {
+						ItemStack gj = new ItemStack(ic);
+						player.getLocation().getWorld().dropItem(player.getLocation(), gj);
+						moveyet++;
+						c.getInventory().remove(ic);
+						c.update();
+						player.sendMessage(dprint.r.color(moveyet + " ... " + gj.getTypeId() + ":" + gj.getData()
+								+ tr.gettr("amount") + " = " + gj.getAmount()));
+					}
+
 				}
 			}
 
@@ -5389,19 +5477,19 @@ public class dewset extends dewset_interface {
 			return false;
 		}
 	}
-	
+
 	class delaylay55 implements Runnable {
-		private item55deletec ab ;
-		
+		private item55deletec ab;
+
 		public delaylay55(item55deletec ab) {
 			this.ab = ab;
 		}
 
 		@Override
 		public void run() {
-			
+
 			while (tps.getTPS() < 19) {
-				
+
 				try {
 					Thread.sleep(rnd.nextInt(1000));
 				} catch (InterruptedException e) {
@@ -5409,23 +5497,28 @@ public class dewset extends dewset_interface {
 					e.printStackTrace();
 				}
 			}
-			
-			Bukkit.getScheduler().scheduleSyncDelayedTask(ac, ab,  rnd.nextInt(100) );
-			
+
+			Bukkit.getScheduler().scheduleSyncDelayedTask(ac, ab, rnd.nextInt(100));
+
 		}
 	}
 
-	public void item55delete(Block block, Player player, int id, byte dat, int maxRecursive, int searchSpace, long reTime) {
-		item55deletec ab = new item55deletec(block, player, id, dat, maxRecursive,searchSpace ,  reTime);
+	public void item55delete(Block block, Player player, int id, byte dat, int maxRecursive, int searchSpace,
+			long reTime) {
+		item55deletec ab = new item55deletec(block, player, id, dat, maxRecursive, searchSpace, reTime);
 
-		//delaylay55 bb = new delaylay55(ab);
-			Bukkit.getScheduler().scheduleSyncDelayedTask(ac, ab );
-			
-		//amountRecursiveCount = 0;
-		/*player.sendMessage(dprint.r.color("55 " + id + ":" + dat + 
-				" maxRecursive " + maxRecursive + ",searchSpace " + searchSpace + ", block "/
-				+ block.getX() + "," + block.getY() + "," + block.getZ()); */
-		//Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(ac, ab, rnd.nextInt(100) );
+		// delaylay55 bb = new delaylay55(ab);
+		Bukkit.getScheduler().scheduleSyncDelayedTask(ac, ab);
+
+		// amountRecursiveCount = 0;
+		/*
+		 * player.sendMessage(dprint.r.color("55 " + id + ":" + dat +
+		 * " maxRecursive " + maxRecursive + ",searchSpace " + searchSpace +
+		 * ", block "/ + block.getX() + "," + block.getY() + "," +
+		 * block.getZ());
+		 */
+		// Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(ac, ab,
+		// rnd.nextInt(100) );
 	}
 
 	class chestabsorb_c implements Runnable {
@@ -5639,7 +5732,8 @@ public class dewset extends dewset_interface {
 
 								Block curprochest = protochest(block, d4, sorttype);
 								if (curprochest == null) {
-									player.sendMessage(dprint.r.color("curprochest == null > " + d4 + " , " + sorttype ));
+									player.sendMessage(
+											dprint.r.color("curprochest == null > " + d4 + " , " + sorttype));
 
 									continue;
 
