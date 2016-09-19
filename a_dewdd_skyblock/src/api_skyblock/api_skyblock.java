@@ -448,6 +448,7 @@ public class api_skyblock {
 
 		// found
 		int getslot = getplayerinslot(player.getName(), getid);
+		rs[getid].lastUsed = System.currentTimeMillis();
 
 		if (getplayerinslot(Constant_Protect.flag_noprotect, getid) > -1) {
 
@@ -1180,13 +1181,20 @@ public class api_skyblock {
 
 				}
 
-				if (m.length == 24) {
+				if (m.length >= 24) {
 					int bb = (int) Double.parseDouble(m[23]);
 
 					// bb = 0;
 					rs[rsMax - 1].mission = (bb);
 
 				}
+				if (m.length == 25) {
+					long bb = Long.parseLong(m[24]);
+
+					// bb = 0;
+					rs[rsMax - 1].lastUsed = (bb);
+				}
+				
 
 				// rs[rsMax - 1].mission = 0;
 
@@ -1340,6 +1348,7 @@ public class api_skyblock {
 				}
 
 				wr = wr + " " + rs[y].mission;
+				wr = wr + " " + rs[y].lastUsed;
 
 				fwriter.write(wr + System.getProperty("line.separator"));
 
