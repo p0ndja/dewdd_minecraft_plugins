@@ -1393,7 +1393,7 @@ public class DigEventListener2 implements Listener {
 		inv.clear();
 
 		ItemStack itm = new ItemStack(Material.STICK, 1);
-		itm.addUnsafeEnchantment(Enchantment.DIG_SPEED, 10);
+		itm.addUnsafeEnchantment(Enchantment.DIG_SPEED, 6);
 		ItemMeta ex = itm.getItemMeta();
 
 		ex.setDisplayName("next");
@@ -1401,7 +1401,7 @@ public class DigEventListener2 implements Listener {
 		inv.setItem(53, itm);
 
 		itm = new ItemStack(Material.STICK, 1);
-		itm.addUnsafeEnchantment(Enchantment.DIG_SPEED, 10);
+		itm.addUnsafeEnchantment(Enchantment.DIG_SPEED, 6);
 		ex = itm.getItemMeta();
 
 		ex.setDisplayName("back");

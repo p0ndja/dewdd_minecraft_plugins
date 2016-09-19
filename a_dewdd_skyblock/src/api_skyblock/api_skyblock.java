@@ -2769,6 +2769,11 @@ public class api_skyblock {
 
 					for (ItemStack itm : player.getInventory().getContents()) {
 						if (itm != null) {
+							
+							if (itm.getType() == Material.CHEST) {
+								continue;
+							}
+							
 							hav = true;
 							break;
 						}
