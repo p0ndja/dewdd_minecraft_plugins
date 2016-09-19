@@ -17,6 +17,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.block.BlockExpEvent;
+import org.bukkit.event.block.BlockExplodeEvent;
 import org.bukkit.event.block.BlockPhysicsEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
@@ -52,12 +54,11 @@ class Gravity implements Runnable {
 
 	public boolean isThisBlockHasRoot(Block cur, Block start) {
 		Block b2 = null;
-		//cur.setType(Material.STAINED_GLASS_PANE);
+		// cur.setType(Material.STAINED_GLASS_PANE);
 
-		//Random rnd = new Random();
-		//cur.setData((byte) rnd.nextInt(15));
-		
-		
+		// Random rnd = new Random();
+		// cur.setData((byte) rnd.nextInt(15));
+
 		/*
 		 * if (root.amount > 10) { root.amount -- ; return; }
 		 */
@@ -79,49 +80,31 @@ class Gravity implements Runnable {
 				double dis = (xxx * xxx) + (zzz * zzz);
 				dis = Math.pow(dis, 0.5);
 
-				/*
-				 * if (dis > stick) { continue; }
-				 */
-
 				if (xxx > stick || zzz > stick) {
 					continue;
 				}
 
-				/*
-				 * if (Math.abs(b2.getY() - start.getY()) > stick) { continue; }
-				 */
-				/*
-				 * if (b2.getLocation().distance(start.getLocation()) > 5) {
-				 * continue; }
-				 */
-
-				/*
-				 * if (b2.getType().isSolid() == false) { continue; }
-				 */
-
-				// if (b2.getY() > start.getY() - rRoot && b2.getY() >
-				// 0) {
-				if (b2.getY() > 0) {
+				//if (b2.getY() > start.getY() - Gravity.stick && b2.getY() > 0) {
+					 if (b2.getY() > 0) {
 					// more research !
-					if (Gravity.needBlock(b2) == false) {
+
+					/*
+					 * if (Gravity.needBlock(b2) == false) { continue; }
+					 */
+					if (b2.getType() == Material.AIR) {
 						continue;
 					}
-					
-					boolean ret =  isThisBlockHasRoot(b2, start);
+
+					boolean ret = isThisBlockHasRoot(b2, start);
 					if (ret == true) {
 						return true;
-					}
-					else {
+					} else {
 						continue;
 					}
 
 				} else {
 
-					if (Gravity.needBlock(b2) == false) {
-						return true;
-					} else {
-						return true;
-					}
+					return true;
 				}
 
 			}
@@ -138,7 +121,7 @@ class Gravity implements Runnable {
 		case STATIONARY_LAVA:
 		case LAVA:
 		case AIR:
-	   //case STAINED_GLASS_PANE:
+			// case STAINED_GLASS_PANE:
 			return false;
 		default:
 			return true;
@@ -257,8 +240,10 @@ class Gravity implements Runnable {
 			Block cur = list.get(l);
 			// cur.setType(Material.LOG);
 			// cur.setData((byte) rnd.nextInt(4));
-		/*	cur.setType(Material.STAINED_GLASS);
-			cur.setData((byte) rnd.nextInt(15));*/
+			/*
+			 * cur.setType(Material.STAINED_GLASS); cur.setData((byte)
+			 * rnd.nextInt(15));
+			 */
 
 			for (int x = -r; x <= r; x++) {
 				for (int z = -r; z <= r; z++) {
@@ -293,7 +278,7 @@ class Gravity implements Runnable {
 
 			int counter = 0;
 
-			int tmpr = Gravity.r;
+			int tmpr = Gravity.stick;
 
 			for (int x = -tmpr; x <= tmpr; x++) {
 				for (int y = -tmpr; y <= tmpr; y++) {
@@ -321,11 +306,11 @@ class Gravity implements Runnable {
 class TheJobType {
 	private LinkedList<Location> loc = new LinkedList<Location>();
 
-	public  int getSize() {
+	public int getSize() {
 		return loc.size();
 	}
 
-	public  void put(Location loc) {
+	public void put(Location loc) {
 		Block blo = loc.getBlock();
 		if (blo == null) {
 			return;
@@ -391,7 +376,7 @@ class MainLoop implements Runnable {
 
 		int done = 0;
 
-		while (done <= 10 && jobs.getSize() > 0) {
+		while (done <= 1 && jobs.getSize() > 0) {
 			// dprint.r.printAll("done size " + done + " , " + jobs.getSize());
 
 			Location loc = jobs.get();
@@ -405,11 +390,9 @@ class MainLoop implements Runnable {
 
 				Gravity noop = new Gravity(blo, null, 1);
 				
-
+				
 			}
-			
-			done++;
-			
+done++;
 		}
 
 		if (jobs.getSize() > 0) {
@@ -433,7 +416,7 @@ class Delay implements Runnable {
 		}
 
 		MainLoop mainLoop = new MainLoop();
-		Bukkit.getScheduler().scheduleSyncRepeatingTask(DigEventListener2.ac, mainLoop, 0, 4);
+		Bukkit.getScheduler().scheduleSyncRepeatingTask(DigEventListener2.ac, mainLoop, 0, 5);
 
 	}
 }
@@ -454,41 +437,35 @@ public class DigEventListener2 implements Listener {
 	// BlockPlaceEvent
 
 	@EventHandler
-	public void eventja(PlayerInteractEvent e) {
-		/*if (!tr.isrunworld(ac.getName(), e.getBlock().getWorld().getName()))
+	public void eventja(BlockExplodeEvent e) {
+
+		if (!tr.isrunworld(ac.getName(), e.getBlock().getWorld().getName()))
 			return;
-		
-		
+
 		Block block = e.getBlock();
 		Block b2 = null;
 
 		int r = Gravity.r;
-		int counter = 0;
-		
-		if (MainLoop.jobs.getSize() > 100) {
-			return;
-		}
 
 		for (int x = -r; x <= r; x++) {
 			for (int y = -r; y <= r; y++) {
 				for (int z = -r; z <= r; z++) {
-					counter++;
 
 					b2 = block.getRelative(x, y, z);
 
-					
-					 * if (b2.getType() == Material.AIR) { continue; }
-					 
+					if (Gravity.needBlock(b2) == false) {
+						continue;
+					}
+
 					// Gravity noop = new Gravity(b2, null, block, counter *
 					// 25);
-					
 					MainLoop.jobs.put(b2.getLocation());
 
 				}
 			}
 
 		}
-*/
+
 	}
 
 	@EventHandler
@@ -500,19 +477,18 @@ public class DigEventListener2 implements Listener {
 		Block block = e.getBlock();
 		Block b2 = null;
 
-		int r = Gravity.stick;
+		int r = Gravity.r;
 		int counter = 0;
-
 		for (int x = -r; x <= r; x++) {
 			for (int y = -r; y <= r; y++) {
 				for (int z = -r; z <= r; z++) {
-					counter++;
 
 					b2 = block.getRelative(x, y, z);
 
-					/*
-					 * if (b2.getType() == Material.AIR) { continue; }
-					 */
+					if (Gravity.needBlock(b2) == false) {
+						continue;
+					}
+
 					// Gravity noop = new Gravity(b2, null, block, counter *
 					// 25);
 					MainLoop.jobs.put(b2.getLocation());
@@ -541,17 +517,18 @@ public class DigEventListener2 implements Listener {
 		Block block = e.getBlock();
 		Block b2 = null;
 
-		int r = Gravity.stick;
+		int r = Gravity.r;
 		int counter = 0;
 		for (int x = -r; x <= r; x++) {
 			for (int y = -r; y <= r; y++) {
 				for (int z = -r; z <= r; z++) {
-					counter++;
+
 					b2 = block.getRelative(x, y, z);
 
-					/*
-					 * if (b2.getType() == Material.AIR) { continue; }
-					 */
+					if (Gravity.needBlock(b2) == false) {
+						continue;
+					}
+
 					// Gravity noop = new Gravity(b2, null, block, counter *
 					// 25);
 					MainLoop.jobs.put(b2.getLocation());

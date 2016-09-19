@@ -21,8 +21,16 @@ public  class api_creative {
 
 	public static JavaPlugin ac;
 
+	public static boolean cando(Block block, Player player) {
+		return cando(block.getX() , block.getY()  , block.getZ(),player);
+	}
+	
 	public static boolean cando(int x, int y, int z, Player player) {
 		if (!tr.isrunworld(ac.getName(), player.getWorld().getName())) {
+			return true;
+		}
+		
+		if (player.isOp() ) {
 			return true;
 		}
 

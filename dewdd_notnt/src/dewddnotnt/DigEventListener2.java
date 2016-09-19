@@ -5,8 +5,10 @@
  */
 package dewddnotnt;
 
+import org.bukkit.entity.EntityType;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.entity.EntityChangeBlockEvent;
 import org.bukkit.event.entity.EntityExplodeEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -14,12 +16,9 @@ import dewddtran.tr;
 
 public class DigEventListener2 implements Listener {
 	public JavaPlugin ac = null;
-	
 
 	// Chat Event.class
 	// BlockBreakEvent
-
-	
 
 	// BlockBreakEvent
 
@@ -29,13 +28,24 @@ public class DigEventListener2 implements Listener {
 
 	// BlockDamageEvent
 
-	
+	// EntityExplodeEvent
 
 	// EntityExplodeEvent
 
-	
+	@EventHandler
+	public void eventja(EntityChangeBlockEvent e) {
+		if (tr.isrunworld(ac.getName(), e.getEntity().getLocation().getWorld().getName()) == false)
+			return;
 
-	// EntityExplodeEvent
+		if (e.getEntity() == null)
+			return;
+
+		if (e.getEntity().getType() == EntityType.ENDERMAN) {
+			e.setCancelled(true);
+			return;
+		}
+
+	}
 
 	@EventHandler
 	public void eventja(EntityExplodeEvent event) throws InterruptedException {
@@ -43,19 +53,14 @@ public class DigEventListener2 implements Listener {
 		if (!tr.isrunworld(ac.getName(), event.getEntity().getWorld().getName()))
 			return;
 
-	
-			event.setCancelled(true);
-		
+		event.setCancelled(true);
 
 	}
 
 	// PlayerDeathEvent
 
-
 	// PlayerInteractEvent
 
-
 	// PlayerRespawnEvent
-
 
 } // class

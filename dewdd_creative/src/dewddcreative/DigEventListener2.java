@@ -17,8 +17,9 @@ import org.bukkit.block.Sign;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.block.BlockExpEvent;
+import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockExplodeEvent;
+import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityExplodeEvent;
 import org.bukkit.event.entity.ItemDespawnEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
@@ -576,5 +577,35 @@ public class DigEventListener2 implements Listener {
 		// dewremove
 
 	}
+	
+	@EventHandler
+	public void eventja(BlockBreakEvent e) {
+		if (!tr.isrunworld(ac.getName(), e.getPlayer().getWorld().getName())) {
+			return;
+		}
+		Block block = e.getBlock();
+		Player player = e.getPlayer();
 
+		boolean cando = api_creative.cando(block, player);
+		if (cando == false) {
+			e.setCancelled(true);
+			return;
+		}
+	}
+
+
+	@EventHandler
+	public void eventja(BlockPlaceEvent e) {
+		if (!tr.isrunworld(ac.getName(), e.getPlayer().getWorld().getName())) {
+			return;
+		}
+		Block block = e.getBlock();
+		Player player = e.getPlayer();
+
+		boolean cando = api_creative.cando(block, player);
+		if (cando == false) {
+			e.setCancelled(true);
+			return;
+		}
+	}
 } // class
