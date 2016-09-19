@@ -26,7 +26,7 @@ public class Main extends JavaPlugin {
 
 		this.log = this.getLogger();
 
-		this.ax.ac = this;
+		DigEventListener2.ac = this;
 		// ax.dew = new Dewddminecraft();
 		// ax.dew.loadmainfile();
 		// ax.dew.ac = this;
