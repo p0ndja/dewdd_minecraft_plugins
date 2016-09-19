@@ -25,9 +25,10 @@ class ForceSpawn implements Runnable {
 
 	@Override
 	public void run() {
-		World world = Bukkit.getWorld(tr.gettr("CONFIG FORCESPAWN WORLD NAME"));
+		World world = Bukkit.getWorld(tr.gettr("CONFIG FORCESPAWN WORLD NAME").trim());
 		if (world == null) {
 			world = player.getWorld();
+			dprint.r.printAll("ForecSpawn World '" + world.getName() + "' or '" + tr.gettr("CONFIG FORCESPAWN WORLD NAME") + "' == null" );
 		}
 
 		try {
