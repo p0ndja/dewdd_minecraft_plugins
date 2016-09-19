@@ -64,18 +64,37 @@ public class DigEventListener2 implements Listener {
 
 				}
 			}
-			
-			if (m[0].equalsIgnoreCase("ghost" )) {
-				if(player.getGameMode() == GameMode.SURVIVAL) {
-					player.setGameMode(GameMode.SPECTATOR);
+
+			if (m[0].equalsIgnoreCase("ghost")) {
+				if (player.getGameMode() == GameMode.SURVIVAL) {
+					int money = (int) tr.gettrint("CONFIG_GHOST_PRICE");
+					try {
+						if (Economy.getMoney(player.getName()) < money) {
+							player.sendMessage(dprint.r.color("ptdew&dewdd : /ghost " + tr.gettr("use_money") + money));
+
+							return;
+						} else {
+							try {
+								Economy.setMoney(player.getName(), Economy.getMoney(player.getName()) - money);
+								player.setGameMode(GameMode.SPECTATOR);
+							} catch (UserDoesNotExistException | NoLoanPermittedException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							}
+
+						}
+					} catch (UserDoesNotExistException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
 				}
+
 				else {
 					player.setGameMode(GameMode.SURVIVAL);
 				}
-					 
+
 			}
 
-	
 			if (m[0].equalsIgnoreCase("digx") == true) {
 				player.addPotionEffect(PotionEffectType.FAST_DIGGING.createEffect(6000, 100));
 			}
@@ -289,8 +308,6 @@ public class DigEventListener2 implements Listener {
 				return;
 			}
 
-		
-
 			// 555
 
 			if (m[0].equalsIgnoreCase("xD") == true) {
@@ -334,7 +351,7 @@ public class DigEventListener2 implements Listener {
 						LivingEntity en = (LivingEntity) ent;
 						if (en.getCustomName() != null)
 							continue;
-						
+
 						if (ent.getCustomName() == null) {
 							continue;
 						}
@@ -485,8 +502,8 @@ public class DigEventListener2 implements Listener {
 
 				// ลาก่อน
 				if (m[0].equalsIgnoreCase("bye bye") == true || m[0].equalsIgnoreCase("good bye") == true
-						|| m[0].equalsIgnoreCase("see you") == true || m[0].equalsIgnoreCase("bye") ||
-						m[0].equalsIgnoreCase("บาย")) {
+						|| m[0].equalsIgnoreCase("see you") == true || m[0].equalsIgnoreCase("bye")
+						|| m[0].equalsIgnoreCase("บาย")) {
 					player.setHealth(0);
 
 					dprint.r.printA("ptdew&dewdd: " + player.getName() + " อยากตาย ก็เลยตาย");
@@ -512,7 +529,6 @@ public class DigEventListener2 implements Listener {
 
 				// ********************************************
 				// หายใจใต้น้ำ
-			
 
 				// ใจดี
 				if (m[0].equalsIgnoreCase("good man") == true || m[0].equalsIgnoreCase(":)") == true
@@ -544,8 +560,6 @@ public class DigEventListener2 implements Listener {
 					}
 					return;
 				}
-
-				
 
 				// save
 				if (m[0].equalsIgnoreCase("save") == true) {
@@ -589,8 +603,6 @@ public class DigEventListener2 implements Listener {
 					canc = true;
 				}
 
-				
-
 				if (m[0].equalsIgnoreCase("dewgetalldrop") == true || m[0].equalsIgnoreCase("dg") == true
 						|| m[0].equalsIgnoreCase("dgad") == true) {
 					canc = true;
@@ -623,8 +635,6 @@ public class DigEventListener2 implements Listener {
 					return;
 				}
 
-			
-
 			} catch (UserDoesNotExistException | NoLoanPermittedException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -650,9 +660,9 @@ public class DigEventListener2 implements Listener {
 				Ageable age = (Ageable) en;
 
 				double a1 = tr.gettrint("CONFIG_MAX_ANIMAL_" + age.getType().name());
-			
-				double a2 = tr.gettrint  ("CONFIG_MAX_ANIMAL_amount" + age.getType().name());
-			
+
+				double a2 = tr.gettrint("CONFIG_MAX_ANIMAL_amount" + age.getType().name());
+
 			}
 
 			int count = 0;
@@ -664,12 +674,11 @@ public class DigEventListener2 implements Listener {
 				Ageable age = (Ageable) en;
 
 				double a1 = tr.gettrint("CONFIG_MAX_ANIMAL_Count_" + age.getType().name());
-				
-				double a2 = tr.gettrint("CONFIG_MAX_ANIMAL_Radius" + age.getType().name());
-			
 
-				int anymal = (int)a1;
-				int anyamo = (int)a2;
+				double a2 = tr.gettrint("CONFIG_MAX_ANIMAL_Radius" + age.getType().name());
+
+				int anymal = (int) a1;
+				int anyamo = (int) a2;
 
 				// count neary mon
 				count = 0;
@@ -732,71 +741,71 @@ public class DigEventListener2 implements Listener {
 			}
 
 			if (message.equalsIgnoreCase("clearmon") == true || message.equalsIgnoreCase("cm") == true) {
-				
+
 				for (World wow : Bukkit.getWorlds())
-				for (Entity ent : wow.getEntities()) {
-					if (!(ent instanceof LivingEntity))
-						continue;
-					LivingEntity en = (LivingEntity) ent;
-					if (!en.getCustomName().equalsIgnoreCase(""))
-						continue;
+					for (Entity ent : wow.getEntities()) {
+						if (!(ent instanceof LivingEntity))
+							continue;
+						LivingEntity en = (LivingEntity) ent;
+						if (!en.getCustomName().equalsIgnoreCase(""))
+							continue;
 
-					if (ent.getType() == org.bukkit.entity.EntityType.CREEPER) {
-						ent.remove();
-					}
-					if (ent.getType() == org.bukkit.entity.EntityType.SKELETON) {
-						ent.remove();
-					}
-					if (ent.getType() == org.bukkit.entity.EntityType.ZOMBIE) {
-						ent.remove();
-					}
-					if (ent.getType() == org.bukkit.entity.EntityType.SPIDER) {
-						ent.remove();
-					}
-					if (ent.getType() == org.bukkit.entity.EntityType.CAVE_SPIDER) {
-						ent.remove();
-					}
-					if (ent.getType() == org.bukkit.entity.EntityType.BLAZE) {
-						ent.remove();
-					}
-					if (ent.getType() == org.bukkit.entity.EntityType.ENDERMAN) {
-						ent.remove();
-					}
-					if (ent.getType() == org.bukkit.entity.EntityType.BAT) {
-						ent.remove();
-					}
-					if (ent.getType() == org.bukkit.entity.EntityType.SLIME) {
-						ent.remove();
-					}
-					if (ent.getType() == org.bukkit.entity.EntityType.GHAST) {
-						ent.remove();
-					}
-					if (ent.getType() == org.bukkit.entity.EntityType.ENDERMAN) {
-						ent.remove();
-					}
-					if (ent.getType() == org.bukkit.entity.EntityType.GIANT) {
-						ent.remove();
-					}
-					if (ent.getType() == org.bukkit.entity.EntityType.PIG_ZOMBIE) {
-						ent.remove();
-					}
-					if (ent.getType() == org.bukkit.entity.EntityType.WITCH) {
-						ent.remove();
-					}
-					if (ent.getType() == org.bukkit.entity.EntityType.MAGMA_CUBE) {
-						ent.remove();
-					}
-					if (ent.getType() == org.bukkit.entity.EntityType.WITHER) {
-						ent.remove();
-					}
-					if (ent.getType() == org.bukkit.entity.EntityType.ENDER_DRAGON) {
-						ent.remove();
-					}
-					if (ent.getType() == org.bukkit.entity.EntityType.SILVERFISH) {
-						ent.remove();
-					}
+						if (ent.getType() == org.bukkit.entity.EntityType.CREEPER) {
+							ent.remove();
+						}
+						if (ent.getType() == org.bukkit.entity.EntityType.SKELETON) {
+							ent.remove();
+						}
+						if (ent.getType() == org.bukkit.entity.EntityType.ZOMBIE) {
+							ent.remove();
+						}
+						if (ent.getType() == org.bukkit.entity.EntityType.SPIDER) {
+							ent.remove();
+						}
+						if (ent.getType() == org.bukkit.entity.EntityType.CAVE_SPIDER) {
+							ent.remove();
+						}
+						if (ent.getType() == org.bukkit.entity.EntityType.BLAZE) {
+							ent.remove();
+						}
+						if (ent.getType() == org.bukkit.entity.EntityType.ENDERMAN) {
+							ent.remove();
+						}
+						if (ent.getType() == org.bukkit.entity.EntityType.BAT) {
+							ent.remove();
+						}
+						if (ent.getType() == org.bukkit.entity.EntityType.SLIME) {
+							ent.remove();
+						}
+						if (ent.getType() == org.bukkit.entity.EntityType.GHAST) {
+							ent.remove();
+						}
+						if (ent.getType() == org.bukkit.entity.EntityType.ENDERMAN) {
+							ent.remove();
+						}
+						if (ent.getType() == org.bukkit.entity.EntityType.GIANT) {
+							ent.remove();
+						}
+						if (ent.getType() == org.bukkit.entity.EntityType.PIG_ZOMBIE) {
+							ent.remove();
+						}
+						if (ent.getType() == org.bukkit.entity.EntityType.WITCH) {
+							ent.remove();
+						}
+						if (ent.getType() == org.bukkit.entity.EntityType.MAGMA_CUBE) {
+							ent.remove();
+						}
+						if (ent.getType() == org.bukkit.entity.EntityType.WITHER) {
+							ent.remove();
+						}
+						if (ent.getType() == org.bukkit.entity.EntityType.ENDER_DRAGON) {
+							ent.remove();
+						}
+						if (ent.getType() == org.bukkit.entity.EntityType.SILVERFISH) {
+							ent.remove();
+						}
 
-				}
+					}
 				dprint.r.printC("DewDD:ClearMon done");
 
 				return;
@@ -804,9 +813,9 @@ public class DigEventListener2 implements Listener {
 			}
 
 			if (message.equalsIgnoreCase("gc") == true) {
-				
+
 				System.gc();
-				
+
 				return;
 			}
 
@@ -817,7 +826,6 @@ public class DigEventListener2 implements Listener {
 
 				return;
 			}
-
 
 			if (message.equalsIgnoreCase("cleardrop") == true) {
 
@@ -940,8 +948,7 @@ public class DigEventListener2 implements Listener {
 		message = (message.replace("แ อ ด", "Dew"));
 		message = (message.replace("แอด", "Dew"));
 		message = (message.replace("แ  อ  ด", "Dew"));
-		
-		
+
 		e.setMessage(message);
 
 		chatc ab = new chatc();
