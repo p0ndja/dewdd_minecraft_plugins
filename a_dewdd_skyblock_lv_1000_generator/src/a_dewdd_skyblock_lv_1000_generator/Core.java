@@ -194,10 +194,9 @@ public class Core {
 
 		d.pl("converted tmpShop to AllShop ");
 	}
-
-	public void decodeTmpLV(ParameterLVType paraLV) {
-
-		// random unique item
+	
+	
+	public void addNeedItemToLV(ParameterLVType paraLV ) {
 		ParameterRandomUniqueItem rUnique = new ParameterRandomUniqueItem();
 		decodeRandomUniqueItem(rUnique);
 
@@ -205,7 +204,7 @@ public class Core {
 		for (int i = 0; i < allBlockInGameAsList.size(); i++) {
 
 			double c01 = decodeRandomGive01_();
-			rAmountStack[i] = (int) (c01 * allBlockInGameAsList.get(rUnique.index[i]).maxStack);
+			rAmountStack[i] = (int) Math.round(c01 * allBlockInGameAsList.get(rUnique.index[i]).maxStack);
 			if (rAmountStack[i] <= 0)
 				rAmountStack[i] = 1;
 
@@ -232,7 +231,7 @@ public class Core {
 
 				l.needItem[j] = eof.theName;
 				l.needData[j] = eof.data;
-				l.needAmount[j] = (int) (decodeRandomGive01_() * eof.maxStack);
+				l.needAmount[j] = (int) Math.round(decodeRandomGive01_() * eof.maxStack);
 				if (l.needAmount[j] <= 0) {
 					l.needAmount[j] = 1;
 				}
@@ -242,7 +241,63 @@ public class Core {
 			}
 
 		}
+	}
+	
+	public void addRewardItemToLV(ParameterLVType paraLV ) {
+		
+		// each lv
+		for ( int i = 0 ; i < paraLV.outputLV.size() ; i ++ ) {
+			LV1000Type e = paraLV.outputLV.get(i);
+			
+			int amountReward = 0;
+			double tmp01 =  decodeRandomGive01_();
+			
+			// 10 - 1 = 9
+			double maxmin =(maxRewardDiffBlockType - minRewardDiffBlockType);
+			
+			amountReward =(int) ( Math.round(
+					(tmp01 * maxmin))+minRewardDiffBlockType );
+			
+			if (amountReward > maxRewardDiffBlockType) amountReward = maxRewardDiffBlockType;
+			if (amountReward < minRewardDiffBlockType) amountReward = minRewardDiffBlockType;
+			
+			// after know amount
+			
+			
+			e.rewardSize = 0;
+			
+			e.rewardData = new byte[amountReward];
+			e.rewardAmount = new int[amountReward];
+			e.needItem = new String [amountReward];
+			
+			for (int j = 0 ; j < amountReward ; j ++ ) {
+				double g = decodeRandomGive01_() * allBlockInGameAsList.size();
+				g = Math.round(g);
+				int index =  (int) (g);
+				
+				e.rewardData[j] = allBlockInGameAsList.get(index).data;
+				e.rewardItem[j] = allBlockInGameAsList.get(index).theName;
+				e.rewardAmount[j] = (int) Math.round(decodeRandomGive01_() * allBlockInGameAsList.get(index).maxStack);
+				
+				
+				
+			}
+			
+			
+			e.rewardSize = amountReward;
+			
+			
+		}
+	}
 
+	public void decodeTmpLV(ParameterLVType paraLV) {
+
+		// random unique item
+		
+		addNeedItemToLV(paraLV);
+		
+		addRewardItemToLV(paraLV);
+		
 	}
 
 	public void decodeRandomSumAmount417ForAllShop(ParameterRandomAmountItem para) {
@@ -261,10 +316,10 @@ public class Core {
 
 			double tmpReadChro = decodeRandomGive01_(); // random
 			
-				double curAmount = (tmpReadChro * max) + minShopSize; // 3 - 7
+				double curAmount = Math.round(tmpReadChro * max) + minShopSize; // 3 - 7
 				
 				para.amount[countItem] = (int) curAmount;
-				if (para.amount[countItem] == 0) {
+				if (para.amount[countItem] <= 0) {
 					para.amount[countItem] = 1;
 				}
 
@@ -273,9 +328,9 @@ public class Core {
 			// 417 > 417
 			if (countItem > allBlockInGameAsList.size()) {
 				int tmb = (countItem - allBlockInGameAsList.size());
-				if (tmb < 0) {
-					d.pl("tmb : " + tmb);
-				}
+				
+					d.pl("decodeRandumSumAmount Shouldn't be here : " + tmb);
+				
 				countItem = allBlockInGameAsList.size() - 1;
 				para.amount[countItem] = tmb;
 
@@ -294,9 +349,7 @@ public class Core {
 
 	public double decodeRandomGive01_() {
 		double tmpReadChro = 0;
-		tmpReadChro = Math.abs(chromosome[curChro]);
-
-		curChro++;
+		tmpReadChro = decodeRandomGiveDouble_();
 
 		if (tmpReadChro < 0) {
 			tmpReadChro = 0;
@@ -354,7 +407,7 @@ public class Core {
 
 			double max = (maxShopSize - minShopSize); // 1 / 7
 
-			double curAmount = (tmpReadChro * max) + minShopSize;
+			double curAmount = Math.round(tmpReadChro * max) + minShopSize;
 			paraShopPrice.amount[paraShopPrice.shopSlotMax] = (int) curAmount;
 
 			countItem += paraShopPrice.amount[paraShopPrice.shopSlotMax];
@@ -393,7 +446,7 @@ public class Core {
 
 			double rendomStack01 = decodeRandomGive01_();
 
-			bo.curAmount = (int) (rendomStack01 * allBlockInGameAsList.get(cur).maxStack);
+			bo.curAmount = (int) Math.round(rendomStack01 * allBlockInGameAsList.get(cur).maxStack);
 
 			if (bo.curAmount <= 0)
 				bo.curAmount = 1;
