@@ -41,14 +41,20 @@ public class tranrun implements Listener {
 				p.sendMessage(tr.gettr("listed_of_runworld"));
 
 				for (int i = 0; i < tr.runworld.size(); i++) {
-					p.sendMessage(r.color(tr.runworld.get(i).pluginname));
+					dprint_tran.r.printA((r.color(tr.runworld.get(i).pluginname)));
 
-					for (int j = 0; j < tr.runworld.get(i).runworld.size(); j++) {
-						p.sendMessage(r.color(" > " + tr.runworld.get(i).runworld.get(j)));
+					for (int j = 0; j < tr.runworld.get(i).runWorld.size(); j++) {
+						dprint_tran.r.printA(r.color(" > " + tr.runworld.get(i).runWorld.get(j)));
 
 					}
 
+					for (int j = 0; j < tr.runworld.get(i).skipWorld.size(); j++) {
+						dprint_tran.r.printA(r.color(" > " + tr.runworld.get(i).skipWorld.get(j)));
+
+					}
 				}
+				
+				
 
 			} else if (m[1].equalsIgnoreCase("reload")) {
 				r.printAll("tran reloading file...");

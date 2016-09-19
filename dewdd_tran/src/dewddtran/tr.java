@@ -22,9 +22,10 @@ import org.bukkit.plugin.Plugin;
 import dprint_tran.r;
 import li.Constant_Protect;
 
-class runworldtype {
+class RunWorldType {
 	public String pluginname;
-	public ArrayList<String> runworld;
+	public ArrayList<String> runWorld;
+	public ArrayList<String> skipWorld;
 }
 
 public class tr {
@@ -35,7 +36,7 @@ public class tr {
 
 	public static String folder_name = "plugins" + File.separator + "dewdd_tran";
 
-	public static ArrayList<runworldtype> runworld = new ArrayList<runworldtype>();
+	public static ArrayList<RunWorldType> runworld = new ArrayList<RunWorldType>();
 
 	public static void generateRunWorldFile() {
 
@@ -215,12 +216,27 @@ public class tr {
 
 	public static boolean isrunworld(String pluginname, String worldname) {
 		for (int j = 0; j < tr.runworld.size(); j++) {
-			if (tr.runworld.get(j).pluginname.equalsIgnoreCase(pluginname)) {
+			RunWorldType tmp = tr.runworld.get(j);
 
-				for (int k = 0; k < tr.runworld.get(j).runworld.size(); k++) {
-					if (tr.runworld.get(j).runworld.get(k).equalsIgnoreCase(worldname))
+			if (tmp.pluginname.equalsIgnoreCase(pluginname)) {
+
+				for (int k = 0; k < tmp.skipWorld.size(); k++) { // exclude
+					if (tmp.skipWorld.get(k).equalsIgnoreCase(worldname)) {
 						return false;
+
+					}
 				}
+
+				for (int k = 0; k < tmp.runWorld.size(); k++) { // exclude
+
+					if (tmp.runWorld.get(k).equalsIgnoreCase(worldname) || tmp.runWorld.get(k).equalsIgnoreCase("*")) {
+						return true;
+
+					}
+				}
+				
+				return false;
+
 			}
 		}
 
@@ -287,7 +303,7 @@ public class tr {
 
 		String lo[] = tr.loadfile("dewdd_tran", "drunworld.txt");
 		System.out.println("lo size = " + lo.length);
-		tr.runworld = new ArrayList<runworldtype>();
+		tr.runworld = new ArrayList<RunWorldType>();
 		tr.runworld.clear();
 
 		if (lo.length == 0) {
@@ -300,44 +316,59 @@ public class tr {
 		System.out.println("converting_runworld_file_data");
 
 		String m[] = null;
+
 		for (int i = 0; i < lo.length; i++) {
 			m = lo[i].split("\\s+");
 
-			if (i == 0) {
-				tr.runworld.add(new runworldtype());
-				tr.runworld.get(tr.runworld.size() - 1).pluginname = m[0];
-				tr.runworld.get(tr.runworld.size() - 1).runworld = new ArrayList<String>();
-				tr.runworld.get(tr.runworld.size() - 1).runworld.clear();
-				tr.runworld.get(tr.runworld.size() - 1).runworld.add(m[1]);
+			RunWorldType tmp = new RunWorldType();
+
+			tmp.pluginname = m[0];
+			dprint_tran.r.printAll("pluginname " + m[0]);
+
+			tmp.runWorld = new ArrayList<String>();
+			tmp.skipWorld = new ArrayList<String>();
+
+			// cut STring
+
+			if (m[1].equalsIgnoreCase("*")) {
+
+				tmp.runWorld.add("*");
+				dprint_tran.r.printAll("runWorld add " + "*");
+				
+				
+				for (int j = 2; j < lo.length && j < m.length; j++) {
+					dprint_tran.r.printAll("skipWorld add " + m[j]);
+
+					tmp.skipWorld.add(m[j]);
+				}
 
 			} else {
-				// search that plugin name
+				// tmp.skipWorld.add("*");
 
-				boolean added = false;
-
-				for (int j = 0; j < tr.runworld.size(); j++) {
-					if (tr.runworld.get(j).pluginname.equalsIgnoreCase(m[0])) {
-						tr.runworld.get(j).runworld.add(m[1]);
-
-						added = true;
-						break;
-					}
-
+				for (int j = 1; j < lo.length && j < m.length ; j++) {
+					dprint_tran.r.printAll("runWorld add " + m[j]);
+					tmp.runWorld.add(m[j]);
 				}
-
-				if (added == true) {
-					continue;
-				}
-
-				// add new
-				tr.runworld.add(new runworldtype());
-				tr.runworld.get(tr.runworld.size() - 1).pluginname = m[0];
-				tr.runworld.get(tr.runworld.size() - 1).runworld = new ArrayList<String>();
-				tr.runworld.get(tr.runworld.size() - 1).runworld.clear();
-				tr.runworld.get(tr.runworld.size() - 1).runworld.add(m[1]);
-				continue;
 			}
 
+			tr.runworld.add(tmp);
+		}
+
+		dprint_tran.r.printAll("runWorld Size =  " + tr.runworld.size());
+		for (int i = 0; i < tr.runworld.size(); i++) {
+			RunWorldType xxx = tr.runworld.get(i);
+
+			dprint_tran.r.printAll("runWorld size " + xxx.runWorld.size());
+
+			for (int j = 0; j < xxx.runWorld.size(); j++) {
+				dprint_tran.r.printAll(xxx.runWorld.get(j));
+			}
+
+			dprint_tran.r.printAll("skipWorld size " + xxx.skipWorld.size());
+
+			for (int j = 0; j < xxx.skipWorld.size(); j++) {
+				dprint_tran.r.printAll(xxx.skipWorld.get(j));
+			}
 		}
 
 		System.out.println("loaded_runworld_file_data");

@@ -1029,7 +1029,7 @@ startTime = System.currentTimeMillis();
 				return;
 			}
 
-			dprint.r.printAll("ptdew&dewdd : " + tr.gettr("searching_freezone_for_build_skyblock"));
+			//dprint.r.printAll("ptdew&dewdd : " + tr.gettr("searching_freezone_for_build_skyblock"));
 			lastcreate = System.currentTimeMillis();
 
 			player.getInventory().clear();
@@ -1073,7 +1073,7 @@ startTime = System.currentTimeMillis();
 				
 				y = rnd.nextInt(200) + 50;
 
-				dprint.r.printAll("searching..." + x + "," + y + "," + z);
+				//dprint.r.printAll("searching..." + x + "," + y + "," + z);
 
 				boolean checkrs = true;
 
@@ -1249,8 +1249,12 @@ startTime = System.currentTimeMillis();
 					dprint.r.printA(tr.gettr("good_luck_createlsdone") + " '" + player.getName() + "'(" + x + "," + y
 							+ "," + z + ")");
 
-					dprint.r.printA(tr.gettr("if_you_want_to_back_to_is_type") + " /skyblock home");
+					dprint.r.printA(tr.gettr("if_you_want_to_back_to_is_type") + " /skyblock home " + player.getName());
 
+					dprint.r.printA(tr.gettr("anyway_you_shold_sethome_and_home_for_shorten_typing") + " /skyblock home " + player.getName());
+
+					
+					
 					lastcreate = System.currentTimeMillis();
 
 					player.sendMessage(tr.gettr("cur_c_is") + (rs[newid].mission));
