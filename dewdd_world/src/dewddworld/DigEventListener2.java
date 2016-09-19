@@ -137,7 +137,7 @@ public class DigEventListener2 implements Listener {
 
 		@Override
 		public void run() {
-			dprint.r.printA("ptdew&dewdd: unloading all chunk with no player");
+			dprint.r.printC("ptdew&dewdd: unloading all chunk with no player");
 		
 			
 			for (World wx : Bukkit.getWorlds()) {
@@ -159,7 +159,7 @@ public class DigEventListener2 implements Listener {
 
 					if (worldHasPlayer == false) {
 						cj.unload(true);
-						dprint.r.printA("ptdew&dewdd: unloaded chunk at (" + cj.getX() * 16 + ","
+						dprint.r.printC("ptdew&dewdd: unloaded chunk at (" + cj.getX() * 16 + ","
 								+ cj.getZ() * 16 + ")");
 					}
 
@@ -336,7 +336,7 @@ public class DigEventListener2 implements Listener {
 			}
 
 			if (m[0].equalsIgnoreCase("loadchunk") == true) {
-				dprint.r.printA("ptdew&dewdd: loading all chunk neary you");
+				dprint.r.printC("ptdew&dewdd: loading all chunk neary you");
 				World wx = player.getWorld();
 
 				for (int x = -200; x < 200; x += 16) {
@@ -345,7 +345,7 @@ public class DigEventListener2 implements Listener {
 
 						wx.loadChunk((int) ((x + player.getLocation().getX()) / 16),
 								(int) ((z + player.getLocation().getZ()) / 16), true);
-						dprint.r.printA("ptdew&dewdd: loaded chunk at (" + (x + player.getLocation().getX()) + ","
+						dprint.r.printC("ptdew&dewdd: loaded chunk at (" + (x + player.getLocation().getX()) + ","
 								+ (z + player.getLocation().getZ()) + ")");
 					}
 
