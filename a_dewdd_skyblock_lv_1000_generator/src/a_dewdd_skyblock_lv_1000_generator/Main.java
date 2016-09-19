@@ -77,50 +77,51 @@ class HybridOverride extends Hybrid {
 		a = ps.allMyInventory.get("SAPLING:5");
 		a.curAmount = 3;
 
-		a = ps.allMyInventory.get("PUMPKIN_SEEDS");
+		a = ps.allMyInventory.get("PUMPKIN:0");
 		a.curAmount = 10;
 		
-		a = ps.allMyInventory.get("SEEDS");
+		a = ps.allMyInventory.get("WHEAT:0");
 		a.curAmount = 10;
 		
-		a = ps.allMyInventory.get("POTATO_ITEM");
+		a = ps.allMyInventory.get("POTATO_ITEM:0");
 		a.curAmount = 10;
 		
-		a = ps.allMyInventory.get("SUGAR_CANE");
+		a = ps.allMyInventory.get("SUGAR_CANE:0");
 		a.curAmount = 10;
 		
-		a = ps.allMyInventory.get("BROWN_MUSHROOM");
+		a = ps.allMyInventory.get("BROWN_MUSHROOM:0");
 		a.curAmount = 2;
 		
-		a = ps.allMyInventory.get("CACTUS");
+		a = ps.allMyInventory.get("CACTUS:0");
 		a.curAmount = 1;
 		
-		a = ps.allMyInventory.get("SAND");
+		a = ps.allMyInventory.get("SAND:0");
 		a.curAmount = 7;
 		
-		a = ps.allMyInventory.get("CARROT_ITEM");
+		a = ps.allMyInventory.get("CARROT_ITEM:0");
 		a.curAmount = 10;
 		
-		a = ps.allMyInventory.get("LAVA_BUCKET");
+		a = ps.allMyInventory.get("LAVA_BUCKET:0");
 		a.curAmount = 10;
 		
-		a = ps.allMyInventory.get("RED_MUSHROOM");
+		a = ps.allMyInventory.get("RED_MUSHROOM:0");
 		a.curAmount = 2;
-		a = ps.allMyInventory.get("MELON_SEEDS");
+		a = ps.allMyInventory.get("MELON:0");
 		a.curAmount = 10;
-		a = ps.allMyInventory.get("TORCH");
+		a = ps.allMyInventory.get("TORCH:0");
 		a.curAmount = 3;
 		
+		a = ps.allMyInventory.get("GRASS:0");
+		a.curAmount = 50;
 		
+		// grass , dirt
 		
-
-		for (long curSecond = 0; curSecond <= Core.maxItemForCompleteMission; curSecond++) {
-
-		}
 
 		return 0;
 
 	}
+	
+	
 
 }
 
