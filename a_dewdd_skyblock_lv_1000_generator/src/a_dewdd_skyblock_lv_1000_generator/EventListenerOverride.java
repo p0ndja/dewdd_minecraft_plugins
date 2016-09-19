@@ -4,9 +4,10 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 
-import ga_optimization_api.Chromosome;
+import core_optimization_api.Chromosome;
+import core_optimization_api.EventListener;
 
-public class EventListenerOverride extends ga_optimization_api.EventListener {
+public class EventListenerOverride extends EventListener {
 	public static String folder_Name = File.separator + "ramdisk" + File.separator + "skylv_generator";
 	public static String theBest_fileName = "theBest.txt";
 

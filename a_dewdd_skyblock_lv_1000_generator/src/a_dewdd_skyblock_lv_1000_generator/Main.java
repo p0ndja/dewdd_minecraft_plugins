@@ -1,8 +1,11 @@
 package a_dewdd_skyblock_lv_1000_generator;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 
-import ga_optimization_api.Chromosome;
+import core_optimization_api.Chromosome;
+
+
 
 public class Main {
 
@@ -46,13 +49,13 @@ public class Main {
 
 		HybridOverride hy = new HybridOverride();
 
-		hy.setChromosomeLength(Core.dnaSize);
+		hy.setDnaLength(Core.dnaSize);
 		
-		hy.setRunCount(1000000);
+		hy.setMaxEpochs(1000000);
 
 		// set chromosome here
 
-		LinkedList<Chromosome> seo = hy.loadAndSortTheBestFromRamdisk();
+		ArrayList<Chromosome> seo = hy.loadAndSortTheBestFromRamdisk();
 		
 		if (args.length == 0) {
 			args = new String[2];

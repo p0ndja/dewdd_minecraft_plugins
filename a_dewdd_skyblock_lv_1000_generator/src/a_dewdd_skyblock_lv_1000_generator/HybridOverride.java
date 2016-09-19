@@ -5,10 +5,11 @@ import java.io.DataInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Random;
 
-import ga_optimization_api.Chromosome;
+import core_optimization_api.Chromosome;
 import ga_optimization_api.Hybrid;
 
 public class HybridOverride extends Hybrid{
@@ -69,8 +70,8 @@ public class HybridOverride extends Hybrid{
 		return ceo;
 	}
 
-	public LinkedList<Chromosome> loadAndSortTheBestFromRamdisk() {
-		LinkedList<Chromosome> cho = new LinkedList<Chromosome>();
+	public ArrayList<Chromosome> loadAndSortTheBestFromRamdisk() {
+		ArrayList<Chromosome> cho = new ArrayList<Chromosome>();
 
 		File fie = new File(EventListenerOverride.folder_Name + File.separator + "lastGen");
 
