@@ -24,9 +24,9 @@ public class CheckNoRedstoneActivity implements Runnable {
 
 			if (diff > Redex.maxNoRedstoneActivityInTick) {
 				at.isRunning = false;
-				dprint.r.printAll("CheckNoRedstoneActivity : " + lop + " die "
+				/*dprint.r.printAll("CheckNoRedstoneActivity : " + lop + " die "
 						+ (Redex.redstoneTimer) + " - "
-						+ at.lastRedstoneActivity + " = " + diff);
+						+ at.lastRedstoneActivity + " = " + diff);*/
 
 				// check score
 				FitnessSubArea fs = new FitnessSubArea(this.redex, lop);

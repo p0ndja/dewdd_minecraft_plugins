@@ -20,9 +20,8 @@ public class Redex {
 	// update the best
 	// produce next gen
 
-	public static int				maxTopBest					= 10;
 
-	public static int				maxPopulation				= 10;
+	public static int				maxPopulation				= 1000;
 
 	public static long				maxNothingBetterInTick		= (60 * 1) * 10;				// 1
 																								// minutes
@@ -32,7 +31,7 @@ public class Redex {
 	public static int				spaceBlockEachArea			= 5;
 	public static long				redstoneTimer				= 0;
 
-	public static int				dnaLength					= 300;							// 1125;
+	public static int				dnaLength					= 3000;							// 1125;
 	public int						curMode						= 0;							// 0
 																								// is
 																								// redex
@@ -63,7 +62,11 @@ public class Redex {
 
 	public Hybrid					hybrid;
 	
+	public boolean 					isAutoMode = false;
+	
 	public EventListenerX eventListenerX = null;
+	
+	public int evolutionCount = 0;
 
 	public Redex(World world) {
 		this.world = world;
@@ -146,8 +149,8 @@ public class Redex {
 
 	}
 
-	public void ActivateAllArea() {
-		ActivateAllArea caa = new ActivateAllArea(this);
+	public void ActivateAllArea(boolean auto) {
+		ActivateAllArea caa = new ActivateAllArea(this,auto);
 		Bukkit.getScheduler().scheduleSyncDelayedTask(DigEventListener2.ac, caa,
 				1);
 	}
@@ -158,14 +161,14 @@ public class Redex {
 				1);
 	}
 
-	public void CleanAllArea() {
-
-		CleanAllArea caa = new CleanAllArea(this, 0);
+	public void CleanAllArea(boolean auto) {
+		this.isAutoMode = auto;
+		CleanAllArea caa = new CleanAllArea(this, 0, auto);
 		Bukkit.getScheduler().scheduleSyncDelayedTask(DigEventListener2.ac, caa,
 				1);
 	}
 
-	public void DecodeAllArea() {
+	public void DecodeAllArea(boolean auto) {
 		// load new dna
 		
 		ArrayList <Chromosome> tmp = hybrid.getPopulation();
@@ -175,7 +178,7 @@ public class Redex {
 
 		dprint.r.printAll("DecodeAllArea first " + " , "
 				+ this.hybrid.getPopulation().size());
-		DecodeAllDNA caa = new DecodeAllDNA(this, 0);
+		DecodeAllDNA caa = new DecodeAllDNA(this, 0,auto);
 		Bukkit.getScheduler().scheduleSyncDelayedTask(DigEventListener2.ac, caa,
 				1);
 	}

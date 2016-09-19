@@ -65,8 +65,12 @@ public class DecodeSubDNA implements Runnable {
 			tmpx = tmpx % diffX;
 			int posx = (int) tmpx;
 
-			double tmpy = Math.abs(dna.dna[startPoint + 1]) * diffY;
+			/*double tmpy = Math.abs(dna.dna[startPoint + 1]) * diffY;
 			tmpy = tmpy % diffY;
+			int posy = (int) tmpy;*/
+			
+			double tmpy = Math.abs(dna.dna[startPoint + 1]) * 255;
+			tmpy = tmpy % 255;
 			int posy = (int) tmpy;
 
 			double tmpz = Math.abs(dna.dna[startPoint + 2]) * diffZ;

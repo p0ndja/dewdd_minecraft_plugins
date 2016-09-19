@@ -4,9 +4,11 @@ import org.bukkit.Bukkit;
 
 public class ActivateAllArea implements Runnable {
 	private Redex redex;
+	private boolean auto = false;
 
-	public ActivateAllArea(Redex redex) {
+	public ActivateAllArea(Redex redex, boolean auto) {
 		this.redex = redex;
+		this.auto =  auto;
 	}
 
 	@Override

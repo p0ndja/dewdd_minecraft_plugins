@@ -6,10 +6,12 @@ import org.bukkit.block.Block;
 public class DecodeAllDNA implements Runnable {
 	private Redex	redex;
 	private int		curId	= 0;
+	private boolean auto = false;
 
-	public DecodeAllDNA(Redex redex, int curId) {
+	public DecodeAllDNA(Redex redex, int curId, boolean auto) {
 		this.redex = redex;
 		this.curId = curId;
+		this.auto = auto;
 	}
 
 	@Override
@@ -29,7 +31,7 @@ public class DecodeAllDNA implements Runnable {
 		this.curId++;
 		if (this.curId < this.redex.listEx.size()) {
 			// recall own self
-			DecodeAllDNA caa = new DecodeAllDNA(this.redex, this.curId);
+			DecodeAllDNA caa = new DecodeAllDNA(this.redex, this.curId,auto);
 			Bukkit.getScheduler().scheduleSyncDelayedTask(DigEventListener2.ac,
 					caa, 1);
 			return;
@@ -37,6 +39,9 @@ public class DecodeAllDNA implements Runnable {
 
 		dprint.r.printAll("Decoding Done");
 		
+		if (auto == true) {
+			redex.ActivateAllArea(auto);
+		}
 		
 
 	}

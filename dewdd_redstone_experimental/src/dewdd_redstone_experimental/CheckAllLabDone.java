@@ -21,6 +21,7 @@ public class CheckAllLabDone implements Runnable {
 					+ ((at.chro == null) ? "yes" : "no"));*/
 			
 			if (at.isRunning == true) {
+				dprint.r.printAll("Lab ID "+ lop +" is running");
 				dprint.r.printAll("check All lab done False");
 				return;
 			}
@@ -43,11 +44,24 @@ public class CheckAllLabDone implements Runnable {
 			tmp.add(at.chro);
 		}
 		
+		if (redex.topBest != null) {
+		if (redex.topBest.chro.fitness == (1 / (double)(101)) ) {
+			
+			dprint.r.printAll("done found the best");
+			return;
+		}
+		}
 		
 		this.redex.hybrid.setAllChromosomeGen1(tmp);
+		this.redex.hybrid.produceNextGen(redex.evolutionCount ++);
+		dprint.r.printAll("next Evolution : " + redex.evolutionCount);
 		
-		this.redex.hybrid.produceNextGen(1);
 		
+		if (redex.isAutoMode == true) {
+		
+			redex.CleanAllArea(true);
+		
+		}
 
 		/*double unsort[] = new double[Redex.maxPopulation];
 

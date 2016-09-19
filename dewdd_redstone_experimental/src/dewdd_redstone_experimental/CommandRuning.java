@@ -44,7 +44,7 @@ public class CommandRuning implements Runnable {
 
 						// start process
 
-						this.redex.CleanAllArea();
+						this.redex.CleanAllArea(true);
 
 					}
 					else if (this.m[1].equalsIgnoreCase("clean")) {
@@ -52,7 +52,7 @@ public class CommandRuning implements Runnable {
 
 							// start process
 
-							this.redex.CleanAllArea();
+							this.redex.CleanAllArea(false);
 						}
 						else if (this.m.length == 3) {
 
@@ -67,7 +67,7 @@ public class CommandRuning implements Runnable {
 						if (this.m.length == 2) {
 							// start process
 
-							this.redex.DecodeAllArea();
+							this.redex.DecodeAllArea(false);
 						}
 						else if (this.m.length == 3) {
 
@@ -82,7 +82,7 @@ public class CommandRuning implements Runnable {
 						if (this.m.length == 2) {
 							// start process
 
-							this.redex.ActivateAllArea();
+							this.redex.ActivateAllArea(false);
 						}
 						else if (this.m.length == 3) {
 
