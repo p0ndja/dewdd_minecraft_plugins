@@ -2479,10 +2479,15 @@ startTime = System.currentTimeMillis();
 
 					Block thetop = gethFirstBlockHigh(block);
 					if (thetop == null) {
+						
+						block.setType(Material.GLASS);
 						player.sendMessage(dprint.r.color(
 								tr.gettr("can't warp to this sky island cuz there are no middle block to stand")));
-						return;
+						//return;
+						thetop = gethFirstBlockHigh(block);
 					}
+					
+					
 					player.teleport(thetop.getLocation());
 
 					player.sendMessage(dprint.r.color("teleported you to (" + block.getX() + "," + block.getY() + ","
@@ -2499,10 +2504,14 @@ startTime = System.currentTimeMillis();
 
 					Block thetop = gethFirstBlockHigh(block);
 					if (thetop == null) {
+						
+						block.setType(Material.GLASS);
 						player.sendMessage(dprint.r.color(
 								tr.gettr("can't warp to this sky island cuz there are no middle block to stand")));
-						return;
+						//return;
+						thetop = gethFirstBlockHigh(block);
 					}
+					
 					player.teleport(thetop.getLocation());
 
 					player.sendMessage(dprint.r.color("teleported you to (" + block.getX() + "," + block.getY() + ","
@@ -2573,9 +2582,12 @@ startTime = System.currentTimeMillis();
 								block.getChunk().load();
 								Block thetop = gethFirstBlockHigh(block);
 								if (thetop == null) {
-									player.sendMessage(dprint.r.color(tr.gettr(
-											"can't warp to this sky island cuz there are no middle block to stand")));
-									return;
+									
+									block.setType(Material.GLASS);
+									player.sendMessage(dprint.r.color(
+											tr.gettr("can't warp to this sky island cuz there are no middle block to stand")));
+									//return;
+									thetop = gethFirstBlockHigh(block);
 								}
 								player.teleport(thetop.getLocation());
 								player.sendMessage(dprint.r.color("teleported you to (" + block.getX() + ","

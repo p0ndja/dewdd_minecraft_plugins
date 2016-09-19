@@ -97,6 +97,34 @@ public class DigEventListener2 implements Listener {
 				return;
 			}
 
+			if ((this.message.equalsIgnoreCase("dewsetset0in150") == true)) {
+				int getid = DigEventListener2.this.dew.getfreeselect(this.player);
+
+				DigEventListener2.this.dew.selectx1[getid] = this.player.getLocation().getBlockX() - 149;
+				DigEventListener2.this.dew.selecty1[getid] = 0;
+				DigEventListener2.this.dew.selectz1[getid] = this.player.getLocation().getBlockZ() - 149;
+
+				DigEventListener2.this.dew.selectx2[getid] = this.player.getLocation().getBlockX() + 149;
+				DigEventListener2.this.dew.selecty2[getid] = 255;
+				DigEventListener2.this.dew.selectz2[getid] = this.player.getLocation().getBlockZ() + 149;
+
+				DigEventListener2.this.dew.showpos(this.player, idc);
+
+				ArrayList<IDDataType> item = new ArrayList<IDDataType>();
+				ArrayList<IDDataType> itemSearch = new ArrayList<IDDataType>();
+
+				item = IDDataType.longArgumentToListIDDataType("4:0");
+				itemSearch = IDDataType.longArgumentToListIDDataType("8,9,10,11");
+
+				dew.dewset(player, item, itemSearch, false);
+
+				item = IDDataType.longArgumentToListIDDataType("0:0");
+				itemSearch = IDDataType.longArgumentToListIDDataType("-29:-29");
+
+				dew.dewset(player, item, itemSearch, false);
+
+			}
+
 			if ((m[0].equalsIgnoreCase("dewsety") == true) || (m[0].equalsIgnoreCase("sety") == true)) {
 				if (m.length != 3) {
 					this.player.sendMessage(tr.gettr("not enought argument please type" + " /sety y1 y2"));
@@ -168,6 +196,12 @@ public class DigEventListener2 implements Listener {
 	class chatz extends Thread {
 		String message = "";
 		Player player = null;
+
+		public chatz(String message, Player player) {
+			this.message = message;
+			this.player = player;
+			Bukkit.getScheduler().scheduleSyncDelayedTask(DigEventListener2.this.ac, this);
+		}
 
 		@Override
 		public void run() {
@@ -647,10 +681,7 @@ public class DigEventListener2 implements Listener {
 
 		}
 
-		chatz ar = new chatz();
-		ar.player = event.getPlayer();
-		ar.message = event.getMessage();
-		ar.start();
+		chatz ar = new chatz(event.getMessage(), event.getPlayer());
 
 		chatx ab = new chatx(event.getMessage(), event.getPlayer());
 
@@ -743,11 +774,7 @@ public class DigEventListener2 implements Listener {
 
 		event.setCancelled(ab.canc);
 
-		chatz ar = new chatz();
-		ar.player = event.getPlayer();
-		ar.message = event.getMessage().substring(1);
-		ar.start();
-
+		chatz ar = new chatz(event.getMessage().substring(1), event.getPlayer());
 		dprint.r.printC(event.getMessage());
 
 	}
