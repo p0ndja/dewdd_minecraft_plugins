@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.net.SocketException;
 
 import javazoom.jl.decoder.JavaLayerException;
 import javazoom.jl.player.Player;
@@ -64,21 +65,21 @@ class SubListener implements Runnable {
 		String clientSentence;
 		String capitalizedSentence;
 
-		while (true) {
-
-			try {
+		try {
+			while (true) {
 				clientSentence = inFromClient.readLine();
 				System.out.println("Received: " + clientSentence);
 				capitalizedSentence = clientSentence.toUpperCase() + '\n';
 				outToClient.writeBytes(capitalizedSentence);
 				runSound();
-
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-
 			}
+		} catch (SocketException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 
 	}
@@ -116,8 +117,8 @@ class StartListener implements Runnable {
 				connectionSocket = welcomeSocket.accept();
 				inFromClient = new BufferedReader(new InputStreamReader(connectionSocket.getInputStream()));
 				outToClient = new DataOutputStream(connectionSocket.getOutputStream());
-				
-				SubListener sl  = new SubListener(connectionSocket, inFromClient, outToClient);
+
+				SubListener sl = new SubListener(connectionSocket, inFromClient, outToClient);
 				Thread abx = new Thread(sl);
 				abx.start();
 			}
@@ -125,7 +126,7 @@ class StartListener implements Runnable {
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-			startServer();
+			// startServer();
 		}
 
 	}

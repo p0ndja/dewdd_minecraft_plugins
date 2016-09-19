@@ -49,8 +49,8 @@ class Reconnect_c implements Runnable {
 }
 
 public class DigEventListener2 implements Listener {
-	JavaPlugin ac = null;
-	Reconnect_c abc = null;
+	public static JavaPlugin ac = null;
+	public static Reconnect_c abc = null;
 
 
 	public void Reconnect() {
@@ -68,6 +68,7 @@ public class DigEventListener2 implements Listener {
 	public void eventja(PlayerJoinEvent event) {
 		try {
 			abc.outToServer.writeBytes(event.getPlayer().getName() + " joining \n");
+			
 		} catch (SocketException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

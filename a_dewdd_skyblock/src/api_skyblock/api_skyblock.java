@@ -690,7 +690,7 @@ startTime = System.currentTimeMillis();
 				long end  = System.currentTimeMillis();
 				long diff = end  - start;
 				
-				Bukkit.getScheduler().scheduleSyncDelayedTask(ac, abc, (diff/20)*2);
+				Bukkit.getScheduler().scheduleSyncDelayedTask(ac, abc, (diff/20)*3);
 
 			} else if (isDone == true) {
 				
