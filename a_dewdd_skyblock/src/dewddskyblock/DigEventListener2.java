@@ -8,7 +8,6 @@ package dewddskyblock;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Random;
 
@@ -602,6 +601,8 @@ public class DigEventListener2 implements Listener {
 		public int lastStandProtectID = -1;
 	}
 
+	public String sky_c_inv_name = "sky c";
+	
 	public JavaPlugin ac = null;
 
 	public api_skyblock dew = null;
@@ -1130,7 +1131,7 @@ public class DigEventListener2 implements Listener {
 			return;
 		}
 
-		if (inv.getName().equalsIgnoreCase("sky lv")) {
+		if (inv.getName().equalsIgnoreCase(sky_c_inv_name)) {
 
 			if (e.getSlot() >= 0 && e.getSlot() <= 10) {
 				e.setCancelled(true);
@@ -1150,7 +1151,7 @@ public class DigEventListener2 implements Listener {
 			return;
 		}
 
-		if (inv.getName().equalsIgnoreCase("sky lv")) {
+		if (inv.getName().equalsIgnoreCase(sky_c_inv_name)) {
 
 			Player p = (Player) e.getPlayer();
 
@@ -1410,24 +1411,17 @@ public class DigEventListener2 implements Listener {
 
 					player.sendMessage("xy " + ee.lx + "," + ee.lz + " to " + ee.rx + "," + ee.rz);
 				} else if (m[1].equalsIgnoreCase("flag")) {
-
 					player.sendMessage(
 							dprint.r.color(tr.gettr("skyblock add these flag to your zone to activate something")));
-
-					player.sendMessage(dprint.r.color((Constant_Protect.flag_autoabsorb + " "
-							+ tr.gettr("flag " + Constant_Protect.flag_autoabsorb + " meaning"))));
-					player.sendMessage(dprint.r.color((Constant_Protect.flag_autocut + " "
-							+ tr.gettr("flag " + Constant_Protect.flag_autocut + " meaning"))));
-					player.sendMessage(dprint.r.color((Constant_Protect.flag_everyone + " "
-							+ tr.gettr("flag " + Constant_Protect.flag_everyone + " meaning"))));
-					player.sendMessage(dprint.r.color((Constant_Protect.flag_explode + " "
-							+ tr.gettr("flag " + Constant_Protect.flag_explode + " meaning"))));
-					player.sendMessage(dprint.r.color((Constant_Protect.flag_monster + " "
-							+ tr.gettr("flag " + Constant_Protect.flag_monster + " meaning"))));
-					player.sendMessage(dprint.r.color((Constant_Protect.flag_noprotect + " "
-							+ tr.gettr("flag " + Constant_Protect.flag_noprotect + " meaning"))));
-					player.sendMessage(dprint.r.color((Constant_Protect.flag_pvp + " "
-							+ tr.gettr("flag " + Constant_Protect.flag_pvp + " meaning"))));
+						
+					player.sendMessage(
+							dprint.r.color("/sky <add> <flag>"));
+					player.sendMessage(
+							dprint.r.color("/sky <remove> <flag>"));
+					
+					
+					tr.showFlagToPlayer(player);
+					
 
 				} else if (m[1].equalsIgnoreCase("buyhere")) {
 					// for buy these zone
@@ -1648,21 +1642,16 @@ public class DigEventListener2 implements Listener {
 				else if (m[1].equalsIgnoreCase("home")) {
 					if (m.length != 3) {
 						player.sendMessage(dprint.r.color("need 3 arguments   /skyblock home <player>"));
-						
-						
 
 						for (int lop2 = 0; lop2 < api_skyblock.rsMax; lop2++) {
 							if (api_skyblock.getplayerinslot(player.getName(), lop2) == -1) {
 								continue;
 							}
 
-							
-						player.sendMessage(dprint.r.color("/skyblock home " +  api_skyblock.rs[lop2].p[0]));
-
-							
+							player.sendMessage(dprint.r.color("/skyblock home " + api_skyblock.rs[lop2].p[0]));
 
 						}
-						
+
 						return;
 					}
 
@@ -1704,11 +1693,10 @@ public class DigEventListener2 implements Listener {
 							if (api_skyblock.getplayerinslot(player.getName(), lop2) == -1) {
 								continue;
 							}
-							
-							
 
-							if ( ((api_skyblock.rs[lop2].p[0].equalsIgnoreCase(m[2])) && counttruename == 1)
-								 ||  ( api_skyblock.rs[lop2].p[0].toLowerCase().indexOf(m[2].toLowerCase()) > -1) && counttruename != 1) {
+							if (((api_skyblock.rs[lop2].p[0].equalsIgnoreCase(m[2])) && counttruename == 1)
+									|| (api_skyblock.rs[lop2].p[0].toLowerCase().indexOf(m[2].toLowerCase()) > -1)
+											&& counttruename != 1) {
 								Block block = player.getWorld().getBlockAt(api_skyblock.rs[lop2].x,
 										api_skyblock.rs[lop2].y + 10, api_skyblock.rs[lop2].z);
 								block.getChunk().load();
@@ -1718,14 +1706,11 @@ public class DigEventListener2 implements Listener {
 
 								return;
 							}
-							
-							
 
 						}
 
 					}
-					
-					
+
 					if (nearname > 1) {
 						player.sendMessage(dprint.r.color(tr.gettr("list of sky protect name like your search name")));
 
@@ -1736,7 +1721,7 @@ public class DigEventListener2 implements Listener {
 
 							if (api_skyblock.rs[lop2].p[0].toLowerCase().indexOf(m[2].toLowerCase()) > -1) {
 
-								player.sendMessage(dprint.r.color("/skyblock home " +  api_skyblock.rs[lop2].p[0]));
+								player.sendMessage(dprint.r.color("/skyblock home " + api_skyblock.rs[lop2].p[0]));
 
 							}
 
@@ -1745,8 +1730,7 @@ public class DigEventListener2 implements Listener {
 						return;
 					}
 
-					
-					 if (nearname == 0 ){
+					if (nearname == 0) {
 						player.sendMessage(dprint.r
 								.color(tr.gettr("you_have_more_than_1_home_so_choose_it") + " /skyblock home <name>"));
 
@@ -1755,19 +1739,13 @@ public class DigEventListener2 implements Listener {
 								continue;
 							}
 
-							
-								player.sendMessage(dprint.r.color("/skyblock home " +  api_skyblock.rs[lop2].p[0]));
-
-							
+							player.sendMessage(dprint.r.color("/skyblock home " + api_skyblock.rs[lop2].p[0]));
 
 						}
-						
-						return;
-						
-					}
 
-					
-					
+						return;
+
+					}
 
 					player.sendMessage(dprint.r.color(tr.gettr("not_found_skyblock_of") + m[2]));
 
@@ -1797,7 +1775,7 @@ public class DigEventListener2 implements Listener {
 					player.sendMessage(dprint.r.color(tr.gettr("cur_c_is") + (api_skyblock.rs[getid].mission)));
 					dew.printToAllPlayerOnRS(getid, (tr.gettr("cur_c_is") + api_skyblock.rs[getid].mission));
 
-					Inventory inv = Bukkit.createInventory(null, 54, "sky lv");
+					Inventory inv = Bukkit.createInventory(null, 54, sky_c_inv_name);
 					updateLVInventory(inv, player);
 
 					player.openInventory(inv);
@@ -2339,7 +2317,7 @@ public class DigEventListener2 implements Listener {
 			return;
 		}
 
-		if (rnd.nextInt(100) > 50) {
+		if (rnd.nextInt(100) > 75) {
 
 			Player p = e.getPlayer();
 

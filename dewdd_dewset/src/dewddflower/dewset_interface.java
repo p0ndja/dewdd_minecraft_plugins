@@ -9,8 +9,6 @@ import org.bukkit.entity.Player;
 
 public abstract class dewset_interface extends dewsetdatabase {
 
-	
-
 	public int selectmax = 29;
 
 	public int dewsignlimit = 200;
@@ -33,17 +31,17 @@ public abstract class dewset_interface extends dewsetdatabase {
 	public String pmainoveride = "dewdd.main.overide";
 
 	public String pmainplaceblocknoprotect = "dewdd.main.placeblock.noprotect";
-	
+
 	public String pmainalsocopyinventoryblockwhenyouusedewset = "dewdd.main.dewset.copyinventoryblocks";
-	
+
 	public String puseitem55 = "dewdd.main.dewset.item55";
-
-
 
 	public abstract boolean dewps_add(String message, Player player);
 
 	public abstract boolean dewps_list(Player player);
 
 	public abstract boolean dewps_remove(String message, Player player);
+
+	public abstract boolean dewps_goid(Player player, int id) ;
 
 }

@@ -10,8 +10,8 @@ import java.util.logging.Logger;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class Main extends JavaPlugin {
-	Logger			log;
-	dewddautoseed	ax	= new dewddautoseed();
+	Logger log;
+	dewddautoseed ax = new dewddautoseed();
 
 	@Override
 	public void onDisable() {

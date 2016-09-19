@@ -9,7 +9,7 @@ import java.util.logging.Logger;
 
 import org.bukkit.plugin.java.JavaPlugin;
 
-import dprint.dprint;
+import dprint_tran.r;
 
 public class Main extends JavaPlugin {
 	Logger log;
@@ -18,7 +18,7 @@ public class Main extends JavaPlugin {
 	@Override
 	public void onDisable() {
 		getServer().getPluginManager().disablePlugin(this);
-		dprint.printAll("ptdew&dewdd : unloaded dewdd tran");
+		r.printAll("ptdew&dewdd : unloaded dewdd tran");
 	}
 
 	@Override
@@ -28,7 +28,7 @@ public class Main extends JavaPlugin {
 
 		ax.ac = this;
 		getServer().getPluginManager().registerEvents(ax, this);
-		dprint.printAll("ptdew&dewdd : loaded dewdd tran");
+		r.printAll("ptdew&dewdd : loaded dewdd tran");
 
 		tr.loadRunWorldFile();
 		tr.loadTrFile();

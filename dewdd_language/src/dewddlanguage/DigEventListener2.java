@@ -14,8 +14,6 @@ import org.bukkit.block.Sign;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.block.BlockBreakEvent;
-import org.bukkit.event.block.BlockDamageEvent;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.server.ServerCommandEvent;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -982,10 +980,6 @@ public class DigEventListener2 implements Listener {
 
 		event.setMessage(dew.engtothai(event.getMessage()));
 	}
-
-	
-
-	
 
 	@EventHandler
 	public void eventja(ServerCommandEvent event) {

@@ -291,8 +291,6 @@ public class DigEventListener2 implements Listener {
 				}
 				dew = dewddflower.Main.ds;
 
-				
-
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
 				delay eee = new delay();
@@ -649,8 +647,6 @@ public class DigEventListener2 implements Listener {
 		abc2.start();
 
 	}
-	
-	
 
 	@EventHandler
 	public void eventja(BlockRedstoneEvent e) {

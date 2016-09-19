@@ -26,6 +26,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import dewddtran.tr;
+import dprint.*;
 import li.Constant_Protect;
 import li.LXRXLZRZType;
 
@@ -83,8 +84,6 @@ public class api_skyblock {
 		}
 	}
 
-	
-	
 	class AdjustProtect2 implements Runnable {
 		private Block midBlockX0Z0;
 		private Player player;
@@ -203,7 +202,7 @@ public class api_skyblock {
 
 				for (int lop = 0; lop < rsMax; lop++) {
 					if (rs[lop].x == x && rs[lop].z == z) {
-					//	dprint.r.printAll(">>> owner " + rs[lop].p[0]);
+						// dprint.r.printAll(">>> owner " + rs[lop].p[0]);
 						checkrs = false;
 						break;
 					}
@@ -449,12 +448,12 @@ public class api_skyblock {
 
 		// found
 		int getslot = getplayerinslot(player.getName(), getid);
-		
-		if (getplayerinslot(Constant_Protect.flag_noprotect, getid) > -1 ) {
+
+		if (getplayerinslot(Constant_Protect.flag_noprotect, getid) > -1) {
 
 			return true;
 		}
-		
+
 		if (getplayerinslot(Constant_Protect.flag_everyone, getid) > -1 && mode.equalsIgnoreCase("right")) {
 
 			// player.sendMessage(dprint.r.color("this is not your skyblock ,
@@ -525,7 +524,7 @@ public class api_skyblock {
 	}
 
 	public static LXRXLZRZType getPositionLXRXLZRZ() {
-		LXRXLZRZType ee = new LXRXLZRZType();
+		LXRXLZRZType ee = new LXRXLZRZType(rs[0].x, rs[0].y , rs[0].z,rs[0].x ,rs[0].y,rs[0].z);
 
 		ee.lx = rs[0].x;
 		ee.rx = rs[0].x;

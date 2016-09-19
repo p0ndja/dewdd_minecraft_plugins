@@ -5,9 +5,7 @@ import java.io.File;
 public class Constant {
 
 	public static String pskyblock = "dewdd.skyblock.skyblock";
-	
-	
-	
+
 	public static String folder_name = "plugins" + File.separator + "dewdd_skyblock";
 
 	public static String rsProtect_filename = "ptdew_dewdd_rs_protect.txt";
@@ -18,7 +16,6 @@ public class Constant {
 	public static String poveride = "dewdd.skyblock.overide";
 	public static String presetc = "dewdd.skyblock.resetlv";
 
-	
 	public static int LV_2_USE_BONE_MEAL_AMOUNT = 45;
 	public static int LV_3_DROP_TOUCH_AMOUNT = 64;
 	public static int LV_6_DROP_WHEAT_AMOUNT = 64;

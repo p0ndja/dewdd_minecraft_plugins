@@ -16,9 +16,11 @@ import java.util.ArrayList;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 
-import dprint.dprint;
+import dprint_tran.r;
+import li.Constant_Protect;
 
 class runworldtype {
 	public String pluginname;
@@ -342,6 +344,28 @@ public class tr {
 
 	}
 
+	public static void showFlagToPlayer(Player player) {
+	
+
+		player.sendMessage(r.color((Constant_Protect.flag_autoabsorb + " "
+				+ tr.gettr("flag " + Constant_Protect.flag_autoabsorb + " meaning"))));
+		player.sendMessage(r.color((Constant_Protect.flag_autocut + " "
+				+ tr.gettr("flag " + Constant_Protect.flag_autocut + " meaning"))));
+		player.sendMessage(r.color((Constant_Protect.flag_everyone + " "
+				+ tr.gettr("flag " + Constant_Protect.flag_everyone + " meaning"))));
+		player.sendMessage(r.color((Constant_Protect.flag_explode + " "
+				+ tr.gettr("flag " + Constant_Protect.flag_explode + " meaning"))));
+		player.sendMessage(r.color((Constant_Protect.flag_monster + " "
+				+ tr.gettr("flag " + Constant_Protect.flag_monster + " meaning"))));
+		player.sendMessage(r.color((Constant_Protect.flag_noprotect + " "
+				+ tr.gettr("flag " + Constant_Protect.flag_noprotect + " meaning"))));
+		player.sendMessage(r.color((Constant_Protect.flag_pvp + " "
+				+ tr.gettr("flag " + Constant_Protect.flag_pvp + " meaning"))));
+		player.sendMessage(r.color((Constant_Protect.flag_protectanimal + " "
+				+ tr.gettr("flag " + Constant_Protect.flag_protectanimal + " meaning"))));
+	
+	}
+	
 	public static void loadTrFile() {
 		String worldf = "dew_tr.txt";
 
@@ -417,7 +441,7 @@ public class tr {
 		try {
 			fff.createNewFile();
 
-			dprint.printC("ptdew&dewdd : Start saving " + filena);
+			r.printC("ptdew&dewdd : Start saving " + filena);
 			fwriter = new FileWriter(fff);
 
 			boolean cs = false;
@@ -440,7 +464,7 @@ public class tr {
 			}
 
 			fwriter.close();
-			dprint.printC("ptdew&dewdd : saved " + filena);
+			r.printC("ptdew&dewdd : saved " + filena);
 			return;
 
 		} catch (IOException e) {

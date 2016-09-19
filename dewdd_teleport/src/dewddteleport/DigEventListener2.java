@@ -69,20 +69,20 @@ public class DigEventListener2 implements Listener {
 					p.sendMessage(dprint.r.color(tr.gettr("you don't have permission") + pbuildsign));
 					return;
 				}
-				
+
 				if (sworld == null) {
 					p.sendMessage(dprint.r.color(tr.gettr("you need to type /dewsaveteleport first")));
 					return;
 				}
-				
-				for (int i = 0 ; i >= -3 ; i --) {
+
+				for (int i = 0; i >= -3; i--) {
 					Block b = p.getLocation().getBlock().getRelative(0, i, 0);
 					if (dewddflower.Main.ds.checkpermissionarea(b, p, "build") == true) {
 						p.sendMessage(dprint.r.color(tr.gettr("this zone is protected you can't build")));
 						return;
 					}
 				}
-				
+
 				Block b = p.getLocation().getBlock().getRelative(0, -2, 0);
 				b.setTypeId(68, false);
 

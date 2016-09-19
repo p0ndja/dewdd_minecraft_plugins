@@ -37,6 +37,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import com.earth2me.essentials.api.Economy;
 import com.earth2me.essentials.api.NoLoanPermittedException;
 import com.earth2me.essentials.api.UserDoesNotExistException;
+import com.sun.javafx.geom.Rectangle;
 
 import api_skyblock.api_skyblock;
 import dewddtran.tr;
@@ -44,266 +45,6 @@ import li.Constant_Protect;
 import li.LXRXLZRZType;
 
 public class dewset extends dewset_interface {
-
-	public void DeleteRecursive_mom(HashMap<String, Location> bd, World world, int firstAdded, LXRXLZRZType ee,
-			Material id, byte data, int chunklimit, int search) {
-		DeleteRecursive_Thread dr = new DeleteRecursive_Thread(bd, world, firstAdded, ee, id, data, chunklimit, search);
-		Bukkit.getScheduler().scheduleSyncDelayedTask(ac, dr);
-
-	}
-
-	class DeleteRecursive_Thread implements Runnable {
-		private HashMap<String, Location> bd;
-		private World world;
-		private LXRXLZRZType ee;
-		private Material id;
-		private byte data = 0;
-		private int chunklimit = 0;
-		private int search = 10;
-
-		public DeleteRecursive_Thread(HashMap<String, Location> bd, World world, int firstAdded, LXRXLZRZType ee,
-				Material id, byte data, int chunklimit, int search) {
-			this.bd = bd;
-			this.world = world;
-			this.ee = ee;
-			this.id = id;
-			this.data = data;
-			this.chunklimit = chunklimit;
-			this.search = search;
-
-			// random add
-
-		}
-
-		@Override
-		public void run() {
-			long blockdo = 0;
-
-			// dprint.r.printAll("nope.avi " + id.name());
-
-			for (Player player : Bukkit.getOnlinePlayers()) {
-				if (player == null) {
-					continue;
-
-				}
-
-				if (player.isOp() == true) {
-
-					id = player.getItemInHand().getType();
-					// data = player.getItemInHand().getData().getData();
-				}
-
-				if (player.getItemInHand().getType() == Material.STICK) {
-					// bd = null;
-					return;
-				}
-			}
-
-			long startTime = System.currentTimeMillis();
-
-			// dprint.r.printAll("start " + bd.size());
-
-			if (bd.size() == 0) {
-
-				bd = null;
-				bd = new HashMap<String, Location>();
-				// dprint.r.printAll("run () bd.size = " + bd.size());
-
-				while (System.currentTimeMillis() - startTime < 1000 && world.getLoadedChunks().length <= chunklimit) {
-
-					int x = li.useful.randomInteger(ee.lx, ee.rx);
-					int z = li.useful.randomInteger(ee.lz, ee.rz);
-
-					int y = li.useful.randomInteger(0, 40);
-
-					Block block = world.getBlockAt(x, y, z);
-					if (block.getType() == id) {
-						if (block.getData() == data || data == -29) {
-							blockdo++;
-
-							if (bd.get(tr.locationToString(block.getLocation())) == null) {
-								bd.put(tr.locationToString(block.getLocation()), block.getLocation());
-							}
-
-							dprint.r.printAdmin("delete Recursive > first add > " + block.getX() + "," + block.getY()
-									+ "," + block.getZ() + " size " + bd.size() + " , id data " + id + ":" + data);
-
-						}
-					}
-
-				}
-
-				for (Player player : Bukkit.getOnlinePlayers()) {
-					if (player == null) {
-						continue;
-
-					}
-
-					Block getStack = player.getLocation().getBlock();
-
-					for (int x = -search; x <= search; x++)
-						for (int y = -search; y <= search; y++) {
-
-							for (int z = -search; z <= search; z++) {
-
-								Block bo = player.getWorld().getBlockAt(getStack.getX() + x, getStack.getY() + y,
-										getStack.getZ() + z);
-
-								// dprint.r.printAll("near " +
-								// tr.locationToString(bo.getLocation()) + "
-								// block id " + bo.getType().name() + ":" +
-								// bo.getData() + " > item "
-								// + id.name() + ":" + data);
-
-								if (bo.getType() == id) {
-
-									if (bo.getData() == data || data == -29) {
-										// dprint.r.printAll(bo.getType().name()
-										// + " , " + id.name());
-										// dprint.r.printAll("near " +
-										// tr.locationToString(bo.getLocation())
-										// + " block id " +
-										// bo.getType().name());
-
-										if (bd.get(tr.locationToString(bo.getLocation())) == null) {
-											blockdo++;
-											bd.put(tr.locationToString(bo.getLocation()), bo.getLocation());
-											// dprint.r.printAll("added " +
-											// bd.size() + " " +
-											// tr.locationToString(bo.getLocation())
-											// + " id " + bo.getType().name() +
-											// ":" + bo.getData());
-										}
-
-									}
-								}
-
-							}
-
-						}
-
-				}
-
-				if (bd.size() == 0) {
-
-					// dprint.r.printAll("recall ... " + bd.size() + " , blockdo
-					// " + blockdo + "/" +
-					// (System.currentTimeMillis() - startTime) + " avg = " +
-					// (blockdo / (System.currentTimeMillis() - startTime +1))
-					// );
-
-					DeleteRecursive_Thread newRun = new DeleteRecursive_Thread(bd, world, 0, ee, id, data, chunklimit,
-							search);
-					Bukkit.getScheduler().scheduleSyncDelayedTask(ac, newRun, sleeptime);
-
-					return;
-				}
-
-			}
-
-			startTime = System.currentTimeMillis();
-
-			// blockdo = 0;
-
-			int first = 0;
-			while (bd.size() > 0 && System.currentTimeMillis() - startTime < 1000) {
-
-				for (int i = 0; i < 1000000 && System.currentTimeMillis() - startTime < 1000; i++) {
-
-					String forDeleteLoc = "";
-					for (String locStr : bd.keySet()) {
-
-						Location loc = bd.get(locStr);
-
-						// bd.remove(locStr);
-						forDeleteLoc = locStr;
-
-						Block getStack = world.getBlockAt(loc);
-
-						if (getStack.getWorld().getLoadedChunks().length > chunklimit) {
-							break;
-						}
-
-						if (getStack.getType() == id) {
-							if (getStack.getData() == data || data == -29) {
-
-							} else {
-								break;
-							}
-						} else {
-							break;
-						}
-
-						if (first == 0) {
-							dprint.r.printAdmin("delete recursive > break > " + getStack.getX() + "," + getStack.getY()
-									+ "," + getStack.getZ() + " " + getStack.getType().name() + ":" + getStack.getData()
-									+ " size " + bd.size() + " " + getStack.getWorld().getName() + " > id data " + id
-									+ ":" + data + " blockdo " + blockdo + "/"
-									+ (System.currentTimeMillis() - startTime) + " avg = "
-									+ (blockdo / (System.currentTimeMillis() - startTime + 1)));
-							first = 1;
-						}
-
-						// getStack.breakNaturally();
-						getStack.setType(Material.AIR);
-						// dprint.r.printAdmin("break " +
-						// getStack.getType().name() + " " +
-						// tr.locationToString(getStack.getLocation()));
-
-						blockdo++;
-
-						for (int x = -search; x <= search; x++)
-							for (int y = -search; y <= search; y++) {
-
-								for (int z = -search; z <= search; z++) {
-
-									Block bo = getStack.getWorld().getBlockAt(getStack.getX() + x, getStack.getY() + y,
-											getStack.getZ() + z);
-									if (bo.getX() < ee.lx || bo.getX() > ee.rx || bo.getZ() < ee.lz || bo.getZ() > ee.rz
-											|| bo.getY() > 255 || bo.getY() < 0) {
-										break;
-									}
-
-									if (bo.getType() == id) {
-										if (bo.getData() == data || data == -29)   {
-											blockdo++;
-
-											if (bd.get(tr.locationToString(bo.getLocation())) == null) {
-											bd.put(tr.locationToString(bo.getLocation()), bo.getLocation());
-											}
-
-										}
-									}
-
-								}
-
-							}
-
-						break;
-					}
-
-					if (forDeleteLoc.equalsIgnoreCase("")) {
-
-					} else {
-						Block bee = bd.get(forDeleteLoc).getBlock();
-						// dprint.r.printAdmin("bd remove " +
-						// tr.locationToString( bee.getLocation() ) + " " +
-						// bee.getType().name() + ":" + bee.getData());
-						bd.remove(forDeleteLoc);
-					}
-
-				}
-
-			}
-
-			DeleteRecursive_Thread newRun = new DeleteRecursive_Thread(bd, world, 0, ee, id, data, chunklimit, search);
-			Bukkit.getScheduler().scheduleSyncDelayedTask(ac, newRun, sleeptime);
-			dprint.r.printAdmin("recalling > " + bd.size() + " " + " avg = "
-					+ (int) ((double) blockdo / (System.currentTimeMillis() - startTime + 1)));
-
-		}
-
-	}
 
 	class autosortchest2_class implements Runnable {
 		private Block block;
@@ -1171,6 +912,259 @@ public class dewset extends dewset_interface {
 		}
 	}
 
+	class DeleteRecursive_Thread implements Runnable {
+		private HashMap<String, Location> bd;
+		private World world;
+		private LXRXLZRZType ee;
+		private Material id;
+		private byte data = 0;
+		private int chunklimit = 0;
+		private int search = 10;
+
+		public DeleteRecursive_Thread(HashMap<String, Location> bd, World world, int firstAdded, LXRXLZRZType ee,
+				Material id, byte data, int chunklimit, int search) {
+			this.bd = bd;
+			this.world = world;
+			this.ee = ee;
+			this.id = id;
+			this.data = data;
+			this.chunklimit = chunklimit;
+			this.search = search;
+
+			// random add
+
+		}
+
+		@Override
+		public void run() {
+			long blockdo = 0;
+
+			// dprint.r.printAll("nope.avi " + id.name());
+
+			for (Player player : Bukkit.getOnlinePlayers()) {
+				if (player == null) {
+					continue;
+
+				}
+
+				if (player.isOp() == true) {
+
+					id = player.getItemInHand().getType();
+					// data = player.getItemInHand().getData().getData();
+				}
+
+				if (player.getItemInHand().getType() == Material.STICK) {
+					// bd = null;
+					return;
+				}
+			}
+
+			long startTime = System.currentTimeMillis();
+
+			// dprint.r.printAll("start " + bd.size());
+
+			if (bd.size() == 0) {
+
+				bd = null;
+				bd = new HashMap<String, Location>();
+				// dprint.r.printAll("run () bd.size = " + bd.size());
+
+				while (System.currentTimeMillis() - startTime < 1000 && world.getLoadedChunks().length <= chunklimit) {
+
+					int x = li.useful.randomInteger(ee.lx, ee.rx);
+					int z = li.useful.randomInteger(ee.lz, ee.rz);
+
+					int y = li.useful.randomInteger(0, 40);
+
+					Block block = world.getBlockAt(x, y, z);
+					if (block.getType() == id) {
+						if (block.getData() == data || data == -29) {
+							blockdo++;
+
+							if (bd.get(tr.locationToString(block.getLocation())) == null) {
+								bd.put(tr.locationToString(block.getLocation()), block.getLocation());
+							}
+
+							dprint.r.printAdmin("delete Recursive > first add > " + block.getX() + "," + block.getY()
+									+ "," + block.getZ() + " size " + bd.size() + " , id data " + id + ":" + data);
+
+						}
+					}
+
+				}
+
+				for (Player player : Bukkit.getOnlinePlayers()) {
+					if (player == null) {
+						continue;
+
+					}
+
+					Block getStack = player.getLocation().getBlock();
+
+					for (int x = -search; x <= search; x++)
+						for (int y = -search; y <= search; y++) {
+
+							for (int z = -search; z <= search; z++) {
+
+								Block bo = player.getWorld().getBlockAt(getStack.getX() + x, getStack.getY() + y,
+										getStack.getZ() + z);
+
+								// dprint.r.printAll("near " +
+								// tr.locationToString(bo.getLocation()) + "
+								// block id " + bo.getType().name() + ":" +
+								// bo.getData() + " > item "
+								// + id.name() + ":" + data);
+
+								if (bo.getType() == id) {
+
+									if (bo.getData() == data || data == -29) {
+										// dprint.r.printAll(bo.getType().name()
+										// + " , " + id.name());
+										// dprint.r.printAll("near " +
+										// tr.locationToString(bo.getLocation())
+										// + " block id " +
+										// bo.getType().name());
+
+										if (bd.get(tr.locationToString(bo.getLocation())) == null) {
+											blockdo++;
+											bd.put(tr.locationToString(bo.getLocation()), bo.getLocation());
+											// dprint.r.printAll("added " +
+											// bd.size() + " " +
+											// tr.locationToString(bo.getLocation())
+											// + " id " + bo.getType().name() +
+											// ":" + bo.getData());
+										}
+
+									}
+								}
+
+							}
+
+						}
+
+				}
+
+				if (bd.size() == 0) {
+
+					// dprint.r.printAll("recall ... " + bd.size() + " , blockdo
+					// " + blockdo + "/" +
+					// (System.currentTimeMillis() - startTime) + " avg = " +
+					// (blockdo / (System.currentTimeMillis() - startTime +1))
+					// );
+
+					DeleteRecursive_Thread newRun = new DeleteRecursive_Thread(bd, world, 0, ee, id, data, chunklimit,
+							search);
+					Bukkit.getScheduler().scheduleSyncDelayedTask(ac, newRun, sleeptime);
+
+					return;
+				}
+
+			}
+
+			startTime = System.currentTimeMillis();
+
+			// blockdo = 0;
+
+			int first = 0;
+			while (bd.size() > 0 && System.currentTimeMillis() - startTime < 1000) {
+
+				for (int i = 0; i < 1000000 && System.currentTimeMillis() - startTime < 1000; i++) {
+
+					String forDeleteLoc = "";
+					for (String locStr : bd.keySet()) {
+
+						Location loc = bd.get(locStr);
+
+						// bd.remove(locStr);
+						forDeleteLoc = locStr;
+
+						Block getStack = world.getBlockAt(loc);
+
+						if (getStack.getWorld().getLoadedChunks().length > chunklimit) {
+							break;
+						}
+
+						if (getStack.getType() == id) {
+							if (getStack.getData() == data || data == -29) {
+
+							} else {
+								break;
+							}
+						} else {
+							break;
+						}
+
+						if (first == 0) {
+							dprint.r.printAdmin("delete recursive > break > " + getStack.getX() + "," + getStack.getY()
+									+ "," + getStack.getZ() + " " + getStack.getType().name() + ":" + getStack.getData()
+									+ " size " + bd.size() + " " + getStack.getWorld().getName() + " > id data " + id
+									+ ":" + data + " blockdo " + blockdo + "/"
+									+ (System.currentTimeMillis() - startTime) + " avg = "
+									+ (blockdo / (System.currentTimeMillis() - startTime + 1)));
+							first = 1;
+						}
+
+						// getStack.breakNaturally();
+						getStack.setType(Material.AIR);
+						// dprint.r.printAdmin("break " +
+						// getStack.getType().name() + " " +
+						// tr.locationToString(getStack.getLocation()));
+
+						blockdo++;
+
+						for (int x = -search; x <= search; x++)
+							for (int y = -search; y <= search; y++) {
+
+								for (int z = -search; z <= search; z++) {
+
+									Block bo = getStack.getWorld().getBlockAt(getStack.getX() + x, getStack.getY() + y,
+											getStack.getZ() + z);
+									if (bo.getX() < ee.lx || bo.getX() > ee.rx || bo.getZ() < ee.lz || bo.getZ() > ee.rz
+											|| bo.getY() > 255 || bo.getY() < 0) {
+										break;
+									}
+
+									if (bo.getType() == id) {
+										if (bo.getData() == data || data == -29) {
+											blockdo++;
+
+											if (bd.get(tr.locationToString(bo.getLocation())) == null) {
+												bd.put(tr.locationToString(bo.getLocation()), bo.getLocation());
+											}
+
+										}
+									}
+
+								}
+
+							}
+
+						break;
+					}
+
+					if (forDeleteLoc.equalsIgnoreCase("")) {
+
+					} else {
+						Block bee = bd.get(forDeleteLoc).getBlock();
+						// dprint.r.printAdmin("bd remove " +
+						// tr.locationToString( bee.getLocation() ) + " " +
+						// bee.getType().name() + ":" + bee.getData());
+						bd.remove(forDeleteLoc);
+					}
+
+				}
+
+			}
+
+			DeleteRecursive_Thread newRun = new DeleteRecursive_Thread(bd, world, 0, ee, id, data, chunklimit, search);
+			Bukkit.getScheduler().scheduleSyncDelayedTask(ac, newRun, sleeptime);
+			dprint.r.printAdmin("recalling > " + bd.size() + " " + " avg = "
+					+ (int) ((double) blockdo / (System.currentTimeMillis() - startTime + 1)));
+
+		}
+
+	}
+
 	class dewa_mom implements Runnable {
 		public int amount;
 		public Player player = null;
@@ -1765,49 +1759,51 @@ public class dewset extends dewset_interface {
 			 * err) { dprint.r.printAll("error economy while dewbuy " +
 			 * err.getCause().getMessage()); }
 			 */
+			
+			int worldid = getworldid(player.getLocation().getWorld().getName());
 
-			player.sendMessage(dprint.r.color("x" + "," + dewsignx1[getworldid(player.getWorld().getName())][getid]
-					+ "," + dewsigny1[getworldid(player.getWorld().getName())][getid] + ","
-					+ dewsignz1[getworldid(player.getWorld().getName())][getid] + " to "
+			player.sendMessage(dprint.r.color("x" + "," + dewsignx1[worldid][getid]
+					+ "," + dewsigny1[worldid][getid] + ","
+					+ dewsignz1[worldid][getid] + " to "
 
-					+ "," + dewsignx2[getworldid(player.getWorld().getName())][getid] + ","
-					+ dewsigny2[getworldid(player.getWorld().getName())][getid] + ","
-					+ dewsignz2[getworldid(player.getWorld().getName())][getid]));
+					+ "," + dewsignx2[worldid][getid] + ","
+					+ dewsigny2[worldid][getid] + ","
+					+ dewsignz2[worldid][getid]));
 
 			player.sendMessage(dprint.r.color(tr.gettr("dewbuy_before_add_sign_world") + dewworldlistmax
-					+ tr.gettr("sign_max") + (dewsignmax[getworldid(player.getWorld().getName())] - 1)));
+					+ tr.gettr("sign_max") + (dewsignmax[worldid] - 1)));
 
-			adderarraysignfile(getworldid(player.getWorld().getName()));
+			adderarraysignfile(worldid);
 
 			player.sendMessage(dprint.r.color(tr.gettr("dewbuy_after_add_sign_world") + dewworldlistmax
-					+ tr.gettr("sign_max") + (dewsignmax[getworldid(player.getWorld().getName())] - 1)));
+					+ tr.gettr("sign_max") + (dewsignmax[worldid] - 1)));
 
-			dewsignx1[getworldid(player.getWorld().getName())][dewsignmax[getworldid(player.getWorld().getName())]
+			dewsignx1[worldid][dewsignmax[worldid]
 					- 1] = selectx1[getid];
-			dewsigny1[getworldid(player.getWorld().getName())][dewsignmax[getworldid(player.getWorld().getName())]
+			dewsigny1[worldid][dewsignmax[worldid]
 					- 1] = selecty1[getid];
-			dewsignz1[getworldid(player.getWorld().getName())][dewsignmax[getworldid(player.getWorld().getName())]
+			dewsignz1[worldid][dewsignmax[worldid]
 					- 1] = selectz1[getid];
 
-			dewsignx2[getworldid(player.getWorld().getName())][dewsignmax[getworldid(player.getWorld().getName())]
+			dewsignx2[worldid][dewsignmax[worldid]
 					- 1] = selectx2[getid];
-			dewsigny2[getworldid(player.getWorld().getName())][dewsignmax[getworldid(player.getWorld().getName())]
+			dewsigny2[worldid][dewsignmax[worldid]
 					- 1] = selecty2[getid];
-			dewsignz2[getworldid(player.getWorld().getName())][dewsignmax[getworldid(player.getWorld().getName())]
+			dewsignz2[worldid][dewsignmax[worldid]
 					- 1] = selectz2[getid];
 
-			dewsignname[getworldid(player.getWorld().getName())][dewsignmax[getworldid(player.getWorld().getName())]
+			dewsignname[worldid][dewsignmax[worldid]
 					- 1][0] = player.getName();
 
 			for (int gggg = 1; gggg < dewsignnamemax; gggg++) {
-				dewsignname[getworldid(player.getWorld().getName())][dewsignmax[getworldid(player.getWorld().getName())]
+				dewsignname[worldid][dewsignmax[worldid]
 						- 1][gggg] = "null";
 			}
 
-			dewsignloop[getworldid(player.getWorld().getName())][dewsignmax[getworldid(player.getWorld().getName())]
+			dewsignloop[worldid][dewsignmax[worldid]
 					- 1] = 0;
 
-			savesignfile(-1, getworldid(player.getWorld().getName()));
+			savesignfile(-1, worldid);
 			loadsignfile();
 			dprint.r.printAll("ptdew&dewdd : " + player.getName() + " " + tr.gettr("buy") + tr.gettr(tr.gettr("done")));
 			isok = true;
@@ -1828,6 +1824,8 @@ public class dewset extends dewset_interface {
 
 		@Override
 		public void run() {
+			
+			
 			/*
 			 * if (player.hasPermission(pmaindewbuydelete) == false) {
 			 * player.sendMessage (dprint.r.color(
@@ -1841,8 +1839,17 @@ public class dewset extends dewset_interface {
 						dprint.r.color("ptdew&dewdd : " + tr.gettr("dewbuydelete_this_zone_don't_have_protection")));
 				return;
 			}
+			
+			if (player.hasPermission(pmaindewbuydelete) == false) {
+				player.sendMessage(dprint.r.color("ptdew&dewdd : " + tr.gettr("you_don't_have_permission")
+						+ tr.gettr("for") + pmaindewbuydelete));
+				return;
+			}
 
-			if (dewsignname[getworldid(player.getWorld().getName())][xyz][0].equalsIgnoreCase(player.getName()) == false
+			
+			int worldid = getworldid(player.getLocation().getWorld().getName());
+			
+			if (dewsignname[worldid][xyz][0].equalsIgnoreCase(player.getName()) == false
 					&& player.hasPermission(pmaindewbuydelete) == false) {
 				player.sendMessage(dprint.r.color(tr.gettr("dewbuydelete_this_is_not_your_zone")));
 				return;
@@ -1851,66 +1858,14 @@ public class dewset extends dewset_interface {
 			dprint.r.printAll("ptdew&dewdd : '" + player.getName() + "'" + tr.gettr("starting") + " dewbuydelete "
 					+ player.getItemInHand().getTypeId() + ":" + player.getItemInHand().getData());
 
-			savesignfile(xyz, getworldid(player.getWorld().getName()));
+			savesignfile(xyz, worldid);
 			loadsignfile();
 
 			dprint.r.printAll("ptdew&dewdd : " + player.getName() + " dewbuydelete " + tr.gettr(tr.gettr("done")));
 		}
 	}
 
-	class dewbuyremove_c implements Runnable {
-		private Player player;
-
-		public dewbuyremove_c(Player player) {
-			this.player = player;
-			Bukkit.getScheduler().scheduleSyncDelayedTask(ac, this, sleeptime);
-		}
-
-		@Override
-		public void run() {
-
-			if (player.hasPermission(pmaindewbuydelete) == false) {
-				player.sendMessage(dprint.r.color("ptdew&dewdd : " + tr.gettr("you_don't_have_permission")
-						+ tr.gettr("for") + pmaindewbuydelete));
-				return;
-			}
-
-			int getid = getfreeselect(player);
-			if (selectx1[getid] == 0 && selecty1[getid] == 0 && selectz1[getid] == 0) {
-				player.sendMessage(dprint.r.color("ptdew&dewdd : dewbuyremove " + tr.gettr("please_set_block_1")));
-				return;
-			}
-			if (selectx2[getid] == 0 && selecty2[getid] == 0 && selectz2[getid] == 0) {
-				player.sendMessage(dprint.r.color("ptdew&dewdd : dewbuyremove " + tr.gettr("please_set_block_2")));
-				return;
-			}
-
-			player.getItemInHand().getTypeId();
-			player.getItemInHand().getData().getData();
-
-			dprint.r.printAll("ptdew&dewdd : '" + player.getName() + "'" + tr.gettr("starting") + " dewbuydelete "
-					+ player.getItemInHand().getTypeId() + ":" + player.getItemInHand().getData());
-
-			int dd = 0;
-
-			for (Block blb : getselectblock(getid, player)) {
-				dd = checkpermissionarea(blb, true);
-				if (dd == -1) {
-					continue;
-				}
-
-				// remove
-
-				savesignfile(dd, getworldid(player.getWorld().getName()));
-				loadsignfile();
-
-				dprint.r.printAll("removed zone id " + dd);
-
-			}
-
-			dprint.r.printAll("ptdew&dewdd : dewbuyremove " + tr.gettr("done") + " : " + player.getName());
-		}
-	}
+	
 
 	class dewbuyzone_c implements Runnable {
 		private Block block2;
@@ -1936,13 +1891,14 @@ public class dewset extends dewset_interface {
 				return;
 			}
 
+			int worldid = getworldid(player.getLocation().getWorld().getName());
 			// String abab = dewsignname[homeid][18] ;
-			if (dewsignname[getworldid(player.getWorld().getName())][homeid][0]
+			if (dewsignname[worldid][homeid][0]
 					.equalsIgnoreCase(Constant_Protect.flag_sell) == true) {
 				dprint.r.printAll("ptdew&dewdd : '" + player.getName() + "'" + tr.gettr("starting") + " dewbuyzone "
 						+ player.getItemInHand().getTypeId() + ":" + player.getItemInHand().getData());
 
-				int mon = Integer.parseInt(dewsignname[getworldid(player.getWorld().getName())][homeid][1]);
+				int mon = Integer.parseInt(dewsignname[worldid][homeid][1]);
 				player.sendMessage(dprint.r.color("ptdew&dewdd : " + tr.gettr("dewbuyzone_thiszonepriceis") + mon));
 
 				try {
@@ -1964,12 +1920,12 @@ public class dewset extends dewset_interface {
 				}
 
 				for (int g = 0; g < 20; g++) {
-					dewsignname[getworldid(player.getWorld().getName())][homeid][g] = "null";
+					dewsignname[worldid][homeid][g] = "null";
 				}
 
-				dewsignname[getworldid(player.getWorld().getName())][homeid][0] = player.getName();
+				dewsignname[worldid][homeid][0] = player.getName();
 				dprint.r.printAll("ptdew&dewdd : " + player.getName() + " dewbuyzone " + tr.gettr("complete") + "...");
-				savesignfile(-1, getworldid(block2.getWorld().getName()));
+				savesignfile(-1, worldid);
 
 			} else {
 				player.sendMessage(dprint.r.color("ptdew&dewdd : " + tr.gettr("dewbuyzone_thiszone_not_for_sell")));
@@ -2599,8 +2555,6 @@ public class dewset extends dewset_interface {
 		}
 	}
 
-	// Bigdigthread
-
 	class dewfill_thread implements Runnable {
 
 		private byte handdata;
@@ -2696,6 +2650,8 @@ public class dewset extends dewset_interface {
 		}
 	}
 
+	// Bigdigthread
+
 	class dewfullcircle_c implements Runnable {
 		private byte handdata;
 		private int handid;
@@ -2788,14 +2744,6 @@ public class dewset extends dewset_interface {
 		}
 	}
 
-	// skyblock
-	// nether
-	// invert
-	// old_1
-	// flat
-	// old_2
-	// float
-
 	class dewselectcube_c implements Runnable {
 		private Player player;
 		private int rad;
@@ -2835,6 +2783,14 @@ public class dewset extends dewset_interface {
 		}
 	}
 
+	// skyblock
+	// nether
+	// invert
+	// old_1
+	// flat
+	// old_2
+	// float
+
 	class dewselectprotect_c implements Runnable {
 		private Player player;
 
@@ -2854,15 +2810,17 @@ public class dewset extends dewset_interface {
 			}
 
 			int getid2 = getfreeselect(player);
+			
+			int worldid = getworldid(block.getWorld().getName());
+			
+			selectx1[getid2] = dewsignx1[worldid][getid];
+			selectx2[getid2] = dewsignx2[worldid][getid];
 
-			selectx1[getid2] = dewsignx1[getworldid(block.getWorld().getName())][getid];
-			selectx2[getid2] = dewsignx2[getworldid(block.getWorld().getName())][getid];
+			selecty1[getid2] = dewsigny1[worldid][getid];
+			selecty2[getid2] = dewsigny2[worldid][getid];
 
-			selecty1[getid2] = dewsigny1[getworldid(block.getWorld().getName())][getid];
-			selecty2[getid2] = dewsigny2[getworldid(block.getWorld().getName())][getid];
-
-			selectz1[getid2] = dewsignz1[getworldid(block.getWorld().getName())][getid];
-			selectz2[getid2] = dewsignz2[getworldid(block.getWorld().getName())][getid];
+			selectz1[getid2] = dewsignz1[worldid][getid];
+			selectz2[getid2] = dewsignz2[worldid][getid];
 
 			player.sendMessage(dprint.r.color("ptdew&dewdd : selected area = (" + selectx1[getid2] + ","
 					+ selecty1[getid2] + "," + selectz1[getid2] + ") to (" + selectx2[getid2] + "," + selecty2[getid2]
@@ -4379,6 +4337,107 @@ public class dewset extends dewset_interface {
 		}
 	}
 
+	class gift_thread implements Runnable {
+		private Player player;
+
+		private int a1;
+		private byte a2;
+
+		public gift_thread(Player player, int a1, byte a2) {
+			this.player = player;
+			this.a1 = a1;
+			this.a2 = a2;
+
+			long lo = (rnd.nextInt(20) + 1) * 20;
+
+			Bukkit.getScheduler().scheduleSyncDelayedTask(ac, this, lo);
+
+		}
+
+		@Override
+		public void run() {
+			int moveyet = 0;
+			boolean okok = false;
+
+			Block b = null;
+
+			ArrayList<Block> blockList = new ArrayList<Block>();
+			blockList.clear();
+
+			for (int y = -10; y <= +10; y++)
+				for (int z = -10; z <= +10; z++)
+					for (int x = -10; x <= +10; x++) {
+
+						Block curBlock = giftblock.getRelative(x, y, z);
+						searchRecursiveBlock(blockList, curBlock, Material.CHEST, (byte) -29);
+						searchRecursiveBlock(blockList, curBlock, Material.TRAPPED_CHEST, (byte) -29);
+					}
+
+			for (int y = -10; y <= +10; y++)
+				for (int z = -10; z <= +10; z++)
+					for (int x = -10; x <= +10; x++) {
+
+						Block curBlock = player.getLocation().getBlock().getRelative(x, y, z);
+						searchRecursiveBlock(blockList, curBlock, Material.CHEST, (byte) -29);
+						searchRecursiveBlock(blockList, curBlock, Material.TRAPPED_CHEST, (byte) -29);
+					}
+
+			player.sendMessage("blockList.size() == " + blockList.size() + "  , gift position " + giftblock.getX() + ","
+					+ giftblock.getY() + "," + giftblock.getZ());
+
+			for (int index = 0; index < blockList.size(); index++) {
+
+				b = blockList.get(index);
+
+				if (checkpermissionarea(b, player, "right") == true) {
+					continue;
+				}
+
+				if (b.getTypeId() == Material.CHEST.getId() || b.getTypeId() == Material.TRAPPED_CHEST.getId()) {
+					Chest c = (Chest) b.getState();
+
+					for (ItemStack ic : c.getInventory().getContents()) {
+						if (ic == null) {
+							continue;
+						}
+
+						okok = false;
+						if (ic.getTypeId() == a1)
+							if (a2 == -29) {
+								okok = true;
+							} else if (a2 == ic.getData().getData()) {
+								okok = true;
+							}
+
+						if (moveyet > 10) {
+							player.sendMessage(
+									dprint.r.color("ptdew&dewdd : " + tr.gettr("gift_you_got_item_10_times_enough")));
+							return;
+						}
+
+						if (okok == true) {
+							ItemStack gj = new ItemStack(ic);
+							player.getLocation().getWorld().dropItem(player.getLocation(), gj);
+							moveyet++;
+							c.getInventory().remove(ic);
+							c.update();
+							player.sendMessage(dprint.r.color(moveyet + " ... " + gj.getTypeId() + ":" + gj.getData()
+									+ tr.gettr("amount") + " = " + gj.getAmount()));
+						}
+
+					}
+				}
+
+			}
+
+			if (moveyet == 0) {
+				player.sendMessage(dprint.r.color(tr.gettr("gift_not_found_item")));
+			}
+
+		}
+
+	}
+
 	class gotohellt implements Runnable {
 		private Location lo1 = null;
 		private Location lo2 = null;
@@ -5159,10 +5218,11 @@ public class dewset extends dewset_interface {
 
 	// Check Permission Area block
 	public boolean checkpermissionarea(Block block) {
-
-		if (getworldid(block.getWorld().getName()) == -1)
+		int worldid = getworldid(block.getWorld().getName());
+		
+		if (worldid == -1)
 			return false;
-		if (dewsignmax[getworldid(block.getWorld().getName())] == 0)
+		if (dewsignmax[worldid] == 0)
 			return false;
 
 		int digx = block.getX();
@@ -5175,7 +5235,7 @@ public class dewset extends dewset_interface {
 
 		int dewsignnow = 0;
 
-		for (dewsignnow = 0; dewsignnow < dewsignmax[getworldid(block.getWorld().getName())]; dewsignnow++) { // for
+		for (dewsignnow = 0; dewsignnow < dewsignmax[worldid]; dewsignnow++) { // for
 
 			// x 2 type
 			// x1 <= x2
@@ -5183,36 +5243,33 @@ public class dewset extends dewset_interface {
 			// check is this block on protect zone or not
 			int x1m = 0;
 			int x1l = 0;
-			if (dewsignx1[getworldid(block.getWorld().getName())][dewsignnow] >= dewsignx2[getworldid(
-					block.getWorld().getName())][dewsignnow]) {
-				x1m = dewsignx1[getworldid(block.getWorld().getName())][dewsignnow];
-				x1l = dewsignx2[getworldid(block.getWorld().getName())][dewsignnow];
+			if (dewsignx1[worldid][dewsignnow] >= dewsignx2[worldid][dewsignnow]) {
+				x1m = dewsignx1[worldid][dewsignnow];
+				x1l = dewsignx2[worldid][dewsignnow];
 			} else {
-				x1l = dewsignx1[getworldid(block.getWorld().getName())][dewsignnow];
-				x1m = dewsignx2[getworldid(block.getWorld().getName())][dewsignnow];
+				x1l = dewsignx1[worldid][dewsignnow];
+				x1m = dewsignx2[worldid][dewsignnow];
 			}
 
 			int y1m = 0;
 			int y1l = 0;
-			if (dewsigny1[getworldid(block.getWorld().getName())][dewsignnow] >= dewsigny2[getworldid(
-					block.getWorld().getName())][dewsignnow]) {
-				y1m = dewsigny1[getworldid(block.getWorld().getName())][dewsignnow];
-				y1l = dewsigny2[getworldid(block.getWorld().getName())][dewsignnow];
+			if (dewsigny1[worldid][dewsignnow] >= dewsigny2[worldid][dewsignnow]) {
+				y1m = dewsigny1[worldid][dewsignnow];
+				y1l = dewsigny2[worldid][dewsignnow];
 			} else {
-				y1l = dewsigny1[getworldid(block.getWorld().getName())][dewsignnow];
-				y1m = dewsigny2[getworldid(block.getWorld().getName())][dewsignnow];
+				y1l = dewsigny1[worldid][dewsignnow];
+				y1m = dewsigny2[worldid][dewsignnow];
 
 			}
 
 			int z1m = 0;
 			int z1l = 0;
-			if (dewsignz1[getworldid(block.getWorld().getName())][dewsignnow] >= dewsignz2[getworldid(
-					block.getWorld().getName())][dewsignnow]) {
-				z1m = dewsignz1[getworldid(block.getWorld().getName())][dewsignnow];
-				z1l = dewsignz2[getworldid(block.getWorld().getName())][dewsignnow];
+			if (dewsignz1[worldid][dewsignnow] >= dewsignz2[worldid][dewsignnow]) {
+				z1m = dewsignz1[worldid][dewsignnow];
+				z1l = dewsignz2[worldid][dewsignnow];
 			} else {
-				z1l = dewsignz1[getworldid(block.getWorld().getName())][dewsignnow];
-				z1m = dewsignz2[getworldid(block.getWorld().getName())][dewsignnow];
+				z1l = dewsignz1[worldid][dewsignnow];
+				z1m = dewsignz2[worldid][dewsignnow];
 
 			}
 
@@ -5229,10 +5286,11 @@ public class dewset extends dewset_interface {
 	}
 
 	public int checkpermissionarea(Block block, boolean gethomeid) {
-
-		if (getworldid(block.getWorld().getName()) == -1)
+		int worldid = getworldid(block.getWorld().getName());
+		
+		if (worldid == -1)
 			return -1;
-		if (dewsignmax[getworldid(block.getWorld().getName())] == 0)
+		if (dewsignmax[worldid] == 0)
 			return -1;
 
 		boolean ee = false;
@@ -5248,15 +5306,15 @@ public class dewset extends dewset_interface {
 
 		for (int prioL = 1; prioL <= 2; prioL++) {
 
-			for (dewsignnow = 0; dewsignnow < dewsignmax[getworldid(block.getWorld().getName())]; dewsignnow++) { // for
+			for (dewsignnow = 0; dewsignnow < dewsignmax[worldid]; dewsignnow++) { // for
 				if (prioL == 1) {
 					// dprint.r.printAll("dewsignnow " + dewsignnow );
 
-					if (dewsignname[getworldid(block.getWorld().getName())][dewsignnow][0]
+					if (dewsignname[worldid][dewsignnow][0]
 							.equalsIgnoreCase(Constant_Protect.flag_everyone) == true) {
 						continue;
 					}
-				} else if (dewsignname[getworldid(block.getWorld().getName())][dewsignnow][0]
+				} else if (dewsignname[worldid][dewsignnow][0]
 						.equalsIgnoreCase(Constant_Protect.flag_everyone) == false) {
 					continue;
 				}
@@ -5264,36 +5322,33 @@ public class dewset extends dewset_interface {
 				// check is this block on protect zone or not
 				int x1m = 0;
 				int x1l = 0;
-				if (dewsignx1[getworldid(block.getWorld().getName())][dewsignnow] >= dewsignx2[getworldid(
-						block.getWorld().getName())][dewsignnow]) {
-					x1m = dewsignx1[getworldid(block.getWorld().getName())][dewsignnow];
-					x1l = dewsignx2[getworldid(block.getWorld().getName())][dewsignnow];
+				if (dewsignx1[worldid][dewsignnow] >= dewsignx2[worldid][dewsignnow]) {
+					x1m = dewsignx1[worldid][dewsignnow];
+					x1l = dewsignx2[worldid][dewsignnow];
 				} else {
-					x1l = dewsignx1[getworldid(block.getWorld().getName())][dewsignnow];
-					x1m = dewsignx2[getworldid(block.getWorld().getName())][dewsignnow];
+					x1l = dewsignx1[worldid][dewsignnow];
+					x1m = dewsignx2[worldid][dewsignnow];
 				}
 
 				int y1m = 0;
 				int y1l = 0;
-				if (dewsigny1[getworldid(block.getWorld().getName())][dewsignnow] >= dewsigny2[getworldid(
-						block.getWorld().getName())][dewsignnow]) {
-					y1m = dewsigny1[getworldid(block.getWorld().getName())][dewsignnow];
-					y1l = dewsigny2[getworldid(block.getWorld().getName())][dewsignnow];
+				if (dewsigny1[worldid][dewsignnow] >= dewsigny2[worldid][dewsignnow]) {
+					y1m = dewsigny1[worldid][dewsignnow];
+					y1l = dewsigny2[worldid][dewsignnow];
 				} else {
-					y1l = dewsigny1[getworldid(block.getWorld().getName())][dewsignnow];
-					y1m = dewsigny2[getworldid(block.getWorld().getName())][dewsignnow];
+					y1l = dewsigny1[worldid][dewsignnow];
+					y1m = dewsigny2[worldid][dewsignnow];
 
 				}
 
 				int z1m = 0;
 				int z1l = 0;
-				if (dewsignz1[getworldid(block.getWorld().getName())][dewsignnow] >= dewsignz2[getworldid(
-						block.getWorld().getName())][dewsignnow]) {
-					z1m = dewsignz1[getworldid(block.getWorld().getName())][dewsignnow];
-					z1l = dewsignz2[getworldid(block.getWorld().getName())][dewsignnow];
+				if (dewsignz1[worldid][dewsignnow] >= dewsignz2[worldid][dewsignnow]) {
+					z1m = dewsignz1[worldid][dewsignnow];
+					z1l = dewsignz2[worldid][dewsignnow];
 				} else {
-					z1l = dewsignz1[getworldid(block.getWorld().getName())][dewsignnow];
-					z1m = dewsignz2[getworldid(block.getWorld().getName())][dewsignnow];
+					z1l = dewsignz1[worldid][dewsignnow];
+					z1m = dewsignz2[worldid][dewsignnow];
 
 				}
 
@@ -5302,7 +5357,7 @@ public class dewset extends dewset_interface {
 				goodc1 = ee;
 
 				if (goodc1 == true) {
-					dewsignloop[getworldid(block.getWorld().getName())][dewsignnow]++;
+					dewsignloop[worldid][dewsignnow]++;
 					break;
 				}
 			} // loog sign
@@ -5334,14 +5389,15 @@ public class dewset extends dewset_interface {
 	}
 
 	public boolean checkpermissionarea(Block block, Player player, String modeevent, boolean test) {
-
-		if (getworldid(block.getWorld().getName()) == -1)
+		int worldid = getworldid(block.getWorld().getName());
+		
+		if (worldid == -1)
 			if (api_admin.dewddadmin.is2moderator(player) == true)
 				return true;
 			else
 				return false;
 
-		if (dewsignmax[getworldid(block.getWorld().getName())] == -1)
+		if (dewsignmax[worldid] == -1)
 			if (api_admin.dewddadmin.is2moderator(player) == true)
 				return true;
 			else
@@ -5360,14 +5416,14 @@ public class dewset extends dewset_interface {
 			boolean che2 = false;
 
 			if (api_admin.dewddadmin.is2moderator(player) == true) {
-				goodc1 = !havethisnameinthishome(getworldid(block.getWorld().getName()), dewsignnow, player.getName());
+				goodc1 = !havethisnameinthishome(worldid, dewsignnow, player.getName());
 				return goodc1;
 			}
 
-			dewsignloop[getworldid(block.getWorld().getName())][dewsignnow]++;
+			dewsignloop[worldid][dewsignnow]++;
 
 			if (modeevent.equalsIgnoreCase("right") == true) { // right everyone
-				che1 = havethisnameinthishome(getworldid(block.getWorld().getName()), dewsignnow,
+				che1 = havethisnameinthishome(worldid, dewsignnow,
 						Constant_Protect.flag_everyone);
 
 				if (che1 == true) { // if" + tr.gettr("for") + "everyone
@@ -5382,7 +5438,7 @@ public class dewset extends dewset_interface {
 					}
 
 				} else { // not" + tr.gettr("for") + "everyone
-					che2 = havethisnameinthishome(getworldid(block.getWorld().getName()), dewsignnow, player.getName());
+					che2 = havethisnameinthishome(worldid, dewsignnow, player.getName());
 
 					goodc1 = !che2;
 				}
@@ -5409,7 +5465,7 @@ public class dewset extends dewset_interface {
 
 				) { // paste chest sign
 
-					che2 = havethisnameinthishome(getworldid(block.getWorld().getName()), dewsignnow, player.getName());
+					che2 = havethisnameinthishome(worldid, dewsignnow, player.getName());
 
 					goodc1 = !che2;
 
@@ -5421,7 +5477,7 @@ public class dewset extends dewset_interface {
 
 				} // neary <sign>
 				else { // not
-					che2 = havethisnameinthishome(getworldid(block.getWorld().getName()), dewsignnow, player.getName());
+					che2 = havethisnameinthishome(worldid, dewsignnow, player.getName());
 
 					goodc1 = !che2;
 				}
@@ -5441,7 +5497,7 @@ public class dewset extends dewset_interface {
 																		// right
 																		// click
 
-				che2 = havethisnameinthishome(getworldid(block.getWorld().getName()), dewsignnow, player.getName());
+				che2 = havethisnameinthishome(worldid, dewsignnow, player.getName());
 
 				goodc1 = !che2;
 
@@ -5454,7 +5510,7 @@ public class dewset extends dewset_interface {
 			} // right click or not
 			else { // not right click
 
-				che2 = havethisnameinthishome(getworldid(block.getWorld().getName()), dewsignnow, player.getName());
+				che2 = havethisnameinthishome(worldid, dewsignnow, player.getName());
 
 				goodc1 = !che2;
 
@@ -5649,6 +5705,13 @@ public class dewset extends dewset_interface {
 		return false;
 	}
 
+	public void DeleteRecursive_mom(HashMap<String, Location> bd, World world, int firstAdded, LXRXLZRZType ee,
+			Material id, byte data, int chunklimit, int search) {
+		DeleteRecursive_Thread dr = new DeleteRecursive_Thread(bd, world, firstAdded, ee, id, data, chunklimit, search);
+		Bukkit.getScheduler().scheduleSyncDelayedTask(ac, dr);
+
+	}
+
 	public void dewa(Player player, int amount) {
 
 		dewa_mom r = new dewa_mom();
@@ -5675,9 +5738,7 @@ public class dewset extends dewset_interface {
 		new dewbuydelete_c(player);
 	}
 
-	public void dewbuyremove(Player player) {
-		new dewbuyremove_c(player);
-	}
+	
 
 	public void dewbuyzone(Player player, Block block2) {
 
@@ -5729,35 +5790,26 @@ public class dewset extends dewset_interface {
 			return false;
 		}
 
-		if (m.length != 2) {
-			player.sendMessage(dprint.r.color("dewadd " + tr.gettr("need_argument_player_or_flag")));
-			player.sendMessage(dprint.r.color("dewadd <name or flag>"));
-			player.sendMessage(dprint.r.color("dewadd ptdew"));
-			player.sendMessage(dprint.r.color("dewadd " + tr.gettr("your_friend_name")));
-
-			player.sendMessage(dprint.r.color("flags list :"));
-			player.sendMessage(dprint.r
-					.color(Constant_Protect.flag_monster + "  " + tr.gettr("allow_monster_spawn_at_your_zone")));
-			player.sendMessage(dprint.r.color(Constant_Protect.flag_pvp + "  " + tr.gettr("allow_to_hit_player")));
-			player.sendMessage(dprint.r.color(Constant_Protect.flag_everyone + tr.gettr("allow_everyone_rightclick")));
-			player.sendMessage(dprint.r.color(Constant_Protect.flag_sell + tr.gettr("explain_sell_flag")
-					+ tr.gettr("explain_sell_Constant_Protect.flag_2")));
-
-			player.sendMessage(dprint.r.color(Constant_Protect.flag_protectanimal + tr.gettr("not_allow_hit_animal")));
+		if (m.length != 3) {
+			player.sendMessage(dprint.r.color("/fw add " + tr.gettr("need_argument_player_or_flag")));
+			player.sendMessage(dprint.r.color("/fw add <name or flag>"));
+			player.sendMessage(dprint.r.color("/fw add ptdew"));
+			player.sendMessage(dprint.r.color("/fw add " + tr.gettr("your_friend_name")));
 
 			return false;
 		}
+		int worldid = getworldid(player.getLocation().getWorld().getName());
 
-		String str11 = m[1];
+		String nameToAdd = m[2];
 		// got player name
 
-		dprint.r.printC("ptdew&dewdd : dewadd name = '" + str11 + "'");
+		dprint.r.printC("ptdew&dewdd : dewadd name = '" + nameToAdd + "'");
 		System.out.println("ptdew&dewdd : dewadd " + tr.gettr("home_id_is") + "  = '" + xyz + "'");
 
-		if (dewsignname[getworldid(player.getWorld().getName())][xyz][0].equalsIgnoreCase(player.getName()) == false
+		if (dewsignname[worldid][xyz][0].equalsIgnoreCase(player.getName()) == false
 				&& player.hasPermission(pmaindewbuymodifymember) == false) {
 			player.sendMessage(dprint.r.color(
-					tr.gettr("owner_is") + " ..." + dewsignname[getworldid(player.getWorld().getName())][xyz][0]));
+					tr.gettr("owner_is") + " ..." + dewsignname[worldid][xyz][0]));
 			return false;
 		}
 
@@ -5768,7 +5820,7 @@ public class dewset extends dewset_interface {
 		 * 
 		 * player.sendMessage(dprint.r.color("ptdew&dewdd : " +
 		 * tr.gettr("member_can't_add_staff_to_your_zone") +
-		 * dewsignname[getworldid(player.getWorld().getName())][xyz][0]));
+		 * dewsignname[worldid][xyz][0]));
 		 * 
 		 * return false; }
 		 */
@@ -5784,34 +5836,70 @@ public class dewset extends dewset_interface {
 		 * tr.gettr("try_to_add_sell_Constant_Protect.flag_to_his_protect"));
 		 * return false; } player.sendMessage(dprint.r.color("ptdew&dewdd : " +
 		 * tr.gettr("staff_can't_add_member_to_your_zone") +
-		 * dewsignname[getworldid(player.getWorld().getName())][xyz][0]));
+		 * dewsignname[worldid][xyz][0]));
 		 * 
 		 * return false; }
 		 */
 
 		for (int ig = 1; ig < dewsignnamemax; ig++)
-			if (dewsignname[getworldid(player.getWorld().getName())][xyz][ig].equalsIgnoreCase(str11) == true) {
+			if (dewsignname[worldid][xyz][ig].equalsIgnoreCase(nameToAdd) == true) {
 				player.sendMessage(
-						dprint.r.color(tr.gettr("this_name_already_added_can't_add") + str11 + " to  " + xyz));
+						dprint.r.color(tr.gettr("this_name_already_added_can't_add") + nameToAdd + " to  " + xyz));
 				return false;
 			}
 
 		for (int ig = 1; ig < dewsignnamemax; ig++)
-			if (dewsignname[getworldid(player.getWorld().getName())][xyz][ig].equalsIgnoreCase("") == true
-					|| dewsignname[getworldid(player.getWorld().getName())][xyz][ig].equalsIgnoreCase("null") == true) {
+			if (dewsignname[worldid][xyz][ig].equalsIgnoreCase("") == true
+					|| dewsignname[worldid][xyz][ig].equalsIgnoreCase("null") == true) {
 
-				dewsignname[getworldid(player.getWorld().getName())][xyz][ig] = str11;
-				player.sendMessage(dprint.r.color("added " + str11 + " to  " + xyz));
-				savesignfile(-1, getworldid(player.getWorld().getName()));
+				dewsignname[worldid][xyz][ig] = nameToAdd;
+				player.sendMessage(dprint.r.color("added " + nameToAdd + " to  " + xyz));
+				savesignfile(-1, worldid);
 				return true;
 			}
 
 		player.sendMessage(dprint.r.color(tr.gettr("can't_find_free_slot_for_add_this_player")));
 		return false;
 	}
+	
+	@Override
+	public boolean dewps_goid(Player player , int id) {
+		
+		int worldid = getworldid(player.getLocation().getWorld().getName());
+
+		if (id < -1 || id > dewsignmax[worldid] - 1) {
+			player.sendMessage(dprint.r.color("ptdew&dewdd : dewgo   -1 < ? < "
+					+ (dewsignmax[worldid] - 1)));
+			return false;
+		}
+
+		Location lox = player.getLocation();
+		player.sendMessage("goto : " + dewsignx1[worldid][id]
+				+ ",?," + dewsignz1[worldid][id] + " and "
+				+ dewsignx2[worldid][id] + ",?,"
+				+ dewsignz2[worldid][id]);
+
+		if (dewsigny1[worldid][id] >= dewsigny2[
+				worldid][id]) {
+			lox.setX(dewsignx1[worldid][id]);
+			lox.setY(dewsigny1[worldid][id]);
+			lox.setZ(dewsignz1[worldid][id]);
+		} else {
+			lox.setX(dewsignx2[worldid][id]);
+			lox.setY(dewsigny2[worldid][id]);
+			lox.setZ(dewsignz2[worldid][id]);
+		}
+
+		player.getWorld().loadChunk((int) lox.getX(), (int) lox.getZ());
+		player.teleport(lox);
+		player.sendMessage("ptdew&dewdd : " + tr.gettr("teleported_your_to_zone_id") + id);
+
+		return true;
+	}
 
 	@Override
 	public boolean dewps_list(Player player) {
+		
 		Block block = player.getLocation().getBlock();
 
 		int xyz = checkpermissionarea(block, true);
@@ -5821,11 +5909,12 @@ public class dewset extends dewset_interface {
 		}
 
 		player.sendMessage(dprint.r.color("ptdew&dewdd : " + tr.gettr("tree_thiszoneprotectedby")));
-
+		int worldid = getworldid(block.getWorld().getName() + " id " + xyz);
+		
 		for (int xxx = 0; xxx < dewsignnamemax; xxx++)
-			if (dewsignname[getworldid(block.getWorld().getName())][xyz][xxx].equalsIgnoreCase("null") == false) {
+			if (dewsignname[worldid][xyz][xxx].equalsIgnoreCase("null") == false) {
 				player.sendMessage(
-						dprint.r.color(xxx + " = " + dewsignname[getworldid(block.getWorld().getName())][xyz][xxx]));
+						dprint.r.color(xxx + " = " + dewsignname[worldid][xyz][xxx]));
 			}
 
 		return true;
@@ -5834,17 +5923,18 @@ public class dewset extends dewset_interface {
 	@Override
 	public boolean dewps_remove(String message, Player player) {
 		String m[] = message.split("\\s+");
-		if (m.length != 2) {
-			player.sendMessage(dprint.r.color("/dewremove <name>"));
+		if (m.length != 3) {
+			player.sendMessage(dprint.r.color("/fw remove <name>"));
 			return false;
 		}
 
-		String str11 = m[1];
+		String nameToRemove = m[2];
+		int worldid = getworldid(player.getLocation().getWorld().getName());
 		// got player name
 
 		int xyz = checkpermissionarea(player.getLocation().getBlock(), true);
 
-		dprint.r.printC("ptdew&dewdd : dewremove name = '" + str11 + "'");
+		dprint.r.printC("ptdew&dewdd : dewremove name = '" + nameToRemove + "'");
 		System.out.println("ptdew&dewdd : dewremove " + tr.gettr("search_home_id") + "= '" + xyz + "'");
 
 		if (xyz == -1) {
@@ -5852,18 +5942,18 @@ public class dewset extends dewset_interface {
 			return false;
 		}
 
-		if (dewsignname[getworldid(player.getWorld().getName())][xyz][0].equalsIgnoreCase(player.getName()) == false
+		if (dewsignname[worldid][xyz][0].equalsIgnoreCase(player.getName()) == false
 				&& player.hasPermission(pmaindewbuymodifymember) == false) {
 			player.sendMessage(dprint.r.color(
-					tr.gettr("owner_is") + " ..." + dewsignname[getworldid(player.getWorld().getName())][xyz][0]));
+					tr.gettr("owner_is") + " ..." + dewsignname[worldid][xyz][0]));
 			return false;
 		}
 
 		for (int ig = 1; ig < dewsignnamemax; ig++)
-			if (dewsignname[getworldid(player.getWorld().getName())][xyz][ig].equalsIgnoreCase(str11) == true) {
+			if (dewsignname[worldid][xyz][ig].equalsIgnoreCase(nameToRemove) == true) {
 
-				dewsignname[getworldid(player.getWorld().getName())][xyz][ig] = "null";
-				player.sendMessage(dprint.r.color("removed " + str11 + " from  " + xyz));
+				dewsignname[worldid][xyz][ig] = "null";
+				player.sendMessage(dprint.r.color("removed " + nameToRemove + " from  " + xyz));
 				return true;
 			}
 
@@ -5884,6 +5974,7 @@ public class dewset extends dewset_interface {
 
 		Bukkit.getScheduler().scheduleSyncDelayedTask(ac, aer);
 	}
+	
 
 	public void dewsetblock(Player player, int handid, byte handdata, boolean isfillmode) {
 
@@ -5908,11 +5999,11 @@ public class dewset extends dewset_interface {
 
 	}
 
+	// fixtool
+
 	public void dewsetprivate(Player player) {
 		new dewsetprivate_c(player);
 	}
-
-	// fixtool
 
 	public void dewsetroom(Player player, int handid, byte handdata, boolean isfillmode) {
 
@@ -5930,12 +6021,12 @@ public class dewset extends dewset_interface {
 
 	}
 
+	// getfreeselect
+
 	public void dewspreadcircle(Player player, int handid, byte handdata) {
 
 		new dewspreadcircle_c(player, handid, handdata);
 	}
-
-	// getfreeselect
 
 	public void dewspreadq(Player player, int handid, byte handdata) {
 		Queue<Block> bd = new LinkedList<Block>();
@@ -6025,20 +6116,20 @@ public class dewset extends dewset_interface {
 		return -1;
 	}
 
+	// riceblockiron
+
 	public LinkedList<String> getmaterialrealname(String gname) {
 		LinkedList<String> ab = new LinkedList<String>();
-		
+
 		for (Material en : Material.values())
 			if (en.name().toLowerCase().indexOf(gname.toLowerCase()) > -1) {
 
 				dprint.r.printC("found material real name = " + en.name());
-				ab.add( en.name());
+				ab.add(en.name());
 			}
 
 		return ab;
 	}
-
-	// riceblockiron
 
 	// getselectblock //" + tr.gettr("for") + "dewset or dewfill or dewdelete
 	public Block[] getselectblock(int getid, Player player) {
@@ -6182,6 +6273,10 @@ public class dewset extends dewset_interface {
 
 	} // getselectblock
 
+	// sandmelon
+
+	// ironorefreeze
+
 	public int getwallid() {
 		int g = 0;
 		Random rn = new Random();
@@ -6192,10 +6287,15 @@ public class dewset extends dewset_interface {
 
 		return g;
 	}
-
-	// sandmelon
-
-	// ironorefreeze
+	
+	public ArrayList<Integer> getAllHomeIDThatHaveMyName(String playerName,int worldid) {
+		ArrayList<Integer> tmp = new ArrayList<Integer>();
+		
+		return null;
+	}
+	
+	
+	
 
 	public int getworldid(String wowo) {
 		for (int d = 0; d < dewworldlistmax; d++)
@@ -6210,112 +6310,9 @@ public class dewset extends dewset_interface {
 		String aa = "ptdew_dewdd_" + dewworldlist[idworld] + ".txt";
 		return aa;
 	}
-	
-	
-	class gift_thread implements Runnable {
-		private Player player;
-		
-		private int a1;
-		private byte a2;
-		
-
-		public gift_thread(Player player , int a1 , byte a2) {
-			this.player = player ;
-			this.a1 = a1;
-			this.a2 = a2;
-			
-			long lo =  (rnd.nextInt(20)+1) * 20;
-			
-			Bukkit.getScheduler().scheduleSyncDelayedTask(ac, this, lo);
-			
-		}
-
-		@Override
-		public void run() {
-			int moveyet = 0;
-			boolean okok = false;
-
-			Block b = null;
-
-			ArrayList<Block> blockList = new ArrayList<Block>();
-			blockList.clear();
-
-			for (int y = -10; y <= +10; y++)
-				for (int z = -10; z <= +10; z++)
-					for (int x = -10; x <= +10; x++) {
-
-						Block curBlock = giftblock.getRelative(x, y, z);
-						searchRecursiveBlock(blockList, curBlock, Material.CHEST, (byte) -29);
-						searchRecursiveBlock(blockList, curBlock, Material.TRAPPED_CHEST, (byte) -29);
-					}
-
-			for (int y = -10; y <= +10; y++)
-				for (int z = -10; z <= +10; z++)
-					for (int x = -10; x <= +10; x++) {
-
-						Block curBlock = player.getLocation().getBlock().getRelative(x, y, z);
-						searchRecursiveBlock(blockList, curBlock, Material.CHEST, (byte) -29);
-						searchRecursiveBlock(blockList, curBlock, Material.TRAPPED_CHEST, (byte) -29);
-					}
-
-			player.sendMessage("blockList.size() == " + blockList.size() + "  , gift position " + giftblock.getX() + ","
-					+ giftblock.getY() + "," + giftblock.getZ());
-
-			for (int index = 0; index < blockList.size(); index++) {
-
-				b = blockList.get(index);
-
-				if (checkpermissionarea(b, player, "right") == true) {
-					continue;
-				}
-
-				if (b.getTypeId() == Material.CHEST.getId() || b.getTypeId() == Material.TRAPPED_CHEST.getId()) {
-					Chest c = (Chest) b.getState();
-
-					for (ItemStack ic : c.getInventory().getContents()) {
-						if (ic == null) {
-							continue;
-						}
-
-						okok = false;
-						if (ic.getTypeId() == a1)
-							if (a2 == -29) {
-								okok = true;
-							} else if (a2 == ic.getData().getData()) {
-								okok = true;
-							}
-
-						if (moveyet > 10) {
-							player.sendMessage(
-									dprint.r.color("ptdew&dewdd : " + tr.gettr("gift_you_got_item_10_times_enough")));
-							return;
-						}
-
-						if (okok == true) {
-							ItemStack gj = new ItemStack(ic);
-							player.getLocation().getWorld().dropItem(player.getLocation(), gj);
-							moveyet++;
-							c.getInventory().remove(ic);
-							c.update();
-							player.sendMessage(dprint.r.color(moveyet + " ... " + gj.getTypeId() + ":" + gj.getData()
-									+ tr.gettr("amount") + " = " + gj.getAmount()));
-						}
-
-					}
-				}
-
-			}
-
-			if (moveyet == 0) {
-				player.sendMessage(dprint.r.color(tr.gettr("gift_not_found_item")));
-			}
-			
-		}
-		
-	}
 
 	public void gift(Player player, int a1, byte a2) {
-		gift_thread xyz = new gift_thread(player,a1,a2);
+		gift_thread xyz = new gift_thread(player, a1, a2);
 
 	}
 
@@ -6820,6 +6817,28 @@ public class dewset extends dewset_interface {
 		return false;
 	}
 
+	
+	public void teleportPlayerToProtectID(int id , Player player) {
+		int worldid = getworldid(player.getWorld().getName());
+		
+		LXRXLZRZType ee = new LXRXLZRZType(
+				dewsignx1[worldid][id],
+				dewsigny1[worldid][id], 
+				dewsignz1[worldid][id], 
+				
+				dewsignx2[worldid][id],
+				dewsigny2[worldid][id], 
+				dewsignz2[worldid][id]);
+		int mid[] = ee.getmiddle();
+				
+		Location lox = player.getWorld().getBlockAt(mid[0],mid[1],mid[2]).getLocation();
+				
+				
+		player.getWorld().loadChunk((int) lox.getX(), (int) lox.getZ());
+		player.teleport(lox);
+		player.sendMessage("ptdew&dewdd : " + tr.gettr("teleported_your_to_zone_id") + id);
+	
+	}
 	// randomplaynote
 
 	public Block protochest(Block block, int d4, String sorttype) {

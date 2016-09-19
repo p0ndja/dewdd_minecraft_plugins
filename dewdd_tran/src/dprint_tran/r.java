@@ -1,11 +1,11 @@
-package dprint;
+package dprint_tran;
 
 import java.util.Random;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
-public class dprint {
+public class r {
 	static Random rnd = new Random();
 
 	public static String color(String abc) {

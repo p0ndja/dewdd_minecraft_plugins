@@ -25,12 +25,6 @@ import dewddflower.dewset;
 
 public class dewddautoseed implements Listener {
 
-	public JavaPlugin	ac	= null;
-
-	dewset				dew	;
-	
-	
-	
 	class delay_dewset extends Thread {
 
 		@Override
@@ -59,28 +53,27 @@ public class dewddautoseed implements Listener {
 				}
 				dew = dewddflower.Main.ds;
 
-				
-
 			} catch (InterruptedException e) {
-			
 
 				e.printStackTrace();
 			}
 
 		}
 	}
-	
+
+	public JavaPlugin ac = null;
+
+	dewset dew;
+
 	public dewddautoseed() {
-		
 
 		delay_dewset abc2 = new delay_dewset();
 		abc2.start();
 
 	}
-	
+
 	@EventHandler
 	public void eventja(BlockDispenseEvent e) {
-		
 
 		if (e.getBlock().getType() == Material.DROPPER) {
 			Dropper dropper = (Dropper) e.getBlock().getState();
@@ -209,7 +202,6 @@ public class dewddautoseed implements Listener {
 
 	@EventHandler
 	public void eventja(BlockPistonExtendEvent e) {
-		
 
 		Block block = e.getBlock();
 		// search sign
@@ -235,25 +227,20 @@ public class dewddautoseed implements Listener {
 
 	}
 
-
 	@EventHandler
 	public void eventja(BlockPlaceEvent event) {
 
-		/*Player player = event.getPlayer();
-		Block block = event.getBlock();
-
-		switch (player.getItemInHand().getType()) {
-		case CROPS:
-		case CARROT:
-		case POTATO:
-		case PUMPKIN_SEEDS:
-		case MELON_SEEDS:
-
-			dew.soiladdseedrecusive(block, player, player.getItemInHand()
-					.getType(), true);
-
-			return;
-		}*/
+		/*
+		 * Player player = event.getPlayer(); Block block = event.getBlock();
+		 * 
+		 * switch (player.getItemInHand().getType()) { case CROPS: case CARROT:
+		 * case POTATO: case PUMPKIN_SEEDS: case MELON_SEEDS:
+		 * 
+		 * dew.soiladdseedrecusive(block, player, player.getItemInHand()
+		 * .getType(), true);
+		 * 
+		 * return; }
+		 */
 	}
 
 	@EventHandler
@@ -262,10 +249,10 @@ public class dewddautoseed implements Listener {
 		Block b = e.getClickedBlock();
 		Action act = e.getAction();
 
-		if (b == null) return;
+		if (b == null)
+			return;
 
-		if (p.getItemInHand().getTypeId() == 351
-				&& p.getItemInHand().getData().getData() == 15
+		if (p.getItemInHand().getTypeId() == 351 && p.getItemInHand().getData().getData() == 15
 				&& act == Action.RIGHT_CLICK_BLOCK) {
 			switch (b.getType()) {
 			case POTATO:

@@ -5,7 +5,6 @@ import java.util.LinkedList;
 
 import core_optimization_api.Chromosome;
 
-
 public class Main {
 
 	public static Core co;

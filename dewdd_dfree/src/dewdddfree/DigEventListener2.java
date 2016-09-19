@@ -246,106 +246,37 @@ public class DigEventListener2 implements Listener {
 							int c = 1;
 							if (c == 1) {
 
-								/*switch (e.getItem().getTypeId()) {
-								case 8:
-								case 9:
-								case 10:
-								case 11:
-								case 14:
-								case 15:
-								case 16:
-								case 19:
-								case 21:
-								case 22:
-								case 35:
-								case 41:
-								case 42:
-								case 46:
-								case 48:
-								case 49:
-								case 51:
-								case 52:
-								case 55:
-								case 56:
-								case 57:
-								case 59:
-								case 73:
-								case 74:
-								case 79:
-								case 81:
-								case 83:
-								case 86:
-								case 89:
-								case 91:
-								case 93:
-								case 94:
-								case 103:
-								case 129:
-								case 133:
-								case 138:
-								case 141:
-								case 142:
-								case 147:
-								case 148:
-								case 149:
-								case 152:
-								case 153:
-								case 155:
-
-								case 263:
-								case 264:
-								case 265:
-								case 266:
-								case 296:
-								case 318:
-								case 319:
-								case 320:
-								case 326:
-								case 327:
-								case 331:
-								case 334:
-								case 338:
-								case 341:
-								case 344:
-								case 348:
-								case 349:
-								case 350:
-								case 351:
-								case 352:
-								case 353:
-								case 356:
-								case 363:
-								case 364:
-								case 365:
-								case 366:
-								case 367:
-								case 368:
-								case 369:
-								case 370:
-								case 371:
-								case 372:
-								case 375:
-								case 376:
-								case 377:
-								case 378:
-								case 381:
-								case 382:
-								case 384:
-								case 388:
-								case 391:
-								case 392:
-								case 393:
-								case 394:
-								case 399:
-								case 404:
-								case 360:
-								case 297:
-
-									dprint.r.printAll("dfree not't acceptable item id at (" + block.getX() + ","
-											+ block.getY() + "," + block.getZ() + ")" + e.getItem().getTypeId());
-									block.breakNaturally();
-									break;
-								}*/
+								/*
+								 * switch (e.getItem().getTypeId()) { case 8:
+								 * case 9: case 10: case 11: case 14: case 15:
+								 * case 16: case 19: case 21: case 22: case 35:
+								 * case 41: case 42: case 46: case 48: case 49:
+								 * case 51: case 52: case 55: case 56: case 57:
+								 * case 59: case 73: case 74: case 79: case 81:
+								 * case 83: case 86: case 89: case 91: case 93:
+								 * case 94: case 103: case 129: case 133: case
+								 * 138: case 141: case 142: case 147: case 148:
+								 * case 149: case 152: case 153: case 155:
+								 * 
+								 * case 263: case 264: case 265: case 266: case
+								 * 296: case 318: case 319: case 320: case 326:
+								 * case 327: case 331: case 334: case 338: case
+								 * 341: case 344: case 348: case 349: case 350:
+								 * case 351: case 352: case 353: case 356: case
+								 * 363: case 364: case 365: case 366: case 367:
+								 * case 368: case 369: case 370: case 371: case
+								 * 372: case 375: case 376: case 377: case 378:
+								 * case 381: case 382: case 384: case 388: case
+								 * 391: case 392: case 393: case 394: case 399:
+								 * case 404: case 360: case 297:
+								 * 
+								 * dprint.r.printAll(
+								 * "dfree not't acceptable item id at (" +
+								 * block.getX() + "," + block.getY() + "," +
+								 * block.getZ() + ")" +
+								 * e.getItem().getTypeId());
+								 * block.breakNaturally(); break; }
+								 */
 
 								Dispenser abc = (Dispenser) e.getBlock().getState();
 								ItemStack itee = e.getItem();
@@ -629,8 +560,6 @@ public class DigEventListener2 implements Listener {
 				dewddflower.Main.ds.chestabsorb2();
 			}
 
-			
-			
 			// exchange
 
 			if (act == Action.RIGHT_CLICK_BLOCK) {
@@ -700,8 +629,6 @@ public class DigEventListener2 implements Listener {
 		if (!tr.isrunworld(ac.getName(), e.getPlayer().getWorld().getName())) {
 			return;
 		}
-
-		
 
 		if (e.getLine(0).endsWith("[dfree]") == true) {
 			if (player.hasPermission(pcdfree) == false) {

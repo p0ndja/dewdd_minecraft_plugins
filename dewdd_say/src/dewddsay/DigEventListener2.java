@@ -52,7 +52,7 @@ public class DigEventListener2 implements Listener {
 					player.sendMessage(dprint.r.color("vd = " + Bukkit.getViewDistance()));
 					return;
 				}
-				
+
 			}
 
 			if (player.isOp() == true) {
@@ -340,10 +340,10 @@ public class DigEventListener2 implements Listener {
 			}
 
 			// 555
-			
+
 			if (m[0].equalsIgnoreCase("xD") == true) {
 				player.addPotionEffect(PotionEffectType.REGENERATION.createEffect(30, 1));
-				
+
 			}
 
 			if (m[0].equalsIgnoreCase("555") == true) {
@@ -960,8 +960,6 @@ public class DigEventListener2 implements Listener {
 						}
 					}
 				}
-
-			
 
 				if (m[0].equalsIgnoreCase("drops") == true) {
 					canc = true;
