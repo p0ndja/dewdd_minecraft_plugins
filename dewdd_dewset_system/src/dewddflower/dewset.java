@@ -4268,6 +4268,25 @@ public class dewset extends dewset_interface {
 		Bukkit.getScheduler().scheduleSyncDelayedTask(dewset.ac, arr);
 	}
 
+	public boolean saveHistoryBreaking(CoreProtectAPI CoreProtect, Player player, Block hostBlock, Block setBlock
+			) {
+		if (CoreProtect != null) { // Ensure we have
+			// access
+			// to the API
+			boolean success = false;
+			// mean set 0
+			success =success = CoreProtect.logRemoval(player.getName(), hostBlock.getLocation(),
+					hostBlock.getType(), hostBlock.getData());
+					return success;
+		
+
+		} else {
+			setBlock.setTypeIdAndData(hostBlock.getTypeId(), hostBlock.getData(), false);
+			
+
+		}
+		return false;
+	}
 	public boolean saveHistory(CoreProtectAPI CoreProtect, Player player, Block hostBlock, Block setBlock,
 			boolean saveHistoryOnPlacing) {
 		if (CoreProtect != null) { // Ensure we have

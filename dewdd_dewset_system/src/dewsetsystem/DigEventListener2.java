@@ -22,6 +22,7 @@ import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.potion.PotionEffectType;
 
 import dewddflower.dewset;
 import dewddflower.dewset_interface;
@@ -806,17 +807,39 @@ public class DigEventListener2 implements Listener {
 
 	}
 
-	@EventHandler
-	public void eventja(BlockDamageEvent event) {
+	class FasterBreak implements Runnable {
+		private Block block;
+		private Player player;
 
-		if (!tr.isrunworld(this.ac.getName(), event.getPlayer().getWorld().getName())) {
+		public FasterBreak(Block block, Player player) {
+			this.block = block;
+			this.player = player;
+		}
+
+		@Override
+		public void run() {
+
+			if (dew.cando_all(block, player, "break")) {
+			
+				dew.saveHistoryBreaking(dew.getCoreProtect(), player, block, block);
+					block.breakNaturally();
+					
+			}
+
+		}
+	}
+
+	@EventHandler
+	public void eventja(BlockDamageEvent e) {
+
+		if (!tr.isrunworld(this.ac.getName(), e.getPlayer().getWorld().getName())) {
 			return;
 		}
 		// 4
 		try {
 
-			Block block = event.getBlock();
-			Player player = event.getPlayer();
+			Block block = e.getBlock();
+			Player player = e.getPlayer();
 
 			// check host block
 
@@ -835,10 +858,44 @@ public class DigEventListener2 implements Listener {
 					this.dew.dewsetLightAround(player, item);
 				}
 
+				if (player.hasPermission(dewset.pmainfasterbreak)) {
+
+					switch (player.getItemInHand().getType()) {
+					case WOOD_PICKAXE:
+					case WOOD_SPADE:
+
+					case STONE_PICKAXE:
+					case STONE_SPADE:
+					case STONE_AXE:
+
+					case IRON_PICKAXE:
+					case IRON_SPADE:
+					case IRON_AXE:
+
+					case GOLD_PICKAXE:
+					case GOLD_SPADE:
+					case GOLD_AXE:
+
+					case DIAMOND_PICKAXE:
+					case DIAMOND_SPADE:
+					case DIAMOND_AXE:
+					case SHEARS:
+					
+
+						FasterBreak fb = new FasterBreak(block, player);
+						Thread thh = new Thread(fb);
+						Bukkit.getScheduler().scheduleSyncDelayedTask(ac, thh);
+						player.addPotionEffect(PotionEffectType.FAST_DIGGING.createEffect(10, 100));
+						e.setCancelled(true);
+						
+						break;
+
+					}
+				}
 			} // have permission
 
-		} catch (Exception e) {
-			System.err.println("BlockDamageEvent error: Damage event " + e.getMessage());
+		} catch (Exception exc) {
+			System.err.println("BlockDamageEvent error: Damage event " + exc.getMessage());
 		}
 
 	}
@@ -930,12 +987,12 @@ public class DigEventListener2 implements Listener {
 		if (block == null) {
 			return;
 		}
-		
+
 		if (dew == null) {
-		dew = new dewset();
-		dewset.ac = DigEventListener2.this.ac;
+			dew = new dewset();
+			dewset.ac = DigEventListener2.this.ac;
 		}
-		
+
 		goodc1 = dew.cando_all(block, player, "right");
 
 		if (goodc1 == false) {

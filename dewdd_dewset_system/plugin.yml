@@ -83,4 +83,6 @@ permissions:
   dewdd.main.dewset.copyinventoryblocks:
     description: When you use command /copy , /stack   (it's also copy Block Inventory holder such as chest , hopper ...)
     default: op
-
+  dewdd.main.fasterbreak:
+    description: faster breaking block (only work at protected zone if config set)
+    default: default
