@@ -1,7 +1,6 @@
 package a_dewdd_skyblock_lv_1000_generator;
 
 public class LV1000Type {
-	public int lvmode = 0; // 0 - 5
 	
 	// to done
 	public String[] needItem = new String[Core.maxItemForCompleteMission];
