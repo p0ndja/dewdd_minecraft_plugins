@@ -63,6 +63,10 @@ class Gravity implements Runnable {
 		 * if (root.amount > 10) { root.amount -- ; return; }
 		 */
 
+		if (cur.getY() == 0) {
+			return Gravity.needBlock(cur);
+		}
+
 		for (int x = -r; x <= r; x++) {
 
 			for (int z = -r; z <= r; z++) {
@@ -72,6 +76,7 @@ class Gravity implements Runnable {
 				 */
 
 				b2 = cur.getRelative(x, -1, z);
+
 				// b2.setType(Material.LOG);
 
 				double xxx = Math.abs(b2.getX() - start.getX());
@@ -86,26 +91,23 @@ class Gravity implements Runnable {
 
 				// if (b2.getY() > start.getY() - Gravity.stick && b2.getY() >
 				// 0) {
-				if (b2.getY() > 0) {
-					// more research !
 
-					/*
-					 * if (Gravity.needBlock(b2) == false) { continue; }
-					 */
-					if (b2.getType() == Material.AIR) {
-						continue;
-					}
+				// more research !
 
-					boolean ret = isThisBlockHasRoot(b2, start);
-					if (ret == true) {
-						return true;
-					} else {
-						continue;
-					}
+				/*
+				 * if (Gravity.needBlock(b2) == false) { continue; }
+				 */
+				if (Gravity.needBlock(b2) == false) {
+					continue;
+				}
 
-				} else {
-
+				boolean ret = isThisBlockHasRoot(b2, start);
+				dprint.r.printAll(tr.locationToString(b2.getLocation()) + " = " + ret);
+				
+				if (ret == true) {
 					return true;
+				} else {
+					continue;
 				}
 
 			}
@@ -246,31 +248,32 @@ class Gravity implements Runnable {
 			 * rnd.nextInt(15));
 			 */
 
-			for (int x = -r; x <= r; x++) {
-				for (int z = -r; z <= r; z++) {
-
-					b2 = cur.getRelative(x, -1, z);
-
-					if (Gravity.needBlock(b2) == false) {
-						continue;
-					}
-
-					found = isThisBlockHasRoot(b2, start);
-					if (found == true) {
-						break;
-					}
-
-				}
-				if (found == true) {
-					break;
-				}
+			if (Gravity.needBlock(cur) == false) {
+				continue;
 			}
+
+			found = isThisBlockHasRoot(cur, start);
+
+			/*
+			 * for (int x = -r; x <= r; x++) { for (int z = -r; z <= r; z++) {
+			 * 
+			 * b2 = cur.getRelative(x, -1, z);
+			 * 
+			 * if (Gravity.needBlock(b2) == false) { continue; }
+			 * 
+			 * found = isThisBlockHasRoot(b2, start); if (found == true) {
+			 * break; }
+			 * 
+			 * } if (found == true) { break; } }
+			 */
 
 			if (found == true) {
 				break;
 			}
 		}
 
+		
+		
 		if (found == false) {
 			Material mat = start.getType();
 			byte data = start.getData();
@@ -279,7 +282,7 @@ class Gravity implements Runnable {
 
 			int counter = 0;
 
-			int tmpr = Gravity.stick;
+			int tmpr = Gravity.r;
 
 			for (int x = -tmpr; x <= tmpr; x++) {
 				for (int y = -tmpr; y <= tmpr; y++) {
@@ -291,7 +294,7 @@ class Gravity implements Runnable {
 							continue;
 						}
 
-						MainLoop.jobs.put(b2.getLocation());
+						//MainLoop.jobs.put(b2.getLocation());
 						// Gravity noop = new Gravity(b2, player, block, counter
 						// * 30);
 
@@ -372,7 +375,7 @@ class MainLoop implements Runnable {
 	}
 
 	long lostTime = 0;
-	
+
 	@Override
 	public void run() {
 		// always get Item from jobs
@@ -380,13 +383,22 @@ class MainLoop implements Runnable {
 
 		long startTime = System.currentTimeMillis();
 
-		
+		//dprint.r.printAll("Recall " + jobs.getSize() + " " + lostTime);
+
 		if (lostTime > maxTime) {
-			lostTime -= maxTime;
+			lostTime -= 10;
+			if (lostTime < 0) {
+				lostTime = 0;
+			}
+
+			if (jobs.getSize() > 0) {
+				dprint.r.printAll("size " + jobs.getSize() + " " + lostTime);
+			}
+
 			return;
 		}
 
-		while ( jobs.getSize() > 0) {
+		while (jobs.getSize() > 0 && (System.currentTimeMillis() - startTime) < maxTime) {
 			// dprint.r.printAll("done size " + done + " , " + jobs.getSize());
 
 			Location loc = jobs.get();
@@ -398,23 +410,19 @@ class MainLoop implements Runnable {
 					continue;
 				}
 
-				Gravity noop = new Gravity(blo, null, 1);
+				Gravity noop = new Gravity(blo, null, 2);
 
 			}
 
-			long endTime = System.currentTimeMillis();
-			long curLost = endTime - startTime;
-			
-			if ( curLost > maxTime) {
-				 lostTime += curLost;
-				
-				break;
+			if (jobs.getSize() > 0) {
+				dprint.r.printC("size " + jobs.getSize() + " " + lostTime + " ... ");
 			}
-			
+
 		}
 
-		if (jobs.getSize() > 0) {
-			dprint.r.printC("size " + jobs.getSize());
+		long tmp = System.currentTimeMillis() - startTime;
+		if (tmp > maxTime) {
+			lostTime += tmp - maxTime;
 		}
 
 	}
@@ -434,7 +442,7 @@ class Delay implements Runnable {
 		}
 
 		MainLoop mainLoop = new MainLoop();
-		Bukkit.getScheduler().scheduleSyncRepeatingTask(DigEventListener2.ac, mainLoop, 0, 5);
+		Bukkit.getScheduler().scheduleSyncRepeatingTask(DigEventListener2.ac, mainLoop, 0, 20);
 
 	}
 }
@@ -521,7 +529,7 @@ public class DigEventListener2 implements Listener {
 	@EventHandler
 	public void eventja(AsyncPlayerChatEvent e) {
 		if (e.getMessage().equalsIgnoreCase("gravity")) {
-			e.getPlayer().sendMessage("0.3");
+			e.getPlayer().sendMessage("0.5");
 		}
 
 	}
