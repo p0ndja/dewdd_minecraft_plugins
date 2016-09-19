@@ -21,12 +21,15 @@ public class Core {
 	
 	public static int dnaSize = 1000;
 	
-	public LinkedList<SellableType> dnaDecoder(double[] chromosome) {
+	/*public LinkedList<SellableType> dnaDecoder(double[] chromosome) {
+		//first thing deal with Shop
+		// loop untill shop done
+		
 		for (int i = 0; i < dnaSize ; i ++ ) {
 		   
 			
 		}
-	}
+	}*/
 	
 	public LinkedList<SellableType> sortSell(LinkedList<SellableType> sortPls) {
 		int dataSize = sell.size();

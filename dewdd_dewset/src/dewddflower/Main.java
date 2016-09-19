@@ -31,6 +31,9 @@ public class Main extends JavaPlugin {
 		printAll("ptdew&dewdd : " + tr.gettr("loaded_plugin") + " dewset api");
 		dewddflower.dewset.ac = this;
 		ds = new dewset();
+		ds.loadmainfile();
+		
+		printAll("dewset ds = " + (ds == null ? "null" : "not null"));
 		
 	}
 

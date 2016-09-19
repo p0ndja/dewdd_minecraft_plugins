@@ -4375,7 +4375,7 @@ public class dewset extends dewset_interface {
 
 		// loadadminlist();
 		
-		this.loadmainfile();
+		
 	
 
 		// firstrun19 = true;

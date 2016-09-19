@@ -6,6 +6,7 @@ public class MissionType {
 	public int maxStack;
 	public boolean isBlock = false;
 	
+	
 	public MissionType copyIt() {
 		MissionType abc = new MissionType();
 		abc.theName = this.theName;

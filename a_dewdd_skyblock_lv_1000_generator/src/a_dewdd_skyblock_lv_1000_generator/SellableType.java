@@ -6,6 +6,8 @@ public class SellableType {
 	public int maxStack;
 	public double timeToGet;
 	
+
+	
 	public SellableType copyIt() {
 		SellableType abc = new SellableType();
 		abc.theName = this.theName;

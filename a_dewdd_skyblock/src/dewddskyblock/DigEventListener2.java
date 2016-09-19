@@ -1686,14 +1686,26 @@ public class DigEventListener2 implements Listener {
 			return;
 		}
 
-		Player player = e.getPlayer();
+		final Player player = e.getPlayer();
 
 		/*
 		 * if (player.getInventory().first(83) >= 0) return;
 		 * 
 		 * ItemStack ite = new ItemStack(83, 1);
 		 * player.getInventory().addItem(ite);
+		 * 
+		 * 
 		 */
+		
+		
+		
+		
+		Bukkit.getScheduler().scheduleSyncDelayedTask(ac, new Runnable() {
+			
+			public void run() {
+			player.sendMessage(tr.gettr("on_skyblock_playerjoin_tell_him_this_word"));
+			}
+		}, 100);
 
 		int rsid = dew.getOWNIslandID(player, false);
 
