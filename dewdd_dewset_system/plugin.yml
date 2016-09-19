@@ -1,0 +1,85 @@
+name: dewsetsystem
+main: dewsetsystem.Main
+version: 1
+author: dewtx29@gmail.com
+database: false
+depend: [dewddprint, dewddtran]
+
+commands:
+  set:
+    description: dewset is replace everyblock
+    usage: /<command>
+    aliases: [ds]
+  xet:
+    description: dewxet is replace everyblock
+    usage: /<command>
+  wall:
+    description: dewsetwall is replace blocks for build wall
+    usage: /<command>
+  room:
+    description: set room is replace blocks for build room
+    usage: /<command>
+  setblock:
+    description: dewsetblock is replace blocks for build block
+    usage: /<command>
+  stack:
+    description: stack selected blocked to some direction (use Diamond Sword Right Click near Block to Set direction)
+    usage: /<command>
+    aliases: [da]
+  copy:
+    description: dewcopy is copy block to your position.. position will seem place at left click...(select 1)
+    usage: /<command>
+  down:
+    description: dewdown is put the block on your hand under your feet
+    usage: /<command>
+    aliases: [dn]
+  setlight:
+    description: dewsetlight is place torch in the area it's dark
+    usage: /<command>
+  spreadsphere:
+    description: sphere sphere is spread blocks from your position.. to every direction..
+    usage: /<command>
+  spreadq:
+    description: spreadq is spread blocks from your position... only seem y (very fast)
+    usage: /<command>
+    aliases: [dsq]
+  setsphere:
+    description: set sphere
+    usage: /<command>
+  wallsphere:
+    description: set sphere (only wall)
+    usage: /<command>
+  sety:
+    description: set y position y1 y2 such as /dewsety 1 255
+    usage: /<command>
+  setpos:
+    description: set position /setpos x1 y1 z1 x2 y2 z2
+    usage: /<command>
+  pos1:
+    description: set position x1 y1 z1
+    usage: /<command>
+  pos2:
+    description: set position x2 y2 z2
+    usage: /<command>
+  extend:
+    description: dewextend set y = 0 to y = 255
+    usage: /<command>
+    aliases: [de]
+  selectcube:
+    description: dewselectcube select block near you  amount of item in hand = radius
+    usage: /<command>
+
+permissions:
+  dewdd.main.overide:
+    description: can dewset to All Protected Zone (there are WorldGuard Protection)
+    default: op
+  dewdd.main.delete:
+    description: allow to /set 0 , /setBlock 0 (delete block)
+    default: op
+  dewdd.main.infinite:
+    description: allow to use Dewset System even you don't have those block in your inventory
+    default: op
+  dewdd.main.dewset.copyinventoryblocks:
+    description: When you use command /copy , /stack   (it's also copy Block Inventory holder such as chest , hopper ...)
+    default: op
+
