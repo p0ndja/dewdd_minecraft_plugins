@@ -1599,7 +1599,7 @@ public class DigEventListener2 implements Listener {
 
 				}
 
-			dew.cutwoodsub(event.getBlock(), event.getPlayer(), true);
+			//dew.cutwoodsub(event.getBlock(), event.getPlayer(), true);
 
 			switch (block.getTypeId()) {
 			case 14:
@@ -2325,6 +2325,11 @@ public class DigEventListener2 implements Listener {
 					Block bo = e.getBlock().getRelative(x, y, z);
 					if (bo.getType() == Material.SIGN_POST || bo.getType() == Material.WALL_SIGN) {
 						Sign sign = (Sign) bo.getState();
+						if (sign.getLine(0).equalsIgnoreCase("dewbreak")) {
+							sign.setLine(0, "[dewbreak]");
+							sign.update(true);
+						}
+						
 						if (sign.getLine(0).equalsIgnoreCase("[dewbreak]")) {
 							block.getRelative(e.getDirection()).breakNaturally();
 
@@ -2582,6 +2587,11 @@ public class DigEventListener2 implements Listener {
 					block2 = event.getItem().getLocation().getBlock().getRelative(x, y, z);
 					if (block2.getTypeId() == 63 || block2.getTypeId() == 68) {
 						Sign sign = (Sign) block2.getState();
+						if (sign.getLine(0).equalsIgnoreCase("dewhopper")) {
+							sign.setLine(0, "[dewhopper]");
+							sign.update(true);
+						}
+						
 						if (sign.getLine(0).equalsIgnoreCase("[dewhopper]") == true) {
 
 							int tx = Integer.parseInt(sign.getLine(1));
@@ -2608,6 +2618,11 @@ public class DigEventListener2 implements Listener {
 					block2 = event.getItem().getLocation().getBlock().getRelative(x, y, z);
 					if (block2.getTypeId() == 63 || block2.getTypeId() == 68) {
 						Sign sign = (Sign) block2.getState();
+						if (sign.getLine(0).equalsIgnoreCase("dewhopperx")) {
+							sign.setLine(0, "[dewhopperx]");
+							sign.update(true);
+						}
+						
 						if (sign.getLine(0).equalsIgnoreCase("[dewhopperx]") == true) {
 
 							int tx = Integer.parseInt(sign.getLine(1)); // ID
@@ -3169,7 +3184,16 @@ public class DigEventListener2 implements Listener {
 
 		Player player = event.getPlayer();
 		Block block = event.getBlock();
-
+		
+		if (event.getLine(0).equalsIgnoreCase("dewbuy")) {
+			event.setLine(0, "[dewbuy]");
+		}
+		if (event.getLine(0).equalsIgnoreCase("dewhome")) {
+			event.setLine(0, "[dewhome]");
+		}
+		
+		
+		
 		if (event.getLine(0).equalsIgnoreCase("[dewbuy]") == true
 				|| event.getLine(0).equalsIgnoreCase("[dewhome]") == true) {
 
@@ -3229,7 +3253,10 @@ public class DigEventListener2 implements Listener {
 			}
 
 		}
-
+		
+		if (event.getLine(0).equalsIgnoreCase("dgive")) {
+			event.setLine(0, "[dgive]");
+		}
 		if (event.getLine(0).endsWith("[dgive]") == true) {
 			if (api_admin.dewddadmin.is2admin(player) == false && api_admin.dewddadmin.is2moderator(player) == false) {
 				player.sendMessage("ptdew&dewdd : " + tr.gettr("only_staff_admin_can_build_this_sign"));

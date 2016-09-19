@@ -88,7 +88,12 @@ public class DigEventListener2 implements Listener {
 								b3 = b2.getRelative(x2, 0, z2);
 								if (b3.getTypeId() == 63 || b3.getTypeId() == 68) {
 									Sign sign = (Sign) b3.getState();
-
+									if (sign.getLine(0).equalsIgnoreCase("autosell")) {
+										sign.setLine(0, "[autosell]");
+										sign.update(true);
+									}
+									
+									
 									if (sign.getLine(0).equalsIgnoreCase("[autosell]")) {
 										double lowest = 100000;
 										double temp = 0;

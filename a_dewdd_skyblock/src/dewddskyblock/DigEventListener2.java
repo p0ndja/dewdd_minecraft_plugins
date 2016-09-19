@@ -1914,7 +1914,11 @@ public class DigEventListener2 implements Listener {
 		if (block.getType() == Material.SIGN_POST || block.getType() == Material.WALL_SIGN) {
 
 			Sign sign = (Sign) block.getState();
-
+			if (sign.getLine(0).equalsIgnoreCase("skypercent20")) {
+				sign.setLine(0, "[skypercent20");
+				sign.update(true);
+				
+			}
 			if (sign.getLine(0).equalsIgnoreCase("[skypercent20]")) {
 				// show
 

@@ -111,45 +111,6 @@ public class DigEventListener2 implements Listener {
 		}
 	}
 
-	public boolean dewnosign(Player player, String str) {
-		Block block = null;
-		int gg = 4;
-
-		for (int x = -gg; x <= gg; x++) {
-			for (int y = -gg; y <= gg; y++) {
-				for (int z = -gg; z <= gg; z++) {
-					block = player.getWorld().getBlockAt(player.getLocation())
-							.getRelative(x, y, z);
-					if (block.getTypeId() == 63 || block.getTypeId() == 68) {
-						Sign sign = (Sign) block.getState();
-						if (sign.getLine(0).equalsIgnoreCase("[dewno]") == true
-								|| sign.getLine(0).equalsIgnoreCase(
-										"[kairoseki]") == true) {
-
-							for (int dc = 1; dc <= 3; dc++) {
-								if (sign.getLine(dc).startsWith("/login") == true) {
-									continue;
-								}
-
-								if (sign.getLine(dc).equalsIgnoreCase(str) == true
-										|| str.toLowerCase().startsWith(
-												sign.getLine(dc).toLowerCase())) {
-									return true;
-								}
-							}
-
-						}
-					}
-				}
-
-			}
-
-		}
-		// [Kairoseki]
-		// [dewno]
-		return false;
-
-	}
 
 	@EventHandler
 	public void eventja(AsyncPlayerChatEvent e)
@@ -189,11 +150,7 @@ public class DigEventListener2 implements Listener {
 
 		}
 
-		if (dewnosign(player, e.getMessage()) == true) {
-			player.sendMessage("ptdew&dewdd: this area block this '"
-					+ e.getMessage() + "'");
-			e.setCancelled(true);
-		}
+		
 
 	}
 
@@ -221,7 +178,16 @@ public class DigEventListener2 implements Listener {
 
 			e.setCancelled(true);
 			Sign sign = (Sign) block.getState();
-
+			if (sign.getLine(0).equalsIgnoreCase("dewenchant")) {
+				sign.setLine(0, "[dewenchant]");
+				sign.update(true);
+			}
+			if (sign.getLine(0).equalsIgnoreCase("dewenchant")) {
+				sign.setLine(0, "[dewenchant]");
+				sign.update(true);
+			}
+			
+			
 			if (sign.getLine(0).endsWith("[dewenchant]") == true) {
 				if (player.hasPermission(pudenchant) == false) {
 					player.sendMessage("ptdew&dewdd: you can't use enchant sign");
@@ -293,7 +259,11 @@ public class DigEventListener2 implements Listener {
 					if (block2.getTypeId() == 63 || block2.getTypeId() == 68) {
 
 						Sign sign = (Sign) block2.getState();
-
+						if (sign.getLine(0).equalsIgnoreCase("dfree")) {
+							sign.setLine(0, "[dfree]");
+							sign.update(true);
+						}
+						
 						if (sign.getLine(0).equalsIgnoreCase("[dfree]") == true) {
 							int c = 1;
 							if (c == 1) {
@@ -477,12 +447,7 @@ public class DigEventListener2 implements Listener {
 			return;
 		}
 		Player player = e.getPlayer();
-		if (dewnosign(player, e.getMessage()) == true
-				&& e.getMessage().startsWith("/login") == false) {
-			player.sendMessage("ptdew&dewdd: this area block this '"
-					+ e.getMessage() + "'");
-			e.setCancelled(true);
-		}
+	
 
 		String[] m = e.getMessage().split("\\s+");
 
@@ -633,6 +598,12 @@ public class DigEventListener2 implements Listener {
 						if (block2.getTypeId() == 63
 								|| block2.getTypeId() == 68) {
 							Sign sign = (Sign) block2.getState();
+							if (sign.getLine(0).equalsIgnoreCase("autosort")) {
+								sign.setLine(0, "[autosort]");
+								sign.update(true);
+							}
+							
+							
 							if (sign.getLine(0).equalsIgnoreCase("[autosort]") == true) {
 								
 
@@ -668,6 +639,11 @@ public class DigEventListener2 implements Listener {
 						if (block2.getTypeId() == 63
 								|| block2.getTypeId() == 68) {
 							Sign sign = (Sign) block2.getState();
+							if (sign.getLine(0).equalsIgnoreCase("dfree")) {
+								sign.setLine(0, "[dfree]");
+								sign.update(true);
+							}
+							
 							if (sign.getLine(0).equalsIgnoreCase("[dfree]") == true) {
 								if (player.hasPermission(pcdfree) == false) {
 
@@ -691,9 +667,19 @@ public class DigEventListener2 implements Listener {
 			if (sign.getLine(0) != null) {
 				dewddflower.Main.ds.linkurl(player, sign.getLine(0));
 			}
+			
+			if (sign.getLine(0).equalsIgnoreCase("dewtobox")) {
+				sign.setLine(0, "[dewtobox]");
+				sign.update(true);
+			}
 			if (sign.getLine(0).equalsIgnoreCase("[dewtobox]") == true) {
 				// player.sendMessage("dewtobox run");
 				dewddflower.Main.ds.chestabsorb();
+			}
+			
+			if (sign.getLine(0).equalsIgnoreCase("dewsortbox")) {
+				sign.setLine(0, "[dewsortbox]");
+				sign.update(true);
 			}
 
 			if (sign.getLine(0).equalsIgnoreCase("[dewsortbox]")
@@ -703,8 +689,13 @@ public class DigEventListener2 implements Listener {
 			}
 			
 			
-
+			
 			// exchange
+			if (sign.getLine(0).equalsIgnoreCase("dewexchange")) {
+				sign.setLine(0, "[dewexchange]");
+				sign.update(true);
+			}
+			
 			if (sign.getLine(0).endsWith("[dewexchange]") == true) {
 				if (player.hasPermission(pudexchange) == false) {
 					player.sendMessage("ptdew&dewdd: you don't have permission for use dew exchange");
@@ -751,6 +742,12 @@ public class DigEventListener2 implements Listener {
 
 			if (act == Action.RIGHT_CLICK_BLOCK) {
 				// lift
+				if (sign.getLine(0).equalsIgnoreCase("dewlift")) {
+					sign.setLine(0, "[dewlift]");
+					sign.update(true);
+				}
+				
+				
 				if (sign.getLine(0).equalsIgnoreCase("[dewlift]") == true) {
 					Block block2 = null;
 

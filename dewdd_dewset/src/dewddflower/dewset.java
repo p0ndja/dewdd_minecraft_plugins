@@ -5545,6 +5545,11 @@ public class dewset extends dewset_interface {
 							}
 
 							Sign sign = (Sign) block.getState();
+							if (sign.getLine(0).equalsIgnoreCase("dewtobox")) {
+								sign.setLine(0, "[dewtobox]");
+								sign.update(true);
+							}
+							
 							if (sign.getLine(0).equalsIgnoreCase("[dewtobox]") == true) {
 								// player.sendMessage(dprint.r.color("found
 								// dewtobox sign : "
@@ -5683,6 +5688,11 @@ public class dewset extends dewset_interface {
 							// dewsorttype
 
 							Sign sign = (Sign) block.getState();
+							if (sign.getLine(0).equalsIgnoreCase("dewsortbox")) {
+								sign.setLine(0, "[dewsortbox]");
+								sign.update(true);
+							}
+							
 							if (sign.getLine(0).equalsIgnoreCase("[dewsortbox]") == true) {
 
 								/*
@@ -5756,6 +5766,8 @@ public class dewset extends dewset_interface {
 											// dewsorttype
 
 											Sign js = (Sign) temp.getState();
+										
+											
 											if (js.getLine(0).equalsIgnoreCase("[dewsortbox]") == true) {
 
 												/*
@@ -6302,6 +6314,11 @@ public class dewset extends dewset_interface {
 					}
 
 					sign2 = (Sign) temp.getState();
+					if (sign2.getLine(0).equalsIgnoreCase("dewsorttype")) {
+						sign2.setLine(0, "[dewsorttype]");
+						sign2.update(true);
+					}
+					
 					if (sign2.getLine(0).equalsIgnoreCase("[dewsorttype]")) {
 						if (sign2.getLine(1).equalsIgnoreCase(sorttype)) {
 							// found proto type

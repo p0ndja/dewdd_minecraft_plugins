@@ -74,7 +74,7 @@ public class DigEventListener2 implements Listener {
 				b.setTypeId(68, false);
 
 				Sign se = (Sign) b.getState();
-
+				
 				se.setLine(0, "[dewteleport]");
 				se.setLine(1, "" + sx);
 				se.setLine(2, "" + sy);
@@ -106,6 +106,11 @@ public class DigEventListener2 implements Listener {
 		Block block = player.getLocation().getBlock().getRelative(0, -2, 0);
 		if (block.getTypeId() == 68 || block.getTypeId() == 68) {
 			Sign sign = (Sign) block.getState();
+			if (sign.getLine(0).equalsIgnoreCase("dewteleport")) {
+				sign.setLine(0, "[dewteleport]");
+				sign.update(true);
+			}
+			
 			if (sign.getLine(0).equalsIgnoreCase("[dewteleport]") == true) {
 
 				int xh = Integer.parseInt(sign.getLine(1));
@@ -122,6 +127,12 @@ public class DigEventListener2 implements Listener {
 						.getRelative(0, -3, 0);
 				if (block2.getTypeId() == 68 || block2.getTypeId() == 68) {
 					Sign sign2 = (Sign) block2.getState();
+					if (sign2.getLine(0).equalsIgnoreCase("dewteleport2")) {
+						sign2.setLine(0, "[dewteleport2]");
+						sign2.update(true);
+					}
+					
+					
 					if (sign2.getLine(0).equalsIgnoreCase("[dewteleport2]") == true) {
 						wname = Bukkit.getWorld(sign2.getLine(1));
 					}
