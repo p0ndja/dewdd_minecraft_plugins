@@ -23,6 +23,8 @@ import dewddflower.dewset;
 import dewddtran.tr;
 
 public class DigEventListener2 implements Listener {
+	dewset dew = null;
+	
 	class runp implements Runnable {
 		private Player p;
 		private String m[];
@@ -66,6 +68,9 @@ public class DigEventListener2 implements Listener {
 				return;
 			}
 			if (m[0].equalsIgnoreCase("/dewloadteleport")) {
+				if (dew == null) {
+					dew = new dewset();
+				}
 				if (p.hasPermission(pbuildsign) == false) {
 					p.sendMessage(dprint.r.color(tr.gettr("you don't have permission") + pbuildsign));
 					return;
@@ -78,7 +83,7 @@ public class DigEventListener2 implements Listener {
 
 				for (int i = 0; i >= -3; i--) {
 					Block b = p.getLocation().getBlock().getRelative(0, i, 0);
-					if (dewset.cando_all(b, p, "build") == false) {
+					if (dew.cando_all(b, p, "build") == false) {
 						p.sendMessage(dprint.r.color(tr.gettr("this zone is protected you can't build")));
 						return;
 					}

@@ -615,6 +615,10 @@ public class dewset extends dewset_interface {
 									}
 
 								}
+								else{
+									saveHistory(CoreProtect, player, hostBlock, setBlock, true);
+									
+								}
 
 								zlx++;
 							} // z
