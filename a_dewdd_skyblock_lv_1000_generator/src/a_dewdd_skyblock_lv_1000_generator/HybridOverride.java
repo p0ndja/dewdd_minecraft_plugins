@@ -581,7 +581,7 @@ public class HybridOverride extends Hybrid{
 			}
 
 			tmpFitness = fitCurLV + fitMoneyLeft + fitMaxMoney + fitAtTheEndItem;
-		
+			tmpFitness = fitCurLV  + fitMaxMoney ;
 
 			
 			d.pl("fitness " + tmpFitness + ", f curLV " + fitCurLV + " , f money left " + fitMoneyLeft

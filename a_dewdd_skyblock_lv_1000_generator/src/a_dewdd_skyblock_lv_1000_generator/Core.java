@@ -59,10 +59,10 @@ public class Core {
 	public static String tmpLVPath = File.separator + "ramdisk" + File.separator + "ptdew_dewdd_lv.txt";
 	
 	public static String missionPath = File.separator + "ramdisk" + File.separator + "missionblock.txt";
-	public static int dnaSize = 3300;
+	public static int dnaSize = 4300;
 
-	public static int maxItemForCompleteMission = 10;
-	public static int minItemForCompleteMission = 3;
+	public static int maxItemForCompleteMission = 5;
+	public static int minItemForCompleteMission = 2;
 
 	public static int maxRewardDiffBlockType = 10;
 
@@ -78,7 +78,7 @@ public class Core {
 	public static double ShopMaxCost = 100;
 
 	public static double maxMoney = 100000;
-	public static double moneyLeft = 1000;
+	public static double moneyLeft = 5000;
 
 	public static int maxLV = 100;
 	public static HashMap<String, SellableType> sell = new HashMap<String, SellableType>();
@@ -104,7 +104,7 @@ public class Core {
 		decodeRandomUniqueItem(rUnique);
 
 		ParameterRandomAmountItem amountUniqueItemPerLV = new ParameterRandomAmountItem();
-		decodeRandomSumAmount417ForAllShop(amountUniqueItemPerLV);
+		decodeRandomSumAmount417ForLV(amountUniqueItemPerLV);
 
 		// add need item
 
@@ -388,6 +388,46 @@ public class Core {
 
 	}
 
+	public void decodeRandomSumAmount417ForLV(ParameterRandomAmountItem para) {
+		para.amount = new int[allBlockInGameAsListSize];
+
+		for (int i = 0; i < allBlockInGameAsListSize; i++) {
+			para.amount[i] = 0;
+		}
+
+		int countItem = 0;
+		while (countItem < allBlockInGameAsListSize) {
+			// d.pl("countItem , " + countItem + " , curChro " + curChro);
+
+			double max = (maxItemForCompleteMission - minItemForCompleteMission); // 1 / 7
+
+			double tmpReadChro = decodeRandomGive01_(); // random
+
+			double curAmount = Math.round(tmpReadChro * max) + minItemForCompleteMission; // 3
+																			// -
+																			// 7
+
+			para.amount[countItem] = (int) curAmount;
+			if (para.amount[countItem] <= 0) {
+				para.amount[countItem] = 1;
+			}
+
+			countItem++;
+
+			// 417 > 417
+			if (countItem > allBlockInGameAsListSize) {
+				int tmb = (countItem - allBlockInGameAsListSize);
+
+				if (printpls) d.pl("decodeRandumSumAmount Shouldn't be here : " + tmb);
+
+				countItem = allBlockInGameAsListSize - 1;
+				para.amount[countItem] = tmb;
+
+			}
+		}
+
+	}
+	
 	public void decodeRandomUniqueItem(ParameterRandomUniqueItem para) {
 		para.index = new int[allBlockInGameAsListSize];
 		boolean tmpBoolean[] = new boolean[allBlockInGameAsListSize];
