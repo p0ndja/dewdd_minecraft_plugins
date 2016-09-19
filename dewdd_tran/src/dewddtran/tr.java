@@ -328,7 +328,7 @@ public class tr {
 			RunWorldType tmp = new RunWorldType();
 
 			tmp.pluginname = m[0];
-			dprint_tran.r.printAll("pluginname " + m[0]);
+			//dprint_tran.r.printAll("pluginname " + m[0]);
 
 			tmp.runWorld = new ArrayList<String>();
 			tmp.skipWorld = new ArrayList<String>();
@@ -338,11 +338,11 @@ public class tr {
 			if (m[1].equalsIgnoreCase("*")) {
 
 				tmp.runWorld.add("*");
-				dprint_tran.r.printAll("runWorld add " + "*");
+				//dprint_tran.r.printAll("runWorld add " + "*");
 				
 				
 				for (int j = 2; j < lo.length && j < m.length; j++) {
-					dprint_tran.r.printAll("skipWorld add " + m[j]);
+					//dprint_tran.r.printAll("skipWorld add " + m[j]);
 
 					tmp.skipWorld.add(m[j]);
 				}
@@ -351,7 +351,7 @@ public class tr {
 				// tmp.skipWorld.add("*");
 
 				for (int j = 1; j < lo.length && j < m.length ; j++) {
-					dprint_tran.r.printAll("runWorld add " + m[j]);
+					//dprint_tran.r.printAll("runWorld add " + m[j]);
 					tmp.runWorld.add(m[j]);
 				}
 			}
@@ -359,17 +359,17 @@ public class tr {
 			tr.runworld.add(tmp);
 		}
 
-		dprint_tran.r.printAll("runWorld Size =  " + tr.runworld.size());
+	//	dprint_tran.r.printAll("runWorld Size =  " + tr.runworld.size());
 		for (int i = 0; i < tr.runworld.size(); i++) {
 			RunWorldType xxx = tr.runworld.get(i);
 
-			dprint_tran.r.printAll("runWorld size " + xxx.runWorld.size());
+			//dprint_tran.r.printAll("runWorld size " + xxx.runWorld.size());
 
 			for (int j = 0; j < xxx.runWorld.size(); j++) {
 				dprint_tran.r.printAll(xxx.runWorld.get(j));
 			}
 
-			dprint_tran.r.printAll("skipWorld size " + xxx.skipWorld.size());
+			//dprint_tran.r.printAll("skipWorld size " + xxx.skipWorld.size());
 
 			for (int j = 0; j < xxx.skipWorld.size(); j++) {
 				dprint_tran.r.printAll(xxx.skipWorld.get(j));

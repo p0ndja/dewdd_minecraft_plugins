@@ -352,8 +352,27 @@ public class DigEventListener2 implements Listener {
 					
 					if (pr.isFlying() && pr.getGameMode() != GameMode.SPECTATOR){
 						if (!pr.hasPermission("essentials.fly")) {
-							pr.kickPlayer(tr.gettr("kick_cuz can fly but not vip"));
-							continue;
+							int moneyNeed = (int) tr.gettrint("CONFIG_FLY_WITHOUT_PERMISSION_PRICE_USE_EACH_MINUTES");
+							
+							try {
+								if (Economy.hasEnough(pr.getName(), moneyNeed)) {
+									Economy.subtract(pr.getName(), moneyNeed);
+								}
+								else {
+									pr.setFlying(false);
+									pr.setAllowFlight(false);
+									//pr.kickPlayer(tr.gettr("kick_cuz can fly but not vip"));
+									//continue;
+								}
+							} catch (UserDoesNotExistException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							} catch (NoLoanPermittedException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							}
+							
+						
 						}
 					}
 					
@@ -499,13 +518,13 @@ public class DigEventListener2 implements Listener {
 								}
 
 								en.setTarget(en2);
-								dprint.r.printAll("mon kill " + en.getLocation().getBlockX() + ","
+							/*	dprint.r.printAll("mon kill " + en.getLocation().getBlockX() + ","
 										+ en.getLocation().getBlockY() + "," + en.getLocation().getBlockZ() + " to " +
 
 								en2.getLocation().getBlockX() + "," + en2.getLocation().getBlockY() + ","
 										+ en2.getLocation().getBlockZ()
 
-								);
+								);*/
 
 								break;
 							}
@@ -564,13 +583,13 @@ public class DigEventListener2 implements Listener {
 
 							en.setTarget(en2);
 
-							dprint.r.printAll("mon kill human" + en.getLocation().getBlockX() + ","
+						/*	dprint.r.printAll("mon kill human" + en.getLocation().getBlockX() + ","
 									+ en.getLocation().getBlockY() + "," + en.getLocation().getBlockZ() + " to " +
 
 							en2.getLocation().getBlockX() + "," + en2.getLocation().getBlockY() + ","
 									+ en2.getLocation().getBlockZ()
 
-							);
+							);*/
 
 							break;
 

@@ -67,7 +67,8 @@ public class DigEventListener2 implements Listener {
 
 			if (m[0].equalsIgnoreCase("ghost")) {
 				if (player.getGameMode() == GameMode.SURVIVAL) {
-					int money = (int) tr.gettrint("CONFIG_GHOST_PRICE");
+					int money = (int) tr.gettrint("CONFIG_FLY_WITHOUT_PERMISSION_PRICE_USE_EACH_MINUTES");
+					
 					try {
 						if (Economy.getMoney(player.getName()) < money) {
 							player.sendMessage(dprint.r.color("ptdew&dewdd : /ghost " + tr.gettr("use_money") + money));
@@ -115,7 +116,8 @@ public class DigEventListener2 implements Listener {
 				}
 				try {
 
-					int moneyfly = (int) (tr.gettrint("CONFIG_DEWFLY_PRICE"));
+					int moneyfly = (int) tr.gettrint("CONFIG_FLY_WITHOUT_PERMISSION_PRICE_USE_EACH_MINUTES");
+					
 
 					if (Economy.getMoney(player.getName()) < moneyfly) {
 						player.sendMessage(dprint.r.color("ptdew&dewdd : DewFly " + tr.gettr("use_money") + moneyfly));
