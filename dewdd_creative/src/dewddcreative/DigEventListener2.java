@@ -42,7 +42,11 @@ import dewddtran.tr;
 import li.LXRXLZRZType;
 
 public class DigEventListener2 implements Listener {
+	 LinkedList <Location> allProtect = new LinkedList<Location>();
+	
 	class delay extends Thread {
+		
+		
 
 		public void run() {
 			while (ac == null) {
@@ -110,12 +114,15 @@ public class DigEventListener2 implements Listener {
 	class RunPro_c implements Runnable {
 		String message = "";
 		Player player;
+		
+		
+		
 
 		public void run() {
 			String m[] = message.split("\\s+");
 			if (m[0].equalsIgnoreCase("/cre") || m[0].equalsIgnoreCase("/creative")) {
 				Block block = player.getLocation().getBlock();
-				
+
 				if (m.length == 1) {
 					player.sendMessage(dprint.r.color("/cre buy"));
 					player.sendMessage(dprint.r.color("/cre freezone"));
@@ -123,38 +130,83 @@ public class DigEventListener2 implements Listener {
 
 					return;
 				} else if (m.length == 2 || m.length == 3) {
-					if (m[1].equalsIgnoreCase("position") == true) {
-						LinkedList <Location > list = new LinkedList<Location>();
+					if (m[1].equalsIgnoreCase("warp") == true) {
 						
-						Block start = block.getWorld().getBlockAt(0,0,0);
 						
+						Location lo =  allProtect.get(Integer.parseInt(m[2]));
+						dprint.r.printAll("" + lo.getBlockX() + "," + lo.getBlockY()  + "," + lo.getBlockZ());
+						lo.getChunk().load();
+						player.teleport(lo);
+						
+					}
+				else if (m[1].equalsIgnoreCase("search") == true) {
+						allProtect.clear();
+						
+						LinkedList<Location> list = new LinkedList<Location>();
+
+						Block start = block.getWorld().getBlockAt(0, 0, 0);
+
 						recusiveSearchBlock(start, start, list);
-						
-						LXRXLZRZType o  = new LXRXLZRZType(0, 0, 0, 0, 0, 0);
-						
-						for (int i = 0 ; i < list.size() ; i ++ ) {
+
+						LXRXLZRZType o = new LXRXLZRZType(0, 0, 0, 0, 0, 0);
+
+						for (int i = 0; i < list.size(); i++) {
 							Block tmp = list.get(i).getBlock();
-							
+
 							if (tmp.getX() > o.lx) {
 								o.lx = tmp.getX();
 							}
 							if (tmp.getX() < o.rx) {
 								o.rx = tmp.getX();
 							}
-							
+
 							if (tmp.getZ() > o.lz) {
 								o.lz = tmp.getZ();
 							}
 							if (tmp.getZ() < o.rz) {
 								o.rz = tmp.getZ();
 							}
-							
-							
+
+							dprint.r.printAll(i + " = " + tr.locationToString(tmp.getLocation()));
+							allProtect.add(tmp.getLocation());
+						//	dprint.r.printAll(allProtect.size() + " , " + list.size() + " , " + i);
+						
+						}
+
+						
+						
+						dprint.r.printAll("left light " + o.lx + "," + o.lz + " to " + o.rx + "," + o.rz);
+					
+					} else if (m[1].equalsIgnoreCase("position") == true) {
+						LinkedList<Location> list = new LinkedList<Location>();
+
+						Block start = block.getWorld().getBlockAt(0, 0, 0);
+
+						recusiveSearchBlock(start, start, list);
+
+						LXRXLZRZType o = new LXRXLZRZType(0, 0, 0, 0, 0, 0);
+
+						for (int i = 0; i < list.size(); i++) {
+							Block tmp = list.get(i).getBlock();
+
+							if (tmp.getX() > o.lx) {
+								o.lx = tmp.getX();
+							}
+							if (tmp.getX() < o.rx) {
+								o.rx = tmp.getX();
+							}
+
+							if (tmp.getZ() > o.lz) {
+								o.lz = tmp.getZ();
+							}
+							if (tmp.getZ() < o.rz) {
+								o.rz = tmp.getZ();
+							}
+
 							dprint.r.printAll(i + " = " + tr.locationToString(tmp.getLocation()));
 						}
-						
-						dprint.r.printAll("left light " + o.lx  + "," + o.lz + " to " + o.rx + "," + o.rz);
-						
+
+						dprint.r.printAll("left light " + o.lx + "," + o.lz + " to " + o.rx + "," + o.rz);
 
 					} else if (m[1].equalsIgnoreCase("freezone") == true) {
 						if (m.length == 2) {
@@ -421,12 +473,12 @@ public class DigEventListener2 implements Listener {
 
 	@EventHandler
 	public void eventja(ItemDespawnEvent event) {
-	/*	if (!tr.isrunworld(ac.getName(), event.getLocation().getWorld().getName())) {
-			return;
-		}
-
-		event.getEntity().getItemStack().setType(Material.AIR);
-*/
+		/*
+		 * if (!tr.isrunworld(ac.getName(),
+		 * event.getLocation().getWorld().getName())) { return; }
+		 * 
+		 * event.getEntity().getItemStack().setType(Material.AIR);
+		 */
 	}
 
 	@EventHandler
@@ -462,29 +514,28 @@ public class DigEventListener2 implements Listener {
 		if (!tr.isrunworld(ac.getName(), event.getPlayer().getWorld().getName())) {
 			return;
 		}
-/*
-		if (isbadarea((int) event.getPlayer().getLocation().getX(), (int) event.getPlayer().getLocation().getY(),
-				(int) event.getPlayer().getLocation().getZ()) == true) {
-			Location xx = event.getPlayer().getLocation();
-			xx.setX(0);
-			xx.setY(255);
-			xx.setZ(0);
-			event.getPlayer().teleport(xx);
-			dprint.r.printAll("ptdew&dewdd : ' move " + event.getPlayer().getName() + "' don't go to bad area");
-
-			event.setCancelled(true);
-		}*/
+		/*
+		 * if (isbadarea((int) event.getPlayer().getLocation().getX(), (int)
+		 * event.getPlayer().getLocation().getY(), (int)
+		 * event.getPlayer().getLocation().getZ()) == true) { Location xx =
+		 * event.getPlayer().getLocation(); xx.setX(0); xx.setY(255);
+		 * xx.setZ(0); event.getPlayer().teleport(xx); dprint.r.printAll(
+		 * "ptdew&dewdd : ' move " + event.getPlayer().getName() +
+		 * "' don't go to bad area");
+		 * 
+		 * event.setCancelled(true); }
+		 */
 	}
-	
+
 	@EventHandler
 	public void eventja(PlayerBucketEmptyEvent e) {
 		if (!tr.isrunworld(ac.getName(), e.getPlayer().getWorld().getName())) {
 			return;
 		}
-		
+
 		Block block = e.getBlockClicked();
 		Player player = e.getPlayer();
-		
+
 		boolean cando = api_creative.cando(block, player);
 		if (cando == false) {
 			e.setCancelled(true);
@@ -497,10 +548,10 @@ public class DigEventListener2 implements Listener {
 		if (!tr.isrunworld(ac.getName(), e.getPlayer().getWorld().getName())) {
 			return;
 		}
-		
+
 		Block block = e.getBlockClicked();
 		Player player = e.getPlayer();
-		
+
 		boolean cando = api_creative.cando(block, player);
 		if (cando == false) {
 			e.setCancelled(true);
@@ -513,28 +564,29 @@ public class DigEventListener2 implements Listener {
 		if (!tr.isrunworld(ac.getName(), event.getPlayer().getWorld().getName())) {
 			return;
 		}
-/*
-		if (isbadarea((int) event.getRespawnLocation().getX(), (int) event.getRespawnLocation().getY(),
-				(int) event.getRespawnLocation().getZ()) == true) {
-			Location xx = event.getRespawnLocation();
-			xx.setX(0);
-			xx.setY(255);
-			xx.setZ(0);
-			event.getPlayer().teleport(xx);
-			dprint.r.printAll("ptdew&dewdd : 'respawn " + event.getPlayer().getName() + "' don't go to bad area");
-
-		}*/
+		/*
+		 * if (isbadarea((int) event.getRespawnLocation().getX(), (int)
+		 * event.getRespawnLocation().getY(), (int)
+		 * event.getRespawnLocation().getZ()) == true) { Location xx =
+		 * event.getRespawnLocation(); xx.setX(0); xx.setY(255); xx.setZ(0);
+		 * event.getPlayer().teleport(xx); dprint.r.printAll(
+		 * "ptdew&dewdd : 'respawn " + event.getPlayer().getName() +
+		 * "' don't go to bad area");
+		 * 
+		 * }
+		 */
 	}
 
 	@EventHandler
 	public void eventja(InventoryOpenEvent event) {
-	/*	if (tr.isrunworld(ac.getName(), event.getPlayer().getWorld().getName())) {
-			if (event.getInventory().getType() == InventoryType.ENDER_CHEST) {
-				event.getPlayer().sendMessage(
-						dprint.r.color(tr.gettr("Creative Don't allow to open ender chest as this world")));
-				event.setCancelled(true);
-			}
-		}*/
+		/*
+		 * if (tr.isrunworld(ac.getName(),
+		 * event.getPlayer().getWorld().getName())) { if
+		 * (event.getInventory().getType() == InventoryType.ENDER_CHEST) {
+		 * event.getPlayer().sendMessage( dprint.r.color(tr.gettr(
+		 * "Creative Don't allow to open ender chest as this world")));
+		 * event.setCancelled(true); } }
+		 */
 	}
 
 	@EventHandler
@@ -547,7 +599,8 @@ public class DigEventListener2 implements Listener {
 		World toWorld = event.getTo().getWorld();
 		Player player = event.getPlayer();
 
-		if (tr.isrunworld(ac.getName(), fromWorld.getName())) { // creative to
+		if (tr.isrunworld(ac.getName(), fromWorld.getName())) { // creative
+																// to
 
 			if (tr.isrunworld(ac.getName(), toWorld.getName()) == false) { // survival
 
@@ -594,27 +647,26 @@ public class DigEventListener2 implements Listener {
 			}
 		}
 
-		/*if (isbadarea((int) event.getTo().getX(), (int) event.getTo().getY(), (int) event.getTo().getZ()) == true) {
-			Location xx = event.getTo();
-			xx.setX(0);
-			xx.setY(255);
-			xx.setZ(0);
-			event.getPlayer().teleport(xx);
-			dprint.r.printAll("ptdew&dewdd : ' teleport " + event.getPlayer().getName() + "' don't go to bad area");
-			event.setCancelled(true);
-		}*/
+		/*
+		 * if (isbadarea((int) event.getTo().getX(), (int) event.getTo().getY(),
+		 * (int) event.getTo().getZ()) == true) { Location xx = event.getTo();
+		 * xx.setX(0); xx.setY(255); xx.setZ(0); event.getPlayer().teleport(xx);
+		 * dprint.r.printAll( "ptdew&dewdd : ' teleport " +
+		 * event.getPlayer().getName() + "' don't go to bad area");
+		 * event.setCancelled(true); }
+		 */
 	}
 
-	/*public boolean isbadarea(int x, int y, int z) {
-
-		if (Math.pow(Math.pow(x - 717, 2) + Math.pow(y - 64, 2) + Math.pow(z - 3, 2), 0.5) < 100) {
-			return true;
-		} else if (Math.pow(Math.pow(x - (-225), 2) + Math.pow(y - 87, 2) + Math.pow(z - 867, 2), 0.5) < 100) {
-			return true; 
-		}
-
-		return false;
-	}*/
+	/*
+	 * public boolean isbadarea(int x, int y, int z) {
+	 * 
+	 * if (Math.pow(Math.pow(x - 717, 2) + Math.pow(y - 64, 2) + Math.pow(z - 3,
+	 * 2), 0.5) < 100) { return true; } else if (Math.pow(Math.pow(x - (-225),
+	 * 2) + Math.pow(y - 87, 2) + Math.pow(z - 867, 2), 0.5) < 100) { return
+	 * true; }
+	 * 
+	 * return false; }
+	 */
 
 	public void runpro(String message, Player player) throws UserDoesNotExistException, NoLoanPermittedException {
 		RunPro_c abc = new RunPro_c();
