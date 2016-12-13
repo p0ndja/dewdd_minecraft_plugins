@@ -209,6 +209,37 @@ public class DigEventListener2 implements Listener {
 				for (int x = -1; x <= 1; x++) {
 
 					for (int z = -1; z <= 1; z++) {
+						
+						int g = tps.rnd.nextInt(3);
+						switch (g) {
+						case 0:
+							x  = 0;
+							break;
+						case 1:
+							x  = 1;
+							break;
+						
+						case 2:
+							x  = -1;
+							break;
+						
+						}
+						
+						 g = tps.rnd.nextInt(3);
+							switch (g) {
+							case 0:
+								z  = 0;
+								break;
+							case 1:
+								z  = 1;
+								break;
+							
+							case 2:
+								z = -1;
+								break;
+							
+							}
+
 
 						int newX = (int) (oldX + (x * disPerAmount));
 						int newZ = (int) (oldZ + (z * disPerAmount));
