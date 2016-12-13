@@ -9,6 +9,7 @@ import java.util.LinkedList;
 import java.util.Random;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Chunk;
 import org.bukkit.Effect;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
@@ -67,6 +68,10 @@ public class DigEventListener2 implements Listener {
 	public void recusiveSearchBlock(Block cur, Block start, LinkedList<Location> list) {
 		// add
 
+		for (Chunk ch : cur.getWorld().getLoadedChunks()) {
+			ch.unload();
+		}
+		
 		Block tmp = null;
 		int searchSpace = 500;
 		int betweenSpace = 100;
@@ -74,6 +79,9 @@ public class DigEventListener2 implements Listener {
 		for (int x = -searchSpace; x <= searchSpace; x += betweenSpace) {
 
 			for (int z = -searchSpace; z <= searchSpace; z += betweenSpace) {
+				
+				
+				
 				// tmp = cur.getRelative(x, 0, z);
 				tmp = cur.getWorld().getBlockAt(cur.getX() + x, api_creative.signY, cur.getZ() + z);
 
@@ -106,6 +114,8 @@ public class DigEventListener2 implements Listener {
 
 				this.recusiveSearchBlock(tmp, start, list);
 
+				
+				
 			} // chest
 		}
 
@@ -174,6 +184,11 @@ public class DigEventListener2 implements Listener {
 			double distance = a.distance(b);
 
 			Location c = a.clone();
+			
+			int px = b.getBlockX();
+			int py = b.getBlockY();
+			int pz = b.getBlockZ();
+			
 
 			/*
 			 * dprint.r.printAll("findDot (" + a.getBlockX() + "," +
@@ -193,19 +208,18 @@ public class DigEventListener2 implements Listener {
 
 				boolean foundYet = false;
 
-				int y = a.getBlockY();
 
 				for (int x = -1; x <= 1; x++) {
 
 					for (int z = -1; z <= 1; z++) {
 
-						int newX = oldX + (x * 10);
-						int newZ = oldZ + (z * 10);
+						int newX = oldX + (x * 3);
+						int newZ = oldZ + (z * 3);
 
 						// double newDistance = d.distance(b);
 
-						double newDistance = Useful.distance2Point3D(newX, b.getBlockX(),
-								player.getLocation().getBlockY(), b.getBlockY(), newZ, b.getBlockZ());
+						double newDistance = Useful.distance2Point3D(newX, py,
+								newZ, px , py , pz);
 
 						if (newDistance < distance) {
 
@@ -213,7 +227,7 @@ public class DigEventListener2 implements Listener {
 							oldZ = newZ;
 
 							distance = newDistance;
-							XYZ test2 = new XYZ(newX, player.getLocation().getBlockY(), newZ);
+							XYZ test2 = new XYZ(newX, py, newZ);
 
 							dot.add(test2);
 
@@ -274,9 +288,16 @@ public class DigEventListener2 implements Listener {
 					Location ll = player.getLocation();
 					ll.setX(dotLo.x);
 					ll.setZ(dotLo.z);
-					switch (counter) {
+					switch (counter%3) {
 					case 0:
 						player.getWorld().playEffect(ll, Effect.HEART, 1);
+						break;
+					case 1:
+						player.getWorld().playEffect(ll, Effect.FLAME, 1);
+						break;
+						
+					case 2:
+						player.getWorld().playEffect(ll, Effect.CLOUD, 1);
 						break;
 
 					}
@@ -284,7 +305,7 @@ public class DigEventListener2 implements Listener {
 				}
 
 				counter++;
-				if (counter >= 2) {
+				if (counter >= 3) {
 					counter = 0;
 				}
 
@@ -318,7 +339,7 @@ public class DigEventListener2 implements Listener {
 
 					} else if (m[1].equalsIgnoreCase("ef") == true) {
 
-						player.getWorld().playEffect(player.getLocation(), Effect.CLOUD, 200);
+						player.getWorld().playEffect(player.getLocation(), Effect.CLOUD, 20);
 					}
 
 					else if (m[1].equalsIgnoreCase("ef2") == true) {
@@ -328,7 +349,7 @@ public class DigEventListener2 implements Listener {
 						PlayEffect pe = new PlayEffect(player);
 						// pe.run();
 
-						Bukkit.getScheduler().scheduleSyncRepeatingTask(DigEventListener2.ac, pe, 1, 60);
+						Bukkit.getScheduler().scheduleSyncRepeatingTask(DigEventListener2.ac, pe, 1, 20);
 
 					} else if (m[1].equalsIgnoreCase("search") == true) {
 						allProtect.clear();
