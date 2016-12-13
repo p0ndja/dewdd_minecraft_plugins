@@ -9,6 +9,7 @@ import java.util.LinkedList;
 import java.util.Random;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Effect;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -42,11 +43,9 @@ import dewddtran.tr;
 import li.LXRXLZRZType;
 
 public class DigEventListener2 implements Listener {
-	 LinkedList <Location> allProtect = new LinkedList<Location>();
-	
+	LinkedList<Location> allProtect = new LinkedList<Location>();
+
 	class delay extends Thread {
-		
-		
 
 		public void run() {
 			while (ac == null) {
@@ -111,12 +110,126 @@ public class DigEventListener2 implements Listener {
 
 	}
 
+	class PlayEffect implements Runnable {
+
+		private Player player = null;
+
+		public PlayEffect(Player player) {
+			this.player = player;
+		}
+
+		public LinkedList<Location> findDot(Location a, Location b) {
+
+			LinkedList<Location> dot = new LinkedList<Location>();
+			dot.add(a);
+
+			double distance = a.distance(b);
+
+			Location c = a.clone();
+
+			dprint.r.printAll("findDot (" + a.getBlockX() + "," + a.getBlockY() + a.getBlockZ() + ") to ("
+					+ b.getBlockX() + "," + b.getBlockY() + "," + b.getBlockZ() + ") = distance " + distance);
+			
+				int oldX = c.getBlockX();
+				int oldY = c.getBlockY();
+				int oldZ = c.getBlockZ();
+				
+				int counter = 0 ;
+				
+			while (distance > 0) {
+				counter ++;
+				
+				
+				// x , y , z
+
+				// 0 , -1 , +1
+				
+				
+
+				boolean foundYet = false;
+
+				for (int x = -1; x <= 1; x++) {
+
+					for (int y = -1; y <= 1; y++) {
+
+						for (int z = -1; z <= 1; z++) {
+							int newX = oldX + x;
+							int newY = oldY + y;
+							int newZ = oldZ + z;
+							
+							
+							Location d = player.getLocation();
+							d.setX(newX);
+							d.setY(newY);
+							d.setZ(newZ);
+							
+							double newDistance = d.distance(b);
+							if (newDistance < distance) {
+								c.setX(d.getX());
+								c.setY(d.getY());
+								c.setZ(d.getZ());
+								
+								oldX = c.getBlockX();
+								oldY = c.getBlockY();
+								oldZ = c.getBlockZ();
+								
+								distance = newDistance;
+
+								dot.add(d);
+								/*dprint.r.printAll("shoter part " + dot.size() + " (" + c.getBlockX() + ","
+										+ c.getBlockY() + "," + c.getBlockZ() + ") = distance " + newDistance);*/
+
+								foundYet = true;
+								break;
+							}
+						}
+
+						if (foundYet == true) {
+							break;
+						}
+					}
+					if (foundYet == true) {
+						break;
+					}
+				}
+
+			} // while
+			
+			
+			dprint.r.printAll("dot size " + dot.size());
+
+			return dot;
+
+		}
+
+		public void run() {
+
+			Location l1 = player.getLocation();
+
+			for (int i = 0; i < 1; i++) {
+
+				Location l2 = allProtect.get(i);
+
+				LinkedList<Location> dots = findDot(l1, l2);
+				
+				for (int j = 0 ; j < dots.size() ; j ++ ) {
+					Location dotLo = dots.get(j);
+					
+					dprint.r.printC(j + " = " +  dotLo.getBlockX() + "," + dotLo.getBlockY() + "," + dotLo.getBlockZ());
+					
+					player.getWorld().playEffect(dotLo, Effect.HEART, 100);
+
+				
+				}
+			}
+
+		}
+
+	}
+
 	class RunPro_c implements Runnable {
 		String message = "";
 		Player player;
-		
-		
-		
 
 		public void run() {
 			String m[] = message.split("\\s+");
@@ -131,17 +244,24 @@ public class DigEventListener2 implements Listener {
 					return;
 				} else if (m.length == 2 || m.length == 3) {
 					if (m[1].equalsIgnoreCase("warp") == true) {
-						
-						
-						Location lo =  allProtect.get(Integer.parseInt(m[2]));
-						dprint.r.printAll("" + lo.getBlockX() + "," + lo.getBlockY()  + "," + lo.getBlockZ());
+
+						Location lo = allProtect.get(Integer.parseInt(m[2]));
+						dprint.r.printAll("" + lo.getBlockX() + "," + lo.getBlockY() + "," + lo.getBlockZ());
 						lo.getChunk().load();
 						player.teleport(lo);
-						
+
+					} else if (m[1].equalsIgnoreCase("ef") == true) {
+
+						player.getWorld().playEffect(player.getLocation(), Effect.CLOUD, 200);
 					}
-				else if (m[1].equalsIgnoreCase("search") == true) {
+
+					else if (m[1].equalsIgnoreCase("ef2") == true) {
+						PlayEffect pe = new PlayEffect(player);
+						pe.run();
+
+					} else if (m[1].equalsIgnoreCase("search") == true) {
 						allProtect.clear();
-						
+
 						LinkedList<Location> list = new LinkedList<Location>();
 
 						Block start = block.getWorld().getBlockAt(0, 0, 0);
@@ -169,14 +289,13 @@ public class DigEventListener2 implements Listener {
 
 							dprint.r.printAll(i + " = " + tr.locationToString(tmp.getLocation()));
 							allProtect.add(tmp.getLocation());
-						//	dprint.r.printAll(allProtect.size() + " , " + list.size() + " , " + i);
-						
+							// dprint.r.printAll(allProtect.size() + " , " +
+							// list.size() + " , " + i);
+
 						}
 
-						
-						
 						dprint.r.printAll("left light " + o.lx + "," + o.lz + " to " + o.rx + "," + o.rz);
-					
+
 					} else if (m[1].equalsIgnoreCase("position") == true) {
 						LinkedList<Location> list = new LinkedList<Location>();
 
