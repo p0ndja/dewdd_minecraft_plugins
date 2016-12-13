@@ -41,6 +41,7 @@ import com.earth2me.essentials.api.UserDoesNotExistException;
 
 import dewddtran.tr;
 import li.LXRXLZRZType;
+import li.Useful;
 
 public class DigEventListener2 implements Listener {
 	LinkedList<Location> allProtect = new LinkedList<Location>();
@@ -110,18 +111,65 @@ public class DigEventListener2 implements Listener {
 
 	}
 
+	class XYZ {
+		int x = 0;
+		int y = 0;
+		int z = 0;
+
+		public XYZ(Block b) {
+			x = b.getX();
+			y = b.getY();
+			z = b.getZ();
+		}
+
+		public XYZ(int x, int y, int z) {
+			this.x = x;
+			this.y = y;
+			this.z = z;
+
+		}
+	}
+
+	class DotType {
+		double distance = 0;
+		LinkedList<XYZ> xyz = new LinkedList<XYZ>();
+	}
+
 	class PlayEffect implements Runnable {
 
 		private Player player = null;
 
+		private LinkedList<DotType> dt = new LinkedList<DotType>();
+
+		private int counter = 50;
+
 		public PlayEffect(Player player) {
 			this.player = player;
+
 		}
 
-		public LinkedList<Location> findDot(Location a, Location b) {
+		public void refindAllDot() {
+			Location l1 = player.getLocation();
 
-			LinkedList<Location> dot = new LinkedList<Location>();
-			dot.add(a);
+			for (int i = 0; i < allProtect.size(); i++) {
+
+				Location l2 = allProtect.get(i);
+
+				DotType dotType = new DotType();
+				LinkedList<XYZ> dots = findDot(l1, l2);
+				dotType.xyz = dots;
+
+				dt.add(dotType);
+
+			}
+		}
+
+		public LinkedList<XYZ> findDot(Location a, Location b) {
+
+			LinkedList<XYZ> dot = new LinkedList<XYZ>();
+			XYZ test1 = new XYZ(b.getBlock());
+
+			dot.add(test1);
 
 			double distance = a.distance(b);
 
@@ -137,8 +185,7 @@ public class DigEventListener2 implements Listener {
 			int oldX = c.getBlockX();
 			int oldZ = c.getBlockZ();
 
-
-			while (distance > 0) {
+			while (distance > 15) {
 
 				// x , y , z
 
@@ -152,31 +199,29 @@ public class DigEventListener2 implements Listener {
 
 					for (int z = -1; z <= 1; z++) {
 
-						int newX = oldX + x;
-						int newZ = oldZ + z;
+						int newX = oldX + (x * 10);
+						int newZ = oldZ + (z * 10);
 
-						Location d = player.getLocation();
-						d.setX(newX);
-						d.setY(b.getBlockY());
-						
-						d.setZ(newZ);
+						// double newDistance = d.distance(b);
 
-						double newDistance = d.distance(b);
+						double newDistance = Useful.distance2Point3D(newX, b.getBlockX(),
+								player.getLocation().getBlockY(), b.getBlockY(), newZ, b.getBlockZ());
+
 						if (newDistance < distance) {
-							c.setX(d.getX());
-							c.setZ(d.getZ());
 
-							oldX = c.getBlockX();
-							oldZ = c.getBlockZ();
+							oldX = newX;
+							oldZ = newZ;
 
 							distance = newDistance;
+							XYZ test2 = new XYZ(newX, player.getLocation().getBlockY(), newZ);
 
-							dot.add(d);
-							
-							/*  dprint.r.printAll("shoter part " + dot.size() +
-							  " (" + c.getBlockX() + "," + c.getBlockY() + ","
-							  + c.getBlockZ() + ") = distance " + newDistance);*/
-							 
+							dot.add(test2);
+
+							/*
+							 * dprint.r.printAll("shoter part " + dot.size() +
+							 * " (" + c.getBlockX() + "," + c.getBlockY() + ","
+							 * + c.getBlockZ() + ") = distance " + newDistance);
+							 */
 
 							foundYet = true;
 							break;
@@ -187,7 +232,6 @@ public class DigEventListener2 implements Listener {
 						break;
 					}
 				}
-			
 
 			} // while
 
@@ -199,26 +243,52 @@ public class DigEventListener2 implements Listener {
 
 		public void run() {
 
-			Location l1 = player.getLocation();
+			counter++;
 
-			for (int i = 0; i < 1; i++) {
+			if (counter > 3) {
 
-				Location l2 = allProtect.get(i);
-
-				LinkedList<Location> dots = findDot(l1, l2);
-
-				for (int j = 0; j < dots.size(); j++) {
-					Location dotLo = dots.get(j);
-					dotLo.setY(player.getLocation().getY() );
-
-					/* dprint.r.printC(j + " = " + dotLo.getBlockX() + "," +
-					 dotLo.getBlockY() + "," + dotLo.getBlockZ());*/
-
-					player.getWorld().playEffect(dotLo, Effect.HEART, 100);
-
-				}
+				refindAllDot();
+				counter = 0;
 			}
 
+			int counter = 0;
+
+			for (int i = 0; i < dt.size(); i++) {
+				LinkedList<XYZ> dots = dt.get(i).xyz;
+
+				for (int j = 0; j < dots.size(); j++) {
+					XYZ dotLo = dots.get(j);
+					dotLo.y = player.getLocation().getBlockY();
+
+					/*
+					 * dprint.r.printC(j + " = " + dotLo.getBlockX() + "," +
+					 * dotLo.getBlockY() + "," + dotLo.getBlockZ());
+					 */
+
+					double dist = Useful.distance2Point3D(dotLo.x, dotLo.y, dotLo.z, player.getLocation().getBlockX(),
+							player.getLocation().getBlockY(), player.getLocation().getBlockZ());
+					if (dist > 100) {
+						continue;
+					}
+
+					Location ll = player.getLocation();
+					ll.setX(dotLo.x);
+					ll.setZ(dotLo.z);
+					switch (counter) {
+					case 0:
+						player.getWorld().playEffect(ll, Effect.HEART, 1);
+						break;
+
+					}
+
+				}
+
+				counter++;
+				if (counter >= 2) {
+					counter = 0;
+				}
+
+			}
 		}
 
 	}
@@ -252,8 +322,13 @@ public class DigEventListener2 implements Listener {
 					}
 
 					else if (m[1].equalsIgnoreCase("ef2") == true) {
+
+						Bukkit.getScheduler().cancelTasks(DigEventListener2.ac);
+
 						PlayEffect pe = new PlayEffect(player);
-						pe.run();
+						// pe.run();
+
+						Bukkit.getScheduler().scheduleSyncRepeatingTask(DigEventListener2.ac, pe, 1, 60);
 
 					} else if (m[1].equalsIgnoreCase("search") == true) {
 						allProtect.clear();
@@ -538,7 +613,7 @@ public class DigEventListener2 implements Listener {
 
 	}
 
-	public JavaPlugin ac = null;
+	public static JavaPlugin ac = null;
 
 	public api_creative dew = null;
 
