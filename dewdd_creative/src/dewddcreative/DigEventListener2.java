@@ -40,6 +40,7 @@ import com.earth2me.essentials.api.Economy;
 import com.earth2me.essentials.api.NoLoanPermittedException;
 import com.earth2me.essentials.api.UserDoesNotExistException;
 
+import dewddtps.tps;
 import dewddtran.tr;
 import li.LXRXLZRZType;
 import li.Useful;
@@ -68,10 +69,6 @@ public class DigEventListener2 implements Listener {
 	public void recusiveSearchBlock(Block cur, Block start, LinkedList<Location> list) {
 		// add
 
-		for (Chunk ch : cur.getWorld().getLoadedChunks()) {
-			ch.unload();
-		}
-		
 		Block tmp = null;
 		int searchSpace = 500;
 		int betweenSpace = 100;
@@ -79,9 +76,7 @@ public class DigEventListener2 implements Listener {
 		for (int x = -searchSpace; x <= searchSpace; x += betweenSpace) {
 
 			for (int z = -searchSpace; z <= searchSpace; z += betweenSpace) {
-				
-				
-				
+
 				// tmp = cur.getRelative(x, 0, z);
 				tmp = cur.getWorld().getBlockAt(cur.getX() + x, api_creative.signY, cur.getZ() + z);
 
@@ -114,8 +109,6 @@ public class DigEventListener2 implements Listener {
 
 				this.recusiveSearchBlock(tmp, start, list);
 
-				
-				
 			} // chest
 		}
 
@@ -152,10 +145,11 @@ public class DigEventListener2 implements Listener {
 		private LinkedList<DotType> dt = new LinkedList<DotType>();
 
 		private int counter = 50;
+		private int amount = 0;
 
-		public PlayEffect(Player player) {
+		public PlayEffect(Player player, int amount) {
 			this.player = player;
-
+			this.amount = amount;
 		}
 
 		public void refindAllDot() {
@@ -184,11 +178,10 @@ public class DigEventListener2 implements Listener {
 			double distance = a.distance(b);
 
 			Location c = a.clone();
-			
+
 			int px = b.getBlockX();
 			int py = b.getBlockY();
 			int pz = b.getBlockZ();
-			
 
 			/*
 			 * dprint.r.printAll("findDot (" + a.getBlockX() + "," +
@@ -200,7 +193,12 @@ public class DigEventListener2 implements Listener {
 			int oldX = c.getBlockX();
 			int oldZ = c.getBlockZ();
 
-			while (distance > 15) {
+			double disPerAmount = ((double)distance )/(double) (amount);
+			if (disPerAmount < 1) {
+				disPerAmount = 1;
+			}
+
+			while (distance > disPerAmount * 3) {
 
 				// x , y , z
 
@@ -208,18 +206,16 @@ public class DigEventListener2 implements Listener {
 
 				boolean foundYet = false;
 
-
 				for (int x = -1; x <= 1; x++) {
 
 					for (int z = -1; z <= 1; z++) {
 
-						int newX = oldX + (x * 3);
-						int newZ = oldZ + (z * 3);
+						int newX = (int) (oldX + (x * disPerAmount));
+						int newZ = (int) (oldZ + (z * disPerAmount));
 
 						// double newDistance = d.distance(b);
 
-						double newDistance = Useful.distance2Point3D(newX, py,
-								newZ, px , py , pz);
+						double newDistance = Useful.distance2Point3D(newX, py, newZ, px, py, pz);
 
 						if (newDistance < distance) {
 
@@ -257,9 +253,16 @@ public class DigEventListener2 implements Listener {
 
 		public void run() {
 
+			int tpsx = (int) tps.getTPS();
+			if (tpsx < 15) {
+
+				dprint.r.printAll("tps " + tpsx);
+				return;
+			}
+
 			counter++;
 
-			if (counter > 3) {
+			if (counter > 2) {
 
 				refindAllDot();
 				counter = 0;
@@ -267,10 +270,18 @@ public class DigEventListener2 implements Listener {
 
 			int counter = 0;
 
+			int efCount = 0;
+
 			for (int i = 0; i < dt.size(); i++) {
 				LinkedList<XYZ> dots = dt.get(i).xyz;
 
 				for (int j = 0; j < dots.size(); j++) {
+
+					efCount++;
+					if (efCount > 20000) {
+						// break;
+					}
+
 					XYZ dotLo = dots.get(j);
 					dotLo.y = player.getLocation().getBlockY();
 
@@ -281,21 +292,21 @@ public class DigEventListener2 implements Listener {
 
 					double dist = Useful.distance2Point3D(dotLo.x, dotLo.y, dotLo.z, player.getLocation().getBlockX(),
 							player.getLocation().getBlockY(), player.getLocation().getBlockZ());
-					if (dist > 100) {
+					if (dist > 500) {
 						continue;
 					}
 
 					Location ll = player.getLocation();
 					ll.setX(dotLo.x);
 					ll.setZ(dotLo.z);
-					switch (counter%3) {
+					switch (counter % 3) {
 					case 0:
 						player.getWorld().playEffect(ll, Effect.HEART, 1);
 						break;
 					case 1:
 						player.getWorld().playEffect(ll, Effect.FLAME, 1);
 						break;
-						
+
 					case 2:
 						player.getWorld().playEffect(ll, Effect.CLOUD, 1);
 						break;
@@ -343,10 +354,11 @@ public class DigEventListener2 implements Listener {
 					}
 
 					else if (m[1].equalsIgnoreCase("ef2") == true) {
+						int amount = Integer.parseInt(m[2]);
 
 						Bukkit.getScheduler().cancelTasks(DigEventListener2.ac);
 
-						PlayEffect pe = new PlayEffect(player);
+						PlayEffect pe = new PlayEffect(player, amount);
 						// pe.run();
 
 						Bukkit.getScheduler().scheduleSyncRepeatingTask(DigEventListener2.ac, pe, 1, 20);
