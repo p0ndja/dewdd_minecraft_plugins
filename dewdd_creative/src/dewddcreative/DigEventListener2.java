@@ -127,76 +127,71 @@ public class DigEventListener2 implements Listener {
 
 			Location c = a.clone();
 
-			dprint.r.printAll("findDot (" + a.getBlockX() + "," + a.getBlockY() + a.getBlockZ() + ") to ("
-					+ b.getBlockX() + "," + b.getBlockY() + "," + b.getBlockZ() + ") = distance " + distance);
-			
-				int oldX = c.getBlockX();
-				int oldY = c.getBlockY();
-				int oldZ = c.getBlockZ();
-				
-				int counter = 0 ;
-				
+			/*
+			 * dprint.r.printAll("findDot (" + a.getBlockX() + "," +
+			 * a.getBlockY() + a.getBlockZ() + ") to (" + b.getBlockX() + "," +
+			 * b.getBlockY() + "," + b.getBlockZ() + ") = distance " +
+			 * distance);
+			 */
+
+			int oldX = c.getBlockX();
+			int oldZ = c.getBlockZ();
+
+
 			while (distance > 0) {
-				counter ++;
-				
-				
+
 				// x , y , z
 
 				// 0 , -1 , +1
-				
-				
 
 				boolean foundYet = false;
 
+				int y = a.getBlockY();
+
 				for (int x = -1; x <= 1; x++) {
 
-					for (int y = -1; y <= 1; y++) {
+					for (int z = -1; z <= 1; z++) {
 
-						for (int z = -1; z <= 1; z++) {
-							int newX = oldX + x;
-							int newY = oldY + y;
-							int newZ = oldZ + z;
+						int newX = oldX + x;
+						int newZ = oldZ + z;
+
+						Location d = player.getLocation();
+						d.setX(newX);
+						d.setY(b.getBlockY());
+						
+						d.setZ(newZ);
+
+						double newDistance = d.distance(b);
+						if (newDistance < distance) {
+							c.setX(d.getX());
+							c.setZ(d.getZ());
+
+							oldX = c.getBlockX();
+							oldZ = c.getBlockZ();
+
+							distance = newDistance;
+
+							dot.add(d);
 							
-							
-							Location d = player.getLocation();
-							d.setX(newX);
-							d.setY(newY);
-							d.setZ(newZ);
-							
-							double newDistance = d.distance(b);
-							if (newDistance < distance) {
-								c.setX(d.getX());
-								c.setY(d.getY());
-								c.setZ(d.getZ());
-								
-								oldX = c.getBlockX();
-								oldY = c.getBlockY();
-								oldZ = c.getBlockZ();
-								
-								distance = newDistance;
+							/*  dprint.r.printAll("shoter part " + dot.size() +
+							  " (" + c.getBlockX() + "," + c.getBlockY() + ","
+							  + c.getBlockZ() + ") = distance " + newDistance);*/
+							 
 
-								dot.add(d);
-								/*dprint.r.printAll("shoter part " + dot.size() + " (" + c.getBlockX() + ","
-										+ c.getBlockY() + "," + c.getBlockZ() + ") = distance " + newDistance);*/
-
-								foundYet = true;
-								break;
-							}
-						}
-
-						if (foundYet == true) {
+							foundYet = true;
 							break;
 						}
 					}
+
 					if (foundYet == true) {
 						break;
 					}
 				}
+			
 
 			} // while
-			
-			
-			dprint.r.printAll("dot size " + dot.size());
+
+			// dprint.r.printAll("dot size " + dot.size());
 
 			return dot;
 
@@ -211,15 +206,16 @@ public class DigEventListener2 implements Listener {
 				Location l2 = allProtect.get(i);
 
 				LinkedList<Location> dots = findDot(l1, l2);
-				
-				for (int j = 0 ; j < dots.size() ; j ++ ) {
+
+				for (int j = 0; j < dots.size(); j++) {
 					Location dotLo = dots.get(j);
-					
-					dprint.r.printC(j + " = " +  dotLo.getBlockX() + "," + dotLo.getBlockY() + "," + dotLo.getBlockZ());
-					
+					dotLo.setY(player.getLocation().getY() );
+
+					/* dprint.r.printC(j + " = " + dotLo.getBlockX() + "," +
+					 dotLo.getBlockY() + "," + dotLo.getBlockZ());*/
+
 					player.getWorld().playEffect(dotLo, Effect.HEART, 100);
 
-				
 				}
 			}
 
