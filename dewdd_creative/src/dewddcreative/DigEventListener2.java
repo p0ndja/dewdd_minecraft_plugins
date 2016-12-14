@@ -284,12 +284,12 @@ public class DigEventListener2 implements Listener {
 
 		public void run() {
 
-			int tpsx = (int) tps.getTPS();
+		/*	int tpsx = (int) tps.getTPS();
 			if (tpsx < 15) {
 
 				dprint.r.printAll("tps " + tpsx);
 				return;
-			}
+			}*/
 
 			counter++;
 
