@@ -1,16 +1,29 @@
 package dewddcreative;
 
+import java.io.BufferedReader;
+import java.io.DataInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.Random;
 
+import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
+
 import dewddtran.tr;
 import li.Useful;
 
 public  class api_creative {
+	
+	
+	
 	public static String perdewremove = "dewdd.creative.dewremove";
 	public static String perchangehost = "dewdd.creative.changehost";
 	public static String perdoprotecty = "dewdd.creative.doprotecty";
@@ -185,6 +198,109 @@ public  class api_creative {
 		return false;
 	}
 
+	
+	public static void saveRSProtectFile() {
+
+		File dir = new File(Constant.folder_name);
+		dir.mkdir();
+
+		String filena = Constant.folder_name + File.separator + Constant.rsProtect_filename;
+		File fff = new File(filena);
+
+		FileWriter fwriter;
+		try {
+			fff.createNewFile();
+
+			dprint.r.printC("ptdew&dewdd:Start saving " + filena);
+			fwriter = new FileWriter(fff);
+
+		
+			for (int y = 0; y < DigEventListener2.allProtect.size(); y++) {
+				Location lo = DigEventListener2.allProtect.get(y);
+				
+				lo =  Useful.getTopBlockHigh(lo.getBlock()).getLocation();
+				
+				String wr = lo.getBlockX() + " " + lo.getBlockY() + " " + lo.getBlockZ(); 
+
+				fwriter.write(wr + System.getProperty("line.separator"));
+
+			}
+
+			fwriter.close();
+			dprint.r.printC("ptdew&dewdd:saved " + filena);
+			return;
+
+		} catch (IOException e) {
+			// Auto-generated catch block
+			e.printStackTrace();
+		}
+
+	}
+	
+	public static void loadRSProtectFile() {
+		String worldf = Constant.rsProtect_filename;
+
+		File dir = new File(Constant.folder_name);
+		dir.mkdir();
+		System.out.println(dir.getAbsolutePath());
+
+		String filena = Constant.folder_name + File.separator + worldf;
+		File fff = new File(filena);
+
+		try {
+
+			
+			fff.createNewFile();
+
+			dprint.r.printAll("ptdeW&DewDD load Creative : " + filena);
+			// Open the file that is the first
+			// command line parameter
+			FileInputStream fstream = new FileInputStream(filena);
+			// Get the object of DataInputStream
+			DataInputStream in = new DataInputStream(fstream);
+			BufferedReader br = new BufferedReader(new InputStreamReader(in));
+			String strLine;
+			// Read File Line By Line
+
+			// sthae
+			// aosthoeau
+			// * save
+			String m[];
+			
+			DigEventListener2.allProtect.clear();
+
+			while ((strLine = br.readLine()) != null) {
+
+				m = strLine.split("\\s+");
+				// Print the content on the console
+				
+				
+				int x =  Integer.parseInt(m[0]);
+				int y = Integer.parseInt(m[1]);
+				int z = Integer.parseInt(m[2]);
+				
+				Location loc = Bukkit.getPlayer("ddlovedew").getWorld().getBlockAt(x, y, z).getLocation();
+				DigEventListener2.allProtect.add(loc);
+				
+				dprint.r.printAll(DigEventListener2.allProtect.size() + " = " + x + "," + y  + "," + z);
+				
+
+				// rs[rsMax - 1].mission = 0;
+
+			}
+
+
+			dprint.r.printAll("ptdew&DewDD Skyblock: Loaded " + filena);
+
+
+			in.close();
+		} catch (Exception e) {// Catch exception if any
+			dprint.r.printAll("Error load " + filena + e.getMessage());
+			e.printStackTrace();
+		}
+	}
+	
+	
 
 
 }

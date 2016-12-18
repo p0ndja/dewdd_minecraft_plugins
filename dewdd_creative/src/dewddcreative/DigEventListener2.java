@@ -47,7 +47,7 @@ import li.LXRXLZRZType;
 import li.Useful;
 
 public class DigEventListener2 implements Listener {
-	LinkedList<Location> allProtect = new LinkedList<Location>();
+	public static LinkedList<Location> allProtect = new LinkedList<Location>();
 
 	class delay extends Thread {
 
@@ -378,27 +378,32 @@ public class DigEventListener2 implements Listener {
 						lo.getChunk().load();
 						player.teleport(lo);
 
-					} else if (m[1].equalsIgnoreCase("ef") == true) {
+					} else if (m[1].equalsIgnoreCase("save") == true) {
+						api_creative.saveRSProtectFile();
+
+					} else if (m[1].equalsIgnoreCase("load") == true) {
+						api_creative.loadRSProtectFile();
+
+					}
+
+					else if (m[1].equalsIgnoreCase("ef") == true) {
 
 						player.getWorld().playEffect(player.getLocation(), Effect.CLOUD, 20);
 
 						Location start = player.getLocation();
-						Location des = player.getWorld().getBlockAt(0,80,0).getLocation();
-						
-						Vector dir2 =  des.toVector().subtract(start.toVector());
+						Location des = player.getWorld().getBlockAt(0, 80, 0).getLocation();
+
+						Vector dir2 = des.toVector().subtract(start.toVector());
 						Vector dir = dir2.clone();
-						
-						for (double j = 0; j < 10; j+= 0.1) {
-							
+
+						for (double j = 0; j < 10; j += 0.1) {
+
 							dir2 = dir.clone();
 							Vector dir3 = dir2.multiply(j);
-							
-							
+
 							start.add(dir3);
 							dprint.r.printAll(j + " =" + start.getBlockX() + "," + start.getBlockZ());
-							
-							
-							
+
 							start.getWorld().spawnParticle(Particle.REDSTONE, start, 10);
 							start.subtract(dir3);
 							dir3.normalize();
