@@ -155,13 +155,13 @@ public class DigEventListener2 implements Listener {
 
 		public void refindAllDot() {
 			
-			dprint.r.printAll("bisection");
+			//dprint.r.printAll("bisection");
 			
 			Location l1 = player.getLocation();
 
 			dt.clear();
 
-			for (int i = 0; i < allProtect.size() && i <= 1; i++) {
+			for (int i = 0; i < allProtect.size() && i <= 0; i++) {
 
 				Location l2 = allProtect.get(i);
 
@@ -175,30 +175,41 @@ public class DigEventListener2 implements Listener {
 		}
 
 		public LinkedList<XYZ> findDotLikeABoss(Location a, Location b) {
-			double low = 0;
+			double low = -11;
 			double high = 10;
 
-			double left = findDot(a, b, low).size();
-			double right = findDot(a, b, high).size();
+			double left = amount - findDot(a, b, low).size();
+			double right = amount - findDot(a, b, high).size();
 			
 			
 
-			BisectionLib bl = new BisectionLib(0, 10, amount, left, right);
+			BisectionLib bl = new BisectionLib(low, high, left, right);
 			
-			double ret = 0 ;
+			
 			
 			LinkedList<XYZ> tmp = null;
+			int counter = 0 ;
+			
 			do {
+				counter ++ ; 
+				
 				tmp =  findDot(a, b, bl.getMid());
 				
-				dprint.r.printAll("bisection " + bl.getMid() + " , " + tmp.size());
+				dprint.r.printAll(counter + " = bisection " +   bl.getMid() + " , " + tmp.size());
 				
-				bl.findNextValue(tmp.size());
+				bl.findNextValue(amount - tmp.size());
 				
-				
+				if (counter > 25 ) {
+					
+					dprint.r.printAll(">>> infinite loop break");
+					Bukkit.getScheduler().cancelTasks(DigEventListener2.ac);
+					Bukkit.getScheduler().cancelAllTasks();
+					
+					break;
+				}
 				
 			
-			} while (Math.abs(ret - amount) != 0 || Math.abs(ret - amount) > 5);
+			} while (Math.abs(amount - tmp.size() ) != 0 || Math.abs( amount - tmp.size()) > 1);
 			
 			return tmp;
 		}
@@ -245,10 +256,10 @@ public class DigEventListener2 implements Listener {
 
 				if (distance <= 25) {
 
-					break;
+					//break;
 				}
 
-				if (dot.size() > amount) {
+				if (dot.size() > amount* 30) {
 					break;
 				}
 
