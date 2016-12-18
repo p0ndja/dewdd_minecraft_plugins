@@ -9,18 +9,17 @@ public class BisectionLib {
 	private double valueOfStart = 0;
 	private double valueOfEnd = 0;
 
-	private boolean leftIsLower = false;
 
 	public static double getVa(double input) {
 		//return 1 / ( input+1);
 		//return input+1;
-		return 100 / input;
-		//return (input)*2;
+		//return 1 / input;
+		return (input)*2;
 	}
 
 	public static void main(String[] abc) {
-		double start = -10;
-		double end = 11;
+		double start = -40;
+		double end = 20;
 
 
 		double l = 0-getVa(start);
@@ -32,7 +31,7 @@ public class BisectionLib {
 
 		for (int i = 0; i < 20; i++) {
 			double mid = bl.getMid();
-			double midVa =0- getVa(mid);
+			double midVa = getVa(mid);
 			
 
 			System.out.println(i + " >> " + mid + " = value " + midVa + " , next " + bl.findNextValue(midVa));
@@ -53,24 +52,16 @@ public class BisectionLib {
 		this.valueOfStart = valueOfStart;
 		this.valueOfEnd = valueOfEnd;
 
-		checkLower();
 
 		this.mid = (start + end) / 2;
 
 	}
 	
-	public void checkLower() {
-		if (Math.abs(valueOfStart) <= Math.abs(valueOfEnd)) {
-			leftIsLower = true;
-		} else {
-			leftIsLower = false;
-		}
-	}
+	
 
 	public double getMid() {
 		this.mid = (start + end) / 2;
 		
-		checkLower();
 		return mid;
 	}
 
@@ -91,15 +82,15 @@ public class BisectionLib {
 		// double l = Math.abs(valueOfStart - valueOfMid );
 		// double r = Math.abs(valueOfEnd - mid );
 		
-		System.out.println("index =  " +  start + " , " + mid +  " , " + end );
+	//	System.out.println("index =  " +  start + " , " + mid +  " , " + end );
 
-		System.out.println("value =  " +  valueOfStart + " , " + valueOfMid +  " , " + valueOfEnd );
+	//	System.out.println("value =  " +  valueOfStart + " , " + valueOfMid +  " , " + valueOfEnd );
 
 		if (Math.abs(valueOfStart) > Math.abs(valueOfEnd)) { // adjust another
 			
-			System.out.println("adjust left ");
+	//		System.out.println("adjust left ");
 
-				System.out.println("cuz left is - ");
+		//		System.out.println("cuz left is - ");
 				
 				valueOfStart = valueOfMid;
 				start = getMid();
@@ -107,9 +98,9 @@ public class BisectionLib {
 				return getMid();
 
 		} else {
-			System.out.println("adjust right");
+		//	System.out.println("adjust right");
 
-				System.out.println("cuz right is + ");
+			//	System.out.println("cuz right is + ");
 				
 				valueOfEnd = valueOfMid;
 				end = getMid();
