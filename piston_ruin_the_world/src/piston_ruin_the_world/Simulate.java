@@ -19,6 +19,9 @@ public class Simulate implements Runnable {
 		nextTick.add(startBlock);
 	}
 	
+	
+	
+	
 	public void run() {
 		LinkedList<Location> sec = new LinkedList<Location>(); 
 		// loop until all circuit stop
@@ -32,7 +35,17 @@ public class Simulate implements Runnable {
 			
 			Block b = cur.getBlock();
 			
+			switch (b.getType()) {
+			case RedStoneBlock:
+				// check near piston
+				
+				
+				
+				
+				
+				break;
 			
+			}
 			
 		}
 	}

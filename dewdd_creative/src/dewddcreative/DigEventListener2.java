@@ -9,11 +9,11 @@ import java.util.LinkedList;
 import java.util.Random;
 
 import org.bukkit.Bukkit;
-import org.bukkit.Chunk;
 import org.bukkit.Effect;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.Particle;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
@@ -35,6 +35,7 @@ import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.util.Vector;
 
 import com.earth2me.essentials.api.Economy;
 import com.earth2me.essentials.api.NoLoanPermittedException;
@@ -193,7 +194,7 @@ public class DigEventListener2 implements Listener {
 			int oldX = c.getBlockX();
 			int oldZ = c.getBlockZ();
 
-			double disPerAmount = ((double)distance )/(double) (amount);
+			double disPerAmount = ((double) distance) / (double) (amount);
 			if (disPerAmount < 1) {
 				disPerAmount = 1;
 			}
@@ -209,37 +210,36 @@ public class DigEventListener2 implements Listener {
 				for (int x = -1; x <= 1; x++) {
 
 					for (int z = -1; z <= 1; z++) {
-						
+
 						int g = tps.rnd.nextInt(3);
 						switch (g) {
 						case 0:
-							x  = 0;
+							x = 0;
 							break;
 						case 1:
-							x  = 1;
+							x = 1;
 							break;
-						
-						case 2:
-							x  = -1;
-							break;
-						
-						}
-						
-						 g = tps.rnd.nextInt(3);
-							switch (g) {
-							case 0:
-								z  = 0;
-								break;
-							case 1:
-								z  = 1;
-								break;
-							
-							case 2:
-								z = -1;
-								break;
-							
-							}
 
+						case 2:
+							x = -1;
+							break;
+
+						}
+
+						g = tps.rnd.nextInt(3);
+						switch (g) {
+						case 0:
+							z = 0;
+							break;
+						case 1:
+							z = 1;
+							break;
+
+						case 2:
+							z = -1;
+							break;
+
+						}
 
 						int newX = (int) (oldX + (x * disPerAmount));
 						int newZ = (int) (oldZ + (z * disPerAmount));
@@ -284,12 +284,11 @@ public class DigEventListener2 implements Listener {
 
 		public void run() {
 
-		/*	int tpsx = (int) tps.getTPS();
-			if (tpsx < 15) {
-
-				dprint.r.printAll("tps " + tpsx);
-				return;
-			}*/
+			/*
+			 * int tpsx = (int) tps.getTPS(); if (tpsx < 15) {
+			 * 
+			 * dprint.r.printAll("tps " + tpsx); return; }
+			 */
 
 			counter++;
 
@@ -382,6 +381,29 @@ public class DigEventListener2 implements Listener {
 					} else if (m[1].equalsIgnoreCase("ef") == true) {
 
 						player.getWorld().playEffect(player.getLocation(), Effect.CLOUD, 20);
+
+						Location start = player.getLocation();
+						Location des = player.getWorld().getBlockAt(0,80,0).getLocation();
+						
+						Vector dir2 =  des.toVector().subtract(start.toVector());
+						Vector dir = dir2.clone();
+						
+						for (double j = 0; j < 10; j+= 0.1) {
+							
+							dir2 = dir.clone();
+							Vector dir3 = dir2.multiply(j);
+							
+							
+							start.add(dir3);
+							dprint.r.printAll(j + " =" + start.getBlockX() + "," + start.getBlockZ());
+							
+							
+							
+							start.getWorld().spawnParticle(Particle.REDSTONE, start, 10);
+							start.subtract(dir3);
+							dir3.normalize();
+						}
+
 					}
 
 					else if (m[1].equalsIgnoreCase("ef2") == true) {
