@@ -71,7 +71,7 @@ public class DigEventListener2 implements Listener {
 		// add
 
 		Block tmp = null;
-		int searchSpace = 500;
+		int searchSpace = 1000;
 		int betweenSpace = 100;
 
 		for (int x = -searchSpace; x <= searchSpace; x += betweenSpace) {
@@ -155,8 +155,10 @@ public class DigEventListener2 implements Listener {
 
 		public void refindAllDot() {
 			Location l1 = player.getLocation();
+			
+			dt.clear();
 
-			for (int i = 0; i < allProtect.size(); i++) {
+			for (int i = 0; i < allProtect.size() && i <= 0 ; i++) {
 
 				Location l2 = allProtect.get(i);
 
@@ -176,108 +178,62 @@ public class DigEventListener2 implements Listener {
 
 			dot.add(test1);
 
-			double distance = a.distance(b);
+			//dprint.r.printAll("find dot new way");
 
-			Location c = a.clone();
+				Location start =a.clone();
+				Location des = b.clone();
 
-			int px = b.getBlockX();
-			int py = b.getBlockY();
-			int pz = b.getBlockZ();
+				Vector dir2 = des.toVector().subtract(start.toVector());
+				Vector dir = dir2.clone();
+				
+				
+				double va = des.distance(start) / amount;
+				dprint.r.printAll("va = " + va + " , amount " + amount);
+				
+				dprint.r.printAll("distance  = " + (des.distance(start) / amount));
+				
 
-			/*
-			 * dprint.r.printAll("findDot (" + a.getBlockX() + "," +
-			 * a.getBlockY() + a.getBlockZ() + ") to (" + b.getBlockX() + "," +
-			 * b.getBlockY() + "," + b.getBlockZ() + ") = distance " +
-			 * distance);
-			 */
+				for (double j = 0; j < 1000; j +=  (1/ (va)) ) {
+					
+					
 
-			int oldX = c.getBlockX();
-			int oldZ = c.getBlockZ();
+					
+					Vector dir3 = dir2.multiply(j);
 
-			double disPerAmount = ((double) distance) / (double) (amount);
-			if (disPerAmount < 1) {
-				disPerAmount = 1;
-			}
-
-			while (distance > disPerAmount * 3) {
-
-				// x , y , z
-
-				// 0 , -1 , +1
-
-				boolean foundYet = false;
-
-				for (int x = -1; x <= 1; x++) {
-
-					for (int z = -1; z <= 1; z++) {
-
-						int g = tps.rnd.nextInt(3);
-						switch (g) {
-						case 0:
-							x = 0;
-							break;
-						case 1:
-							x = 1;
-							break;
-
-						case 2:
-							x = -1;
-							break;
-
-						}
-
-						g = tps.rnd.nextInt(3);
-						switch (g) {
-						case 0:
-							z = 0;
-							break;
-						case 1:
-							z = 1;
-							break;
-
-						case 2:
-							z = -1;
-							break;
-
-						}
-
-						int newX = (int) (oldX + (x * disPerAmount));
-						int newZ = (int) (oldZ + (z * disPerAmount));
-
-						// double newDistance = d.distance(b);
-
-						double newDistance = Useful.distance2Point3D(newX, py, newZ, px, py, pz);
-
-						if (newDistance < distance) {
-
-							oldX = newX;
-							oldZ = newZ;
-
-							distance = newDistance;
-							XYZ test2 = new XYZ(newX, py, newZ);
-
-							dot.add(test2);
-
-							/*
-							 * dprint.r.printAll("shoter part " + dot.size() +
-							 * " (" + c.getBlockX() + "," + c.getBlockY() + ","
-							 * + c.getBlockZ() + ") = distance " + newDistance);
-							 */
-
-							foundYet = true;
-							break;
-						}
+					start.add(dir3);
+					
+					dir2 = dir.clone();
+					
+					
+					double distance = start.distance(des);
+					
+					
+					dprint.r.printAll(distance + " =" + start.getBlockX() + "," + start.getBlockZ());
+					
+					if (distance <= 25 ) {
+						
+					//	break;
 					}
-
-					if (foundYet == true) {
+					
+					if (dot.size() > amount) {
 						break;
 					}
+					
+					XYZ tmp = new XYZ( start.getBlockX(), start.getBlockY() , start.getBlockZ());
+					
+					dot.add(tmp);
+							
+					//start.getWorld().spawnParticle(Particle.REDSTONE, start, 10);
+					start.subtract(dir3);
+					dir3.normalize();
+					
+					
 				}
+				dprint.r.printAll("size " + dot.size());
+				
 
-			} // while
-
-			// dprint.r.printAll("dot size " + dot.size());
-
+			
+			
 			return dot;
 
 		}
@@ -323,7 +279,7 @@ public class DigEventListener2 implements Listener {
 					double dist = Useful.distance2Point3D(dotLo.x, dotLo.y, dotLo.z, player.getLocation().getBlockX(),
 							player.getLocation().getBlockY(), player.getLocation().getBlockZ());
 					if (dist > 500) {
-						continue;
+						//continue;
 					}
 
 					Location ll = player.getLocation();
@@ -331,14 +287,17 @@ public class DigEventListener2 implements Listener {
 					ll.setZ(dotLo.z);
 					switch (counter % 3) {
 					case 0:
-						player.getWorld().playEffect(ll, Effect.HEART, 1);
+					//	player.getWorld().playEffect(ll, Effect.HEART, 1);
+						player.getWorld().spawnParticle(Particle.REDSTONE, ll, 1);
 						break;
 					case 1:
-						player.getWorld().playEffect(ll, Effect.FLAME, 1);
+					//	player.getWorld().playEffect(ll, Effect.FLAME, 1);
+						player.getWorld().spawnParticle(Particle.REDSTONE, ll, 1);
 						break;
 
 					case 2:
-						player.getWorld().playEffect(ll, Effect.CLOUD, 1);
+					//	player.getWorld().playEffect(ll, Effect.CLOUD, 1);
+						player.getWorld().spawnParticle(Particle.REDSTONE, ll, 1);
 						break;
 
 					}
