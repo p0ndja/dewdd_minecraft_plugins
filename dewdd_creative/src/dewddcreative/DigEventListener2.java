@@ -154,16 +154,19 @@ public class DigEventListener2 implements Listener {
 		}
 
 		public void refindAllDot() {
-			Location l1 = player.getLocation();
 			
+			dprint.r.printAll("bisection");
+			
+			Location l1 = player.getLocation();
+
 			dt.clear();
 
-			for (int i = 0; i < allProtect.size()  ; i++) {
+			for (int i = 0; i < allProtect.size() && i <= 1; i++) {
 
 				Location l2 = allProtect.get(i);
 
 				DotType dotType = new DotType();
-				LinkedList<XYZ> dots = findDot(l1, l2);
+				LinkedList<XYZ> dots = findDotLikeABoss(l1, l2);
 				dotType.xyz = dots;
 
 				dt.add(dotType);
@@ -171,74 +174,95 @@ public class DigEventListener2 implements Listener {
 			}
 		}
 
-		public LinkedList<XYZ> findDot(Location a, Location b) {
+		public LinkedList<XYZ> findDotLikeABoss(Location a, Location b) {
+			double low = 0;
+			double high = 10;
+
+			double left = findDot(a, b, low).size();
+			double right = findDot(a, b, high).size();
+			
+			
+
+			BisectionLib bl = new BisectionLib(0, 10, amount, left, right);
+			
+			double ret = 0 ;
+			
+			LinkedList<XYZ> tmp = null;
+			do {
+				tmp =  findDot(a, b, bl.getMid());
+				
+				dprint.r.printAll("bisection " + bl.getMid() + " , " + tmp.size());
+				
+				bl.findNextValue(tmp.size());
+				
+				
+				
+			
+			} while (Math.abs(ret - amount) != 0 || Math.abs(ret - amount) > 5);
+			
+			return tmp;
+		}
+
+		public LinkedList<XYZ> findDot(Location a, Location b, double vectorIncrese) {
 
 			LinkedList<XYZ> dot = new LinkedList<XYZ>();
 			XYZ test1 = new XYZ(b.getBlock());
 
 			dot.add(test1);
 
-			//dprint.r.printAll("find dot new way");
+			// dprint.r.printAll("find dot new way");
 
-				Location start =a.clone();
-				Location des = b.clone();
+			Location start = a.clone();
+			Location des = b.clone();
 
-				Vector dir2 = des.toVector().subtract(start.toVector()).normalize();
-				Vector dir = dir2.clone();
-				
-				
-				
-				double va = des.distance(start) / amount;
-			//	dprint.r.printAll("va = " + va + " , amount " + amount);
-				
-		//		dprint.r.printAll("distance  = " + (des.distance(start) / amount));
-				
-				Vector test = dir2;
-				
-			//	dprint.r.printAll("test length = " + test.length());
+			Vector dir2 = des.toVector().subtract(start.toVector()).normalize();
+			Vector dir = dir2.clone();
 
-				for (double j = 0; j < 1000; j +=  1) {
-					
-				
-					
-					Vector dir3 = dir2.multiply(j);
-					
-					//dir3 = dir3.normalize();
-					
-					start.add(dir3);
-					
-					dir2 = dir.clone();
-					
-					
-					double distance = start.distance(des);
-					
-					
-					//dprint.r.printAll(distance + " =" + start.getBlockX() + "," + start.getBlockZ());
-					
-					if (distance <= 25 ) {
-						
-						break;
-					}
-					
-					if (dot.size() > amount) {
-						break;
-					}
-					
-					XYZ tmp = new XYZ( start.getBlockX(), start.getBlockY() , start.getBlockZ());
-					
-					dot.add(tmp);
-							
-					//start.getWorld().spawnParticle(Particle.REDSTONE, start, 10);
-					//start.subtract(dir3);
-					//dir3.normalize();
-					
-					
+			double va = des.distance(start) / amount;
+			// dprint.r.printAll("va = " + va + " , amount " + amount);
+
+			// dprint.r.printAll("distance = " + (des.distance(start) /
+			// amount));
+
+			Vector test = dir2;
+
+			// dprint.r.printAll("test length = " + test.length());
+
+			for (double j = 0; j < 1000; j += vectorIncrese) {
+
+				Vector dir3 = dir2.multiply(j);
+
+				// dir3 = dir3.normalize();
+
+				start.add(dir3);
+
+				dir2 = dir.clone();
+
+				double distance = start.distance(des);
+
+				// dprint.r.printAll(distance + " =" + start.getBlockX() + "," +
+				// start.getBlockZ());
+
+				if (distance <= 25) {
+
+					break;
 				}
-			//	dprint.r.printAll("size " + dot.size());
-				
 
-			
-			
+				if (dot.size() > amount) {
+					break;
+				}
+
+				XYZ tmp = new XYZ(start.getBlockX(), start.getBlockY(), start.getBlockZ());
+
+				dot.add(tmp);
+
+				// start.getWorld().spawnParticle(Particle.REDSTONE, start, 10);
+				// start.subtract(dir3);
+				// dir3.normalize();
+
+			}
+			// dprint.r.printAll("size " + dot.size());
+
 			return dot;
 
 		}
@@ -263,6 +287,8 @@ public class DigEventListener2 implements Listener {
 
 			int efCount = 0;
 
+			// we have to adjust j number for closing as amount
+
 			for (int i = 0; i < dt.size(); i++) {
 				LinkedList<XYZ> dots = dt.get(i).xyz;
 
@@ -284,7 +310,7 @@ public class DigEventListener2 implements Listener {
 					double dist = Useful.distance2Point3D(dotLo.x, dotLo.y, dotLo.z, player.getLocation().getBlockX(),
 							player.getLocation().getBlockY(), player.getLocation().getBlockZ());
 					if (dist > 500) {
-						//continue;
+						// continue;
 					}
 
 					Location ll = player.getLocation();
@@ -293,16 +319,16 @@ public class DigEventListener2 implements Listener {
 					ll.setZ(dotLo.z);
 					switch (counter % 3) {
 					case 0:
-					//	player.getWorld().playEffect(ll, Effect.HEART, 1);
+						// player.getWorld().playEffect(ll, Effect.HEART, 1);
 						player.getWorld().spawnParticle(Particle.REDSTONE, ll, 1);
 						break;
 					case 1:
-					//	player.getWorld().playEffect(ll, Effect.FLAME, 1);
+						// player.getWorld().playEffect(ll, Effect.FLAME, 1);
 						player.getWorld().spawnParticle(Particle.REDSTONE, ll, 1);
 						break;
 
 					case 2:
-					//	player.getWorld().playEffect(ll, Effect.CLOUD, 1);
+						// player.getWorld().playEffect(ll, Effect.CLOUD, 1);
 						player.getWorld().spawnParticle(Particle.REDSTONE, ll, 1);
 						break;
 
