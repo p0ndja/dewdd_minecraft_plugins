@@ -158,7 +158,7 @@ public class DigEventListener2 implements Listener {
 			
 			dt.clear();
 
-			for (int i = 0; i < allProtect.size() && i <= 0 ; i++) {
+			for (int i = 0; i < allProtect.size()  ; i++) {
 
 				Location l2 = allProtect.get(i);
 
@@ -183,23 +183,28 @@ public class DigEventListener2 implements Listener {
 				Location start =a.clone();
 				Location des = b.clone();
 
-				Vector dir2 = des.toVector().subtract(start.toVector());
+				Vector dir2 = des.toVector().subtract(start.toVector()).normalize();
 				Vector dir = dir2.clone();
 				
 				
+				
 				double va = des.distance(start) / amount;
-				dprint.r.printAll("va = " + va + " , amount " + amount);
+			//	dprint.r.printAll("va = " + va + " , amount " + amount);
 				
-				dprint.r.printAll("distance  = " + (des.distance(start) / amount));
+		//		dprint.r.printAll("distance  = " + (des.distance(start) / amount));
 				
+				Vector test = dir2;
+				
+			//	dprint.r.printAll("test length = " + test.length());
 
-				for (double j = 0; j < 1000; j +=  (1/ (va)) ) {
+				for (double j = 0; j < 1000; j +=  1) {
 					
-					
-
+				
 					
 					Vector dir3 = dir2.multiply(j);
-
+					
+					//dir3 = dir3.normalize();
+					
 					start.add(dir3);
 					
 					dir2 = dir.clone();
@@ -208,11 +213,11 @@ public class DigEventListener2 implements Listener {
 					double distance = start.distance(des);
 					
 					
-					dprint.r.printAll(distance + " =" + start.getBlockX() + "," + start.getBlockZ());
+					//dprint.r.printAll(distance + " =" + start.getBlockX() + "," + start.getBlockZ());
 					
 					if (distance <= 25 ) {
 						
-					//	break;
+						break;
 					}
 					
 					if (dot.size() > amount) {
@@ -224,12 +229,12 @@ public class DigEventListener2 implements Listener {
 					dot.add(tmp);
 							
 					//start.getWorld().spawnParticle(Particle.REDSTONE, start, 10);
-					start.subtract(dir3);
-					dir3.normalize();
+					//start.subtract(dir3);
+					//dir3.normalize();
 					
 					
 				}
-				dprint.r.printAll("size " + dot.size());
+			//	dprint.r.printAll("size " + dot.size());
 				
 
 			
@@ -284,6 +289,7 @@ public class DigEventListener2 implements Listener {
 
 					Location ll = player.getLocation();
 					ll.setX(dotLo.x);
+					ll.setY(ll.getY() + 5);
 					ll.setZ(dotLo.z);
 					switch (counter % 3) {
 					case 0:
