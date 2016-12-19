@@ -1,6 +1,6 @@
 package dewddcreative;
 
-public class BisectionLib {
+public class BisectionLib2 {
 
 	private double start = 0;
 	private double end = 10;
@@ -12,27 +12,22 @@ public class BisectionLib {
 
 	public static double getVa(double input) {
 		//return 1 / ( input+1);
-		
-		// bisection is not compatible with multi root
-		
-		return  Math.sqrt(input);
-		
-		//return -input;
 		//return input+1;
-		//return (input)*2;
+		//return 1 / input;
+		return (input)*2;
 	}
 
 	public static void main(String[] abc) {
-		double start = 0;
-		double end =20;
+		double start = -40;
+		double end = 20;
 
 
-		double l = getVa(start);
-		double r = getVa(end);
+		double l = 0-getVa(start);
+		double r = 0-getVa(end);
 		
 		System.out.println("value of left , right " + l  + " , " + r );
 
-		BisectionLib bl = new BisectionLib(start, end, l, r);
+		BisectionLib2 bl = new BisectionLib2(start, end, l, r);
 
 		for (int i = 0; i < 20; i++) {
 			double mid = bl.getMid();
@@ -50,17 +45,15 @@ public class BisectionLib {
 
 	}
 
-	public BisectionLib(double start, double end, double valueOfStart, double valueOfEnd) {
+	public BisectionLib2(double start, double end, double valueOfStart, double valueOfEnd) {
 		this.start = start;
 		this.end = end;
 
-	
-		
 		this.valueOfStart = valueOfStart;
 		this.valueOfEnd = valueOfEnd;
 
 
-		this.mid = getMid();
+		this.mid = (start + end) / 2;
 
 	}
 	
@@ -73,13 +66,8 @@ public class BisectionLib {
 	}
 
 	public double findNextValue(double valueOfMid) {
-		if (valueOfStart * valueOfEnd > 0) {
-			System.out.println("Bisection error seem sign !!");
-			return 0;
-		}
-		
 
-		if (valueOfMid == 0 || Math.abs(0 - valueOfMid) < 0.0001) {
+		if (valueOfMid == 0 || Math.abs(0 - valueOfMid) < 0.001) {
 			return mid;
 		}
 
@@ -94,36 +82,31 @@ public class BisectionLib {
 		// double l = Math.abs(valueOfStart - valueOfMid );
 		// double r = Math.abs(valueOfEnd - mid );
 		
-		System.out.println("index =  " +  start + " , " + mid +  " , " + end );
+	//	System.out.println("index =  " +  start + " , " + mid +  " , " + end );
 
-		System.out.println("value =  " +  valueOfStart + " , " + valueOfMid +  " , " + valueOfEnd );
+	//	System.out.println("value =  " +  valueOfStart + " , " + valueOfMid +  " , " + valueOfEnd );
 
-		
-		
-		System.out.println("><><>  " + valueOfStart + " * " + valueOfStart + " = " + (valueOfStart  * valueOfMid));
-		
-		if ((0-valueOfStart)  * (0-valueOfMid )< 0) { // sign is diffeent
-	
+		if (Math.abs(valueOfStart) > Math.abs(valueOfEnd)) { // adjust another
 			
-			// - , + , +
-			// +  , - , -
-				
-				System.out.println("adjust right");
+	//		System.out.println("adjust left ");
 
+		//		System.out.println("cuz left is - ");
+				
+				valueOfStart = valueOfMid;
+				start = getMid();
+
+				return getMid();
+
+		} else {
+		//	System.out.println("adjust right");
+
+			//	System.out.println("cuz right is + ");
 				
 				valueOfEnd = valueOfMid;
 				end = getMid();
 
 				return getMid();
-				
-		} else {
-			System.out.println("adjust left");
-
-				
-			valueOfStart = valueOfMid;
-				start = getMid();
-
-				return getMid();
+			
 		}
 
 	}

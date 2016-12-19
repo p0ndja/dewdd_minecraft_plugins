@@ -203,7 +203,7 @@ public class DigEventListener2 implements Listener {
 					
 					dprint.r.printAll(">>> infinite loop break");
 					Bukkit.getScheduler().cancelTasks(DigEventListener2.ac);
-					Bukkit.getScheduler().cancelAllTasks();
+					//Bukkit.getScheduler().cancelAllTasks();
 					
 					break;
 				}
