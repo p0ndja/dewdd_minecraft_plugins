@@ -175,13 +175,15 @@ public class DigEventListener2 implements Listener {
 		}
 
 		public LinkedList<XYZ> findDotLikeABoss(Location a, Location b) {
-			double low = -11;
-			double high = 10;
+			double low = -100;
+			double high = 100;
 
-			double left = amount - findDot(a, b, low).size();
-			double right = amount - findDot(a, b, high).size();
+			double left =  findDot(a, b, low).size();
+			double right = findDot(a, b, high).size();
+			left = 3000;
+			right = -3000;
 			
-			
+			dprint.r.printAll ("left light " + low + " to " + high + " = " + left  + "," + right);
 
 			BisectionLib bl = new BisectionLib(low, high, left, right);
 			
@@ -195,11 +197,11 @@ public class DigEventListener2 implements Listener {
 				
 				tmp =  findDot(a, b, bl.getMid());
 				
-				dprint.r.printAll(counter + " = bisection " +   bl.getMid() + " , " + tmp.size());
+				dprint.r.printAll(counter + " = bisection " +   bl.getMid() + " , " + tmp.size() + " amount-mid " + (amount-tmp.size()));
 				
-				bl.findNextValue(amount - tmp.size());
+				bl.findNextValue(tmp.size());
 				
-				if (counter > 25 ) {
+				if (counter > 15 ) {
 					
 					dprint.r.printAll(">>> infinite loop break");
 					Bukkit.getScheduler().cancelTasks(DigEventListener2.ac);
@@ -326,7 +328,7 @@ public class DigEventListener2 implements Listener {
 
 					Location ll = player.getLocation();
 					ll.setX(dotLo.x);
-					ll.setY(ll.getY() + 5);
+					ll.setY(ll.getY() + 1);
 					ll.setZ(dotLo.z);
 					switch (counter % 3) {
 					case 0:
