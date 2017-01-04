@@ -4,3 +4,10 @@ version: 1
 author: dewtx29@gmail.com
 database: false
 
+
+commands:
+  invert:
+    description: use /invert
+    usage: /<command>
+    permissions: dewdd.invert.use
+

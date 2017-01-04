@@ -37,11 +37,11 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.util.Vector;
 
+import com.darkblade12.particleeffect.ParticleEffect;
 import com.earth2me.essentials.api.Economy;
 import com.earth2me.essentials.api.NoLoanPermittedException;
 import com.earth2me.essentials.api.UserDoesNotExistException;
 
-import dewddtps.tps;
 import dewddtran.tr;
 import li.LXRXLZRZType;
 import li.Useful;
@@ -166,7 +166,7 @@ public class DigEventListener2 implements Listener {
 				Location l2 = allProtect.get(i);
 
 				DotType dotType = new DotType();
-				LinkedList<XYZ> dots = findDotLikeABoss(l1, l2);
+				LinkedList<XYZ> dots = findDotLikeABoss(l1.clone(), l2.clone());
 				dotType.xyz = dots;
 
 				dt.add(dotType);
@@ -174,7 +174,7 @@ public class DigEventListener2 implements Listener {
 			}
 		}
 
-		public LinkedList<XYZ> findDotLikeABoss(Location a, Location b) {
+		public LinkedList<XYZ> findDotLikeABoss2(Location a, Location b) {
 			double low = -100;
 			double high = 100;
 
@@ -215,6 +215,14 @@ public class DigEventListener2 implements Listener {
 			
 			return tmp;
 		}
+		
+		public LinkedList<XYZ> findDotLikeABoss(Location a, Location b) {
+			dprint.r.printAll("hello");
+			
+			LinkedList<XYZ> tmp = findDot(a,b,amount);
+			
+			return tmp;
+		}
 
 		public LinkedList<XYZ> findDot(Location a, Location b, double vectorIncrese) {
 
@@ -225,8 +233,8 @@ public class DigEventListener2 implements Listener {
 
 			// dprint.r.printAll("find dot new way");
 
-			Location start = a.clone();
-			Location des = b.clone();
+			Location start = b.clone();
+			Location des = a.clone();
 
 			Vector dir2 = des.toVector().subtract(start.toVector()).normalize();
 			Vector dir = dir2.clone();
@@ -304,6 +312,8 @@ public class DigEventListener2 implements Listener {
 
 			for (int i = 0; i < dt.size(); i++) {
 				LinkedList<XYZ> dots = dt.get(i).xyz;
+				
+				ParticleEffect effect = new ParticleEffect(ParticleEffect.REDSTONE, 0.02, 5, 0.0001);
 
 				for (int j = 0; j < dots.size(); j++) {
 

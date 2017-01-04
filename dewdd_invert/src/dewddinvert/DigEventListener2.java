@@ -42,6 +42,8 @@ import org.bukkit.plugin.java.JavaPlugin;
 import dewddtran.tr;
 
 public class DigEventListener2 implements Listener {
+	
+	public static String pInvert = "dewdd.invert.use";
 	/*
 	 * class cleanthischunk extends Thread{ public Chunk chunk = null;
 	 * synchronized public void run() {
@@ -308,7 +310,7 @@ public class DigEventListener2 implements Listener {
 				}
 
 				Location loc2 = en.getLocation();
-				loc2.setY(256 - en.getLocation().getY());
+				loc2.setY(255 - en.getLocation().getY());
 				en.teleport(loc2);
 			}
 
@@ -348,7 +350,7 @@ public class DigEventListener2 implements Listener {
 		}
 	}
 
-	class CleanThisChunk_c_copy_part implements Runnable {
+	class CleanThisChunk_thread_copy_part implements Runnable {
 
 		private Chunk chunk;
 		private int lastY = 0;
@@ -361,7 +363,7 @@ public class DigEventListener2 implements Listener {
 
 		private int maxYdo = 7;
 
-		public CleanThisChunk_c_copy_part(World world, Chunk chunk, int lastY, int bid[][][], byte bdata[][][],
+		public CleanThisChunk_thread_copy_part(World world, Chunk chunk, int lastY, int bid[][][], byte bdata[][][],
 				LinkedList<SpawnerBlockType> spawner, LinkedList<ChestBlockType> chester, LinkedList<SignType> signer) {
 			this.chunk = chunk;
 			this.lastY = lastY; // 255
@@ -387,7 +389,7 @@ public class DigEventListener2 implements Listener {
 				countY++;
 				lastClean = System.currentTimeMillis();
 				if (countY > maxYdo) {
-					CleanThisChunk_c_copy_part newThread = new CleanThisChunk_c_copy_part(world, chunk, y, bid, bdata,
+					CleanThisChunk_thread_copy_part newThread = new CleanThisChunk_thread_copy_part(world, chunk, y, bid, bdata,
 							spawner, chester, signer);
 					Bukkit.getScheduler().scheduleSyncDelayedTask(ac, newThread, 1);
 					lastClean = System.currentTimeMillis();
@@ -565,7 +567,7 @@ public class DigEventListener2 implements Listener {
 		}
 	}
 
-	class CleanThisChunk_c implements Runnable {
+	class cleanThisChunk_Thread implements Runnable {
 		Chunk chunk;
 
 		public void run() {
@@ -619,7 +621,7 @@ public class DigEventListener2 implements Listener {
 
 			// Copying
 
-			CleanThisChunk_c_copy_part newThread = new CleanThisChunk_c_copy_part(world, chunk, 0, bid, bdata, spawner,
+			CleanThisChunk_thread_copy_part newThread = new CleanThisChunk_thread_copy_part(world, chunk, 0, bid, bdata, spawner,
 					chester, signer);
 			Bukkit.getScheduler().scheduleSyncDelayedTask(ac, newThread, 2);
 		} // run
@@ -804,7 +806,7 @@ public class DigEventListener2 implements Listener {
 
 	public Random randomGenerator = new Random();
 
-	public void cleannearchunk(Player player) {
+	public void clearNearChunk(Player player) {
 		if (!isRunWorld(player.getWorld().getName())) {
 			return;
 		}
@@ -828,15 +830,15 @@ public class DigEventListener2 implements Listener {
 					lastClean = System.currentTimeMillis();
 				}
 
-				cleanthischunkt(chunk);
+				cleanThisChunk_Mom(chunk);
 			}
 		}
 	}
 
-	public void cleanthischunkt(Chunk chunk) {
+	public void cleanThisChunk_Mom(Chunk chunk) {
 		// cleanthischunkt2(chunk); // call normal
 
-		CleanThisChunk_c abc = new CleanThisChunk_c(); // call invert
+		cleanThisChunk_Thread abc = new cleanThisChunk_Thread(); // call invert
 		abc.chunk = chunk;
 
 		Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(ac, abc, 1);
@@ -878,7 +880,7 @@ public class DigEventListener2 implements Listener {
 			return;
 		}
 
-		cleannearchunk(player);
+		clearNearChunk(player);
 	}
 
 	@EventHandler
@@ -944,7 +946,7 @@ public class DigEventListener2 implements Listener {
 
 		if (isCleanedChunk(e.getPlayer().getLocation().getChunk()) == true) {
 			Player player = e.getPlayer();
-			cleannearchunk(player);
+			clearNearChunk(player);
 		}
 		else {
 			e.setCancelled(true);
@@ -967,7 +969,7 @@ public class DigEventListener2 implements Listener {
 
 		if (isCleanedChunk(e.getPlayer().getLocation().getChunk()) == true) {
 			Player player = e.getPlayer();
-			cleannearchunk(player);
+			clearNearChunk(player);
 		}
 		else {
 			e.setCancelled(true);
@@ -990,7 +992,7 @@ public class DigEventListener2 implements Listener {
 
 		if (isCleanedChunk(e.getPlayer().getLocation().getChunk()) == true) {
 			Player player = e.getPlayer();
-			cleannearchunk(player);
+			clearNearChunk(player);
 		}
 		else {
 			e.setCancelled(true);
@@ -1005,9 +1007,57 @@ public class DigEventListener2 implements Listener {
 		if (!isRunWorld(e.getPlayer().getWorld().getName())) {
 			return;
 		}
+		
+		
+	
 
 		Player player = e.getPlayer();
-		cleannearchunk(player);
+		
+		if (player.hasPermission(pInvert) == false) {
+			player.sendMessage("need permission " + pInvert);
+			return;
+		}
+		
+		
+		
+			String m[] = e.getMessage().split("\\s+");
+			
+			if (m[0].equalsIgnoreCase("/invert")) {
+				
+			if (m.length < 3) {
+				player.sendMessage("/invert force <radius>");
+				
+				return;
+				
+			}
+			if (m.length == 3) {
+				int radius = Integer.parseInt(m[2]);
+				
+				long delay = 1;
+				
+				player.sendMessage("cleaning chunk radius = " + radius);
+				
+				
+				for (int x =  0-(radius * 16)  ; x <= (radius * 16)  ; x += 15) {
+					for (int z =   0-(radius * 16)  ; z <= (radius * 16) ; z += 15) {
+						
+						
+
+						cleanThisChunk_Thread abc = new cleanThisChunk_Thread(); // call invert
+						abc.chunk = player.getLocation().getBlock().getRelative(x, 0, z).getChunk();
+
+						Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(ac, abc, delay);
+						delay += 10;
+						dprint.r.printC("add to queue invert chunk " + abc.chunk.getX() + " , " + abc.chunk.getZ());
+						
+					}
+					
+				}
+				
+			}
+		}
+		
+		clearNearChunk(player);
 	}
 
 	@EventHandler
@@ -1047,7 +1097,7 @@ public class DigEventListener2 implements Listener {
 			
 			
 			
-			cleannearchunk(player);
+			clearNearChunk(player);
 		}
 	}
 
